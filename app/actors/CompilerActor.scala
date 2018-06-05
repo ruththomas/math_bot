@@ -75,29 +75,16 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
     }
   }
 
-  private def sendFrames(currentCompiler: Option[ProgramState],
-                         programState: ProgramState,
-                         clientFrames: List[ClientFrame]): Option[ProgramState] = {
+  private def sendFrames(programState: ProgramState,
+                         clientFrames: List[ClientFrame]): Unit = {
     out ! CompilerOutput(clientFrames, programState.grid.problem)
-    if (clientFrames.last.isSuccess()) {
-      None
-    } else if (clientFrames.last.isFailure()) {
-      None
-    } else {
-      currentCompiler
-    }
   }
 
-  override def receive : Receive = compile()
+  override def receive : Receive = createCompile()
 
-  def compile(currentCompiler: Option[ProgramState] = None): Receive = {
+  def createCompile() : Receive = {
     case CompilerExecute(steps, problem) =>
-      // This approach to detecting a new program is deprecated. The client should now flag
-      // new programs in the request json
-      currentCompiler match {
-        case Some(_) => self ! CompilerContinue(steps)
-        case None => self ! CompilerCreate(steps, problem)
-      }
+      self ! CompilerCreate(steps, problem)
 
     case CompilerCreate(steps, problem) =>
       logger.LogInfo(className, "Creating new compiler.")
@@ -116,39 +103,40 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           val processor = Processor(program)
           val stream = processor.execute()
           context.become(
-            compile(
-              Some(
+            compileContinue(
                 ProgramState(stream = stream,
-                             iterator = stream.iterator,
-                             grid = grid,
-                             program = program,
-                             exitOnSuccess = grid.evalEachFrame)
+                  iterator = stream.iterator,
+                  grid = grid,
+                  program = program,
+                  exitOnSuccess = grid.evalEachFrame)
               )
-            )
           )
           self ! CompilerContinue(steps)
         }
       }
+  }
+
+  def compileContinue(currentCompiler : ProgramState): Receive = {
+
+    case CompilerExecute(steps, _) =>
+      self ! CompilerContinue(steps)
 
     case CompilerContinue(steps) =>
       logger.LogInfo(className, s"Stepping compiler for $steps steps")
-      for {
-        programState <- currentCompiler
-      } yield {
         // filter out non-robot frames (eg function calls and program start)
-        val maxStepsReached = config.maxProgramSteps < programState.stepCount + steps
-        val takeSteps = if (maxStepsReached) config.maxProgramSteps - programState.stepCount else steps
-        val robotFrames = programState.iterator.filter(f => f.robotLocation.isDefined).take(takeSteps).toList
+        val maxStepsReached = config.maxProgramSteps < currentCompiler.stepCount + steps
+        val takeSteps = if (maxStepsReached) config.maxProgramSteps - currentCompiler.stepCount else steps
+        val robotFrames = currentCompiler.iterator.filter(f => f.robotLocation.isDefined).take(takeSteps).toList
 
-        val executeSomeFrames = (if (programState.exitOnSuccess) {
-                                   if (programState.leftoverFrame.exists(lf => checkForSuccess(programState, lf))) {
+        val executeSomeFrames = (if (currentCompiler.exitOnSuccess) {
+                                   if (currentCompiler.leftoverFrame.exists(lf => checkForSuccess(currentCompiler, lf))) {
                                      Seq.empty[Frame] // When the leftover is the success frame, don't return addtional frames
                                    } else {
                                      // Generate a temporary index for the program frames and search for a success frame.
                                      // Truncate the frames to the first successful frame
                                      val frames = robotFrames.zipWithIndex
                                      frames
-                                       .find(frame => checkForSuccess(programState, frame._1))
+                                       .find(frame => checkForSuccess(currentCompiler, frame._1))
                                        .map(successFrame => frames.take(successFrame._2 + 1))
                                        .getOrElse(frames)
                                        .map(f => f._1)
@@ -163,65 +151,60 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
         // This logic is done this way for now because the client has to query to get group of frames and will hang
         // if a query never responds with a frame. Eventually this gets replaced with an async stream of frames coming
         // from the compiler that will be controlled with back pressure message coming from the client.
-        (currentCompiler.flatMap(_.leftoverFrame), executeSomeFrames) match {
+        (currentCompiler.leftoverFrame, executeSomeFrames) match {
           case (None, List(frame)) =>
             // When the compiler generates a single frame, assume its the last frame.
             for {
-              lastFrame <- createLastFrame(programState, frame)
-            } yield context.become(compile(sendFrames(currentCompiler, programState, lastFrame)))
+              lastFrame <- createLastFrame(currentCompiler, frame)
+            } yield sendFrames(currentCompiler, lastFrame)
+            context.become(createCompile())
           case (None, leadingFrames :+ last) if !programCompleted =>
             // More than one frame, send the leading frames and save the last frame for the next request
+            sendFrames(currentCompiler, createFrames(leadingFrames))
             context.become(
-              compile(
-                sendFrames(currentCompiler, programState, createFrames(leadingFrames))
-                  .map(_.copy(leftoverFrame = Some(last)).addSteps(takeSteps))
+              compileContinue(currentCompiler.copy(leftoverFrame = Some(last)).addSteps(takeSteps)
               )
             )
           case (None, leadingFrames :+ last) if programCompleted =>
             // When short the requested frames, assume the program has finished and compute the last frame too **
             for {
-              lastFrame <- createLastFrame(programState, last)
-            } yield
+              lastFrame <- createLastFrame(currentCompiler, last)
+            } yield sendFrames(currentCompiler, createFrames(leadingFrames) ++ lastFrame)
               context.become(
-                compile(sendFrames(currentCompiler, programState, createFrames(leadingFrames) ++ lastFrame))
+                createCompile()
               )
           case (Some(leftover), leadingFrames :+ last) if !programCompleted =>
             // With a leftover, and last, this is executing somewhere in the middle of the program.
+            sendFrames(currentCompiler, createFrames(leftover +: leadingFrames))
             context.become(
-              compile(
-                sendFrames(currentCompiler, programState, createFrames(leftover +: leadingFrames))
-                  .map(_.copy(leftoverFrame = Some(last)).addSteps(takeSteps))
-              )
+              compileContinue(currentCompiler.copy(leftoverFrame = Some(last)).addSteps(takeSteps))
+
             )
           case (Some(leftover), leadingFrames :+ last) if programCompleted =>
             // With the program completed, we send all the remaining frames
             for {
-              lastFrame <- createLastFrame(programState, last)
-            } yield
-              context.become(
-                compile(sendFrames(currentCompiler, programState, createFrames(leftover +: leadingFrames) ++ lastFrame))
-              )
+              lastFrame <- createLastFrame(currentCompiler, last)
+            } yield sendFrames(currentCompiler, createFrames(leftover +: leadingFrames) ++ lastFrame)
+            context.become(createCompile())
           case (Some(leftover), Nil) =>
             // The compiler generates no more frames, so the leftover is now the last.
             for {
-              lastFrame <- createLastFrame(programState, leftover)
-            } yield context.become(compile(sendFrames(currentCompiler, programState, lastFrame)))
+              lastFrame <- createLastFrame(currentCompiler, leftover)
+            } yield sendFrames(currentCompiler, lastFrame)
+            context.become(createCompile())
           case (Some(leftover), List(last)) =>
             // The compiler generated one more frame, and there was one leftover, send both frames
             for {
-              lastFrame <- createLastFrame(programState, last)
-            } yield
-              context.become(
-                compile(sendFrames(currentCompiler, programState, createFrames(List(leftover)) ++ lastFrame))
-              )
+              lastFrame <- createLastFrame(currentCompiler, last)
+            } yield sendFrames(currentCompiler, createFrames(List(leftover)) ++ lastFrame)
+              context.become(createCompile())
           case (None, Nil) =>
           // This case does nothing, should never happen
         }
-      }
 
     case _: CompilerHalt =>
       logger.LogInfo(className, "Compiler halted")
-      context.become(compile())
+      context.become(createCompile())
       out ! CompilerHalted()
 
     case Left(_: StatsDoneUpdating) =>
