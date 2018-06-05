@@ -25,6 +25,18 @@
   margin-bottom: 10px;
 }
 
+.user-profile-user {
+  display: flex;
+  align-items: center;
+  flex-direction: column-reverse;
+}
+
+.user-profile-user-image {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+}
+
 .text {
   opacity: 0.3;
   color: #FFFFFF;

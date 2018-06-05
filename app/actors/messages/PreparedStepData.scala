@@ -89,7 +89,7 @@ object PreparedStepData {
     s"${rawStepData.description
       .split("!!")
       .map {
-        case a if a == "[P]" => problemGen(rawStepData).problem
+        case a if a == "[P]" => problemGen(rawStepData).problem.getOrElse("0")
         case a if a == "[S]" => parseCamelCase(rawStepData.step)
         case a if a == "[L]" => parseCamelCase(rawStepData.level)
         case a if a contains "[img]" =>
