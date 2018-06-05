@@ -15,5 +15,12 @@ case class Register(holdingCell: Cell = Cell(cellType = CellType.RobotHolding),
     case _ => None
   }
 
-  def push(newElement: Element): Register = this.copy(holdingCell = this.holdingCell.push(newElement))
+  def push(newElement: Option[Element]): Register =
+    newElement match {
+      case Some(element) => this.copy(holdingCell = this.holdingCell.push(element))
+      case _ =>  this // No change
+    }
+
+  def peek() : Option[Element] = holdingCell.contents.headOption
+
 }
