@@ -40,6 +40,14 @@
 }
 
 @media only screen and (max-width : 1280px) {
+  .instructions-robot-container {
+    height: 90px;
+  }
+
+  .return-to-profile {
+    height: 120px;
+  }
+
   .instructions-filler-left {
     width: 250px;
   }

@@ -358,6 +358,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getCurrentUser: state => state.currentUser,
     getStepData: state => state.stepData,
     getSplashScreenShowing: state => state.splashScreenShowing,
     getPointerPosition: state => state.pointerPosition,
