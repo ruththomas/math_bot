@@ -1,7 +1,6 @@
 import api from './api'
 import Robot from './RobotState'
 import GridAnimator from './GridAnimator'
-import utils from './utils'
 
 class RunCompiled extends GridAnimator {
   constructor (context) {
@@ -34,8 +33,7 @@ class RunCompiled extends GridAnimator {
       this._mainEmptyMessage()
     } else if (this.robot.state !== 'paused') {
       this.robot.setState('running')
-      this._askCompiler()
-      utils.watcher(() => !this.robotFrames.length, this._processFrames)
+      this._askCompiler(this._processFrames)
     } else {
       this.robot.setState('running')
       this._processFrames()
@@ -172,9 +170,10 @@ class RunCompiled extends GridAnimator {
     run(current)
   }
 
-  _askCompiler () {
+  _askCompiler (startRunning) {
     api.compilerWebSocket.compileWs({context: this, problem: this.stepData.problem.encryptedProblem}, (compiled) => {
       this.robotFrames = this.robotFrames.concat(compiled.frames)
+      if (startRunning) startRunning()
     })
   }
 }
