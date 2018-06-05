@@ -4,7 +4,9 @@
       <img :src="permanentImages.instructionsRobot">
     </div>
     <div class="user-profile-controls-text-container">
-      <div class="user-profile-user-name text">{{currentUser.name}}</div>
+      <div class="user-profile-user">
+        <div class="user-profile-user-name text">{{currentUser.name}}</div>
+      </div>
       <mathbot-header :font-size="headerFont" :line-height="headerFont + 2"></mathbot-header>
       <div class="user-profile-controls-text-footer">
         <div class="text nav-links about" @click="gotoMarketing">About</div>
