@@ -2,7 +2,7 @@
   position: relative;
   width: 670px;
   height: 721px;
-  /*border: 1px solid teal;*/
+  //border: 1px solid teal;
 }
 
 .planet {
@@ -47,8 +47,40 @@
   left: 5%;
 }
 
-@media only screen and (max-width : 992px) {
+@media only screen and (max-width : 1280px) {
+  .space {
+    margin: 0;
+    width: 670px;
+    height: 500px;
+  }
 
+  .planet1 {
+    left: 10%;
+    height: 220px;
+    width: 220px;
+  }
+
+  .planet2 {
+    top: 0;
+    height: 173px;
+    width: 173px;
+  }
+
+  .planet3 {
+    top: 40%;
+    height: 185px;
+    width: 185px;
+  }
+
+  .planet4 {
+    height: 153px;
+    width: 153px;
+  }
+
+  .planet5 {
+    height: 140px;
+    width: 140px;
+  }
 }
 
 /* Small Devices */
