@@ -25,7 +25,19 @@ object Cell {
   }
 
   def pickupItem(cell: Option[Cell]): Option[(Option[Cell], Option[Element])] = cell match {
-    case Some(existingCell) => Some(existingCell.pop())
+    case Some(existingCell) =>
+      Some(existingCell.pop())
     case None => None
   }
+}
+
+case class CellChange(location : Point, contents: List[Element], cellCleared: Boolean)
+
+object CellChange {
+  def apply(robotLocation : Point, changedCell : Option[Cell]) : CellChange =
+    CellChange(
+      location = robotLocation,
+      contents = changedCell.map(_.contents).getOrElse(List.empty[Element]),
+      cellCleared = !changedCell.isDefined
+    )
 }
