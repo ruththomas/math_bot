@@ -6,6 +6,8 @@ import Robot from '@/components/Robot'
 import Profile from '@/components/Profile'
 import Marketing from '@/components/marketing/Marketing'
 
+import 'jquery-beacons/dist/jquery-beacons.min'
+
 Vue.use(Router)
 Vue.use(VueResource)
 Vue.use(Sortable)

@@ -193,7 +193,7 @@ export default {
     },
     toggleFunctionAdd (evt) {
       this.commandEvt = evt
-      this.togglePopoverBucket({show: this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction'})
+      this.togglePopoverBucket({ind: -1, show: this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction'})
     },
     closeFunctionBox () {
       this.commandEvt = null
@@ -226,7 +226,6 @@ export default {
       })
     },
     moveSwiper (direction) {
-      this.closeFunctionBox()
       const $functions = $('.functions')
       const $functionBoxes = $functions.children()
       if ($functionBoxes.length) {
