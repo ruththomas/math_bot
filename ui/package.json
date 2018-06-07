@@ -34,6 +34,7 @@
     "fs": "0.0.1-security",
     "identicon.js": "^2.1.0",
     "jquery": "^3.2.1",
+    "jquery-beacons": "^2.0.0",
     "jquery-watch": "^1.21.0",
     "mathjs": "^3.13.3",
     "md5": "^2.2.1",
