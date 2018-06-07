@@ -4,10 +4,13 @@
       <img :src="permanentImages.instructionsRobot">
     </div>
     <div class="user-profile-controls-text-container">
+      <div class="user-profile-user">
+        <div class="user-profile-user-name text">{{currentUser.name}}</div>
+      </div>
       <mathbot-header :font-size="headerFont" :line-height="headerFont + 2"></mathbot-header>
       <div class="user-profile-controls-text-footer">
-        <div class="text about" @click="gotoMarketing">About</div>
-        <div class="text sign-out" v-if="auth !== null" @click="auth.logout()">Sign Out</div>
+        <div class="text nav-links about" @click="gotoMarketing">About</div>
+        <div class="text nav-links sign-out" v-if="auth !== null" @click="auth.logout()">Sign Out</div>
       </div>
     </div>
   </div>
@@ -18,6 +21,12 @@ import MathbotHeader from './Mathbot_header'
 export default {
   name: 'user_profile_controls',
   computed: {
+    currentUser () {
+      return this.$store.getters.getCurrentUser
+    },
+    auth () {
+      return this.$store.getters.getAuth
+    },
     windowWidth () {
       return window.innerWidth
     },
@@ -37,8 +46,8 @@ export default {
   components: {
     MathbotHeader
   },
-  props: ['auth', 'permanentImages']
+  props: ['permanentImages']
 }
 </script>
 
-<style scoped src="../css/scoped/userProfileControls.css"></style>
+<style scoped src="../css/scoped/userProfileControls.scss" lang="scss"></style>

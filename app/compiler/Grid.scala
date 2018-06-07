@@ -65,16 +65,29 @@ case class Grid(
     case None => this.copy(grid = this.grid - robotLocation.asTuple)
   }
 
-  def setItemDown(newElement: Element): Grid =
-    updateCurrentCell(Some(Cell.setItemDown(grid.get(robotLocation.asTuple), newElement)))
+  def setItemDown(newElement: Element): (Grid, CellChange) = {
+    val updatedCell = Some(Cell.setItemDown(grid.get(robotLocation.asTuple), newElement))
 
-  def pickupItem(): (Grid, Option[Element]) = {
+    (updateCurrentCell(updatedCell), CellChange(robotLocation, updatedCell))
+  }
+
+  def pickupItem(): (Grid, Option[CellChange], Option[Element]) = {
     val existingElementsAtRobotLocation = Cell.pickupItem(grid.get(robotLocation.asTuple))
 
     existingElementsAtRobotLocation match {
-      case Some((cell, Some(element))) => (updateCurrentCell(cell), Some(element))
-      case Some((cell, None)) => (updateCurrentCell(cell), None)
-      case None => (this, None)
+      case Some((cell, Some(element))) =>
+        (updateCurrentCell(cell), Some(CellChange(robotLocation, cell)), Some(element))
+      case Some((cell, None)) => (updateCurrentCell(cell), Some(CellChange(robotLocation, None)), None)
+      case None => (this, None, None)
     }
+  }
+
+  def applyChangeCell(cellChange: CellChange): Grid = {
+    this.copy(
+      grid = Map(
+        (cellChange.location.x, cellChange.location.y) -> Cell(cellType = CellType.EmptySpace,
+          contents = cellChange.contents)
+      )
+    )
   }
 }

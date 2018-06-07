@@ -19,7 +19,7 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
     (operation.getColor(), state.currentRegister.holdingCell.contents.headOption.map(v => v.color)) match {
       case (Some("grey"), Some(_)) => true
       case (Some(opColor), Some(botColor)) => opColor == botColor
-      case (Some(opColor), None) => false
+      case (Some(_), None) => false
       case (None, _) => true
     }
 
@@ -47,36 +47,43 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
       state.currentRegister = Register()
       Frame(operation, state.currentRegister, state.currentGrid)
 
-    case PickUpItem(color) =>
-      val boardAndBox = state.currentGrid.pickupItem()
-      state.currentRegister =
-        boardAndBox._2.map(box => state.currentRegister.push(box)).getOrElse(state.currentRegister).clearAnimation()
-      state.currentGrid = boardAndBox._1
-      Frame(operation, state.currentRegister, boardAndBox._1, Some(state.currentGrid.getRobotLocation))
+    case PickUpItem(_) =>
+        val (grid, change, item) = state.currentGrid.pickupItem()
+        state.currentRegister = state.currentRegister.push(item)
+        state.currentGrid = grid
+        Frame(operation, state.currentRegister, grid, Some(state.currentGrid.getRobotLocation), change)
 
-    case SetItemDown(color) =>
-      val registerAndBox = state.currentRegister.pop()
-      state.currentGrid = registerAndBox.map(v => state.currentGrid.setItemDown(v._2)).getOrElse(state.currentGrid)
-      state.currentRegister = registerAndBox.map(_._1).getOrElse(state.currentRegister).clearAnimation()
-      Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
-
-    case ChangeRobotDirection(color) =>
-      state.currentGrid = state.currentGrid.changeDirection()
-      state.currentRegister = state.currentRegister.clearAnimation()
-      Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
-
-    case MoveRobotForwardOneSpot(color) =>
-      state.currentGrid.moveRobotForwardOneSpot() match {
-        case Some(grid) => {
-          state.currentGrid = grid
-          state.currentRegister = state.currentRegister.clearAnimation()
-          Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+    case SetItemDown(_) =>
+        state.currentRegister.pop() match {
+          case Some((register, element)) =>
+            val (grid, change) = state.currentGrid.setItemDown(element)
+            state.currentRegister = register.clearAnimation()
+            state.currentGrid = grid
+            Frame(operation,
+                  state.currentRegister,
+                  state.currentGrid,
+                  Some(state.currentGrid.getRobotLocation),
+                  Some(change))
+          case None =>
+            state.currentRegister = state.currentRegister.clearAnimation()
+            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation), None)
         }
-        case None => {
-          state.currentRegister = state.currentRegister.copy(animation = Some(AnimationType.Bumped))
-          Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+
+    case ChangeRobotDirection(_) =>
+        state.currentGrid = state.currentGrid.changeDirection()
+        state.currentRegister = state.currentRegister.clearAnimation()
+        Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+
+    case MoveRobotForwardOneSpot(_) =>
+        state.currentGrid.moveRobotForwardOneSpot() match {
+          case Some(grid) =>
+            state.currentGrid = grid
+            state.currentRegister = state.currentRegister.clearAnimation()
+            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+          case None =>
+            state.currentRegister = state.currentRegister.copy(animation = Some(AnimationType.Bumped))
+            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
         }
-      }
 
     case _ => Frame(operation, state.currentRegister, state.currentGrid)
   }
