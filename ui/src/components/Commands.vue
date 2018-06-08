@@ -3,7 +3,7 @@
 
     <popover-bucket
       v-if="commandEvt !== null"
-      :evt="commandEvt"
+      :evt="evt"
     ></popover-bucket>
 
     <div class="command-control-button-group">
@@ -78,6 +78,9 @@ export default {
     })
   },
   computed: {
+    evt () {
+      return this.commandEvt
+    },
     mainFunctionFunc () {
       return this.$store.getters.getMainFunction.func
     },

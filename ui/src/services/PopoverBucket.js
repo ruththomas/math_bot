@@ -1,52 +1,63 @@
 class PopoverBucket {
-  constructor (context) {
+  constructor (context, target) {
     this.context = context
     this.editingIndex = this.context.$store.getters.getEditingIndex
     this.$pointer = $('.pointer')
 
-    if (this.editingIndex > -1) {
-      this.$functions = $('.functions')
-      this.startScrollTop = this.$functions.scrollTop()
-      this._handleVisibility = this._handleVisibility.bind(this)
-      this._handleVisibility()
-    } else {
-      this.$selected = () => $('#open-staged')
-    }
+    this.$selected = $(target)
+    this.$selectedPosition = this.$selected.position()
+    this.$selectedWidth = this.$selected.width()
+    this._updatePointerPosition()
 
-    if (this.editingIndex !== null) {
-      this.$selectedPosition = this.$selected().position()
-      this.$selectedWidth = this.$selected().width()
-      this._updatePointerPosition()
-    }
+    this.$functions = $('.functions')
+    this.startScrollTop = this.$functions.scrollTop()
+
+    this.watcherRunning = true
+    this._handlePointerVisibility = this._handlePointerVisibility.bind(this)
+    this._handlePointerVisibility()
   }
 
-  $selected () {
-    this.functionsChildren = this.$functions.children()
-    return $(this.functionsChildren[this.editingIndex])
+  killBucket () {
+    this.watcherRunning = false
+  }
+
+  updateTarget (context, target) {
+    this.constructor(context, target)
   }
 
   _updatePointerPosition () {
     let left = this.$selectedPosition.left
     const pointerWidth = this.$pointer.width()
 
-    left += ((this.$selectedWidth / 2) - (pointerWidth / 2))
+    if (this.$selected.attr('id') === 'open-staged') {
+      left += ((this.$selectedWidth) / 2) - (pointerWidth / 2)
+    } else {
+      left += ((this.$selectedWidth / 2) - (pointerWidth / 4))
+    }
 
     this.$pointer.css({left: left})
   }
 
+  _hidePointer () {
+    this.$pointer.addClass('pointer-hidden')
+  }
+
+  _showPointer () {
+    this.$pointer.removeClass('pointer-hidden')
+  }
+
   _togglePointer (show) {
     if (show) {
-      this.$pointer.addClass('pointer-hidden')
+      this._showPointer()
     } else {
-      this.$pointer.removeClass('pointer-hidden')
+      this._hidePointer()
     }
   }
 
-  _handleVisibility () {
+  _handlePointerVisibility () {
     const scrollTop = this.$functions.scrollTop()
-    this._togglePointer(scrollTop !== this.startScrollTop)
-    const functionAreaShowing = this.context.$store.getters.getFunctionAreaShowing === 'editFunction'
-    if (functionAreaShowing) return setTimeout(this._handleVisibility, 100)
+    this._togglePointer(scrollTop === this.startScrollTop)
+    if (this.watcherRunning) setTimeout(this._handlePointerVisibility, 100)
   }
 }
 
