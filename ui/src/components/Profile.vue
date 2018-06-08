@@ -12,12 +12,10 @@
 import SplashScreen from './Splash_screen'
 import Arithmetic from './Arithmetic'
 import UserProfileControls from './User_profile_controls'
-const farFromPerfect = require('../hiddenControls') || {default: () => {}}
 export default {
   mounted () {
     this.$store.dispatch('updateStepData', {})
     this.$store.dispatch('updateRobot', {})
-    setTimeout(farFromPerfect.default, 500)
   },
   computed: {
     auth () {
