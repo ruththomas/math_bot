@@ -1,25 +1,63 @@
 class PopoverBucket {
-  constructor (context) {
+  constructor (context, target) {
     this.context = context
-    this.pointerPosition = 0
-    this.style = null
-    this._makeStyle()
+    this.editingIndex = this.context.$store.getters.getEditingIndex
+    this.$pointer = $('.pointer')
+
+    this.$selected = $(target)
+    this.$selectedPosition = this.$selected.position()
+    this.$selectedWidth = this.$selected.width()
+    this._updatePointerPosition()
+
+    this.$functions = $('.functions')
+    this.startScrollTop = this.$functions.scrollTop()
+
+    this.watcherRunning = true
+    this._handlePointerVisibility = this._handlePointerVisibility.bind(this)
+    this._handlePointerVisibility()
   }
 
-  updatePointerPosition () {
-    const editingIndex = this.context.$store.getters.getEditingIndex
-    if (typeof editingIndex === 'number') {
-      const $functions = $('.functions')
-      const $clicked = $($functions.children()[editingIndex])
-      this.pointerPosition = $clicked.offset().left - 25
-    } else if (editingIndex !== null) {
-      this.pointerPosition = $('.open-staged').offset().left - 25
+  killBucket () {
+    this.watcherRunning = false
+  }
+
+  updateTarget (context, target) {
+    this.constructor(context, target)
+  }
+
+  _updatePointerPosition () {
+    let left = this.$selectedPosition.left
+    const pointerWidth = this.$pointer.width()
+
+    if (this.$selected.attr('id') === 'open-staged') {
+      left += ((this.$selectedWidth) / 2) - (pointerWidth / 2)
+    } else {
+      left += ((this.$selectedWidth / 2) - (pointerWidth / 4))
     }
-    this._makeStyle()
+
+    this.$pointer.css({left: left})
   }
 
-  _makeStyle () {
-    this.style = {'margin-left': this.pointerPosition + 'px'}
+  _hidePointer () {
+    this.$pointer.addClass('pointer-hidden')
+  }
+
+  _showPointer () {
+    this.$pointer.removeClass('pointer-hidden')
+  }
+
+  _togglePointer (show) {
+    if (show) {
+      this._showPointer()
+    } else {
+      this._hidePointer()
+    }
+  }
+
+  _handlePointerVisibility () {
+    const scrollTop = this.$functions.scrollTop()
+    this._togglePointer(scrollTop === this.startScrollTop)
+    if (this.watcherRunning) setTimeout(this._handlePointerVisibility, 100)
   }
 }
 
