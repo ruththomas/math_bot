@@ -18,26 +18,3 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-
-.secretTools {
-  width: 100%;
-  display: flex;
-  left: 0;
-  position: absolute;
-  z-index: 10000;
-}
-
-.secretTools {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.secretTools > button {
-  width: 50%;
-  outline: none;
-  background: transparent;
-  border: none;
-  color: transparent;
-  cursor: default;
-}
