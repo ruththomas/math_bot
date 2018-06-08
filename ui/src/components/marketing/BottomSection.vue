@@ -22,7 +22,7 @@ export default {
   #Marketing-bottom-section {
     grid-area: bottomsection;
     /* Create the parallax scrolling effect */
-    background: url("http://res.cloudinary.com/doohickey/image/upload/v1521748894/Header_Background_xlmkkt.png") no-repeat fixed 0 0;
+    background: url("https://res.cloudinary.com/doohickey/image/upload/v1521748894/Header_Background_xlmkkt.png") no-repeat fixed 0 0;
     background-size: cover;
 
     padding: 100px 0 100px 0;
