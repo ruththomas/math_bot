@@ -22,9 +22,7 @@ import PopoverBucket from '../services/PopoverBucket'
 
 export default {
   mounted () {
-    if (this.editingIndex !== null) {
-      this.popoverBucket = new PopoverBucket(this)
-    }
+    this.popoverBucket = new PopoverBucket(this, this.target)
   },
   computed: {
     editingIndex () {
@@ -32,23 +30,23 @@ export default {
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    }
-  },
-  watch: {
-    editingIndex (ind) {
-      if (ind !== null) {
-        this.popoverBucket = new PopoverBucket(this)
-      }
+    },
+    target () {
+      return this.evt.target
     }
   },
   updated () {
-    if (this.editingIndex !== null) {
-      this.popoverBucket = new PopoverBucket(this)
+    if (this.functionAreaShowing === 'editFunction' || this.functionAreaShowing === 'addFunction') this.popoverBucket.updateTarget(this, this.target)
+    else this.popoverBucket.killBucket()
+  },
+  watch: {
+    target (target) {
+      this.popoverBucket.updateTarget(this, target)
     }
   },
   data () {
     return {
-      popoverBucket: {}
+      popoverBucket: null
     }
   },
   components: {
