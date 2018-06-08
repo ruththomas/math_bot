@@ -32,14 +32,14 @@ export default {
   data () {
     return {
       imgResources: {
-        'mathBotLogo': 'http://res.cloudinary.com/doohickey/image/upload/v1521989155/Logo_yplcxn.svg',
-        'planetOne': 'http://res.cloudinary.com/doohickey/image/upload/v1521989169/noun_727334_cc_l5lza9.svg',
-        'planetTwo': 'http://res.cloudinary.com/doohickey/image/upload/v1521989163/noun_727330_cc_eerpfh.svg',
-        'planetThree': 'http://res.cloudinary.com/doohickey/image/upload/v1521989166/noun_727331_cc_hpgvzl.svg',
-        'planetFour': 'http://res.cloudinary.com/doohickey/image/upload/v1521989160/noun_727327_cc_fhbmzh.svg',
-        'planetFive': 'http://res.cloudinary.com/doohickey/image/upload/c_scale,w_100/v1522344876/planet_p_ddnulv.png',
-        'spaceShip': 'http://res.cloudinary.com/doohickey/image/upload/v1521989176/noun_1018446_cc_zvq5px.svg',
-        'archedLine': 'http://res.cloudinary.com/doohickey/image/upload/v1521989179/Path_2_ggddw3.svg'
+        'mathBotLogo': 'https://res.cloudinary.com/doohickey/image/upload/v1521989155/Logo_yplcxn.svg',
+        'planetOne': 'https://res.cloudinary.com/doohickey/image/upload/v1521989169/noun_727334_cc_l5lza9.svg',
+        'planetTwo': 'https://res.cloudinary.com/doohickey/image/upload/v1521989163/noun_727330_cc_eerpfh.svg',
+        'planetThree': 'https://res.cloudinary.com/doohickey/image/upload/v1521989166/noun_727331_cc_hpgvzl.svg',
+        'planetFour': 'https://res.cloudinary.com/doohickey/image/upload/v1521989160/noun_727327_cc_fhbmzh.svg',
+        'planetFive': 'https://res.cloudinary.com/doohickey/image/upload/c_scale,w_100/v1522344876/planet_p_ddnulv.png',
+        'spaceShip': 'https://res.cloudinary.com/doohickey/image/upload/v1521989176/noun_1018446_cc_zvq5px.svg',
+        'archedLine': 'https://res.cloudinary.com/doohickey/image/upload/v1521989179/Path_2_ggddw3.svg'
       }
     }
   },
