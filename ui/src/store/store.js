@@ -1,31 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import _ from 'underscore'
 import VueDefaultValue from 'vue-default-value/dist/vue-default-value'
 import permanentImages from '../assets/assets'
 import Message from '../services/Message'
 import AuthService from '../services/AuthService'
+import utils from '../services/utils'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
 
+const orderEm = utils.orderEm
+
 function addMessage (state, messageBuilder) {
   const message = new Message(state, messageBuilder)
   message.add()
-}
-
-function orderEm (steps) {
-  const stepsInOrder = Object.keys(steps).filter(key => steps[key].prevStep === 'None').map(s => steps[s]);
-
-  (function ordEm () {
-    if (stepsInOrder[stepsInOrder.length - 1].nextStep === 'None') return
-
-    stepsInOrder.push(steps[stepsInOrder[stepsInOrder.length - 1].nextStep])
-
-    ordEm()
-  })()
-
-  return stepsInOrder
 }
 
 const colors = {
@@ -393,22 +381,7 @@ export default new Vuex.Store({
     getSignupLoading: state => state.signupLoading,
     getLock: state => state.lock,
     getSocket: state => state.socket,
-    getLevels: state => {
-      const levels = state.auth.userToken.stats.levels
-      const assembleLevels = _.chain(levels)
-        .map((l, k) => {
-          return [k, {
-            level: l,
-            name: k,
-            prevStep: _.find(l, v => v.prevStep === 'None').prevLevel,
-            nextStep: _.find(l, v => v.nextStep === 'None').nextLevel
-          }]
-        })
-        .object()
-        .value()
-
-      return orderEm(assembleLevels)
-    },
+    getLevels: state => utils.assembleLevels(state.auth.userToken.stats.levels),
     getStats: state => state.auth.userToken.stats,
     getStep: state => state.auth.userToken.stats.step,
     getSteps: state => orderEm(state.auth.userToken.stats.levels[state.auth.userToken.stats.level]),

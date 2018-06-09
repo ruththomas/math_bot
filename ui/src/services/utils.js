@@ -1,8 +1,35 @@
 import elementResizeEvent from 'element-resize-event'
+import _ from 'underscore'
 
-export default {
-  pulseEffect () {
+const utils = {
+  assembleLevels (levels) {
+    const assembleLevels = _.chain(levels)
+      .map((l, k) => {
+        return [k, {
+          level: l,
+          name: k,
+          prevStep: _.find(l, v => v.prevStep === 'None').prevLevel,
+          nextStep: _.find(l, v => v.nextStep === 'None').nextLevel
+        }]
+      })
+      .object()
+      .value()
 
+    return this.orderEm(assembleLevels)
+  },
+
+  orderEm (steps) {
+    const stepsInOrder = Object.keys(steps).filter(key => steps[key].prevStep === 'None').map(s => steps[s]);
+
+    (function ordEm () {
+      if (stepsInOrder[stepsInOrder.length - 1].nextStep === 'None') return
+
+      stepsInOrder.push(steps[stepsInOrder[stepsInOrder.length - 1].nextStep])
+
+      ordEm()
+    })()
+
+    return stepsInOrder
   },
 
   parseCamelCase: str => str.split('')
@@ -130,3 +157,5 @@ export default {
     }
   }
 }
+
+export default utils
