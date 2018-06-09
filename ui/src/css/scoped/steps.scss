@@ -69,7 +69,6 @@
 
 .step-image-stars {
   height: 100%;
-  /*width: 105px;*/
 }
 
 .step-image-lock {
@@ -85,17 +84,52 @@
   opacity: 0.5;
 }
 
+@media only screen and (max-width : 1280px) and (max-height: 900px) {
+  $steps-height: 90vh;
+
+  .steps {
+    height: $steps-height;
+  }
+}
+
 /* Medium Devices, Desktops */
 @media only screen and (max-width : 992px) {
+  $steps-height: 250px;
+  $steps-width: 275px;
 
+  .steps {
+    height: $steps-height;
+    width: $steps-width;
+    margin-top: 10px;
+  }
+
+  .steps-navigator-item {
+    width: 245px;
+    height: 50px;
+  }
+  .steps-header {
+    font-size: 18px;
+  }
+
+  .step-info-text {
+    font-size: 12px;
+  }
+
+  .step-image-lock {
+    height: 25px;
+    width: 21px;
+  }
 }
 
 /* Small Devices */
 @media only screen and (max-width : 736px) {
+  $steps-height: 250px;
+  $steps-width: 275px;
+
   .steps {
-    margin-top: 80px;
-    height: 390px;
-    width: 275px;
+    height: $steps-height;
+    width: $steps-width;
+    margin-top: 10px;
   }
 
   .steps-navigator-item {
@@ -118,10 +152,13 @@
 
 /* Small Devices */
 @media only screen and (max-width : 667px) {
+  $steps-height: 250px;
+  $steps-width: 230px;
+
   .steps {
-    margin-top: 60px;
-    height: 300px;
-    width: 220px;
+    height: $steps-height;
+    width: $steps-width;
+    margin-top: 10px;
   }
 
   .steps-navigator-item {
@@ -144,33 +181,30 @@
 
 /* Extra Small Devices, Phones */
 @media only screen and (max-width : 480px) {
+  $steps-height: 550px;
+  $steps-width: 150px;
+
   .steps {
-    margin-top: 0;
-    height: 400px;
-    width: 180px;
+    height: $steps-height;
+    width: $steps-width;
+    margin-top: 10px;
   }
 
   .steps-navigator-item {
-    width: 150px;
+    width: 120px;
     height: 50px;
   }
-  .steps-header {
-    font-size: 18px;
-  }
-
-  .step-info-text {
-    font-size: 12px;
-  }
-
-  .step-image-lock {}
 }
 
 /* Custom, iPhone Retina */
-@media only screen and (max-width : 320px) {
+@media only screen and (max-width : 360px) {
+  $steps-height: 400px;
+  $steps-width: 120px;
+
   .steps {
-    margin-top: 0;
-    height: 400px;
-    width: 120px;
+    height: $steps-height;
+    width: $steps-width;
+    margin-top: 10px;
   }
 
   .steps-navigator-item {
@@ -194,8 +228,13 @@
 
 /* iPad */
 @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+  $steps-height: 700px;
+  $steps-width: 270px;
+
   .steps {
-    width: 300px;
+    width: $steps-width;
+    height: $steps-height;
+    margin-top: 80px;
   }
 
   .steps-navigator-item {
@@ -203,7 +242,18 @@
   }
 }
 @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+  $steps-height: 700px;
+  $steps-width: 20px;
+
+  .steps {
+    width: $steps-width;
+    height: $steps-height;
+    margin-top: 80px;
+  }
+
   .steps-navigator-item {
-    width: 350px;
+    width: 240px;
   }
 }
+
+

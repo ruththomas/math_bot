@@ -31,9 +31,7 @@ export default {
       return window.innerWidth
     },
     headerFont () {
-      if (this.windowWidth >= 992) {
-        return 60
-      } else {
+      if (this.windowWidth < 1024) {
         return 30
       }
     }
