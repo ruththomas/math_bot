@@ -1,3 +1,14 @@
+$gradient-size: 100px;
+$outer-shadow-blur: 50px;
+$outer-shadow-size: 1px;
+$planet-1-color: rgba(202, 122, 255, 0.8);
+$planet-2-color: rgba(242, 92, 92, 0.8);
+$planet-3-color: rgba(74, 144, 226, 0.8);
+$planet-4-color: rgba(255, 152, 177, 0.8);
+$planet-5-color: rgba(80, 227, 194, 0.8);
+$planet-6-color: rgba(184, 233, 134, 0.8);
+$gradient-size: 100px;
+
 .steps {
   display: flex;
   flex-direction: column;
@@ -59,12 +70,47 @@
   text-align: left;
 }
 
+.step-info-new-level {
+  font-size: 50%;
+  text-decoration: underline;
+}
+
 .step-info-image-container {
   display: flex;
   align-items: center;
   justify-content: space-around;
   height: 100%;
   width: 133px;
+}
+
+.step-image-planet {
+  height: 100%;
+  border-radius: 50%;
+}
+
+.step-planet-1 {
+  background: radial-gradient(circle at $gradient-size $gradient-size, $planet-1-color, #000);
+  box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-1-color;
+}
+
+.step-planet-2 {
+  background: radial-gradient(circle at $gradient-size $gradient-size, $planet-2-color, #000);
+  box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-2-color;
+}
+
+.step-planet-3 {
+  background: radial-gradient(circle at $gradient-size $gradient-size, $planet-3-color, #000);
+  box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-3-color;
+}
+
+.step-planet-4 {
+  background: radial-gradient(circle at $gradient-size $gradient-size, $planet-4-color, #000);
+  box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-4-color;
+}
+
+.step-planet-5 {
+  background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, #000);
+  box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-5-color;
 }
 
 .step-image-stars {

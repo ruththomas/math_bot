@@ -22,6 +22,25 @@
             :src="step.active ? permanentImages.stars[step.stars] : permanentImages.lock">
         </div>
       </div>
+      <div
+        v-if="steps[steps.length - 1].stars > 0"
+        class="steps-navigator-item step-active"
+        @click="goToRobot(nextLevel.name, nextLevel.firstStep)">
+        <div class="step-info-text-container">
+          <div class="step-info-text">
+            <span class="step-info-new-level">Next planet!</span>
+            {{parseCamelCase(nextLevel.name)}}
+          </div>
+        </div>
+        <div class="step-info-image-container">
+          <img
+            class="step-image step-image-planet"
+            :class="`step-${nextLevel.planetClass}`"
+            :src="permanentImages.planets[nextLevel.planet]"
+            alt="Image of a planet"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -45,8 +64,24 @@ export default {
     level () {
       return this.$store.getters.getLevel
     },
+    levels () {
+      return this.$store.getters.getLevels
+    },
     steps () {
       return this.$store.getters.getSteps
+    },
+    nextLevel () {
+      const name = this.steps[this.steps.length - 1].nextLevel
+      let planetNumber = 0
+      const nextLevelData = {}
+      nextLevelData.name = name
+      nextLevelData.firstStep = this.findFirstStep(this.levels.find((level, index) => {
+        planetNumber = index + 1
+        return level.name === name
+      }))
+      nextLevelData.planet = `planet${planetNumber}`
+      nextLevelData.planetClass = `planet-${planetNumber}`
+      return nextLevelData
     },
     tokenId () {
       return this.$store.getters.getTokenId
@@ -54,6 +89,10 @@ export default {
   },
   methods: {
     parseCamelCase: utils.parseCamelCase,
+    findFirstStep (level) {
+      const levelSteps = utils.orderEm(level.level)[0].name
+      return levelSteps
+    },
     goToRobot (level, step) {
       api.switchLevel({tokenId: this.tokenId, level: level, step: step}, (res) => {
         this.$store.dispatch('updateStats', res.body)
