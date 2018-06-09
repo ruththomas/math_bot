@@ -11,7 +11,9 @@ export default {
     const $mathbotHeader = $('.mathbot-header')
 
     if (this.fontSize) {
-      $mathbotHeader.css({'font-size': `${this.fontSize}px`})
+      if (this.fontSize) {
+        $mathbotHeader.css({'font-size': `${this.fontSize}px`})
+      }
     }
 
     if (this.lineHeight) {

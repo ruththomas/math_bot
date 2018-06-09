@@ -55,8 +55,6 @@ export default {
   methods: {
     parseCamelCase: utils.parseCamelCase,
     goToRobot (level, step) {
-      console.log(level)
-      console.log(step)
       api.switchLevel({tokenId: this.tokenId, level: level, step: step}, (res) => {
         this.$store.dispatch('updateStats', res.body)
         this.$router.push({path: '/robot'})
