@@ -28,6 +28,7 @@
 
 <script>
 import utils from '../services/utils'
+import api from '../services/api'
 
 export default {
   name: 'steps',
@@ -40,12 +41,29 @@ export default {
         Recursion: 'Planet 4'
       }
       return planets[this.level]
+    },
+    level () {
+      return this.$store.getters.getLevel
+    },
+    steps () {
+      return this.$store.getters.getSteps
+    },
+    tokenId () {
+      return this.$store.getters.getTokenId
     }
   },
   methods: {
-    parseCamelCase: utils.parseCamelCase
+    parseCamelCase: utils.parseCamelCase,
+    goToRobot (level, step) {
+      console.log(level)
+      console.log(step)
+      api.switchLevel({tokenId: this.tokenId, level: level, step: step}, (res) => {
+        this.$store.dispatch('updateStats', res.body)
+        this.$router.push({path: '/robot'})
+      })
+    }
   },
-  props: ['level', 'steps', 'permanentImages', 'goToRobot']
+  props: ['permanentImages']
 }
 </script>
 
