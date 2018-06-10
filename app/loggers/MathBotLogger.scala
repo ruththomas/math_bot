@@ -11,5 +11,5 @@ class MathBotLogger {
 
   def LogInfo(who: String, msg: String) = logger(who).info(msg)
 
-  def LogDebug(who: String, msg: String) = logger(who).info(msg)
+  def LogDebug(who: String, msg: String) = logger(who).debug(msg)
 }

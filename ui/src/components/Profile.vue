@@ -2,7 +2,10 @@
   <div class="profile-container">
     <splash-screen v-if="!auth.authenticated"></splash-screen>
     <div v-else class="profile" data-aos="fade-in">
-      <arithmetic></arithmetic>
+      <div class="profile-action">
+        <space :permanent-images="permanentImages"></space>
+        <steps :permanent-images="permanentImages"></steps>
+      </div>
       <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
     </div>
   </div>
@@ -10,8 +13,10 @@
 
 <script>
 import SplashScreen from './Splash_screen'
-import Arithmetic from './Arithmetic'
 import UserProfileControls from './User_profile_controls'
+import Steps from './Steps'
+import Space from './Space'
+
 export default {
   mounted () {
     this.$store.dispatch('updateStepData', {})
@@ -32,12 +37,24 @@ export default {
     },
     stats () {
       return this.$store.getters.getStats
+    },
+    currentUserName () {
+      let currentUser = this.$store.getters.getCurrentUser
+      if (currentUser === null) {
+        return 'Profile'
+      } else {
+        return currentUser.given_name || currentUser.nickname
+      }
+    },
+    step () {
+      return this.$store.getters.getStep
     }
   },
   components: {
-    Arithmetic,
     SplashScreen,
-    UserProfileControls
+    UserProfileControls,
+    Steps,
+    Space
   }
 }
 </script>

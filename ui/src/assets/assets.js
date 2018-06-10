@@ -114,24 +114,11 @@ module.exports = {
     0: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348066/stars/stars-0_jlw3en.png'
   },
   planets: {
-    selected1: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344124/planets/selectedPlanet4.png',
-    selected2: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344140/planets/selectedPlanet5.png',
-    selected3: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344146/planets/selectedPlanet3.png',
-    selected4: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344146/planets/selectedPlanet1.png',
-    selected5: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344140/planets/selectedPlanet2.png',
-    selected6: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344128/planets/selectedPlanet6.png',
-    active1: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344125/planets/activePlanet4.png',
-    active2: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344131/planets/activePlanet5.png',
-    active3: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344122/planets/activePlanet3.png',
-    active4: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344131/planets/activePlanet2.png',
-    active5: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344135/planets/activePlanet1.png',
-    active6: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344129/planets/activePlanet6.png',
-    inactive1: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344142/planets/inactivePlanet4.png',
-    inactive2: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344146/planets/inactivePlanet5.png',
-    inactive3: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344145/planets/inactivePlanet3.png',
-    inactive4: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344131/planets/inactivePlanet2.png',
-    inactive5: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344144/planets/inactivePlanet1.png',
-    inactive6: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522344135/planets/inactivePlanet6.png'
+    planet1: 'https://res.cloudinary.com/doohickey/image/upload/v1528476678/planet-1_otshkt.png',
+    planet2: 'https://res.cloudinary.com/doohickey/image/upload/v1528476494/planet-2_za8zja.png',
+    planet3: 'https://res.cloudinary.com/doohickey/image/upload/v1528476209/planet-3_ehflik.png',
+    planet4: 'https://res.cloudinary.com/doohickey/image/upload/v1528476786/planet-4_mgoqir.png',
+    planet5: 'https://res.cloudinary.com/doohickey/image/upload/v1528476931/planet-5_va9bvg.png'
   },
   buttons: {
     playButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342823/buttons/Play_Button.png',
