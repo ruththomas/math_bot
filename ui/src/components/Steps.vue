@@ -23,7 +23,7 @@
         </div>
       </div>
       <div
-        v-if="steps[steps.length - 1].stars > 0"
+        v-if="steps[steps.length - 1].stars > 0 && nextLevel !== 'None'"
         class="steps-navigator-item step-active"
         @click="goToRobot(nextLevel.name, nextLevel.firstStep)">
         <div class="step-info-text-container">
@@ -72,16 +72,20 @@ export default {
     },
     nextLevel () {
       const name = this.steps[this.steps.length - 1].nextLevel
-      let planetNumber = 0
-      const nextLevelData = {}
-      nextLevelData.name = name
-      nextLevelData.firstStep = this.findFirstStep(this.levels.find((level, index) => {
-        planetNumber = index + 1
-        return level.name === name
-      }))
-      nextLevelData.planet = `planet${planetNumber}`
-      nextLevelData.planetClass = `planet-${planetNumber}`
-      return nextLevelData
+      if (name === 'None') {
+        return 'None'
+      } else {
+        let planetNumber = 0
+        const nextLevelData = {}
+        nextLevelData.name = name
+        nextLevelData.firstStep = this.findFirstStep(this.levels.find((level, index) => {
+          planetNumber = index + 1
+          return level.name === name
+        }))
+        nextLevelData.planet = `planet${planetNumber}`
+        nextLevelData.planetClass = `planet-${planetNumber}`
+        return nextLevelData
+      }
     },
     tokenId () {
       return this.$store.getters.getTokenId

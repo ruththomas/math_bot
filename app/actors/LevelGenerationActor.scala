@@ -233,7 +233,7 @@ class LevelGenerationActor()(val reactiveMongoApi: ReactiveMongoApi, logger: Mat
                 .map(d => d._1.copy(index = Some(d._2))),
               main =
                 if (rawStepData.clearMain) playerToken.lambdas.get.main.copy(func = Some(List.empty[FuncToken]))
-                else playerToken.lambdas.get.main
+                else playerToken.lambdas.get.main.copy(func = Some(playerToken.lambdas.get.main.func.get.take(rawStepData.mainMax)))
             )
 
             // Update db with new token

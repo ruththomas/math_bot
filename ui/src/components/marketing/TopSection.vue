@@ -54,7 +54,7 @@ export default {
   #Marketing-top-section {
     grid-area: topsection;
     /* Create the parallax scrolling effect */
-    background: url("http://res.cloudinary.com/doohickey/image/upload/v1521748894/Header_Background_xlmkkt.png") no-repeat fixed center;
+    background: url("https://res.cloudinary.com/doohickey/image/upload/v1521748894/Header_Background_xlmkkt.png") no-repeat fixed center;
     background-size: cover;
 
     padding: 100px 0 100px 0;
