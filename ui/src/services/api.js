@@ -83,7 +83,7 @@ export default {
   * @response.body = state property of JWT
   * */
   switchLevel ({tokenId, level, step}, cb) {
-    Vue.http.get('/api/stats/switch/' + urlEncode(tokenId) + '/' + level + '/' + step)
+    Vue.http.get('/api/stats/switch/' + urlEncode(tokenId) + '/' + level + '/' + step || '')
       .then(res => cb(res))
       .catch(console.error)
   },

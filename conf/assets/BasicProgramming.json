@@ -28,7 +28,7 @@
       ],
       "specialParameters": [],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": ["Walk"],
       "prevStep": "None",
       "nextStep": "WalkThree"
@@ -57,7 +57,7 @@
       ],
       "specialParameters": [],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": ["Walk"],
       "prevStep": "WalkOne",
       "nextStep": "WalkFour"
@@ -86,7 +86,7 @@
       ],
       "specialParameters": [],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": ["Walk"],
       "prevStep": "WalkThree",
       "nextStep": "WalkFourWithFunction"
@@ -124,7 +124,7 @@
         "functionRequired"
       ],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": ["rocket"],
       "prevStep": "WalkFour",
       "nextStep": "EditFirstFunction"
@@ -185,7 +185,7 @@
       ],
       "specialParameters": [],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": ["Turn Right"],
       "prevStep": "EditFirstFunction",
       "nextStep": "CreateNewFunction"
@@ -219,7 +219,7 @@
         "functionRequired"
       ],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": ["open-staged"],
       "prevStep": "TurnRight",
       "nextStep": "TurnLeft"
@@ -253,7 +253,7 @@
         "functionRequired"
       ],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": ["open-staged"],
       "prevStep": "Uturn",
       "nextStep": "WalkAndTurn"
@@ -283,7 +283,7 @@
       ],
       "specialParameters": [],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": [],
       "prevStep": "TurnLeft",
       "nextStep": "WalkAndTurnWithFunctions"
@@ -315,7 +315,7 @@
         "functionRequired"
       ],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": ["rocket"],
       "prevStep": "WalkAndTurn",
       "nextStep": "Maze1"
@@ -347,7 +347,7 @@
         "functionRequired"
       ],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": [],
       "prevStep": "WalkAndTurnWithFunctions",
       "nextStep": "Maze2"
@@ -379,7 +379,7 @@
         "functionRequired"
       ],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": [],
       "prevStep": "Maze1",
       "nextStep": "Maze3"
@@ -411,7 +411,7 @@
         "functionRequired"
       ],
       "problem": "0",
-      "clearMain": true,
+      "clearMain": false,
       "initFocus": [],
       "prevStep": "Maze2",
       "nextStep": "None"

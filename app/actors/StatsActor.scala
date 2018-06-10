@@ -141,14 +141,12 @@ class StatsActor @Inject()(val system: ActorSystem, val reactiveMongoApi: Reacti
         }
         .pipeTo(self)(sender)
     case ChangeLevel(tokenId, level, step) =>
-      getToken(tokenId)
-        .map {
-          case Some(token) =>
-            UpdatePlayerToken(token.copy(stats = Some(token.stats.get.copy(level, step))))
-          case None => ActorFailed(s"No token found with token_id $tokenId.")
-        }
-        .pipeTo(self)(sender)
-
+      getToken(tokenId).map {
+        case Some(token) =>
+          UpdatePlayerToken(token.copy(stats = Some(token.stats.get.copy(level, step))))
+        case None => ActorFailed(s"No token found with token_id $tokenId.")
+      }
+      .pipeTo(self)(sender)
     case updatePlayerToken: UpdatePlayerToken =>
       updateToken(updatePlayerToken.playerToken)
         .map { pt =>
