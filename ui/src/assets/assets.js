@@ -114,11 +114,11 @@ module.exports = {
     0: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348066/stars/stars-0_jlw3en.png'
   },
   planets: {
-    planet1: 'http://res.cloudinary.com/doohickey/image/upload/v1528476678/planet-1_otshkt.png',
-    planet2: 'http://res.cloudinary.com/doohickey/image/upload/v1528476494/planet-2_za8zja.png',
-    planet3: 'http://res.cloudinary.com/doohickey/image/upload/v1528476209/planet-3_ehflik.png',
-    planet4: 'http://res.cloudinary.com/doohickey/image/upload/v1528476786/planet-4_mgoqir.png',
-    planet5: 'http://res.cloudinary.com/doohickey/image/upload/v1528476931/planet-5_va9bvg.png'
+    planet1: 'https://res.cloudinary.com/doohickey/image/upload/v1528476678/planet-1_otshkt.png',
+    planet2: 'https://res.cloudinary.com/doohickey/image/upload/v1528476494/planet-2_za8zja.png',
+    planet3: 'https://res.cloudinary.com/doohickey/image/upload/v1528476209/planet-3_ehflik.png',
+    planet4: 'https://res.cloudinary.com/doohickey/image/upload/v1528476786/planet-4_mgoqir.png',
+    planet5: 'https://res.cloudinary.com/doohickey/image/upload/v1528476931/planet-5_va9bvg.png'
   },
   buttons: {
     playButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342823/buttons/Play_Button.png',
