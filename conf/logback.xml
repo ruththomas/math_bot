@@ -40,4 +40,5 @@
     <appender-ref ref="ASYNCSTDOUT" />
   </root>
 
+  <logger name="akka.actor" level="INFO" />
 </configuration>
