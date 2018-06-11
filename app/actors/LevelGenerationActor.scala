@@ -160,7 +160,7 @@ class LevelGenerationActor()(val reactiveMongoApi: ReactiveMongoApi, logger: Mat
             lambdas <- playerToken.lambdas
             mainFunc <- lambdas.main.func
             newMainFunc = if (rawStepData.clearMain) List.empty[FuncToken] else mainFunc
-            newMain = lambdas.main.copy(func = Some(newMainFunc))
+            newMain = lambdas.main.copy(func = Some(newMainFunc.take(rawStepData.mainMax)))
             updatedLambdas = lambdas.copy(main = newMain)
           } yield {
             updateToken(playerToken.copy(lambdas = Some(updatedLambdas)))
