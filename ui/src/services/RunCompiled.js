@@ -32,6 +32,7 @@ class RunCompiled extends GridAnimator {
     if (!mainFunction.length) {
       this._mainEmptyMessage()
     } else if (this.robot.state !== 'paused') {
+      this.robotFrames = []
       this.robot.setState('running')
       this._askCompiler(this._processFrames)
     } else {
@@ -176,8 +177,14 @@ class RunCompiled extends GridAnimator {
 
   _stopIfNoResponse () { // temporary until compiler can handle empty list from processor
     setTimeout(() => {
-      if (!this.robotFrames.length) this._stopRobot()
-    }, 500)
+      if (!this.robotFrames.length) {
+        this._toggleBridge('TryAgain', true)
+        setTimeout(() => {
+          this._toggleBridge('TryAgain', false)
+          this._stopRobot()
+        }, 3000)
+      }
+    }, 3000)
   }
 
   _askCompiler (startRunning) {
