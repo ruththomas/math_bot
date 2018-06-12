@@ -32,6 +32,7 @@ class RunCompiled extends GridAnimator {
     if (!mainFunction.length) {
       this._mainEmptyMessage()
     } else if (this.robot.state !== 'paused') {
+      this.robotFrames = []
       this.robot.setState('running')
       this._askCompiler(this._processFrames)
     } else {
