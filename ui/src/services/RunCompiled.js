@@ -174,7 +174,14 @@ class RunCompiled extends GridAnimator {
     }
   }
 
+  _stopIfNoResponse () { // temporary until compiler can handle empty list from processor
+    setTimeout(() => {
+      if (!this.robotFrames.length) this._stopRobot()
+    }, 500)
+  }
+
   _askCompiler (startRunning) {
+    this._stopIfNoResponse()
     api.compilerWebSocket.compileWs({context: this, problem: this.stepData.problem.encryptedProblem}, (compiled) => {
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()
