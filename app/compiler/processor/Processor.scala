@@ -39,13 +39,13 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
             execute(state, operations.headOption, operations.tail ++: post)
           case _ =>
             // Execute the operation
-            executeHelp(state, process(state, operation), post.headOption, post.tail)
+            executeHelp(state, process(state, operation), post.headOption, post.drop(1))
         }
       case _ =>
         if (post.isEmpty)
           Stream.empty[Frame] // End of program
         else
-          execute(state, post.headOption, post.tail) // Skip the current operation
+          execute(state, post.headOption, post.drop(1)) // Skip the current operation
     }
   }
 
