@@ -1,18 +1,18 @@
 package actors
 
-import actors.LevelGenerationActor.{GetGridMap, GetStep}
-import actors.StatsActor.{StatsDoneUpdating, UpdateStats}
+import actors.LevelGenerationActor.{ GetGridMap, GetStep }
+import actors.StatsActor.{ StatsDoneUpdating, UpdateStats }
 import actors.messages._
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{ Actor, ActorRef, Props, UnhandledMessage }
 import akka.pattern.ask
 import akka.util.Timeout
-import compiler.processor.{Frame, Processor}
-import compiler.{Compiler, GridAndProgram}
+import compiler.processor.{ Frame, Processor }
+import compiler.{ Compiler, GridAndProgram }
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import model.PlayerTokenModel
-import model.models.{GridMap, Stats}
+import model.models.{ GridMap, Stats }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.modules.reactivemongo.ReactiveMongoApi
 import utils.CompilerConfiguration
@@ -114,6 +114,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           self ! CompilerContinue(steps)
         }
       }
+
   }
 
   def compileContinue(currentCompiler : ProgramState): Receive = {
@@ -202,19 +203,25 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           // This case does nothing, should never happen
         }
 
-    case _: CompilerHalt =>
-      logger.LogInfo(className, "Compiler halted")
-      context.become(createCompile())
-      out ! CompilerHalted()
+  }
 
-    case Left(_: StatsDoneUpdating) =>
-      logger.LogInfo(className, s"Stats updated successfully. token_id:$tokenId")
+  override def unhandled(message : Any) : Unit = {
+    message match {
+      case _: CompilerHalt =>
+        logger.LogInfo(className, "Compiler halted")
+        context.become(createCompile())
+        out ! CompilerHalted()
 
-    case Right(invalidJson: ActorFailed) =>
-      logger.LogFailure(className, invalidJson.msg)
-      self ! invalidJson.msg
+      case Left(_: StatsDoneUpdating) =>
+        logger.LogInfo(className, s"Stats updated successfully. token_id:$tokenId")
 
-    case _ => out ! ActorFailed("Unknown command submitted to compiler")
+      case Right(invalidJson: ActorFailed) =>
+        logger.LogFailure(className, invalidJson.msg)
+        self ! invalidJson.msg
+
+      case _ => out ! ActorFailed("Unknown command submitted to compiler")
+
+    }
   }
 }
 
