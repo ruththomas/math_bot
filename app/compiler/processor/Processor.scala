@@ -1,7 +1,7 @@
 package compiler.processor
 
 import compiler.operations._
-import compiler.{ Grid, GridAndProgram }
+import compiler.{Grid, GridAndProgram}
 
 import scala.annotation.tailrec
 
@@ -26,7 +26,7 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
     }
 
   @tailrec
-  private def execute(state: ProcessorState, maybeOperation: Option[Operation], post : Seq[Operation]) : Stream[Frame] = {
+  private def execute(state: ProcessorState, maybeOperation: Option[Operation], post: Seq[Operation]): Stream[Frame] = {
 
     maybeOperation match {
       case Some(operation) if passColorCheck(operation, state) =>
@@ -35,8 +35,12 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
             // Execute the main program
             execute(state, operations.headOption, operations.tail ++: post)
           case UserFunction(operations) =>
-            // Insert the function into the operations stream
-            execute(state, operations.headOption, operations.tail ++: post)
+            if (operations.length == 1 && operations.head.isInstanceOf[UserFunction])
+              // Skip functions that only call another function to avoid non-existing function call loop (not best solution)
+              execute(state, post.headOption, post.drop(1))
+            else
+              // Insert the function into the operations stream
+              execute(state, operations.headOption, operations.tail ++: post)
           case _ =>
             // Execute the operation
             executeHelp(state, process(state, operation), post.headOption, post.drop(1))
@@ -49,7 +53,10 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
     }
   }
 
-  private def executeHelp(state: ProcessorState, executed : Frame, maybeOperation: Option[Operation], post : Seq[Operation]) : Stream[Frame] = {
+  private def executeHelp(state: ProcessorState,
+                          executed: Frame,
+                          maybeOperation: Option[Operation],
+                          post: Seq[Operation]): Stream[Frame] = {
     executed #:: execute(state, maybeOperation, post)
   }
 
@@ -60,42 +67,42 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
       Frame(operation, state.currentRegister, state.currentGrid)
 
     case PickUpItem(_) =>
-        val (grid, change, item) = state.currentGrid.pickupItem()
-        state.currentRegister = state.currentRegister.push(item)
-        state.currentGrid = grid
-        Frame(operation, state.currentRegister, grid, Some(state.currentGrid.getRobotLocation), change)
+      val (grid, change, item) = state.currentGrid.pickupItem()
+      state.currentRegister = state.currentRegister.push(item)
+      state.currentGrid = grid
+      Frame(operation, state.currentRegister, grid, Some(state.currentGrid.getRobotLocation), change)
 
     case SetItemDown(_) =>
-        state.currentRegister.pop() match {
-          case Some((register, element)) =>
-            val (grid, change) = state.currentGrid.setItemDown(element)
-            state.currentRegister = register.clearAnimation()
-            state.currentGrid = grid
-            Frame(operation,
-                  state.currentRegister,
-                  state.currentGrid,
-                  Some(state.currentGrid.getRobotLocation),
-                  Some(change))
-          case None =>
-            state.currentRegister = state.currentRegister.clearAnimation()
-            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation), None)
-        }
+      state.currentRegister.pop() match {
+        case Some((register, element)) =>
+          val (grid, change) = state.currentGrid.setItemDown(element)
+          state.currentRegister = register.clearAnimation()
+          state.currentGrid = grid
+          Frame(operation,
+                state.currentRegister,
+                state.currentGrid,
+                Some(state.currentGrid.getRobotLocation),
+                Some(change))
+        case None =>
+          state.currentRegister = state.currentRegister.clearAnimation()
+          Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation), None)
+      }
 
     case ChangeRobotDirection(_) =>
-        state.currentGrid = state.currentGrid.changeDirection()
-        state.currentRegister = state.currentRegister.clearAnimation()
-        Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+      state.currentGrid = state.currentGrid.changeDirection()
+      state.currentRegister = state.currentRegister.clearAnimation()
+      Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
 
     case MoveRobotForwardOneSpot(_) =>
-        state.currentGrid.moveRobotForwardOneSpot() match {
-          case Some(grid) =>
-            state.currentGrid = grid
-            state.currentRegister = state.currentRegister.clearAnimation()
-            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
-          case None =>
-            state.currentRegister = state.currentRegister.copy(animation = Some(AnimationType.Bumped))
-            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
-        }
+      state.currentGrid.moveRobotForwardOneSpot() match {
+        case Some(grid) =>
+          state.currentGrid = grid
+          state.currentRegister = state.currentRegister.clearAnimation()
+          Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+        case None =>
+          state.currentRegister = state.currentRegister.copy(animation = Some(AnimationType.Bumped))
+          Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+      }
 
     case _ => Frame(operation, state.currentRegister, state.currentGrid)
   }
