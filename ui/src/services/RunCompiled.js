@@ -176,8 +176,14 @@ class RunCompiled extends GridAnimator {
 
   _stopIfNoResponse () { // temporary until compiler can handle empty list from processor
     setTimeout(() => {
-      if (!this.robotFrames.length) this._stopRobot()
-    }, 500)
+      if (!this.robotFrames.length) {
+        this._toggleBridge('TryAgain', true)
+        setTimeout(() => {
+          this._toggleBridge('TryAgain', false)
+          this._stopRobot()
+        }, 3000)
+      }
+    }, 3000)
   }
 
   _askCompiler (startRunning) {
