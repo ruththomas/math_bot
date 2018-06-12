@@ -160,17 +160,28 @@ class RunCompiled extends GridAnimator {
 
   async _processFrames (_) {
     const current = this.robotFrames.shift()
-    const last = this.robotFrames[this.robotFrames.length - 1]
-
-    if (this.robotFrames.length && last.programState === 'running') {
-      this._askCompiler()
-    }
-
+    this._controlAsk()
     const run = await this[`_${current.programState}`](current)
     run(current)
   }
 
+  _controlAsk () {
+    if (this.robotFrames.length && this.robotFrames.length < 8) {
+      const last = this.robotFrames[this.robotFrames.length - 1]
+      if (this.robotFrames.length < 8 && last.programState === 'running') {
+        this._askCompiler()
+      }
+    }
+  }
+
+  _stopIfNoResponse () { // temporary until compiler can handle empty list from processor
+    setTimeout(() => {
+      if (!this.robotFrames.length) this._stopRobot()
+    }, 500)
+  }
+
   _askCompiler (startRunning) {
+    this._stopIfNoResponse()
     api.compilerWebSocket.compileWs({context: this, problem: this.stepData.problem.encryptedProblem}, (compiled) => {
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()
