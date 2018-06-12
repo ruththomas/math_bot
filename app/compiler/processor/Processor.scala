@@ -1,7 +1,9 @@
 package compiler.processor
 
-import compiler.{Grid, GridAndProgram}
 import compiler.operations._
+import compiler.{ Grid, GridAndProgram }
+
+import scala.annotation.tailrec
 
 class Processor(val initialGridAndProgram: GridAndProgram) {
 
@@ -12,7 +14,7 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
 
   def execute(): Stream[Frame] = {
     val state = new ProcessorState(Register(), initialGridAndProgram.grid)
-    execute(state, initialGridAndProgram.program)
+    execute(state, Some(initialGridAndProgram.program), Stream.empty[Operation])
   }
 
   private def passColorCheck(operation: Operation, state: ProcessorState): Boolean =
@@ -23,23 +25,33 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
       case (None, _) => true
     }
 
-  private def execute(state: ProcessorState, operation: Operation): Stream[Frame] =
-    if (passColorCheck(operation, state))
-      operation match {
-        case Program(operations) =>
-          def rest =
-            (operations ++: Stream.empty[Operation]).flatMap(execute(state, _))
+  @tailrec
+  private def execute(state: ProcessorState, maybeOperation: Option[Operation], post : Seq[Operation]) : Stream[Frame] = {
 
-          Stream.cons(process(state, operation), rest)
-        case UserFunction(operations) =>
-          def rest =
-            (operations ++: Stream.empty[Operation]).flatMap(execute(state, _))
+    maybeOperation match {
+      case Some(operation) if passColorCheck(operation, state) =>
+        operation match {
+          case Program(operations) =>
+            // Execute the main program
+            execute(state, operations.headOption, operations.tail ++: post)
+          case UserFunction(operations) =>
+            // Insert the function into the operations stream
+            execute(state, operations.headOption, operations.tail ++: post)
+          case _ =>
+            // Execute the operation
+            executeHelp(state, process(state, operation), post.headOption, post.tail)
+        }
+      case _ =>
+        if (post.isEmpty)
+          Stream.empty[Frame] // End of program
+        else
+          execute(state, post.headOption, post.tail) // Skip the current operation
+    }
+  }
 
-          Stream.cons(process(state, operation), rest)
-        case _ =>
-          process(state, operation) #:: Stream.empty[Frame]
-      } else
-      Stream.empty[Frame]
+  private def executeHelp(state: ProcessorState, executed : Frame, maybeOperation: Option[Operation], post : Seq[Operation]) : Stream[Frame] = {
+    executed #:: execute(state, maybeOperation, post)
+  }
 
   private def process(state: ProcessorState, operation: Operation): Frame = operation match {
 
