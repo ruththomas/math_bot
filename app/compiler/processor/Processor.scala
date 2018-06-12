@@ -1,7 +1,9 @@
 package compiler.processor
 
-import compiler.{Grid, GridAndProgram}
 import compiler.operations._
+import compiler.{Grid, GridAndProgram}
+
+import scala.annotation.tailrec
 
 class Processor(val initialGridAndProgram: GridAndProgram) {
 
@@ -12,7 +14,7 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
 
   def execute(): Stream[Frame] = {
     val state = new ProcessorState(Register(), initialGridAndProgram.grid)
-    execute(state, initialGridAndProgram.program)
+    execute(state, Some(initialGridAndProgram.program), Stream.empty[Operation])
   }
 
   private def passColorCheck(operation: Operation, state: ProcessorState): Boolean =
@@ -23,23 +25,40 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
       case (None, _) => true
     }
 
-  private def execute(state: ProcessorState, operation: Operation): Stream[Frame] =
-    if (passColorCheck(operation, state))
-      operation match {
-        case Program(operations) =>
-          def rest =
-            (operations ++: Stream.empty[Operation]).flatMap(execute(state, _))
+  @tailrec
+  private def execute(state: ProcessorState, maybeOperation: Option[Operation], post: Seq[Operation]): Stream[Frame] = {
 
-          Stream.cons(process(state, operation), rest)
-        case UserFunction(operations) =>
-          def rest =
-            (operations ++: Stream.empty[Operation]).flatMap(execute(state, _))
+    maybeOperation match {
+      case Some(operation) if passColorCheck(operation, state) =>
+        operation match {
+          case Program(operations) =>
+            // Execute the main program
+            execute(state, operations.headOption, operations.tail ++: post)
+          case UserFunction(operations) =>
+            if (operations.length == 1 && operations.head.isInstanceOf[UserFunction])
+              // Skip functions that only call another function to avoid non-existing function call loop (not best solution)
+              execute(state, post.headOption, post.drop(1))
+            else
+              // Insert the function into the operations stream
+              execute(state, operations.headOption, operations.tail ++: post)
+          case _ =>
+            // Execute the operation
+            executeHelp(state, process(state, operation), post.headOption, post.drop(1))
+        }
+      case _ =>
+        if (post.isEmpty)
+          Stream.empty[Frame] // End of program
+        else
+          execute(state, post.headOption, post.drop(1)) // Skip the current operation
+    }
+  }
 
-          Stream.cons(process(state, operation), rest)
-        case _ =>
-          process(state, operation) #:: Stream.empty[Frame]
-      } else
-      Stream.empty[Frame]
+  private def executeHelp(state: ProcessorState,
+                          executed: Frame,
+                          maybeOperation: Option[Operation],
+                          post: Seq[Operation]): Stream[Frame] = {
+    executed #:: execute(state, maybeOperation, post)
+  }
 
   private def process(state: ProcessorState, operation: Operation): Frame = operation match {
 
@@ -48,42 +67,42 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
       Frame(operation, state.currentRegister, state.currentGrid)
 
     case PickUpItem(_) =>
-        val (grid, change, item) = state.currentGrid.pickupItem()
-        state.currentRegister = state.currentRegister.push(item)
-        state.currentGrid = grid
-        Frame(operation, state.currentRegister, grid, Some(state.currentGrid.getRobotLocation), change)
+      val (grid, change, item) = state.currentGrid.pickupItem()
+      state.currentRegister = state.currentRegister.push(item)
+      state.currentGrid = grid
+      Frame(operation, state.currentRegister, grid, Some(state.currentGrid.getRobotLocation), change)
 
     case SetItemDown(_) =>
-        state.currentRegister.pop() match {
-          case Some((register, element)) =>
-            val (grid, change) = state.currentGrid.setItemDown(element)
-            state.currentRegister = register.clearAnimation()
-            state.currentGrid = grid
-            Frame(operation,
-                  state.currentRegister,
-                  state.currentGrid,
-                  Some(state.currentGrid.getRobotLocation),
-                  Some(change))
-          case None =>
-            state.currentRegister = state.currentRegister.clearAnimation()
-            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation), None)
-        }
+      state.currentRegister.pop() match {
+        case Some((register, element)) =>
+          val (grid, change) = state.currentGrid.setItemDown(element)
+          state.currentRegister = register.clearAnimation()
+          state.currentGrid = grid
+          Frame(operation,
+                state.currentRegister,
+                state.currentGrid,
+                Some(state.currentGrid.getRobotLocation),
+                Some(change))
+        case None =>
+          state.currentRegister = state.currentRegister.clearAnimation()
+          Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation), None)
+      }
 
     case ChangeRobotDirection(_) =>
-        state.currentGrid = state.currentGrid.changeDirection()
-        state.currentRegister = state.currentRegister.clearAnimation()
-        Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+      state.currentGrid = state.currentGrid.changeDirection()
+      state.currentRegister = state.currentRegister.clearAnimation()
+      Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
 
     case MoveRobotForwardOneSpot(_) =>
-        state.currentGrid.moveRobotForwardOneSpot() match {
-          case Some(grid) =>
-            state.currentGrid = grid
-            state.currentRegister = state.currentRegister.clearAnimation()
-            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
-          case None =>
-            state.currentRegister = state.currentRegister.copy(animation = Some(AnimationType.Bumped))
-            Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
-        }
+      state.currentGrid.moveRobotForwardOneSpot() match {
+        case Some(grid) =>
+          state.currentGrid = grid
+          state.currentRegister = state.currentRegister.clearAnimation()
+          Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+        case None =>
+          state.currentRegister = state.currentRegister.copy(animation = Some(AnimationType.Bumped))
+          Frame(operation, state.currentRegister, state.currentGrid, Some(state.currentGrid.getRobotLocation))
+      }
 
     case _ => Frame(operation, state.currentRegister, state.currentGrid)
   }
