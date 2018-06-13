@@ -16,6 +16,8 @@ class RunCompiled extends GridAnimator {
       this.stepData = this.$store.getters.getStepData
       this.toolList = this.stepData.toolList
 
+      this.programCreate = true
+
       this._askCompiler = this._askCompiler.bind(this)
       this._processFrames = this._processFrames.bind(this)
       this._initializeStep = this._initializeStep.bind(this)
@@ -29,6 +31,7 @@ class RunCompiled extends GridAnimator {
 
   start () {
     const mainFunction = this.$store.getters.getMainFunction.func
+    // console.log('start ~ ', this.robotFrames.slice())
     if (!mainFunction.length) {
       this._mainEmptyMessage()
     } else if (this.robot.state !== 'paused') {
@@ -136,6 +139,9 @@ class RunCompiled extends GridAnimator {
   }
 
   _success (frame) {
+    // console.log('success ~ ', this.robotFrames.slice())
+    this.programCreate = true
+    // console.log('~~~~~~~~~~~~end', this.programCreate)
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
@@ -143,6 +149,9 @@ class RunCompiled extends GridAnimator {
   }
 
   _failure (frame) {
+    console.log('failure ~ ', this.robotFrames.slice())
+    this.programCreate = true
+    // console.log('~~~~~~~~~~~~end', this.programCreate)
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
@@ -160,7 +169,9 @@ class RunCompiled extends GridAnimator {
   }
 
   async _processFrames (_) {
+    // console.log('frames ~ ', this.robotFrames.slice())
     const current = this.robotFrames.shift()
+    this.programCreate = false
     this._controlAsk()
     const run = await this[`_${current.programState}`](current)
     run(current)
@@ -175,21 +186,8 @@ class RunCompiled extends GridAnimator {
     }
   }
 
-  _stopIfNoResponse () { // temporary until compiler can handle empty list from processor
-    setTimeout(() => {
-      if (!this.robotFrames.length) {
-        this._toggleBridge('TryAgain', true)
-        setTimeout(() => {
-          this._toggleBridge('TryAgain', false)
-          this._stopRobot()
-        }, 3000)
-      }
-    }, 3000)
-  }
-
   _askCompiler (startRunning) {
-    this._stopIfNoResponse()
-    api.compilerWebSocket.compileWs({context: this, problem: this.stepData.problem.encryptedProblem}, (compiled) => {
+    api.compilerWebSocket.compileWs({context: this, problem: this.stepData.problem.encryptedProblem, create: this.programCreate}, (compiled) => {
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()
     })
