@@ -6,17 +6,13 @@ import actors.messages._
 import akka.actor.{Actor, Props}
 import akka.pattern.pipe
 import loggers.MathBotLogger
-import model.{models, DefaultCommands, PlayerTokenModel}
+import model.{models, DefaultCommands, PlayerTokenDAO}
 import model.models._
 import play.api.Environment
-import play.api.libs.json.Json
-import play.modules.reactivemongo.ReactiveMongoApi
 import messages.PreparedStepData._
-
 import java.security.MessageDigest
 
 import scala.concurrent.Future
-import scala.io.Source
 
 object LevelGenerationActor {
   case class GetStepControl(level: String, step: String)
@@ -47,13 +43,12 @@ object LevelGenerationActor {
     MessageDigest.getInstance("MD5").digest(name.getBytes).mkString("")
   }
 
-  def props(reactiveMongoApi: ReactiveMongoApi, logger: MathBotLogger, environment: Environment) =
-    Props(new LevelGenerationActor()(reactiveMongoApi, logger, environment))
+  def props(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger, environment: Environment) =
+    Props(new LevelGenerationActor()(playerTokenDAO, logger, environment))
 }
 
-class LevelGenerationActor()(val reactiveMongoApi: ReactiveMongoApi, logger: MathBotLogger, environment: Environment)
-    extends Actor
-    with PlayerTokenModel {
+class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger, environment: Environment)
+    extends Actor {
   import LevelGenerationActor._
   import context.dispatcher
 
@@ -109,7 +104,8 @@ class LevelGenerationActor()(val reactiveMongoApi: ReactiveMongoApi, logger: Mat
             .pipeTo(self)(sender)
       }
     case GetPlayerToken(tokenId, level, step) =>
-      getToken(tokenId)
+      playerTokenDAO
+        .getToken(tokenId)
         .map {
           case Some(token) => PlayerTokenReceived(token, level, step)
           case None => ActorFailed(s"No token found with token_id $tokenId")
@@ -163,8 +159,11 @@ class LevelGenerationActor()(val reactiveMongoApi: ReactiveMongoApi, logger: Mat
             newMain = lambdas.main.copy(func = Some(newMainFunc.take(rawStepData.mainMax)))
             updatedLambdas = lambdas.copy(main = newMain)
           } yield {
-            updateToken(playerToken.copy(lambdas = Some(updatedLambdas)))
-              .map { PreparedStepData(_, rawStepData) }
+            playerTokenDAO
+              .updateToken(playerToken.copy(lambdas = Some(updatedLambdas)))
+              .map { _ =>
+                PreparedStepData(playerToken, rawStepData)
+              }
               .pipeTo(self)(sender)
           }
         /*
@@ -233,14 +232,15 @@ class LevelGenerationActor()(val reactiveMongoApi: ReactiveMongoApi, logger: Mat
                 .map(d => d._1.copy(index = Some(d._2))),
               main =
                 if (rawStepData.clearMain) playerToken.lambdas.get.main.copy(func = Some(List.empty[FuncToken]))
-                else playerToken.lambdas.get.main.copy(func = Some(playerToken.lambdas.get.main.func.get.take(rawStepData.mainMax)))
+                else
+                  playerToken.lambdas.get.main
+                    .copy(func = Some(playerToken.lambdas.get.main.func.get.take(rawStepData.mainMax)))
             )
 
             // Update db with new token
-            updateToken(playerToken.copy(lambdas = Some(l)))
-              .map(
-                PreparedStepData(_, rawStepData)
-              )
+            playerTokenDAO
+              .updateToken(playerToken.copy(lambdas = Some(l)))
+              .map(_ => PreparedStepData(playerToken, rawStepData))
               .pipeTo(self)(sender)
           }
       }

@@ -3,33 +3,31 @@ package controllers
 import java.net.URLDecoder
 
 import actors.LevelGenerationActor
-import javax.inject.Singleton
-import actors.LevelGenerationActor.{ GetLevel, GetStep }
-import actors.messages.{ ActorFailed, PreparedStepData, RawLevelData }
+import actors.LevelGenerationActor.{GetLevel, GetStep}
+import actors.messages.{ActorFailed, PreparedStepData, RawLevelData}
 import akka.actor.ActorSystem
-
-import scala.concurrent.duration._
-import play.api.mvc.{ Action, Controller }
-import play.modules.reactivemongo.ReactiveMongoApi
 import akka.pattern.ask
 import akka.util.Timeout
 import com.google.inject.Inject
+import javax.inject.Singleton
 import loggers.MathBotLogger
+import model.PlayerTokenDAO
 import play.api.Environment
 import play.api.libs.json.Json
+import play.api.mvc.{Action, Controller}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
-@Singleton
 class LevelController @Inject()(system: ActorSystem,
-                                val reactiveMongoApi: ReactiveMongoApi,
+                                playerTokenDAO: PlayerTokenDAO,
                                 logger: MathBotLogger,
                                 environment: Environment)
     extends Controller {
 
   implicit val timeout: Timeout = 5000.minutes
 
-  val levelActor = system.actorOf(LevelGenerationActor.props(reactiveMongoApi, logger, environment), "level-actor")
+  val levelActor = system.actorOf(LevelGenerationActor.props(playerTokenDAO, logger, environment), "level-actor")
 
   def getStep(level: String, step: String, encodedTokenId: Option[String]) = Action.async { implicit request =>
     (levelActor ? GetStep(level, step, encodedTokenId.map(URLDecoder.decode(_, "UTF-8"))))
