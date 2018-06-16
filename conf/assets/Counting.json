@@ -33,6 +33,7 @@
       "problem": "1",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "None",
       "nextStep": "Pickup3"
     },
@@ -65,6 +66,7 @@
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Counting",
       "nextStep": "Pickup5"
     },
@@ -97,6 +99,7 @@
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup3",
       "nextStep": "Pickup4"
     },
@@ -129,6 +132,7 @@
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup5",
       "nextStep": "Navigate"
     },
@@ -161,6 +165,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup4",
       "nextStep": "Pickup2"
     },
@@ -193,6 +198,7 @@
       "problem": "2",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup7",
       "nextStep": "Pickup2WithFunction"
     },
@@ -225,6 +231,7 @@
       "problem": "2",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup2",
       "nextStep": "Pickup1WithFunction"
     },
@@ -257,6 +264,7 @@
       "problem": "1",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup2WithFunction",
       "nextStep": "Pickup5WithFunction"
     },
@@ -289,6 +297,7 @@
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup1WithFunction",
       "nextStep": "Pickup9WithFunction"
     },
@@ -321,6 +330,7 @@
       "problem": "9",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup5WithFunction",
       "nextStep": "Pickup4WithFunction"
     },
@@ -353,6 +363,7 @@
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup9WithFunction",
       "nextStep": "Pickup6WithFunction"
     },
@@ -385,6 +396,7 @@
       "problem": "6",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup4WithFunction",
       "nextStep": "Pickup8WithFunction"
     },
@@ -417,6 +429,7 @@
       "problem": "8",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup6WithFunction",
       "nextStep": "Pickup3WithFunction"
     },
@@ -449,6 +462,7 @@
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Pickup8WithFunction",
       "nextStep": "None"
     }

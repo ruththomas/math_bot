@@ -30,6 +30,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["Walk"],
+      "videoHints": [],
       "prevStep": "None",
       "nextStep": "WalkThree"
     },
@@ -59,6 +60,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["Walk"],
+      "videoHints": [],
       "prevStep": "WalkOne",
       "nextStep": "WalkFour"
     },
@@ -88,6 +90,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["Walk"],
+      "videoHints": [],
       "prevStep": "WalkThree",
       "nextStep": "WalkFourWithFunction"
     },
@@ -126,6 +129,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["rocket"],
+      "videoHints": [],
       "prevStep": "WalkFour",
       "nextStep": "EditFirstFunction"
     },
@@ -157,6 +161,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["rocket"],
+      "videoHints": [],
       "prevStep": "WalkFourWithFunction",
       "nextStep": "TurnRight"
     },
@@ -187,6 +192,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["Turn Right"],
+      "videoHints": [],
       "prevStep": "EditFirstFunction",
       "nextStep": "CreateNewFunction"
     },
@@ -221,6 +227,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["open-staged"],
+      "videoHints": [],
       "prevStep": "TurnRight",
       "nextStep": "TurnLeft"
     },
@@ -255,6 +262,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["open-staged"],
+      "videoHints": [],
       "prevStep": "Uturn",
       "nextStep": "WalkAndTurn"
     },
@@ -285,6 +293,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "TurnLeft",
       "nextStep": "WalkAndTurnWithFunctions"
     },
@@ -317,6 +326,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["rocket"],
+      "videoHints": [],
       "prevStep": "WalkAndTurn",
       "nextStep": "Maze1"
     },
@@ -349,6 +359,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "WalkAndTurnWithFunctions",
       "nextStep": "Maze2"
     },
@@ -381,6 +392,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Maze1",
       "nextStep": "Maze3"
     },
@@ -413,6 +425,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Maze2",
       "nextStep": "None"
     }

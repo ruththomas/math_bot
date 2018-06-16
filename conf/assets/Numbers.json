@@ -33,6 +33,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "None",
       "nextStep": "Number8"
     },
@@ -65,6 +66,7 @@
       "problem": "8",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Number7",
       "nextStep": "SevenAgain"
     },
@@ -97,6 +99,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Number8",
       "nextStep": "Number2"
     },
@@ -129,6 +132,7 @@
       "problem": "2",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "SevenAgain",
       "nextStep": "SevenAgainAgain"
     },
@@ -161,6 +165,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Number2",
       "nextStep": "Number3"
     },
@@ -193,6 +198,7 @@
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "SevenAgainAgain",
       "nextStep": "Reuse7"
     },
@@ -225,6 +231,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Number7",
       "nextStep": "Number5"
     },
@@ -257,6 +264,7 @@
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Reuse7",
       "nextStep": "ReuseCode"
     },
@@ -289,6 +297,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": [],
       "prevStep": "Number5",
       "nextStep": "None"
     }
