@@ -1,5 +1,6 @@
 package model.models
 
+import actors.messages.PreparedStepData
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -24,4 +25,11 @@ object PlayerToken {
     (JsPath \ PlayerToken.statsField).readNullable[Stats] and
     (JsPath \ PlayerToken.randomImagesField).readNullable[List[String]]
   )(PlayerToken.apply _)
+
+  implicit val tokenWrites: Writes[PlayerToken] = (
+    (JsPath \ PlayerToken.tokenIdField).write[String] and
+    (JsPath \ PlayerToken.lambdas).writeNullable[Lambdas] and
+    (JsPath \ PlayerToken.statsField).writeNullable[Stats] and
+    (JsPath \ PlayerToken.randomImagesField).writeNullable[List[String]]
+  )(unlift(PlayerToken.unapply))
 }
