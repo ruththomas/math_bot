@@ -3,23 +3,22 @@ package controllers
 import java.net.URLDecoder
 
 import actors._
+import actors.messages.{ClientRobotState, PreparedStepData}
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.ask
 import akka.stream.Materializer
 import akka.util.Timeout
-import compiler.processor.{AnimationType, Frame}
+import compiler.processor.Frame
 import compiler.{Cell, Point}
 import javax.inject.Inject
-import actors.messages.{ClientRobotState, PreparedStepData}
 import loggers.MathBotLogger
-import model.PlayerTokenModel
+import model.PlayerTokenDAO
 import model.models._
-import play.api.{Configuration, Environment}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
-import play.modules.reactivemongo.ReactiveMongoApi
+import play.api.{Configuration, Environment}
 import utils.CompilerConfiguration
 
 import scala.concurrent.Future
@@ -80,18 +79,18 @@ object MathBotCompiler {
 
 }
 
-class MathBotCompiler @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implicit system: ActorSystem,
-                                                                        mat: Materializer,
-                                                                        mathBotLogger: MathBotLogger,
-                                                                        environment: Environment,
-                                                                        configuration: Configuration)
+class MathBotCompiler @Inject()()(implicit system: ActorSystem,
+                                  mat: Materializer,
+                                  mathBotLogger: MathBotLogger,
+                                  environment: Environment,
+                                  configuration: Configuration,
+                                  playerTokenDAO: PlayerTokenDAO)
     extends Controller
-    with PlayerTokenModel
     with utils.SameOriginCheck {
 
   val levelActor =
-    system.actorOf(LevelGenerationActor.props(reactiveMongoApi, mathBotLogger, environment), "level-compiler-actor")
-  val statsActor = system.actorOf(StatsActor.props(system, reactiveMongoApi, mathBotLogger), "stats-compiler-actor")
+    system.actorOf(LevelGenerationActor.props(playerTokenDAO, mathBotLogger, environment), "level-compiler-actor")
+  val statsActor = system.actorOf(StatsActor.props(system, playerTokenDAO, mathBotLogger), "stats-compiler-actor")
 
   val compilerConfiguration = CompilerConfiguration(
     maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000)
@@ -113,7 +112,7 @@ class MathBotCompiler @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implicit
               out =>
                 CompilerActor.props(out,
                                     URLDecoder.decode(encodedTokenId, "UTF-8"),
-                                    reactiveMongoApi,
+                                    playerTokenDAO,
                                     statsActor,
                                     levelActor,
                                     mathBotLogger,
@@ -149,11 +148,11 @@ class MathBotCompiler @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implicit
         val compilerProps =
           CompilerActor.props(fakeActor,
                               URLDecoder.decode(encodedTokenId, "UTF-8"),
-                              reactiveMongoApi,
+                              playerTokenDAO,
                               statsActor,
                               levelActor,
                               mathBotLogger,
-            compilerConfiguration)
+                              compilerConfiguration)
         val compiler = system.actorOf(compilerProps)
 
         (compiler ? sr)

@@ -1,16 +1,13 @@
 package actors
 
-import actors.messages.ActorFailed
 import actors.PlayerActor.UpdatePlayerToken
-import akka.actor.{Actor, ActorSystem, PoisonPill, Props}
+import actors.messages.ActorFailed
+import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.pipe
 import com.google.inject.Inject
-import com.google.inject.name.Named
 import loggers.MathBotLogger
+import model.PlayerTokenDAO
 import model.models.{Stats, StepToken}
-import play.modules.reactivemongo.ReactiveMongoApi
-
-import scala.concurrent.Future
 
 object StatsActor {
 
@@ -102,13 +99,12 @@ object StatsActor {
     }
   }
 
-  def props(system: ActorSystem, reactiveMongoApi: ReactiveMongoApi, logger: MathBotLogger) =
-    Props(new StatsActor(system, reactiveMongoApi, logger))
+  def props(system: ActorSystem, playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger) =
+    Props(new StatsActor(system, playerTokenDAO, logger))
 }
 
-class StatsActor @Inject()(val system: ActorSystem, val reactiveMongoApi: ReactiveMongoApi, logger: MathBotLogger)
-    extends Actor
-    with model.PlayerTokenModel {
+class StatsActor @Inject()(val system: ActorSystem, playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger)
+    extends Actor {
 
   import StatsActor._
   import context.dispatcher
@@ -117,7 +113,8 @@ class StatsActor @Inject()(val system: ActorSystem, val reactiveMongoApi: Reacti
 
   override def receive: Receive = {
     case GetStats(tokenId) =>
-      getToken(tokenId)
+      playerTokenDAO
+        .getToken(tokenId)
         .map {
           case Some(token) =>
             token.stats match {
@@ -128,7 +125,8 @@ class StatsActor @Inject()(val system: ActorSystem, val reactiveMongoApi: Reacti
         }
         .pipeTo(self)(sender)
     case UpdateStats(success, tokenId) =>
-      getToken(tokenId)
+      playerTokenDAO
+        .getToken(tokenId)
         .map {
           case Some(token) =>
             token.stats match {
@@ -141,23 +139,27 @@ class StatsActor @Inject()(val system: ActorSystem, val reactiveMongoApi: Reacti
         }
         .pipeTo(self)(sender)
     case ChangeLevel(tokenId, level, step) =>
-      getToken(tokenId).map {
-        case Some(token) =>
-          UpdatePlayerToken(token.copy(stats = Some(token.stats.get.copy(level, step))))
-        case None => ActorFailed(s"No token found with token_id $tokenId.")
-      }
-      .pipeTo(self)(sender)
+      playerTokenDAO
+        .getToken(tokenId)
+        .map {
+          case Some(token) =>
+            UpdatePlayerToken(token.copy(stats = Some(token.stats.get.copy(level, step))))
+          case None => ActorFailed(s"No token found with token_id $tokenId.")
+        }
+        .pipeTo(self)(sender)
     case updatePlayerToken: UpdatePlayerToken =>
-      updateToken(updatePlayerToken.playerToken)
-        .map { pt =>
-          pt.stats match {
+      playerTokenDAO
+        .updateToken(updatePlayerToken.playerToken)
+        .map { _ =>
+          updatePlayerToken.playerToken.stats match {
             case Some(stats) => StatsDoneUpdating(updatePlayerToken.playerToken.token_id, stats)
             case None => ActorFailed("No stats with this player token.")
           }
         }
         .pipeTo(self)(sender)
     case Unlock(tokenId) =>
-      getToken(tokenId)
+      playerTokenDAO
+        .getToken(tokenId)
         .map {
           case Some(token) =>
             token.stats match {
@@ -176,7 +178,8 @@ class StatsActor @Inject()(val system: ActorSystem, val reactiveMongoApi: Reacti
         }
         .pipeTo(self)(sender)
     case Reset(tokenId) =>
-      getToken(tokenId)
+      playerTokenDAO
+        .getToken(tokenId)
         .map {
           case Some(token) =>
             token.stats match {

@@ -9,27 +9,25 @@ import akka.util.Timeout
 import com.google.inject.Inject
 import javax.inject.Singleton
 import loggers.MathBotLogger
+import model.PlayerTokenDAO
 import play.api.Environment
 import play.api.mvc.{Action, Controller}
-
-import play.modules.reactivemongo.ReactiveMongoApi
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-@Singleton
 class GameStatsController @Inject()(system: ActorSystem,
-                                    val reactiveMongoApi: ReactiveMongoApi,
+                                    playerTokenDAO: PlayerTokenDAO,
                                     logger: MathBotLogger,
                                     environment: Environment)
     extends Controller {
   implicit val timeout: Timeout = 5000.minutes
 
   val gameStatsActor =
-    system.actorOf(GameStatsActor.props(reactiveMongoApi, logger, environment), "game-stats-actor")
+    system.actorOf(GameStatsActor.props(playerTokenDAO, logger, environment), "game-stats-actor")
 
   def getCount = Action.async { implicit request =>
-    (gameStatsActor ? GetTokenCount).mapTo[Either[Int, ActorFailed]].map {
+    (gameStatsActor ? GetTokenCount).mapTo[Either[String, ActorFailed]].map {
       case Left(count) =>
         Ok(s"User token count: $count")
       case Right(actorFailed) => BadRequest(actorFailed.msg)
