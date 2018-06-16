@@ -16,10 +16,7 @@
           <div class="step-info-text">{{ parseCamelCase(step.name) }}</div>
         </div>
         <div class="step-info-image-container">
-          <img
-            class="step-image"
-            :class="step.active ? 'step-image-stars' : 'step-image-lock'"
-            :src="step.active ? permanentImages.stars[step.stars] : permanentImages.lock">
+          <stars :level="level" :step="step" :star-group="'star-cluster'"></stars>
         </div>
       </div>
       <div
@@ -48,6 +45,7 @@
 <script>
 import utils from '../services/utils'
 import api from '../services/api'
+import Stars from './Stars'
 
 export default {
   name: 'steps',
@@ -103,6 +101,9 @@ export default {
         this.$router.push({path: '/robot'})
       })
     }
+  },
+  components: {
+    Stars
   },
   props: ['permanentImages']
 }
