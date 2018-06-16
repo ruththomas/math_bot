@@ -34,6 +34,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "None",
       "nextStep": "WalkAround"
     },
@@ -67,6 +68,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "RecurForward",
       "nextStep": "SmallSpiral"
     },
@@ -100,6 +102,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "WalkAround",
       "nextStep": "BigSpiral"
     },
@@ -133,6 +136,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "SmallSpiral",
       "nextStep": "Stairs"
     },
@@ -166,6 +170,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "BigSpiral",
       "nextStep": "LongStairs"
     },
@@ -199,6 +204,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "Stairs",
       "nextStep": "Snake"
     },
@@ -232,6 +238,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "LongStairs",
       "nextStep": "ZigZag"
     },
@@ -265,6 +272,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "LongStairs",
       "nextStep": "CleanUp"
     },
@@ -298,6 +306,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "ZigZag",
       "nextStep": "CleanUpMore"
     },
@@ -331,6 +340,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "CleanUp",
       "nextStep": "PickupPile"
     },
@@ -364,6 +374,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "CleanUpMore",
       "nextStep": "CleanComb"
     },
@@ -397,6 +408,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "PickupPile",
       "nextStep": "CleanComb2"
     },
@@ -430,6 +442,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "CleanComb",
       "nextStep": "CleanComb3"
     },
@@ -463,6 +476,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "CleanComb2",
       "nextStep": "CleanZigZags"
     },
@@ -496,6 +510,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "CleanComb3",
       "nextStep": "None"
     }
