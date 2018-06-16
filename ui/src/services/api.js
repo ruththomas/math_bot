@@ -14,7 +14,7 @@ export default {
     Vue.http.post('/api/token', JSON.stringify({token_id: tokenId}))
       .then(res => res.body)
       .then(token => {
-        // console.log('GET TOKEN ~ ', token);
+        // console.log('GET TOKEN ~ ', token)
         this.compilerWebSocket = new CompilerWebSocket()
         cb(token)
       })
@@ -66,6 +66,7 @@ export default {
       .catch(console.error)
   },
   /*
+  * @deprecated
   * statsWin updates JWT stats when the user wins.
   * @param tokenId = JWT token_id
   * @response.body = stats property of JWT

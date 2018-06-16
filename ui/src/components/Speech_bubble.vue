@@ -1,12 +1,17 @@
 <template>
   <div class="speech-bubble" :class="!showing ? 'hide-speech-bubble' : ''">
-    <div class="bubble-text" v-html="html"></div>
+    <div class="bubble-text">
+      <div v-html="html"></div>
+      <stars :star-group="'star-spread'"></stars>
+    </div>
   </div>
 </template>
 
 <script>
+import Stars from './Stars'
 export default {
   name: 'speech_bubble',
+  components: {Stars},
   props: ['html', 'showing']
 }
 </script>
