@@ -103,6 +103,7 @@ object PlayerActor {
                       if (userStats.levels(l._1).isDefinedAt(s._1)) {
                         s._1 -> s._2.copy(
                           timesPlayed = userStats.levels(l._1)(s._1).timesPlayed,
+                          wins = userStats.levels(l._1)(s._1).wins,
                           stars = userStats.levels(l._1)(s._1).stars,
                           active = userStats.levels(l._1)(s._1).active,
                           prevLevel = s._2.prevLevel,
