@@ -14,11 +14,12 @@ import loggers.MathBotLogger
 import model.PlayerTokenDAO
 import model.models.{GridMap, Stats}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import types.TokenId
 import utils.CompilerConfiguration
 
 import scala.concurrent.duration._
 
-class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
+class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     playerTokenDAO: PlayerTokenDAO,
     statsActor: ActorRef,
     levelActor: ActorRef,
