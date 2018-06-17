@@ -12,14 +12,16 @@ import play.api.Environment
 import messages.PreparedStepData._
 import java.security.MessageDigest
 
+import types.{LevelName, StepName, TokenId}
+
 import scala.concurrent.Future
 
 object LevelGenerationActor {
-  case class GetStepControl(level: String, step: String)
+  case class GetStepControl(level: LevelName, step: StepName)
 
-  case class GetPlayerToken(tokenId: String, level: String, step: String)
+  case class GetPlayerToken(tokenId: TokenId, level: LevelName, step: StepName)
 
-  case class PlayerTokenReceived(playerToken: PlayerToken, level: String, step: String)
+  case class PlayerTokenReceived(playerToken: PlayerToken, level: LevelName, stepName: StepName)
 
   case class UpdateDb(playerToken: PlayerToken, rawStepData: RawStepData)
 
@@ -31,11 +33,11 @@ object LevelGenerationActor {
 
   case class ProcessStepData(playerToken: PlayerToken)
 
-  case class GetLevel(level: String, tokenId: Option[String])
+  case class GetLevel(level: LevelName, tokenId: Option[TokenId])
 
   case class ResetStagedFunctions(playerToken: PlayerToken, rawStepData: RawStepData)
 
-  case class GetStep(level: String, step: String, tokenId: Option[String] = None)
+  case class GetStep(level: LevelName, step: StepName, tokenId: Option[TokenId] = None)
 
   def makeQtyUnlimited(qty: Int): Int = if (qty < 0) 10000 else qty
 

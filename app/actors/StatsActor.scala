@@ -8,20 +8,21 @@ import com.google.inject.Inject
 import loggers.MathBotLogger
 import model.PlayerTokenDAO
 import model.models.{Stats, StepToken}
+import types.{LevelName, StepName, TokenId}
 
 object StatsActor {
 
-  case class ChangeLevel(tokenId: String, level: String, step: String)
+  case class ChangeLevel(tokenId: TokenId, level: LevelName, step: StepName)
 
-  case class Unlock(tokenId: String)
+  case class Unlock(tokenId: TokenId)
 
-  case class Reset(tokenId: String)
+  case class Reset(tokenId: TokenId)
 
-  case class StatsDoneUpdating(tokenId: String, stats: Stats)
+  case class StatsDoneUpdating(tokenId: TokenId, stats: Stats)
 
-  case class GetStats(tokenId: String)
+  case class GetStats(tokenId: TokenId)
 
-  case class UpdateStats(success: Boolean, tokenId: String)
+  case class UpdateStats(success: Boolean, tokenId: TokenId)
 
   def updateStats(stats: Stats) = {
     val currentLevelName: String = stats.level
@@ -30,7 +31,8 @@ object StatsActor {
     val currentLevel: Map[String, StepToken] = stats.levels(currentLevelName)
     val currentStep: StepToken = currentLevel(currentStepName)
 
-    val updatedCurrentStep: StepToken = currentStep.copy(stars = 5, timesPlayed = currentStep.timesPlayed + 1)
+    val updatedCurrentStep: StepToken =
+      currentStep.copy(stars = currentStep.stars + 1)
 
     if (updatedCurrentStep.nextLevel == "None" && updatedCurrentStep.nextStep == "None") {
 
@@ -99,6 +101,19 @@ object StatsActor {
     }
   }
 
+  def increaseTimesPlayed(stats: Stats): Stats = {
+    stats.copy(levels = stats.levels.get(stats.level) match {
+      case Some(level) =>
+        level.get(stats.step) match {
+          case Some(step) =>
+            val updatedLevel = level + (stats.step -> step, stats.step -> step.copy(timesPlayed = step.timesPlayed + 1))
+            stats.levels + (stats.level -> level, stats.level -> updatedLevel)
+          case None => stats.levels
+        }
+      case None => stats.levels
+    })
+  }
+
   def props(system: ActorSystem, playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger) =
     Props(new StatsActor(system, playerTokenDAO, logger))
 }
@@ -131,7 +146,7 @@ class StatsActor @Inject()(val system: ActorSystem, playerTokenDAO: PlayerTokenD
           case Some(token) =>
             token.stats match {
               case Some(stats) =>
-                val updatedStats = if (success) updateStats(stats) else stats
+                val updatedStats = if (success) increaseTimesPlayed(updateStats(stats)) else increaseTimesPlayed(stats)
                 UpdatePlayerToken(token.copy(stats = Some(updatedStats)))
               case None => ActorFailed("No stats with this player token.")
             }

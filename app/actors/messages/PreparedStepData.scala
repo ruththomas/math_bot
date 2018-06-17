@@ -5,11 +5,12 @@ import actors.messages.PreparedStepData.InitialRobotState
 import model.models.{ToolList, _}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import types.{LevelName, StepName, TokenId}
 
 case class PreparedStepData(
-    tokenId: String,
-    level: String,
-    step: String,
+    tokenId: TokenId,
+    level: LevelName,
+    step: StepName,
     gridMap: List[List[GridPart]],
     description: String,
     mainMax: Int,
