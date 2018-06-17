@@ -14,7 +14,7 @@ export default {
     Vue.http.post('/api/token', JSON.stringify({token_id: tokenId}))
       .then(res => res.body)
       .then(token => {
-        // console.log('GET TOKEN ~ ', token)
+        console.log('GET TOKEN ~ ', token)
         this.compilerWebSocket = new CompilerWebSocket()
         cb(token)
       })
@@ -42,6 +42,7 @@ export default {
       .catch(console.error)
   },
   /*
+  * @deprecated
   * putToken replaces JWT with updated JWT
   * !!This call is deprecated but may be useful at times. Updates entire JWT so is able to max server request!!
   * @param token = entire JWT

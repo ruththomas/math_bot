@@ -20,7 +20,7 @@
         </div>
       </div>
       <div
-        v-if="steps[steps.length - 1].stars > 0 && nextLevel !== 'None'"
+        v-if="steps[steps.length - 1].wins > 0 && nextLevel !== 'None'"
         class="steps-navigator-item step-active"
         @click="goToRobot(nextLevel.name, nextLevel.firstStep)">
         <div class="step-info-text-container">
