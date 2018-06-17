@@ -7,7 +7,7 @@ import play.api.libs.json.{JsPath, Json, Reads}
 case class StepToken(
     name: String,
     timesPlayed: Int = 0,
-    stars: Int = 0,
+    stars: Int = 3,
     active: Boolean = false,
     prevStep: String = "None",
     nextStep: String,
