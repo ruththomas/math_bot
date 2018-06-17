@@ -9,13 +9,13 @@ import play.api.libs.json._
 object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
 
   def jsonToCompilerCommand(msg: JsValue): Any = {
-    Json.fromJson[SocketRequest](msg).asOpt match {
-      case Some(SocketRequest(_, _, Some(true), _)) => CompilerHalt()
-      case Some(SocketRequest(Some(steps), Some(problem), _, None)) =>
+    Json.fromJson[CompilerRequest](msg).asOpt match {
+      case Some(CompilerRequest(_, _, Some(true), _)) => CompilerHalt()
+      case Some(CompilerRequest(Some(steps), Some(problem), _, None)) =>
         CompilerExecute(steps, Problem(encryptedProblem = problem))
-      case Some(SocketRequest(Some(steps), Some(problem), _, Some(true))) =>
+      case Some(CompilerRequest(Some(steps), Some(problem), _, Some(true))) =>
         CompilerCreate(steps, Problem(encryptedProblem = problem))
-      case Some(SocketRequest(Some(steps), _, _, Some(false))) => CompilerContinue(steps)
+      case Some(CompilerRequest(Some(steps), _, _, Some(false))) => CompilerContinue(steps)
       case _ => ActorFailed("Invalid socket request json.")
     }
   }

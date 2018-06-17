@@ -2,10 +2,11 @@ package actors.messages
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import types.{LevelName, StepName}
 
 case class RawStepData(
-    level: String,
-    step: String,
+    level: LevelName,
+    step: StepName,
     gridMap: List[String],
     description: String,
     mainMax: Int,

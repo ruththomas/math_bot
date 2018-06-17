@@ -9,6 +9,7 @@ import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
 import org.mongodb.scala.{Completed, _}
+import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,10 +36,10 @@ class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionC
   def insert(playerToken: PlayerToken): Future[Option[Completed]] =
     collection.insertOne(playerToken).toFutureOption()
 
-  def getToken(tokenId: String): Future[Option[PlayerToken]] =
+  def getToken(tokenId: TokenId): Future[Option[PlayerToken]] =
     collection.find(equal(tokenIdField, tokenId)).first().toFutureOption()
 
-  def delete(tokenId: String): Future[Option[DeleteResult]] =
+  def delete(tokenId: TokenId): Future[Option[DeleteResult]] =
     collection.deleteOne(equal(tokenIdField, tokenId)).toFutureOption()
 
   def updateToken(playerToken: PlayerToken): Future[Option[UpdateResult]] =

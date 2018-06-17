@@ -12,6 +12,7 @@ import model.models._
 import play.api.Environment
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsValue, Json, Reads}
+import types.TokenId
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -28,7 +29,7 @@ object PlayerActor {
 
   case class UpdateFunc(funcToken: FuncToken, playerToken: PlayerToken, `override`: Boolean)
 
-  case class ActivateFunc(tokenId: String, stagedIndex: String, activeIndex: String)
+  case class ActivateFunc(tokenId: TokenId, stagedIndex: String, activeIndex: String)
 
   case class MoveFunc(playerToken: PlayerToken, stagedIndex: String, activeIndex: String)
 
@@ -167,7 +168,7 @@ object PlayerActor {
       (JsPath \ "override").readNullable[Boolean]
     )(PrepareLambdas.apply _)
   }
-  case class PrepareLambdas(tokenId: String, funcToken: FuncToken, `override`: Option[Boolean])
+  case class PrepareLambdas(tokenId: TokenId, funcToken: FuncToken, `override`: Option[Boolean])
 
   case class PreparedLambdasToken(lambdas: Lambdas)
 

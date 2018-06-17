@@ -5,8 +5,11 @@ import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import play.api.libs.json.Json
+import types.{LevelName, StepName, TokenId}
 
 object VideoHintActor {
+  final case class GetVideo(tokenId: TokenId, level: LevelName, step: StepName)
+
   def props(out: ActorRef) = Props(new VideoHintActor(out))
 }
 
