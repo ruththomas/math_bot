@@ -15,6 +15,7 @@ import model.PlayerTokenDAO
 import play.api.Environment
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
+import types.{LevelName, TokenId}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -29,7 +30,7 @@ class LevelController @Inject()(system: ActorSystem,
 
   val levelActor = system.actorOf(LevelGenerationActor.props(playerTokenDAO, logger, environment), "level-actor")
 
-  def getStep(level: String, step: String, encodedTokenId: Option[String]) = Action.async { implicit request =>
+  def getStep(level: LevelName, step: LevelName, encodedTokenId: Option[TokenId]) = Action.async { implicit request =>
     (levelActor ? GetStep(level, step, encodedTokenId.map(URLDecoder.decode(_, "UTF-8"))))
       .mapTo[Either[PreparedStepData, ActorFailed]]
       .map {
@@ -38,7 +39,7 @@ class LevelController @Inject()(system: ActorSystem,
       }
   }
 
-  def getLevel(level: String, encodedTokenId: Option[String]) = Action.async { implicit request =>
+  def getLevel(level: LevelName, encodedTokenId: Option[TokenId]) = Action.async { implicit request =>
     (levelActor ? GetLevel(level, encodedTokenId.map(URLDecoder.decode(_, "UTF-8"))))
       .mapTo[Either[RawLevelData, ActorFailed]]
       .map {

@@ -20,6 +20,7 @@ import play.api.libs.json._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import play.api.{Configuration, Environment}
+import types.TokenId
 import utils.CompilerConfiguration
 
 import scala.concurrent.Future
@@ -97,7 +98,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
     maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000)
   )
 
-  def wsPath(tokenId: String): Action[AnyContent] = Action { implicit request: RequestHeader =>
+  def wsPath(tokenId: TokenId): Action[AnyContent] = Action { implicit request: RequestHeader =>
     val url = routes.MathBotCompiler.compileWs(tokenId).webSocketURL()
     val changeSsl =
       if (url.contains("localhost")) url else url.replaceFirst("ws", "wss")
