@@ -1,6 +1,7 @@
 package controllers
 
-import actors.{SocketRequestConvertFlow, SocketResponseConvertFlow, VideoHintActor}
+import actors.convert_flow.{VideoRequestConvertFlow, VideoResponseConvertFlow}
+import actors.VideoHintActor
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import com.google.inject.Inject
@@ -14,12 +15,12 @@ class VideoHintController @Inject()(implicit val system: ActorSystem, implicit v
   private type WSMessage = JsValue
 
   def videoSocket: WebSocket = WebSocket.accept[WSMessage, WSMessage] { _ =>
-    SocketRequestConvertFlow()
+    VideoRequestConvertFlow()
       .via(
         ActorFlow.actorRef { out =>
           VideoHintActor.props(out)
         }
       )
-      .via(SocketResponseConvertFlow())
+      .via(VideoResponseConvertFlow())
   }
 }
