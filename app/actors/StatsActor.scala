@@ -32,7 +32,7 @@ object StatsActor {
     val currentStep: StepToken = currentLevel(currentStepName)
 
     val updatedCurrentStep: StepToken =
-      currentStep.copy(stars = currentStep.stars + 1)
+      currentStep.copy(wins = Some(currentStep.wins.getOrElse(1) + 1))
 
     if (updatedCurrentStep.nextLevel == "None" && updatedCurrentStep.nextStep == "None") {
 
@@ -146,7 +146,7 @@ class StatsActor @Inject()(val system: ActorSystem, playerTokenDAO: PlayerTokenD
           case Some(token) =>
             token.stats match {
               case Some(stats) =>
-                val updatedStats = if (success) increaseTimesPlayed(updateStats(stats)) else increaseTimesPlayed(stats)
+                val updatedStats = if (success) updateStats(increaseTimesPlayed(stats)) else increaseTimesPlayed(stats)
                 UpdatePlayerToken(token.copy(stats = Some(updatedStats)))
               case None => ActorFailed("No stats with this player token.")
             }
