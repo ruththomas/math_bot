@@ -130,7 +130,8 @@ object PlayerActor {
 
                 prevLevel match {
                   case Some(level) =>
-                    val activate = level.filter(st => st._2.nextStep == "None").map(st => st._2.stars > 0).head
+                    val activate =
+                      level.filter(st => st._2.nextStep == "None").map(st => st._2.wins.getOrElse(0) > 0).head
                     s._1 -> s._2.copy(active = activate)
                   case None => s
                 }

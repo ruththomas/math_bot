@@ -10,9 +10,9 @@
     <div class="instructions" :style="congratsShowing || tryAgainShowing ? {opacity: 0} : {}">
       <div class="instructions-filler-left"></div>
       <div class="instructions-robot-container">
-        <img @click="toggleSpeechBubble(this)" :src="permanentImages.instructionsRobot" class="instructions-robot" data-toggle="tooltip" title="Toggle speech bubble">
+        <img :src="permanentImages.instructionsRobot" class="instructions-robot" data-toggle="tooltip" title="Toggle speech bubble">
       </div>
-      <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
+      <speech-bubble :html="description" :showing="speechBubbleShowing" :step="step"></speech-bubble>
     </div>
   </div>
 </template>
@@ -37,6 +37,13 @@ export default {
     },
     description () {
       return this.currentStepData.description
+    },
+    steps () {
+      return this.$store.getters.getSteps
+    },
+    step () {
+      const stepName = this.$store.getters.getStep
+      return this.steps.find(s => s.name === stepName)
     }
   },
   data () {
@@ -45,9 +52,6 @@ export default {
     }
   },
   methods: {
-    toggleSpeechBubble () {
-      this.speechBubbleShowing = !this.speechBubbleShowing
-    },
     goToProfile () {
       this.$store.dispatch('deleteMessages')
       this.$router.push({path: 'profile'})
