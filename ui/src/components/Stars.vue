@@ -1,8 +1,8 @@
 <template>
   <div class="stars">
-    <i class="star star-one" :class="[starGroup, starOneActiveClass]"></i>
-    <i class="star star-two" :class="[starGroup, starTwoActiveClass]"></i>
-    <i class="star star-three" :class="[starGroup, starThreeActiveClass]"></i>
+    <i class="star star-one" :class="[starGroup, starClass(step.stars >= 1)]"></i>
+    <i class="star star-two" :class="[starGroup, starClass(step.stars >= 2)]"></i>
+    <i class="star star-three" :class="[starGroup, starClass(step.stars >= 3)]"></i>
   </div>
 </template>
 
@@ -11,14 +11,10 @@ export default {
   name: 'Stars',
   mounted () {
   },
-  data () {
-    return {
-      starOneActiveClass: 'active-star',
-      starTwoActiveClass: 'active-star',
-      starThreeActiveClass: 'active-star'
-    }
-  },
   methods: {
+    starClass (starActive) {
+      return starActive ? 'active-star' : 'inactive-star'
+    }
   },
   props: ['level', 'step', 'starGroup']
 }
