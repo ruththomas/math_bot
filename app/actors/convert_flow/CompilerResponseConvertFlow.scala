@@ -1,16 +1,16 @@
-package actors
+package actors.convert_flow
 
 import actors.messages._
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import compiler.Point
 import compiler.processor.AnimationType
-import controllers.MathBotCompiler.{ClientFrame, _}
+import controllers.MathBotCompiler._
 import model.models.Problem
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsString, JsValue, Writes, _}
 
-object SocketResponseConvertFlow {
+object CompilerResponseConvertFlow extends SocketResponseConvertFlow {
 
   implicit val pointWrites: Writes[Point] = (
     (JsPath \ "x").write[Int] and
@@ -36,24 +36,23 @@ object SocketResponseConvertFlow {
     (JsPath \ "grid").write[Option[ClientGrid]]
   )(unlift(ClientRobotState.unapply))
 
-  implicit val clientFrameWrites = Json.writes[ClientFrame]
+  implicit val clientFrameWrites: OWrites[ClientFrame] = Json.writes[ClientFrame]
 
   implicit val problemWrites = new Writes[Problem] {
     def writes(o: Problem) = JsString(o.encryptedProblem)
   }
 
-  implicit val clientResponseFormat = Json.writes[ClientResponse]
+  implicit val compileResponseFormat: OWrites[CompilerResponse] = Json.writes[CompilerResponse]
 
-  def compilerResponseToJson(msg: Any): JsValue = {
+  def responseToJson(msg: Any): JsValue = {
     val cr = msg match {
-      case CompilerOutput(frames, problem) => ClientResponse(frames, Some(problem))
-      case _: CompilerHalted => ClientResponse(halted = Some(true))
-      case ActorFailed(msg) => ClientResponse(error = Some(msg))
-      case _ => ClientResponse(error = Some("Unknown response from compiler"))
+      case CompilerOutput(frames, problem) => CompilerResponse(frames, Some(problem))
+      case _: CompilerHalted => CompilerResponse(halted = Some(true))
+      case ActorFailed(msg) => CompilerResponse(error = Some(msg))
+      case _ => CompilerResponse(error = Some("Unknown response from compiler"))
     }
-    Json.toJson[ClientResponse](cr)
+    Json.toJson[CompilerResponse](cr)
   }
 
-  def apply(): Flow[Any, JsValue, NotUsed] = Flow[Any].map(compilerResponseToJson)
-
+  def apply(): Flow[Any, JsValue, NotUsed] = Flow[Any].map(responseToJson)
 }

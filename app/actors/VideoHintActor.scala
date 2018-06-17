@@ -14,9 +14,7 @@ object VideoHintActor {
 class VideoHintActor @Inject()(out: ActorRef) extends Actor {
   import VideoHintActor._
 
-  var session: (String, Int) = ("", 0)
-
   override def receive: Receive = {
-    case actorFailed: ActorFailed => out ! Json.obj("dus" -> "des")
+    case actorFailed: ActorFailed => out ! actorFailed
   }
 }

@@ -3,6 +3,7 @@ package controllers
 import java.net.URLDecoder
 
 import actors._
+import actors.convert_flow.{CompilerRequestConvertFlow, CompilerResponseConvertFlow}
 import actors.messages.{ClientRobotState, PreparedStepData}
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.ask
@@ -72,10 +73,10 @@ object MathBotCompiler {
       ClientFrame(ClientRobotState(frame), programState, stats, stepData)
   }
 
-  case class ClientResponse(frames: List[ClientFrame] = List.empty[ClientFrame],
-                            problem: Option[Problem] = None,
-                            halted: Option[Boolean] = None,
-                            error: Option[String] = None)
+  case class CompilerResponse(frames: List[ClientFrame] = List.empty[ClientFrame],
+                              problem: Option[Problem] = None,
+                              halted: Option[Boolean] = None,
+                              error: Option[String] = None)
 
 }
 
@@ -106,7 +107,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
   def compileWs(encodedTokenId: String): WebSocket =
     WebSocket.accept[JsValue, JsValue] {
       case rh if sameOriginCheck(rh) =>
-        SocketRequestConvertFlow()
+        CompilerRequestConvertFlow()
           .via(
             ActorFlow.actorRef(
               out =>
@@ -120,7 +121,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
             )
           )
           .via(
-            SocketResponseConvertFlow()
+            CompilerResponseConvertFlow()
           )
       case rejected =>
         ActorFlow.actorRef(out => {
@@ -143,7 +144,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
 
     request.body.asJson match {
       case Some(json) =>
-        val sr = SocketRequestConvertFlow.jsonToCompilerCommand(json)
+        val sr = CompilerRequestConvertFlow.jsonToCompilerCommand(json)
 
         val compilerProps =
           CompilerActor.props(fakeActor,
@@ -156,7 +157,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
         val compiler = system.actorOf(compilerProps)
 
         (compiler ? sr)
-          .map(SocketResponseConvertFlow.compilerResponseToJson)
+          .map(CompilerResponseConvertFlow.responseToJson)
           .map(Ok(_))
       case _ =>
         Future(NoContent)
