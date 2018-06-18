@@ -17,6 +17,7 @@ libraryDependencies += "com.github.pdorobisz" %% "math-expression-evaluator" % "
 resolvers += "dl-john-ky" at "http://dl.john-ky.io/maven/releases"
 libraryDependencies += "io.john-ky" %% "hashids-scala" % "1.1.2-2974446"
 libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0"
+libraryDependencies += ws
 
 // The Play project itself
 lazy val root = (project in file("."))
