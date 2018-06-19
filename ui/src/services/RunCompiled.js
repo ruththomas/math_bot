@@ -139,7 +139,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _success (frame) {
-    console.log(JSON.parse(JSON.stringify(frame)))
+    // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
@@ -147,7 +147,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _failure (frame) {
-    console.log(JSON.parse(JSON.stringify(frame)))
+    // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)

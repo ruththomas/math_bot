@@ -94,7 +94,6 @@ export default new Vuex.Store({
         })
         return stepData
       }
-      console.log(stepData)
       state.stepData = Object.keys(stepData).length ? reverseTools(stepData) : stepData
     },
     UPDATE_SPLASH_SCREEN_SHOWING (state, bool) {
