@@ -226,11 +226,11 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
             val cmds = lambdas.cmds
 
             // Copy lambdas and update values
-            val l = lambdas.copy(
+            val updatedLambdas = lambdas.copy(
               cmds = cmds,
-              stagedFuncs = newStagedAndDefault("newStaged"),
-              defaultFuncs = Some(newStagedAndDefault("newDefault")),
-              activeFuncs = preBuiltActive ::: activeFuncs.zipWithIndex
+              stagedFuncs = newStagedAndDefault.getOrElse("newStaged", List.empty[FuncToken]),
+              defaultFuncs = newStagedAndDefault.get("newDefault"),
+              activeFuncs = (activeFuncs ::: preBuiltActive).zipWithIndex
                 .map(d => d._1.copy(index = Some(d._2))),
               main =
                 if (rawStepData.clearMain) playerToken.lambdas.get.main.copy(func = Some(List.empty[FuncToken]))
@@ -239,10 +239,12 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
                     .copy(func = Some(playerToken.lambdas.get.main.func.get.take(rawStepData.mainMax)))
             )
 
+            val updatedPlayerToken = playerToken.copy(lambdas = Some(updatedLambdas))
+
             // Update db with new token
             playerTokenDAO
-              .updateToken(playerToken.copy(lambdas = Some(l)))
-              .map(_ => PreparedStepData(playerToken, rawStepData))
+              .updateToken(updatedPlayerToken)
+              .map(_ => PreparedStepData(updatedPlayerToken, rawStepData))
               .pipeTo(self)(sender)
           }
       }

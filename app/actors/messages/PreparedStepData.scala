@@ -30,25 +30,28 @@ case class PreparedStepData(
 object PreparedStepData {
   import model.models.Problem._
 
-  def apply(playerToken: PlayerToken, rawStepData: RawStepData): PreparedStepData = new PreparedStepData(
-    tokenId = playerToken.token_id,
-    level = rawStepData.level,
-    step = rawStepData.step,
-    gridMap = buildGrid(rawStepData.gridMap),
-    description = makeDescription(rawStepData),
-    mainMax = rawStepData.mainMax,
-    initialRobotState = setInitialRobot(rawStepData),
-    stagedEnabled = rawStepData.stagedEnabled,
-    activeEnabled = rawStepData.activeEnabled,
-    lambdas = ResponseLambdas(prepareLambdas(playerToken, rawStepData)),
-    toolList = ToolList(),
-    specialParameters = rawStepData.specialParameters,
-    problem = problemGen(rawStepData),
-    prevStep = rawStepData.prevStep,
-    nextStep = rawStepData.nextStep,
-    initFocus = createInitFocus(rawStepData.initFocus),
-    stepControl = new StepControl(rawStepData, prepareLambdas(playerToken, rawStepData))
-  )
+  def apply(playerToken: PlayerToken, rawStepData: RawStepData): PreparedStepData = {
+    val preparedLambdas = prepareLambdas(playerToken, rawStepData)
+    new PreparedStepData(
+      tokenId = playerToken.token_id,
+      level = rawStepData.level,
+      step = rawStepData.step,
+      gridMap = buildGrid(rawStepData.gridMap),
+      description = makeDescription(rawStepData),
+      mainMax = rawStepData.mainMax,
+      initialRobotState = setInitialRobot(rawStepData),
+      stagedEnabled = rawStepData.stagedEnabled,
+      activeEnabled = rawStepData.activeEnabled,
+      lambdas = ResponseLambdas(preparedLambdas),
+      toolList = ToolList(),
+      specialParameters = rawStepData.specialParameters,
+      problem = problemGen(rawStepData),
+      prevStep = rawStepData.prevStep,
+      nextStep = rawStepData.nextStep,
+      initFocus = createInitFocus(rawStepData.initFocus),
+      stepControl = new StepControl(rawStepData, preparedLambdas)
+    )
+  }
 
   case class InitialRobotState(location: Map[String, Int], orientation: String, holding: List[String])
 
@@ -120,7 +123,9 @@ object PreparedStepData {
           .filter(ft => rawStepData.cmdsAvailable.contains(ft.commandId.getOrElse("nothing")))
 
         val main = lambdas.main.func match {
-          case Some(funcs) => lambdas.main.copy(func = Some(funcs.take(rawStepData.mainMax)))
+          case Some(funcs) =>
+            val updatedMain = Some(funcs.take(rawStepData.mainMax))
+            lambdas.main.copy(func = updatedMain)
           case None => lambdas.main.copy(func = Some(List.empty[FuncToken]))
         }
 

@@ -139,9 +139,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _success (frame) {
-    // console.log('success ~ ', this.robotFrames.slice())
-    this.programCreate = true
-    // console.log('~~~~~~~~~~~~end', this.programCreate)
+    console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
@@ -149,9 +147,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _failure (frame) {
-    console.log('failure ~ ', this.robotFrames.slice())
-    this.programCreate = true
-    // console.log('~~~~~~~~~~~~end', this.programCreate)
+    console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
