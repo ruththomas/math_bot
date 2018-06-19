@@ -187,7 +187,8 @@ class RunCompiled extends GridAnimator {
   }
 
   _askCompiler (startRunning) {
-    api.compilerWebSocket.compileWs({context: this, problem: this.stepData.problem.encryptedProblem, create: this.programCreate}, (compiled) => {
+    this._stopIfNoResponse()
+    api.compilerWebSocket.compileWs({problem: this.stepData.problem.encryptedProblem}, (compiled) => {
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()
     })

@@ -16,7 +16,7 @@
           <div class="step-info-text">{{ parseCamelCase(step.name) }}</div>
         </div>
         <div class="step-info-image-container">
-          <stars :level="level" :step="step" :star-group="'star-cluster'"></stars>
+          <stars :level="level" :step-stats="step" :star-group="'star-cluster'"></stars>
         </div>
       </div>
       <div
@@ -87,6 +87,9 @@ export default {
     },
     tokenId () {
       return this.$store.getters.getTokenId
+    },
+    step () {
+      return this.$store.getters.getStep
     }
   },
   methods: {

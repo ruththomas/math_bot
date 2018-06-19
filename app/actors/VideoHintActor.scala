@@ -44,7 +44,15 @@ object VideoHintActor {
     val starRatio = Math.ceil(3.toDouble / videoCount).toInt
     val stars = Math.max(0, stat.stars - starRatio)
     val updatedStat = stat.copy(stars = stars)
-    val updatedStats = stats.copy(levels = Map(level -> (stats.levels(level) + (step -> stat, step -> updatedStat))))
+    val updatedStats = stats.copy(levels = stats.levels.map {
+      case l if l._1 == level =>
+        l._1 -> l._2.map {
+          case s if s._1 == step =>
+            s._1 -> updatedStat
+          case s => s
+        }
+      case l => l
+    })
     playerToken.copy(stats = Some(updatedStats))
   }
 

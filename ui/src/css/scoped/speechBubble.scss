@@ -1,12 +1,16 @@
-$speech-bubble-color: rgba(232, 232, 232, 0.62);
+$speech-bubble-color: #F0F0F0;
 
 .speech-bubble {
   position: relative;
   height: 116px;
   width: 594px;
+  border: 1px solid #FFFF;
   background-color: $speech-bubble-color;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.5);
   border-radius: 5px;
   z-index: 100;
+  visibility: visible;
+  transition: opacity 1s linear;
 }
 
 .bubble-text {
@@ -14,13 +18,39 @@ $speech-bubble-color: rgba(232, 232, 232, 0.62);
   width: 100%;
 }
 
-.speech-bubble:after {
+.hide-speech-bubble {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 1s, opacity 1s linear;
+}
+
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  50% { opacity: 1 }
+}
+
+.speech-bubble:before, .speech-bubble:after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 0;
+}
+
+.speech-bubble:before {
+  //border-top: 40px solid #FFFF;
+
+  transform: rotate(50deg);
+
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+
+  margin-left: -20px;
+  margin-bottom: -27px;
+}
+
+.speech-bubble:after {
   border-top: 40px solid $speech-bubble-color;
 
   border-left: 9px solid transparent;
@@ -38,6 +68,17 @@ $speech-bubble-color: rgba(232, 232, 232, 0.62);
     height: 65px;
     width: 400px;
     margin-left: 10px;
+  }
+
+  .speech-bubble:before {
+    border-top: 20px solid #FFFF;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+
+    transform: rotate(70deg);
+
+    margin-left: -13px;
+    margin-bottom: 0;
   }
 
   .speech-bubble:after {
@@ -61,6 +102,17 @@ $speech-bubble-color: rgba(232, 232, 232, 0.62);
     margin-left: -2px;
   }
 
+  .speech-bubble:before {
+    border-top: 20px solid #FFFF;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+
+    transform: rotate(70deg);
+
+    margin-left: -13px;
+    margin-bottom: 0;
+  }
+
   .speech-bubble:after {
     border-top: 20px solid #E8E8E8;
     border-left: 5px solid transparent;
@@ -80,6 +132,17 @@ $speech-bubble-color: rgba(232, 232, 232, 0.62);
     width: 200px;
     margin-left: -2px;
     top: 5px;
+  }
+
+  .speech-bubble:before {
+    border-top: 20px solid #FFFF;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+
+    transform: rotate(70deg);
+
+    margin-left: -13px;
+    margin-bottom: 0;
   }
 
   .speech-bubble:after {
@@ -114,13 +177,25 @@ $speech-bubble-color: rgba(232, 232, 232, 0.62);
     margin-left: -2px;
   }
 
-  .speech-bubble:after {
+  .speech-bubble:before, .speech-bubble:after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     width: 0;
     height: 0;
+  }
+
+  .speech-bubble:before {
+    border-top: 40px solid #FFFF;
+
+    transform: rotate(50deg);
+
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+
+    margin-left: -20px;
+    margin-bottom: -27px;
   }
 
   .speech-bubble:after {

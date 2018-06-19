@@ -8,7 +8,7 @@ GET         /api/levels/getLevel/:level                                         
 # Compiler
 POST        /api/compile/:tokenId                                                  controllers.MathBotCompiler.compile(tokenId)
 GET         /ws/compilews/:tokenId                                                 controllers.MathBotCompiler.compileWs(tokenId)
-GET         /api/wsPath/:tokenId                                                   controllers.MathBotCompiler.wsPath(tokenId)
+GET         /api/wsPath/:tokenId/:connection                                       controllers.MathBotCompiler.wsPath(tokenId, connection)
 
 # PLAYER
 PUT         /api/token/editLambdas                                                 controllers.PlayerController.editLambdas

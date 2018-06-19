@@ -58,6 +58,7 @@ export default {
     selectLevel (level) {
       if (this.isLevelActive(level)) {
         api.switchLevel({tokenId: this.tokenId, level: level.name}, (res) => {
+          // console.log(res.body)
           this.$store.dispatch('updateStats', res.body)
           this.selectedLevel = level
         })

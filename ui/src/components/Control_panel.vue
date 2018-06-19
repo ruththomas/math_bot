@@ -12,7 +12,7 @@
       <div class="instructions-robot-container">
         <img :src="permanentImages.instructionsRobot" class="instructions-robot" data-toggle="tooltip" title="Toggle speech bubble">
       </div>
-      <speech-bubble :html="description" :showing="speechBubbleShowing" :step="step"></speech-bubble>
+      <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
     </div>
   </div>
 </template>
@@ -37,13 +37,6 @@ export default {
     },
     description () {
       return this.currentStepData.description
-    },
-    steps () {
-      return this.$store.getters.getSteps
-    },
-    step () {
-      const stepName = this.$store.getters.getStep
-      return this.steps.find(s => s.name === stepName)
     }
   },
   data () {
