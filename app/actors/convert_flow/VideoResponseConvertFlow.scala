@@ -1,22 +1,27 @@
 package actors.convert_flow
-import actors.VideoHintActor.VideoCompiled
+import actors.VideoHintActor.{Hints, VideoCompiled}
 import actors.messages.ActorFailed
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import model.models.Stats
+import model.models.{Stats, VideoHint}
 import play.api.libs.json.{JsValue, Json, Writes}
 import types.URL
 
 object VideoResponseConvertFlow extends SocketResponseConvertFlow {
-  final case class VideoResponse(status: String, videoURL: Option[URL], stats: Option[Stats])
+  final case class VideoResponse(status: String,
+                                 message: Option[String],
+                                 videoURL: Option[URL],
+                                 stats: Option[Stats],
+                                 hints: Option[VideoHint])
 
   implicit val videoResponseWrites: Writes[VideoResponse] = Json.format[VideoResponse]
 
   override def responseToJson(msg: Any): JsValue = {
     val cr = msg match {
-      case VideoCompiled(tokenId, videoUrl, stats) => VideoResponse("success", Some(videoUrl), Some(stats))
-      case ActorFailed(msg) => VideoResponse("failed", None, None)
-      case _ => VideoResponse("failed", None, None)
+      case VideoCompiled(_, videoUrl, stats) => VideoResponse("success", None, Some(videoUrl), Some(stats), None)
+      case Hints(videoHint) => VideoResponse("success", None, None, None, Some(videoHint))
+      case ActorFailed(message) => VideoResponse("failed", Some(message), None, None, None)
+      case _ => VideoResponse("failed", None, None, None, None)
     }
     Json.toJson[VideoResponse](cr)
   }
