@@ -5,13 +5,13 @@ import model.models.{FuncToken, Lambdas}
 import play.api.libs.json.Json
 
 object ResponseLambdas {
-  def apply(lambdas: Lambdas): ResponseLambdas =
+  def apply(lambdas: Lambdas): ResponseLambdas = {
     new ResponseLambdas(main = lambdas.main,
                         stagedFuncs = lambdas.stagedFuncs,
                         defaultFuncs = lambdas.defaultFuncs.get,
                         cmds = lambdas.cmds,
                         activeFuncs = lambdas.activeFuncs)
-
+  }
   implicit val jsonFormat = Json.format[ResponseLambdas]
 }
 
