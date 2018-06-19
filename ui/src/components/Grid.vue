@@ -7,6 +7,7 @@
     >
       <congrats v-if="congratsShowing"></congrats>
       <tryagain v-else-if="tryAgainShowing"></tryagain>
+      <video-hint v-else-if="hintShowing.showing"></video-hint>
       <div v-else-if="gridMap" class="grid">
         <div
           class="grid-row animated"
@@ -49,6 +50,7 @@ import assets from '../assets/assets'
 import Congrats from './Congrats'
 import Tryagain from './Try_again'
 import Robotcarrying from './Robot_carrying'
+import VideoHint from './Video_hint'
 
 export default {
   computed: {
@@ -87,6 +89,9 @@ export default {
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    hintShowing () {
+      return this.$store.getters.getHintShowing
     },
     messageShowing () {
       if (this.congratsShowing) {
@@ -131,7 +136,8 @@ export default {
   components: {
     Congrats,
     Tryagain,
-    Robotcarrying
+    Robotcarrying,
+    VideoHint
   }
 }
 </script>

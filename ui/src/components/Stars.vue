@@ -1,8 +1,8 @@
 <template>
   <div class="stars">
-    <i class="star star-one" :class="[starGroup, starClass(step.stars >= 1)]"></i>
-    <i class="star star-two" :class="[starGroup, starClass(step.stars >= 2)]"></i>
-    <i class="star star-three" :class="[starGroup, starClass(step.stars >= 3)]"></i>
+    <i class="star star-one" :class="[starGroup, starClass(stepStats.stars >= 1)]"></i>
+    <i class="star star-two" :class="[starGroup, starClass(stepStats.stars >= 2)]"></i>
+    <i class="star star-three" :class="[starGroup, starClass(stepStats.stars >= 3)]"></i>
   </div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
       return starActive ? 'active-star' : 'inactive-star'
     }
   },
-  props: ['level', 'step', 'starGroup']
+  props: ['level', 'stepStats', 'starGroup']
 }
 </script>
 
@@ -24,8 +24,13 @@ export default {
   $star-active-color: #F8E71C
   $star-inactive-color: rgba(104, 104, 104, 1)
   $star-size: 25px
+  $star-border: 1px solid #FFFF00
+  $stars-shadow: inset 0 0 100px #707070
   .stars
     display: inline-flex
+    box-shadow: $stars-shadow
+    border-radius: 5px
+    padding: 5px
 
   .star
     position: relative
@@ -76,6 +81,7 @@ export default {
     margin-left: 0
     margin-right: 0
     margin-bottom: 1.2em
+    box-shadow: none!important
 
     &:first-child, &:last-child
       margin-top: 1.2em
@@ -87,7 +93,7 @@ export default {
       margin-left: 1em
 
   .star-spread
-    margin-left: .7em
-    margin-right: .7em
+    margin-left: 1em
+    margin-right: 1em
     margin-bottom: 1.2em
 </style>

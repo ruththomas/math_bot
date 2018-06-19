@@ -1,17 +1,15 @@
 <template>
   <div class="speech-bubble" :class="!showing ? 'hide-speech-bubble' : ''">
-    <div class="bubble-text">
-      <div v-html="html"></div>
-      <stars :star-group="'star-spread'" :step="step"></stars>
-    </div>
+    <div class="bubble-text" v-html="html"></div>
+    <video-hint></video-hint>
   </div>
 </template>
 
 <script>
-import Stars from './Stars'
+import VideoHint from './Video_hint_controls'
 export default {
   name: 'speech_bubble',
-  components: {Stars},
+  components: {VideoHint},
   props: ['html', 'showing', 'step']
 }
 </script>

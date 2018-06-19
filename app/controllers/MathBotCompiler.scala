@@ -98,8 +98,11 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
     maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000)
   )
 
-  def wsPath(tokenId: TokenId): Action[AnyContent] = Action { implicit request: RequestHeader =>
-    val url = routes.MathBotCompiler.compileWs(tokenId).webSocketURL()
+  def wsPath(tokenId: TokenId, connection: String): Action[AnyContent] = Action { implicit request: RequestHeader =>
+    val url = connection match {
+      case p if p == "compiler" => routes.MathBotCompiler.compileWs(tokenId).webSocketURL()
+      case p if p == "videohint" => routes.VideoHintController.videoSocket().webSocketURL()
+    }
     val changeSsl =
       if (url.contains("localhost")) url else url.replaceFirst("ws", "wss")
     Ok(changeSsl)
