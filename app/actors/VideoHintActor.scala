@@ -47,7 +47,7 @@ object VideoHintActor {
   def updatePlayerToken(playerToken: PlayerToken, level: LevelName, step: StepName, hintCount: Int): PlayerToken = {
     val stats = playerToken.stats.get
     val stat = stats.levels(level)(step)
-    val updatedStat = stat.copy(stars = stat.stars - hintCount)
+    val updatedStat = stat.copy(stars = if (stat.stars > 0) stat.stars - 1 else 0)
     val updatedStats = stats.copy(levels = Map(level -> (stats.levels(level) + (step -> stat, step -> updatedStat))))
     playerToken.copy(stats = Some(updatedStats))
   }
