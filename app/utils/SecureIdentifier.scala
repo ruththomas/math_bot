@@ -3,7 +3,11 @@ package dataentry.utility
 import java.security.SecureRandom
 import java.util.Base64
 
-import spray.json.{ JsString, JsValue, JsonFormat }
+import org.bson.{ BsonReader, BsonWriter }
+import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
+import play.api.libs.json.{ Format, JsError, JsSuccess }
+import spray.json.JsonFormat
+
 
 class SecureIdentifier private (aId : Seq[Byte]) {
   private val id : Seq[Byte] = aId
@@ -25,6 +29,8 @@ object SecureIdentifier {
   private val random = new SecureRandom
 
   implicit object SecureIdentifierFormat extends JsonFormat[SecureIdentifier] {
+    import spray.json.{ JsString, JsValue }
+
     override def read(json : JsValue) = json match {
       case JsString(base64String) => SecureIdentifier(base64String)
       case _ => SecureIdentifier(0) // Effectively a worthless identifier
@@ -32,6 +38,17 @@ object SecureIdentifier {
 
     override def write(obj : SecureIdentifier) = JsString(obj.toString)
   }
+
+  implicit val secureIdentifierPlayFormatter = new Format[SecureIdentifier] {
+    import play.api.libs.json.{JsValue, JsString, JsResult}
+    override def writes(o : SecureIdentifier) : JsValue = JsString(o.toString)
+
+    override def reads(json : JsValue) : JsResult[SecureIdentifier] = json match {
+      case JsString(base64String) => JsSuccess(SecureIdentifier(base64String))
+      case _ => JsError("Invalid SecureIdentifier")
+    }
+  }
+
 
   def apply(aId : String) : SecureIdentifier = new SecureIdentifier(decoder.decode(aId).toSeq)
 
@@ -52,5 +69,14 @@ object SecureIdentifier {
         None
     }
   }
+
+  class SecureIdentifierCodec extends Codec[SecureIdentifier] {
+    override def encode(writer : BsonWriter, value : SecureIdentifier, encoderContext : EncoderContext) : Unit = writer.writeString(value.toString)
+
+    override def getEncoderClass = classOf[SecureIdentifier]
+
+    override def decode(reader : BsonReader, decoderContext : DecoderContext) = SecureIdentifier(reader.readString())
+  }
+
 
 }

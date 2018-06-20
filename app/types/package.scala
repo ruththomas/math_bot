@@ -5,3 +5,4 @@ package object types {
   type URL = String
   type KEY = String
 }
+

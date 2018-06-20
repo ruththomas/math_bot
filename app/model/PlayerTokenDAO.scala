@@ -1,17 +1,17 @@
 package model
 
 import com.google.inject.Inject
-import model.models.{FuncToken, Lambdas, PlayerToken, Stats, StepToken}
-import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
-import org.bson.codecs.configuration.CodecRegistry
-import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
+import dataentry.utility
+import model.models._
+import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
+import org.bson.codecs.configuration.{ CodecRegistries, CodecRegistry }
+import org.mongodb.scala.bson.codecs.{ DEFAULT_CODEC_REGISTRY, Macros }
 import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.result.{DeleteResult, UpdateResult}
-import org.mongodb.scala.{Completed, _}
+import org.mongodb.scala.result.{ DeleteResult, UpdateResult }
+import org.mongodb.scala.{ Completed, _ }
 import types.TokenId
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
   final val collectionLabel = "tokens"
@@ -27,6 +27,7 @@ class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionC
         Macros.createCodecProvider[FuncToken](),
         Macros.createCodecProvider[StepToken]()
       ),
+      CodecRegistries.fromCodecs(new utility.SecureIdentifier.SecureIdentifierCodec),
       DEFAULT_CODEC_REGISTRY
     )
 
