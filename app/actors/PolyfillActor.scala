@@ -24,6 +24,8 @@ object PolyfillActor {
 
   final case class PolyfillsApplied(playerToken: PlayerToken)
 
+  final case class ImplementWins(playerToken: PlayerToken)
+
   def dedup(lambdas: Lambdas): Lambdas = {
     // Dedup active functions, replace created id
     def dedupActives(actives: List[FuncToken]): List[FuncToken] = actives match {
@@ -99,8 +101,24 @@ class PolyfillActor()(system: ActorSystem, logger: MathBotLogger, environment: E
         deduped = dedup(lambdas)
       } yield
         Future { playerToken.copy(lambdas = Some(deduped)) }
-          .map { PolyfillsApplied.apply }
+          .map { ImplementWins.apply }
           .pipeTo(self)(sender)
+    case ImplementWins(playerToken) =>
+      for {
+        stats <- playerToken.stats
+        levels = stats.levels
+      } yield
+        Future {
+          levels.head._2.head._2.wins match {
+            case Some(_) => playerToken
+            case None =>
+              playerToken.copy(stats = Some(stats.copy(levels = levels.map { l =>
+                l._1 -> l._2.map { st =>
+                  st._1 -> st._2.copy(wins = Some(st._2.stars), stars = 3)
+                }
+              })))
+          }
+        }.map { PolyfillsApplied }.pipeTo(self)(sender)
 
     case PolyfillsApplied(playerToken) =>
       sender ! UpdatePlayerToken(playerToken)

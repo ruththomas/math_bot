@@ -1,29 +1,29 @@
 package controllers
 
 import java.net.URLDecoder
-import javax.inject.Inject
 
-import actors.messages.ActorFailed
-import actors.StatsActor._
 import actors.StatsActor
+import actors.StatsActor._
+import actors.messages.ActorFailed
 import akka.actor.ActorSystem
-import akka.util.Timeout
 import akka.pattern.ask
+import akka.util.Timeout
+import javax.inject.Inject
 import loggers.MathBotLogger
+import model.PlayerTokenDAO
 import model.models.Stats
-import play.api.mvc._
 import play.api.libs.json._
-import play.modules.reactivemongo.ReactiveMongoApi
+import play.api.mvc._
 
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
-class StatsController @Inject()(system: ActorSystem, val reactiveMongoApi: ReactiveMongoApi, logger: MathBotLogger)
+class StatsController @Inject()(system: ActorSystem, playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger)
     extends Controller {
 
   implicit val timeout: Timeout = 5000.minutes
 
-  val statsActor = system.actorOf(StatsActor.props(system, reactiveMongoApi, logger), "stats-actor")
+  val statsActor = system.actorOf(StatsActor.props(system, playerTokenDAO, logger), "stats-actor")
 
   def advanceStats(encodedTokenId: String, success: Option[String]) = Action.async {
     implicit request: Request[AnyContent] =>

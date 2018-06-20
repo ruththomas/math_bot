@@ -15,6 +15,8 @@ libraryDependencies ++= Seq(
   "com.github.pdorobisz" %% "math-expression-evaluator" % "1.0.0",
   "io.john-ky" %% "hashids-scala" % "1.1.2-2974446",
   filters,
+  "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0",
+  ws,
 
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
@@ -27,6 +29,7 @@ libraryDependencies ++= Seq(
   "io.gatling" % "gatling-test-framework" % "2.2.5" % Test,
   "org.mockito" % "mockito-all" % "1.9.5" % Test
 )
+
 
 // The Play project itself
 lazy val root = (project in file("."))
