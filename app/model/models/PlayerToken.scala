@@ -1,24 +1,26 @@
 package model.models
 
-import actors.messages.PreparedStepData
-import play.api.libs.functional.syntax._
+import dataentry.utility.SecureIdentifier
 import play.api.libs.json._
 
 case class PlayerToken(
     token_id: String,
     lambdas: Option[Lambdas] = None,
     stats: Option[Stats] = None,
-    randomImages: Option[List[String]] = None
+    randomImages: Option[List[String]] = None,
+    sessionId: Option[SecureIdentifier] = None
 )
 
 object PlayerToken {
-  val tokenIdField = "token_id"
-  val lambdas = "lambdas"
-  val statsField = "stats"
-  val randomImagesField = "randomImages"
+  final val sessionId = "sessionId"
+  final val tokenIdField = "token_id"
+  final val lambdas = "lambdas"
+  final val statsField = "stats"
+  final val randomImagesField = "randomImages"
 
   implicit val jsonFormat = Json.format[PlayerToken]
 
+  /*
   implicit val tokenReads: Reads[PlayerToken] = (
     (JsPath \ PlayerToken.tokenIdField).read[String] and
     (JsPath \ PlayerToken.lambdas).readNullable[Lambdas] and
@@ -32,4 +34,5 @@ object PlayerToken {
     (JsPath \ PlayerToken.statsField).writeNullable[Stats] and
     (JsPath \ PlayerToken.randomImagesField).writeNullable[List[String]]
   )(unlift(PlayerToken.unapply))
+ */
 }

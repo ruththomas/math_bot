@@ -11,9 +11,11 @@ import akka.stream.ActorMaterializer
 import dataentry.actors.messages._
 import dataentry.actors.models.GoogleApiHelpers
 import dataentry.actors.models.GoogleApiHelpers.GoogleTokens
-import dataentry.utility.{ AkkaSemanticLog, GoogleApiConfig, SecureIdentifier, SemanticLog }
+import dataentry.utility.{ AkkaSemanticLog, SecureIdentifier, SemanticLog }
+import utils.GoogleApiConfig
 
 import scala.concurrent.ExecutionContext
+import scala.util.Failure
 
 class GoogleOAuth(
     override val config : GoogleApiConfig
@@ -29,7 +31,7 @@ class GoogleOAuth(
   val log = new AkkaSemanticLog(context.system, this)
 
   override def aroundReceive(receive : Receive, msg : Any) : Unit = {
-    log.info(SemanticLog.tags.message(msg))
+    log.info(SemanticLog.tags.description(msg.toString))
     super.aroundReceive(receive, msg)
   }
 
@@ -78,7 +80,7 @@ class GoogleOAuth(
           TokensFromCodeFailure(sessionId, config.oauthTokenUri, statusCode, body)
       } pipeTo sender() onComplete {
         // In practice this is usually a connectivity error. Revisit in production to see if there is a triage.
-        case util.Failure(e) => sender() ! TokensFromCodeFailure(sessionId, config.oauthTokenUri, StatusCodes.InternalServerError, e.toString)
+        case Failure(e) => sender() ! TokensFromCodeFailure(sessionId, config.oauthTokenUri, StatusCodes.InternalServerError, e.toString)
         case _ => // Success handled by the pipeTo
       }
     case RevokeTokens(sessionId, access_token) =>

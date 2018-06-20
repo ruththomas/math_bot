@@ -1,5 +1,6 @@
 package http
 
+import actors.authFlow.AuthWebSocketFlow
 import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ StatusCodes, Uri }
@@ -7,28 +8,36 @@ import com.google.inject.Inject
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
+import dataentry.actors.messages.ProvideGoogleApiCode
 import dataentry.utility.SecureIdentifier
+import model.SessionDAO
 import utils.WebClientConfig
 
-import scala.concurrent.Await
+import scala.concurrent.{ Await, ExecutionContextExecutor }
 import scala.concurrent.duration.Duration
 
 
 class Routes @Inject()(
                         implicit val system : ActorSystem,
                         config              : WebClientConfig,
-                        googleOAuth         : ActorRef
+                        googleOAuth         : ActorRef,
+                        sessionDAO: SessionDAO
                       ) {
 
-  implicit def ec = system.dispatcher
-  implicit def materializer = ActorMaterializer()
+  implicit def ec : ExecutionContextExecutor = system.dispatcher
+  implicit def materializer : ActorMaterializer = ActorMaterializer()
 
 
-  lazy val routes : Route = path("ping") {
-    get {
-      complete("pong")
-    }
-  } ~       path("authorized") {
+  lazy val routes : Route =
+    path("authSocket") {
+      handleWebSocketMessages(
+        AuthWebSocketFlow(a => {}, sessionDAO)
+      )
+    } ~ path("ping") {
+      get {
+        complete("pong")
+      }
+    } ~ path("authorized") {
     get {
       parameter('error) {
         error =>
