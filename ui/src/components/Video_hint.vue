@@ -1,6 +1,7 @@
 <template>
   <div class="video-hint">
-    <iframe class="embeded" :src="hintShowing.videoURL" scrolling="no" frameborder="0" allowfullscreen="true"></iframe>
+    <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
+    <iframe class="embedded" :src="hintShowing.videoURL" scrolling="no" frameborder="0"></iframe>
   </div>
 </template>
 
@@ -10,6 +11,14 @@ export default {
   computed: {
     hintShowing () {
       return this.$store.getters.getHintShowing
+    },
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
+    }
+  },
+  methods: {
+    closeHint () {
+      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
     }
   }
 }
@@ -25,10 +34,17 @@ $video-hint-shadow: inset 0 0 200px #000;
   margin: 0 auto;
   border-radius: 5px;
   box-shadow: $video-hint-shadow;
+  position: relative;
 
-  .embeded {
+  .embedded {
     height: 100%;
     width: 100%;
   }
+}
+
+.close-video-edit {
+  position: absolute;
+  top: -20px;
+  right: -20px;
 }
 </style>
