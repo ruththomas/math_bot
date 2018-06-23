@@ -91,7 +91,7 @@ class VideoHintActor @Inject()(out: ActorRef,
    * For future implementation with youtube api...
    * */
   private val CHANNEL_ID: String = "UCCRrOAkZKCMB3wEIGEmdMEQ"
-  private val KEY: String = "AIzaSyDY3RSvLmw2uBc3ZarYujOfHtqgJ8n6mPI"
+  private val KEY: String = sys.env("MB_YOUTUBE_KEY")
   private val YOUTUBE_URL: URL = "https://www.googleapis.com/youtube/v3/"
 
   private def embedURL(videoId: String): URL = s"https://www.youtube.com/embed/$videoId"

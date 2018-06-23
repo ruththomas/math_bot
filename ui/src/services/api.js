@@ -16,7 +16,7 @@ export default {
     Vue.http.post('/api/token', JSON.stringify({token_id: tokenId}))
       .then(res => res.body)
       .then(token => {
-        console.log('GET TOKEN ~ ', JSON.parse(JSON.stringify(token)))
+        // console.log('GET TOKEN ~ ', JSON.parse(JSON.stringify(token)))
         this.compilerWebSocket = new CompilerSocket(token.token_id)
         this.videoHintSocket = new VideoHintSocket(token.token_id)
         cb(token)

@@ -9,7 +9,6 @@ class VideoHint {
 
   _startVideo (videoURL) {
     this.$store.dispatch('toggleHintShowing', {showing: true, videoURL: videoURL})
-    console.log(videoURL)
   }
 
   getHint () {
