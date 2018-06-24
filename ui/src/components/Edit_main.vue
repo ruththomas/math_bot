@@ -19,7 +19,7 @@
         v-if="runCompiled.robot.state === 'home' || runCompiled.robot.state === 'paused'"
         class="play noDrag dialog-button"
         :src="permanentImages.buttons.playButton"
-        alt="Play button" @click="[runCompiled.start(), togglePut(true)]"
+        alt="Play button" @click="[runCompiled.start(), togglePut(true), closeHint()]"
         data-toggle="tooltip" title="Run program" />
 
       <img
@@ -118,6 +118,9 @@ export default {
     }
   },
   methods: {
+    closeHint () {
+      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
+    },
     togglePut (bool) {
       this.mainDraggableOptions.group.put = bool
     },

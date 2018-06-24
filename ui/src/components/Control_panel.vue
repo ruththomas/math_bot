@@ -46,6 +46,7 @@ export default {
   },
   methods: {
     goToProfile () {
+      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
       this.$store.dispatch('deleteMessages')
       this.$router.push({path: 'profile'})
     }
