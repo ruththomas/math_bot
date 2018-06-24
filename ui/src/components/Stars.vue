@@ -1,25 +1,17 @@
 <template>
-  <div class="stars">
-    <i class="star star-one" :class="[starGroup, starClass(stepStats.stars >= 1)]"></i>
-    <i class="star star-two" :class="[starGroup, starClass(stepStats.stars >= 2)]"></i>
-    <i class="star star-three" :class="[starGroup, starClass(stepStats.stars >= 3)]"></i>
-    <div
-      v-if="stepStats.stars < 3"
-      class="star-timer"
-    >{{ remainingTime }}</div>
+  <div class="stars" :class="starGroup">
+    <star class="star-two" :active="isActive(2)"></star>
+    <star class="star-one" :active="isActive(1)"></star>
+    <star class="star-three" :active="isActive(3)"></star>
+    <span v-if="stepStats.stars < 3" class="star-timer">{{ convertTime(remainingTime) }}</span>
   </div>
 </template>
 
 <script>
+import Star from './Star'
 
 export default {
   name: 'Timer',
-  methods: {
-    starClass (starActive) {
-      if (!this.stepStats.active) return 'inactive-star'
-      else return starActive ? 'active-star' : 'inactive-star'
-    }
-  },
   computed: {
     remainingTime () {
       const timer = this.videoTimers[`${this.level}/${this.step}`]
@@ -30,91 +22,81 @@ export default {
       return this.$store.getters.getVideoTimers
     }
   },
+  methods: {
+    convertTime (minutes) {
+      let h = Math.floor(minutes / 60)
+      let m = minutes % 60
+      m = m < 10 ? '0' + m : m
+      return h + ':' + m
+    },
+    isActive (starNumber) {
+      if (this.stepStats.active) {
+        if (starNumber === 1) {
+          return this.stepStats.stars >= 1
+        } else if (starNumber === 2) {
+          return this.stepStats.stars >= 3
+        } else {
+          return this.stepStats.stars >= 2
+        }
+      } else return false
+    }
+  },
+  components: {
+    Star
+  },
   props: ['level', 'step', 'stepStats', 'starGroup']
 }
 </script>
 
-<style scoped lang="sass">
-  $star-active-color: #F8E71C
-  $star-inactive-color: rgba(104, 104, 104, 1)
-  $star-size: 25px
-  $star-border: 1px solid #FFFF00
-  $stars-shadow: inset 0 0 100px #707070
-  .stars
-    display: inline-flex
-    box-shadow: $stars-shadow
-    border-radius: 5px
-    padding: 5px
-    position: relative
+<style scoped lang="scss">
+$star-cluster-star-one-size: 50px;
+$star-cluster-star-two-three-size: 40px;
+$star-spread-star-size: 60px;
+$stars-shadow: inset 0 0 100px #D3D3D3;
+$star-congrats-star-size: 70px;
+.stars {
+  position: relative;
+  display: flex;
+  height: 70px;
+  width: 200px;
+  justify-content: space-around;
+  box-shadow: $stars-shadow;
+  border-radius: 5px;
+}
 
-  .star
-    position: relative
+.star-timer {
+  position: absolute;
+}
 
-    display: inline-block
-    width: 0
-    height: 0
+.star-cluster {
+  .star-one {
+    height: $star-cluster-star-one-size;
+    width: $star-cluster-star-one-size;
+    align-self: flex-start;
+  }
 
-    border-right:  .3em solid transparent
-    border-left:   .3em solid transparent
+  .star-two, .star-three {
+    height: $star-cluster-star-two-three-size;
+    width: $star-cluster-star-two-three-size;
+    align-self: flex-end;
+  }
 
-    /* Controls the size of the stars. */
-    font-size: $star-size
+  .star-timer {
+    bottom: 0;
+  }
+}
 
-    &:before, &:after
-      content: ''
+.star-spread {
+  .star-one, .star-two, .star-three {
+    height: $star-spread-star-size;
+    width: $star-spread-star-size;
+    align-self: center;
+  }
 
-      display: block
-      width: 0
-      height: 0
-
-      position: absolute
-      top: .6em
-      left: -1em
-
-      border-right:  1em solid transparent
-      border-left:   1em solid transparent
-
-      transform: rotate(-35deg)
-
-    &:after
-      transform: rotate(35deg)
-
-  .active-star
-    border-bottom: .7em solid $star-active-color
-
-    &:before, &:after
-      border-bottom: .7em solid $star-active-color
-
-  .inactive-star
-    opacity: 0.5
-    border-bottom: .7em solid $star-inactive-color
-
-    &:before, &:after
-      border-bottom: .7em solid $star-inactive-color
-
-  .star-cluster
-    margin-left: 0
-    margin-right: 0
-    margin-bottom: 1.2em
-    box-shadow: none!important
-
-    &:first-child, &:last-child
-      margin-top: 1.2em
-
-    &:first-child
-      margin-right: 1em
-
-    &:last-child
-      margin-left: 1em
-
-  .star-spread
-    margin-left: 1em
-    margin-right: 1em
-    margin-bottom: 1.2em
-
-  .star-timer
-    position: absolute
-    left: 50%
-    transform: translate(-50%, 0)
-    bottom: 0
+  .star-timer {
+    right: -30px;
+    bottom: 0;
+    font-size: 16px;
+  }
+}
 </style>

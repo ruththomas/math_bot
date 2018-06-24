@@ -159,4 +159,233 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/editMain.scss" lang="scss"></style>
+<style scoped lang="scss">
+  .edit-main {
+    z-index: 1000!important;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: visible;
+    width: 100%;
+    height: 120px;
+    /*border: 1px solid goldenrod;*/
+  }
+
+  .edit-main .function-drop {
+    width: 65%!important;
+    /*border: 1px solid teal;*/
+  }
+
+  .bar {
+    position: absolute;
+    left: 48px;
+    right: 48px;
+    top: 39.5%;
+    height: 2px;
+    background-color: #B8E986;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .red-bar {
+    background-color: #FF0000;
+  }
+
+  .dialog-button {
+    z-index: 2010;
+    display: flex;
+    cursor: pointer;
+    position: absolute;
+    top: -20px;
+    float: right;
+  }
+
+  .play {
+    border-radius: 50%;
+    right: 0;
+  }
+
+  .play-border {
+    border: 3px solid rgb(135, 206, 250);
+  }
+
+  .stop {
+    right: -58px;
+  }
+
+  .trash {
+    left: 0;
+  }
+
+  .speed {
+    right: 60px;
+    background-color: #B8E986;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 22px;
+    font-weight: 500;
+  }
+
+  .x {
+    float: left;
+  }
+
+  /* Medium Devices, Desktops */
+  @media only screen and (max-width : 992px) {
+    .edit-main {
+      padding: 0;
+      height: 55px;
+    }
+
+    .function-drop {
+      height: 60px;
+      width: 75%;
+    }
+
+    .dialog-button {
+      top: -9px;
+    }
+
+    .bar {
+      top: 30%;
+      left: -10px;
+      right: -10px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      display: none;
+    }
+
+    .speed {
+      right: 24px;
+      font-size: 12px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+
+    .edit-main {
+      padding: 0;
+      align-items: center;
+      height: 60px;
+    }
+
+    .function-drop {
+      height: 60px;
+      width: 75%;
+    }
+
+    .dialog-button {
+      top: -9px;
+    }
+
+    .bar {
+      top: 30%;
+      left: -10px;
+      right: -10px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      display: none;
+    }
+
+    .speed {
+      right: 24px;
+      font-size: 12px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+
+    .edit-main .function-drop {
+      width: 70%!important;
+    }
+  }
+
+  /* Extra Small Devices, Phones */
+  @media only screen and (max-width : 480px) {
+
+  }
+
+  /* Custom, iPhone Retina */
+  @media only screen and (max-width : 320px) {
+
+  }
+
+  /* iPad */
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+    .edit-main {
+      height: 105px;
+    }
+
+    .dialog-button {
+      top: -15px;
+    }
+
+    .bar {
+      top: 39%;
+      left: -10px;
+      right: -10px;
+    }
+
+    .stop {
+      display: none;
+    }
+
+    .speed {
+      right: 35px;
+      font-size: 12px;
+    }
+  }
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+    .edit-main {
+      padding: 0;
+    }
+
+    .function-drop {
+      height: 60px;
+      width: 75%;
+    }
+
+    .dialog-button {
+      top: -15px;
+    }
+
+    .stop {
+      display: none;
+    }
+
+    .speed {
+      right: 35px;
+      font-size: 12px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+</style>

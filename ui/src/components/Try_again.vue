@@ -8,5 +8,6 @@
 export default {}
 </script>
 
-<style scoped src="../css/scoped/congrats.scss" lang="scss"></style>
+<style scoped lang="scss">
+</style>
 <style scoped src="../css/scoped/tryAgain.scss" lang="scss"></style>

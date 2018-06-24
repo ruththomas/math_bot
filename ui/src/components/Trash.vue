@@ -53,6 +53,15 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/trash.scss" lang="scss">
-
+<style scoped lang="scss">
+  .fire {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    bottom: 0;
+    right: 0;
+    z-index: 105;
+    height: 200vh;
+    width: 200vw;
+  }
 </style>
