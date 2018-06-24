@@ -1,7 +1,7 @@
 package model
 
 import com.google.inject.Inject
-import model.models.{HintTaken, VideoHint}
+import model.models.{HintTaken, HintsTaken}
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
@@ -15,29 +15,29 @@ import scala.concurrent.{ExecutionContext, Future}
 class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
   final val collectionLabel = "video-hints"
 
-  import VideoHint._
+  import HintsTaken._
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(
-      Macros.createCodecProvider[VideoHint](),
+      Macros.createCodecProvider[HintsTaken](),
       Macros.createCodecProvider[HintTaken]()
     ),
     DEFAULT_CODEC_REGISTRY
   )
 
-  val collection: MongoCollection[VideoHint] =
-    mathbotDb.getCollection[VideoHint](collectionLabel).withCodecRegistry(codecRegistry)
+  val collection: MongoCollection[HintsTaken] =
+    mathbotDb.getCollection[HintsTaken](collectionLabel).withCodecRegistry(codecRegistry)
 
-  def insert(videoHint: VideoHint): Future[Option[Completed]] =
+  def insert(videoHint: HintsTaken): Future[Option[Completed]] =
     collection.insertOne(videoHint).toFutureOption()
 
-  def getHints(tokenId: TokenId): Future[Option[VideoHint]] =
+  def getHints(tokenId: TokenId): Future[Option[HintsTaken]] =
     collection.find(equal(tokenIdField, tokenId)).first().toFutureOption()
 
   def delete(tokenId: TokenId): Future[Option[DeleteResult]] =
     collection.deleteOne(equal(tokenIdField, tokenId)).toFutureOption()
 
-  def update(videoHint: VideoHint): Future[Option[UpdateResult]] =
+  def update(videoHint: HintsTaken): Future[Option[UpdateResult]] =
     collection
       .replaceOne(equal(tokenIdField, videoHint.tokenId), videoHint)
       .toFutureOption()
