@@ -238,4 +238,110 @@ export default {
   }
 
 </style>
-<style src="../css/global/speechBubble.css"></style>
+<style lang="scss">
+  /* GLobal styles needed to handle v-html */
+  .speech-bubble {
+    color: #000000;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: left;
+    padding: 13px 13px 13px 20px;
+  }
+
+  .speech-bubble p {
+    margin: 0!important;
+  }
+
+  /* None scoped styles for speech images */
+  .speech-bubble img {
+    height: 22px;
+    background-color: black;
+    border-radius: 2px;
+  }
+
+  @media only screen and (max-width : 1280px) {
+    .speech-bubble {
+      font-size: 18px;
+      line-height: 20px;
+      padding: 0 0 0 10px;
+    }
+
+    .speech-bubble img {
+      height: 10px;
+    }
+  }
+
+  /* Medium Devices, Desktops */
+  @media only screen and (max-width : 992px) {
+    .speech-bubble {
+      font-size: 14px;
+      line-height: 16px;
+      padding: 0 0 0 10px;
+    }
+
+    .speech-bubble img {
+      height: 10px;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+    .speech-bubble {
+      font-size: 12px;
+      line-height: 14px;
+      padding: 0 0 0 10px;
+    }
+
+    .speech-bubble img {
+      height: 10px;
+    }
+  }
+
+  /* Extra Small Devices, Phones */
+  @media only screen and (max-width : 480px) {
+    .speech-bubble {
+      font-size: 12px;
+      line-height: 14px;
+      padding: 0 0 0 10px;
+    }
+
+    .speech-bubble img {
+      height: 10px;
+    }
+  }
+
+  /* Custom, iPhone 5 Retina */
+  @media only screen and (max-width : 320px) {
+
+  }
+
+  /* Custom, iPhone 5 Retina */
+  @media only screen and (max-width : 320px) {
+
+  }
+
+  /* iPad */
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+    .speech-bubble {
+      font-size: 24px;
+      line-height: 29px;
+      padding: 7px 7px 7px 15px;
+    }
+
+    .speech-bubble img {
+      height: 22px;
+    }
+  }
+
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+    .speech-bubble {
+      font-size: 24px;
+      line-height: 29px;
+      padding: 7px 7px 7px 15px;
+    }
+
+    .speech-bubble img {
+      height: 22px;
+    }
+  }
+</style>

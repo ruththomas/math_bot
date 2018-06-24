@@ -1,5 +1,7 @@
 import api from './api'
-
+/*
+* VideoHint - controls video hints
+* */
 class VideoHint {
   constructor (context) {
     this.context = context

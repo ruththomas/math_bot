@@ -11,7 +11,6 @@ import play.api.libs.json.JsValue
 import play.api.libs.streams.ActorFlow
 import play.api.mvc.{Controller, WebSocket}
 import play.api.libs.ws._
-
 class VideoHintController @Inject()(implicit val system: ActorSystem,
                                     implicit val mat: Materializer,
                                     playerTokenDAO: PlayerTokenDAO,

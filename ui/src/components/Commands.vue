@@ -358,10 +358,6 @@ export default {
     white-space: nowrap;
   }
 
-  .dragging, .ghost, .chosen {
-
-  }
-
   .command-control-button-group {
     height: 100%;
     position: relative;

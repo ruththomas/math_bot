@@ -76,8 +76,4 @@ export default {
     margin: 10px 10px 10px 0;
   }
 
-  .dragging, .ghost, .chosen {
-    float: left;
-  }
-
 </style>
