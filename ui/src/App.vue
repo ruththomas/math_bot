@@ -71,8 +71,23 @@ export default {
     width: 20px !important;
   }
 
-  .dragging > .command-name, .function-drop > .sortable-chosen > .command-name {
-    z-index: 1000000!important;
+  .dragging, .ghost, .chosen {
+    height: 75px;
+    width: 75px;
+  }
+
+  .dragging {
+    opacity: 1;
+  }
+
+  .function-drop {
+    .ghost, .chosen {
+      margin: 0 20px 0 20px;
+    }
+
+    .ghost {
+      opacity: 0;
+    }
   }
 
   .pulse {

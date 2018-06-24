@@ -128,7 +128,8 @@ export default {
       if (!evt.hasOwnProperty('removed')) {
         const command = evt.hasOwnProperty('added') ? evt.added.element : evt.moved.element
         const ind = evt.hasOwnProperty('added') ? evt.added.newIndex : evt.moved.newIndex
-        buildUtils.updateFunctionsOnChange({context: this, currentFunction: buildUtils.currentFunc(this), addedFunction: command, newIndex: ind, override: evt.hasOwnProperty('moved')})
+        const currentFunc = buildUtils.currentFunc(this)
+        buildUtils.updateFunctionsOnChange({context: this, currentFunction: currentFunc, addedFunction: command, newIndex: ind, override: evt.hasOwnProperty('moved')})
       }
       this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
     },

@@ -86,7 +86,6 @@ export default {
     display: flex;
     justify-content: center;
     position: relative;
-    left: 0.3em;
     overflow: hidden;
   }
 
@@ -119,7 +118,6 @@ export default {
   /* Large Phones, landscape*/
   @media only screen and (max-width : 992px) {
     .main-placeholder-container {
-      left: 0.2em;
     }
 
     .placeholder {
@@ -135,7 +133,6 @@ export default {
   /* Small Devices */
   @media only screen and (max-width : 667px) {
     .main-placeholder-container {
-      left: 0.15em;
     }
 
     .placeholder {
@@ -160,7 +157,6 @@ export default {
   /* iPad */
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     .main-placeholder-container {
-      left: 0.3em;
     }
 
     .placeholder {
@@ -175,7 +171,6 @@ export default {
 
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
     .main-placeholder-container {
-      left: 0.2em;
     }
 
     .placeholder {
