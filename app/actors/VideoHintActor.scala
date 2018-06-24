@@ -126,8 +126,14 @@ class VideoHintActor @Inject()(out: ActorRef,
   private def embedURL(videoId: String): URL = s"https://www.youtube.com/embed/$videoId"
 
   override def receive: Receive = {
+    /*
+     * GetVideo - entry point for getting a video
+     * */
     case GetVideo(tokenId) =>
       self ! GetPlayerToken(tokenId)
+    /*
+     * GetPlayerToken - gets player token from db
+     * */
     case GetPlayerToken(tokenId) =>
       for {
         playerTokenOpt <- playerTokenDAO.getToken(tokenId)
@@ -139,6 +145,13 @@ class VideoHintActor @Inject()(out: ActorRef,
             } yield self ! GetVideoHint(playerToken, stats)
           case None => out ! ActorFailed(s"Unable to locate tokenId $tokenId")
         }
+    /*
+     * # GetVideoHint - gets video hint from db and controls traffic
+     * If video hint found in db - videos already watched for game
+     * ---- If level/step found - video watched for level/step - continue to UpdateExistingVideo
+     * ---- If level/step not found - video never watched for level/step - continue to InsertNewVideo
+     * If video hint not found - no videos ever watched for game - continue to InsertNewVideoRecord
+     * */
     case GetVideoHint(playerToken, stats) =>
       for {
         videoHintOpt <- videoHintDAO.getHints(playerToken.token_id)
@@ -159,6 +172,9 @@ class VideoHintActor @Inject()(out: ActorRef,
           // if not in database insert new record into database
           case None => self ! InsertNewVideoRecord(playerToken, stats, videoIds)
         }
+    /*
+     * UpdateExistingVideo - if video has already been viewed for this level/step
+     * */
     case UpdateExistingVideo(playerToken, hintsTaken, hintTaken, stats, videoIds) =>
       // Increment hint count
       val hintCount =
@@ -172,6 +188,9 @@ class VideoHintActor @Inject()(out: ActorRef,
       // respond to client
       val videoUrl = embedURL(videoIds(hintCount - 1))
       out ! HintPrepared(playerToken.token_id, videoUrl, updatedPlayerToken.stats.get)
+    /*
+     * InsertNewVideo - if video has never been viewed for this level/step
+     * */
     case InsertNewVideo(playerToken, hintsTaken, stats, videoIds) =>
       // Initialize hint count
       val hintCount = 1
@@ -186,6 +205,9 @@ class VideoHintActor @Inject()(out: ActorRef,
       // respond to client
       val videoUrl = embedURL(videoIds(hintCount - 1))
       out ! HintPrepared(playerToken.token_id, videoUrl, updatedPlayerToken.stats.get)
+    /*
+     * InsertNewVideoRecord - if no videos have ever been watched during game
+     * */
     case InsertNewVideoRecord(playerToken, stats, videoIds) =>
       // Initialize hint count
       val hintCount = 1
@@ -201,6 +223,10 @@ class VideoHintActor @Inject()(out: ActorRef,
       // respond to client
       val videoUrl = embedURL(videoIds(hintCount - 1))
       out ! HintPrepared(playerToken.token_id, videoUrl, updatedPlayerToken.stats.get)
+    /*
+     * GetHintsTaken - returns a list of hints taken with a remaining time in minutes
+     * used for initial rendering
+     * */
     case GetHintsTaken(tokenId) =>
       videoHintDAO.getHints(tokenId) map {
         case Some(hintsTaken) =>
@@ -213,6 +239,12 @@ class VideoHintActor @Inject()(out: ActorRef,
           )
         case None => RemainingTimeList(tokenId, List.empty[RemainingTime])
       }
+    /*
+     * GetRemainingTime - gets new remaining time
+     * Used for new timers as well as for resetting database when time is expired
+     * Client calls this when video is clicked
+     * Client calls this again when timer reaches zero in order to reset database
+     * */
     case GetRemainingTime(tokenId, level, step) =>
       videoHintDAO.getHints(tokenId) map {
         case Some(hintsTaken) =>
@@ -220,9 +252,10 @@ class VideoHintActor @Inject()(out: ActorRef,
             case Some(hintTaken) =>
               // get remaining time in minutes
               val remainingTime = calculateRemainingTime(hintTaken.timeStamp)
-              // if remaining time is zero
+              // if remaining time is zero reset stars and hints taken
               if (remainingTime == 0) {
                 self ! ResetStars(tokenId, hintsTaken, level, step)
+                // else respond with remaining time
               } else {
                 out ! RemainingTime(tokenId, level, step, remainingTime)
               }
@@ -230,6 +263,11 @@ class VideoHintActor @Inject()(out: ActorRef,
           }
         case None => out ! RemainingTime(tokenId, level, step, 0)
       }
+    /*
+     * ResetStars - resets stars in player token and removes level/step from video hint
+     * Responds to client with remaining time of 0
+     * The client will call for updated player token (PlayerTokenController) if response is 0
+     * */
     case ResetStars(tokenId, hintsTaken, level, step) =>
       // get player token
       playerTokenDAO.getToken(tokenId) map {
