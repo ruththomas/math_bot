@@ -5,6 +5,8 @@ import permanentImages from '../assets/assets'
 import Message from '../services/Message'
 import AuthService from '../services/AuthService'
 import utils from '../services/utils'
+// import api from '../services/api'
+import VideoTimer from '../services/VideoTimer'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -78,9 +80,18 @@ export default new Vuex.Store({
     hintShowing: {
       showing: false,
       videoURL: ''
-    }
+    },
+    videoTimers: {}
   },
   mutations: {
+    ADD_VIDEO_TIMER (state, {level, step, remainingTime}) {
+      Vue.set(state.videoTimers, `${level}/${step}`, new VideoTimer({state, level, step, remainingTime}))
+    },
+    START_EXISTING_TIMERS (state, {hintsTaken}) {
+      hintsTaken.forEach(ht => {
+        Vue.set(state.videoTimers, `${ht.level}/${ht.step}`, new VideoTimer({state, level: ht.level, step: ht.step, remainingTime: ht.time}))
+      })
+    },
     TOGGLE_HINT_SHOWING (state, {showing, videoURL}) {
       state.hintShowing = {showing, videoURL}
     },
@@ -233,6 +244,12 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    addVideoTimer ({commit}, context) {
+      commit('ADD_VIDEO_TIMER', context)
+    },
+    startExistingTimers ({commit}, {context, hintsTaken}) {
+      commit('START_EXISTING_TIMERS', {context, hintsTaken})
+    },
     toggleHintShowing ({commit}, {showing, videoURL}) {
       commit('TOGGLE_HINT_SHOWING', {showing, videoURL})
     },
@@ -355,6 +372,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,
     getCurrentUser: state => state.currentUser,
     getStepData: state => state.stepData,

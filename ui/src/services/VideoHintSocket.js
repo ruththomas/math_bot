@@ -27,7 +27,23 @@ class VideoHintSocket extends Ws {
   }
 
   _requestHint () {
-    this._send(JSON.stringify({action: 'get-hint', tokenId: this.tokenId}))
+    this._openSocket(() => {
+      this._send(JSON.stringify({action: 'get-hint', tokenId: this.tokenId}))
+    })
+  }
+
+  requestHintsTaken (cb) {
+    this._openSocket(() => {
+      this._wsOnMessage(cb)
+      this._send(JSON.stringify({action: 'get-hints-taken', tokenId: this.tokenId}))
+    })
+  }
+
+  getTime (level, step, cb) {
+    this._openSocket(() => {
+      this._wsOnMessage(cb)
+      this._send(JSON.stringify({action: 'get-remaining-time', tokenId: this.tokenId, level: level, step: step}))
+    })
   }
 
   getHint (cb) {

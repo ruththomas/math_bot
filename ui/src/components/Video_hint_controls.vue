@@ -1,7 +1,9 @@
 <template>
-    <div class="video-hint" @click="videoHint.getHint()">
+    <div class="video-hint" @click="videoHint.getHint()" v-if="videoHint !== null">
       <stars
         :star-group="'star-spread'"
+        :level="level"
+        :step="step"
         :step-stats="stepStats"></stars>
     </div>
 </template>
@@ -29,6 +31,7 @@ export default {
   },
   data () {
     return {
+      getTime: false,
       videoHint: new VideoHint(this)
     }
   },

@@ -3,20 +3,34 @@
     <i class="star star-one" :class="[starGroup, starClass(stepStats.stars >= 1)]"></i>
     <i class="star star-two" :class="[starGroup, starClass(stepStats.stars >= 2)]"></i>
     <i class="star star-three" :class="[starGroup, starClass(stepStats.stars >= 3)]"></i>
+    <div
+      v-if="stepStats.stars < 3"
+      class="star-timer"
+    >{{ remainingTime }}</div>
   </div>
 </template>
 
 <script>
+
 export default {
-  name: 'Stars',
-  mounted () {
-  },
+  name: 'Timer',
   methods: {
     starClass (starActive) {
-      return starActive ? 'active-star' : 'inactive-star'
+      if (!this.stepStats.active) return 'inactive-star'
+      else return starActive ? 'active-star' : 'inactive-star'
     }
   },
-  props: ['level', 'stepStats', 'starGroup']
+  computed: {
+    remainingTime () {
+      const timer = this.videoTimers[`${this.level}/${this.step}`]
+      if (timer) return timer.remainingTime
+      else return -1
+    },
+    videoTimers () {
+      return this.$store.getters.getVideoTimers
+    }
+  },
+  props: ['level', 'step', 'stepStats', 'starGroup']
 }
 </script>
 
@@ -31,6 +45,7 @@ export default {
     box-shadow: $stars-shadow
     border-radius: 5px
     padding: 5px
+    position: relative
 
   .star
     position: relative
@@ -96,4 +111,10 @@ export default {
     margin-left: 1em
     margin-right: 1em
     margin-bottom: 1.2em
+
+  .star-timer
+    position: absolute
+    left: 50%
+    transform: translate(-50%, 0)
+    bottom: 0
 </style>

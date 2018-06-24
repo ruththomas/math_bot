@@ -1,9 +1,9 @@
 package actors.convert_flow
-import actors.VideoHintActor.{Hints, VideoCompiled}
+import actors.VideoHintActor.{HintPrepared, RemainingTime, RemainingTimeList}
 import actors.messages.ActorFailed
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import model.models.{Stats, VideoHint}
+import model.models.{HintTaken, HintsTaken, Stats}
 import play.api.libs.json.{JsValue, Json, Writes}
 import types.URL
 
@@ -12,16 +12,21 @@ object VideoResponseConvertFlow extends SocketResponseConvertFlow {
                                  message: Option[String],
                                  videoURL: Option[URL],
                                  stats: Option[Stats],
-                                 hints: Option[VideoHint])
+                                 remainingTimes: Option[List[RemainingTime]],
+                                 remainingTime: Option[Long])
 
   implicit val videoResponseWrites: Writes[VideoResponse] = Json.format[VideoResponse]
 
   override def responseToJson(msg: Any): JsValue = {
     val cr = msg match {
-      case VideoCompiled(_, videoUrl, stats) => VideoResponse("success", None, Some(videoUrl), Some(stats), None)
-      case Hints(videoHint) => VideoResponse("success", None, None, None, Some(videoHint))
-      case ActorFailed(message) => VideoResponse("failed", Some(message), None, None, None)
-      case _ => VideoResponse("failed", None, None, None, None)
+      case HintPrepared(_, videoUrl, stats) =>
+        VideoResponse("success", None, Some(videoUrl), Some(stats), None, None)
+      case RemainingTimeList(_, remainingTimes) =>
+        VideoResponse("success", None, None, None, Some(remainingTimes), None)
+      case ActorFailed(message) => VideoResponse("failed", Some(message), None, None, None, None)
+      case RemainingTime(_, level, step, time) =>
+        VideoResponse("success", Some(s"$level/$step"), None, None, None, Some(time))
+      case _ => VideoResponse("failed", None, None, None, None, None)
     }
     Json.toJson[VideoResponse](cr)
   }
