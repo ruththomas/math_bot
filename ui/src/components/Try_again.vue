@@ -65,4 +65,3 @@ export default {}
   }
 
 </style>
-<style scoped src="../css/scoped/tryAgain.scss" lang="scss"></style>

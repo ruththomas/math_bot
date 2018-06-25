@@ -80,12 +80,14 @@ export default {
     opacity: 1;
   }
 
-  .ghost, .chosen {
-    margin: 0 20px 0 20px;
-  }
+  .function-drop {
+    .ghost, .chosen {
+      margin: 0 20px 0 20px;
+    }
 
-  .ghost {
-    opacity: 0;
+    .ghost {
+      opacity: 0;
+    }
   }
 
   .pulse {
