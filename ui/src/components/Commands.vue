@@ -142,7 +142,6 @@ export default {
         },
         filter: '.command-name',
         dragClass: 'dragging',
-        sort: false,
         ghostClass: 'ghost'
       },
       functionOptions: {
@@ -153,7 +152,6 @@ export default {
         },
         filter: '.command-name',
         dragClass: 'dragging',
-        sort: false,
         ghostClass: 'ghost'
       },
       currentColor: this.colorSelected
