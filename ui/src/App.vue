@@ -15,7 +15,7 @@ export default {
     this.auth.isAuthenticated()
     utils.watcher(() => !this.auth.authenticated, () => {
       api.videoHintSocket.requestHintsTaken(res => {
-        this.$store.dispatch('startExistingTimers', {context: this, hintsTaken: res.remainingTimes})
+        this.$store.dispatch('startExistingTimers', res.remainingTimes)
       })
     })
   },

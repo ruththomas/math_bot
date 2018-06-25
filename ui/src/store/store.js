@@ -84,12 +84,12 @@ export default new Vuex.Store({
     videoTimers: {}
   },
   mutations: {
-    ADD_VIDEO_TIMER (state, {level, step, remainingTime}) {
-      Vue.set(state.videoTimers, `${level}/${step}`, new VideoTimer({state, level, step, remainingTime}))
+    ADD_VIDEO_TIMER (state, remainingTime) {
+      Vue.set(state.videoTimers, `${remainingTime.level}/${remainingTime.step}`, new VideoTimer({state, level: remainingTime.level, step: remainingTime.step, stars: remainingTime.stars, remainingTime: remainingTime.remainingTime}))
     },
-    START_EXISTING_TIMERS (state, {hintsTaken}) {
-      hintsTaken.forEach(ht => {
-        Vue.set(state.videoTimers, `${ht.level}/${ht.step}`, new VideoTimer({state, level: ht.level, step: ht.step, remainingTime: ht.time}))
+    START_EXISTING_TIMERS (state, remainingTimes) {
+      remainingTimes.forEach(rt => {
+        Vue.set(state.videoTimers, `${rt.level}/${rt.step}`, new VideoTimer({state, level: rt.level, step: rt.step, stars: rt.stars, remainingTime: rt.remainingTime}))
       })
     },
     TOGGLE_HINT_SHOWING (state, {showing, videoURL}) {
@@ -247,8 +247,8 @@ export default new Vuex.Store({
     addVideoTimer ({commit}, context) {
       commit('ADD_VIDEO_TIMER', context)
     },
-    startExistingTimers ({commit}, {context, hintsTaken}) {
-      commit('START_EXISTING_TIMERS', {context, hintsTaken})
+    startExistingTimers ({commit}, remainingTimes) {
+      commit('START_EXISTING_TIMERS', remainingTimes)
     },
     toggleHintShowing ({commit}, {showing, videoURL}) {
       commit('TOGGLE_HINT_SHOWING', {showing, videoURL})
