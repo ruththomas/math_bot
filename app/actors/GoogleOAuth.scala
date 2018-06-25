@@ -11,7 +11,7 @@ import akka.stream.ActorMaterializer
 import dataentry.actors.messages._
 import dataentry.actors.models.GoogleApiHelpers
 import dataentry.actors.models.GoogleApiHelpers.GoogleTokens
-import dataentry.utility.{ AkkaSemanticLog, SecureIdentifier, SemanticLog }
+import utils.{ AkkaSemanticLog, SecureIdentifier, SemanticLog }
 import utils.GoogleApiConfig
 
 import scala.concurrent.ExecutionContext

@@ -1,4 +1,4 @@
-package dataentry.utility
+package utils
 
 import akka.actor.ActorSystem
 import akka.event.{ LogSource, Logging, LoggingAdapter }
@@ -10,7 +10,7 @@ import scala.reflect.ClassTag
 // By extending from akka.event.LoggingAdapter we can apply semantic logging to internal akka log hooks.
 class AkkaSemanticLog[T : LogSource](system : ActorSystem, source : T)(implicit tag : ClassTag[T]) extends LoggingAdapter with SemanticLog {
 
-  import dataentry.utility.SemanticLog.symbols
+  import utils.SemanticLog.symbols
 
   val log = Logging(system, source)
   val sourceTag = (symbols.source, tag.runtimeClass.getSimpleName)

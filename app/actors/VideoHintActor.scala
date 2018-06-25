@@ -4,65 +4,66 @@ import java.time.Instant
 
 import actors.messages.ActorFailed
 import akka.actor.{Actor, ActorRef, Props}
-import akka.util.Timeout
 import com.google.inject.Inject
+import model.models._
 import model.{PlayerTokenDAO, VideoHintDAO}
-import model.models.{HintTaken, PlayerToken, Stats, VideoHint}
 import play.api.Environment
+import play.api.libs.json.{Json, OFormat}
 import play.api.libs.ws.WSClient
 import types.{LevelName, StepName, TokenId, URL}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
 
 object VideoHintActor {
-  final case class GetVideo(tokenId: TokenId, level: LevelName, step: StepName)
+  final case class GetVideo(tokenId: TokenId)
 
-  final case class GetPlayerToken(tokenId: TokenId, level: LevelName, step: StepName)
+  final case class GetPlayerToken(tokenId: TokenId)
 
-  final case class GetVideoHint(playerToken: PlayerToken, level: LevelName, step: StepName)
+  final case class GetVideoHint(playerToken: PlayerToken, stats: Stats)
 
   final case class UpdateExistingVideo(playerToken: PlayerToken,
-                                       videoHint: VideoHint,
+                                       videoHint: HintsTaken,
                                        hintTaken: HintTaken,
-                                       level: LevelName,
-                                       step: StepName,
+                                       stats: Stats,
                                        videoIds: List[String])
 
-  final case class InsertNewVideo(playerToken: PlayerToken,
-                                  videoHint: VideoHint,
-                                  level: LevelName,
-                                  step: StepName,
-                                  videoIds: List[String])
+  final case class InsertNewVideo(playerToken: PlayerToken, videoHint: HintsTaken, stats: Stats, videoIds: List[String])
 
-  final case class InsertNewVideoRecord(playerToken: PlayerToken,
-                                        level: LevelName,
-                                        step: StepName,
-                                        videoIds: List[String])
+  final case class InsertNewVideoRecord(playerToken: PlayerToken, stats: Stats, videoIds: List[String])
 
-  final case class VideoCompiled(tokenId: TokenId, videoUrl: URL, stats: Stats)
+  final case class GetHintsTaken(tokenId: TokenId)
+
+  final case class HintPrepared(tokenId: TokenId, videoUrl: URL, remainingTime: RemainingTime)
+
+  final case class RemainingTimeList(tokenId: TokenId, list: List[RemainingTime])
+
+  final case class RemainingTime(stars: Int, level: LevelName, step: StepName, remainingTime: Long)
+
+  final case class GetRemainingTime(tokenId: TokenId, level: LevelName, step: StepName)
+
+  final case class UpdateStars(remainingTimeList: RemainingTimeList)
+
+  final case class ResetStars(tokenId: TokenId, hintsTaken: HintsTaken, level: LevelName, step: StepName)
 
   def generateTimestamp: Long = Instant.now.getEpochSecond
 
-  def updatePlayerToken(playerToken: PlayerToken, level: LevelName, step: StepName, hintCount: Int): PlayerToken = {
-    val stats = playerToken.stats.get
-    val stat = stats.levels(level)(step)
-    val updatedStat = stat.copy(stars = stat.stars - hintCount)
-    val updatedStats = stats.copy(levels = Map(level -> (stats.levels(level) + (step -> stat, step -> updatedStat))))
-    playerToken.copy(stats = Some(updatedStats))
+  def calculateStars(stars: Int, videoCount: Int) = {
+    val starRatio = Math.ceil(3.toDouble / videoCount).toInt
+    Math.max(0, stars - starRatio)
   }
 
-  def updateVideoHint(videoHint: VideoHint,
-                      hintCount: Int,
-                      videoIds: List[String],
-                      level: LevelName,
-                      step: StepName): VideoHint = {
-    val updatedVideoHint = videoHint.videosWatched.map {
-      case ht if ht.level == level && ht.step == step =>
-        ht.copy(timeStamp = generateTimestamp, hintCount = hintCount)
-      case ht => ht
+  private val starExpiration = 300 // bump up to 3600
+
+  def calculateRemainingTime(timeStamp: Long): Long = {
+    val expiredTime = timeStamp + starExpiration
+    val timeNow = generateTimestamp
+    val remainingTime = expiredTime - timeNow
+
+    if (remainingTime <= 0) {
+      0
+    } else {
+      remainingTime / 60
     }
-    videoHint.copy(videosWatched = updatedVideoHint)
   }
 
   def props(out: ActorRef,
@@ -87,83 +88,141 @@ class VideoHintActor @Inject()(out: ActorRef,
    * For future implementation with youtube api...
    * */
   private val CHANNEL_ID: String = "UCCRrOAkZKCMB3wEIGEmdMEQ"
-  private val KEY: String = "AIzaSyDY3RSvLmw2uBc3ZarYujOfHtqgJ8n6mPI"
+  private val KEY: String = sys.env.getOrElse("MB_YOUTUBE_KEY", "none")
   private val YOUTUBE_URL: URL = "https://www.googleapis.com/youtube/v3/"
 
   private def embedURL(videoId: String): URL = s"https://www.youtube.com/embed/$videoId"
 
   override def receive: Receive = {
-    case GetVideo(tokenId, level, step) =>
-      self ! GetPlayerToken(tokenId, level, step)
-    case GetPlayerToken(tokenId, level, step) =>
+    /*
+     * GetVideo - entry point for getting a video
+     * */
+    case GetVideo(tokenId) =>
+      self ! GetPlayerToken(tokenId)
+    /*
+     * GetPlayerToken - gets player token from db
+     * */
+    case GetPlayerToken(tokenId) =>
       for {
         playerTokenOpt <- playerTokenDAO.getToken(tokenId)
       } yield
         playerTokenOpt match {
-          case Some(playerToken) => self ! GetVideoHint(playerToken, level, step)
+          case Some(playerToken) =>
+            for {
+              stats <- playerToken.stats
+            } yield self ! GetVideoHint(playerToken, stats)
           case None => out ! ActorFailed(s"Unable to locate tokenId $tokenId")
         }
-    case GetVideoHint(playerToken, level, step) =>
+    /*
+     * # GetVideoHint - gets video hint from db and controls traffic
+     * If video hint found in db - videos already watched for game
+     * ---- If level/step found - video watched for level/step - continue to UpdateExistingVideo
+     * ---- If level/step not found - video never watched for level/step - continue to InsertNewVideo
+     * If video hint not found - no videos ever watched for game - continue to InsertNewVideoRecord
+     * */
+    case GetVideoHint(playerToken, stats) =>
       for {
         videoHintOpt <- videoHintDAO.getHints(playerToken.token_id)
-        videoIds = levelGenerator.getRawStepData(level, step) match {
+        videoIds = levelGenerator.getRawStepData(stats.level, stats.step) match {
           case Some(rawStepData) => rawStepData.videoHints
           case None => List.empty[String]
         }
       } yield
         videoHintOpt match {
           // If videoHint field exists in VideoHint table
-          case Some(videoHint) =>
+          case Some(hintsTaken) =>
             // Test if level/step exist in videos watched
-            videoHint.videosWatched.find(v => v.level == level && v.step == step) match {
+            hintsTaken.videosWatched.find(v => v.level == stats.level && v.step == stats.step) match {
               case Some(hintTaken) =>
-                self ! UpdateExistingVideo(playerToken, videoHint, hintTaken, level, step, videoIds)
-              case None => self ! InsertNewVideo(playerToken, videoHint, level, step, videoIds)
+                self ! UpdateExistingVideo(playerToken, hintsTaken, hintTaken, stats, videoIds)
+              case None => self ! InsertNewVideo(playerToken, hintsTaken, stats, videoIds)
             }
           // if not in database insert new record into database
-          case None => self ! InsertNewVideoRecord(playerToken, level, step, videoIds)
+          case None => self ! InsertNewVideoRecord(playerToken, stats, videoIds)
         }
-    case UpdateExistingVideo(playerToken, videoHint, hintTaken, level, step, videoIds) =>
+    /*
+     * UpdateExistingVideo - if video has already been viewed for this level/step
+     * */
+    case UpdateExistingVideo(playerToken, hintsTaken, hintTaken, stats, videoIds) =>
+      val level = stats.level
+      val step = stats.step
       // Increment hint count
       val hintCount =
         if (hintTaken.hintCount < videoIds.length) hintTaken.hintCount + 1 else videoIds.length
-      // Handle updating videoHint
-      val updatedVideoHint = updateVideoHint(videoHint, hintCount, videoIds, level, step)
-      videoHintDAO.update(updatedVideoHint)
-      // Handle updating player token
-      val updatedPlayerToken = updatePlayerToken(playerToken, level, step, hintCount)
-      playerTokenDAO.updateToken(updatedPlayerToken)
+      // Create new timestamp
+      val timeStamp = generateTimestamp
+      // update stars
+      val stars = calculateStars(hintTaken.stars, videoIds.length)
+      // Handle updating hintsTaken
+      val updatedHintsTaken = hintsTaken.copy(videosWatched = hintsTaken.videosWatched.map {
+        case ht if ht.level == level && ht.step == step =>
+          ht.copy(timeStamp = timeStamp, hintCount = hintCount, stars = stars)
+        case ht => ht
+      })
+      videoHintDAO.update(updatedHintsTaken)
       // respond to client
       val videoUrl = embedURL(videoIds(hintCount - 1))
-      out ! VideoCompiled(playerToken.token_id, videoUrl, updatedPlayerToken.stats.get)
-    case InsertNewVideo(playerToken, videoHint, level, step, videoIds) =>
+      out ! HintPrepared(playerToken.token_id,
+                         videoUrl,
+                         RemainingTime(stars, level, step, calculateRemainingTime(timeStamp)))
+    /*
+     * InsertNewVideo - if video has never been viewed for this level/step
+     * */
+    case InsertNewVideo(playerToken, hintsTaken, stats, videoIds) =>
+      val level = stats.level
+      val step = stats.step
       // Initialize hint count
       val hintCount = 1
+      // Create new timestamp
+      val timestamp = generateTimestamp
+      // stars
+      val stars = calculateStars(3, videoIds.length)
       // Handle creating hintTaken
-      val hintTaken = HintTaken(level, step, generateTimestamp, hintCount)
-      // Handle updating videoHint
-      videoHintDAO.update(videoHint.copy(videosWatched = hintTaken :: videoHint.videosWatched))
-      // Handle updating playerToken
-      val updatedPlayerToken = updatePlayerToken(playerToken, level, step, hintCount)
-      playerTokenDAO.updateToken(updatedPlayerToken)
+      val hintTaken = HintTaken(level, step, timestamp, hintCount, stars)
+      // Handle updating hintsTaken
+      val updatedHintsTaken = hintsTaken.copy(videosWatched = hintTaken :: hintsTaken.videosWatched)
+      videoHintDAO.update(updatedHintsTaken)
       // respond to client
       val videoUrl = embedURL(videoIds(hintCount - 1))
-      out ! VideoCompiled(playerToken.token_id, videoUrl, updatedPlayerToken.stats.get)
-    case InsertNewVideoRecord(playerToken, level, step, videoIds) =>
+      out ! HintPrepared(playerToken.token_id,
+                         videoUrl,
+                         RemainingTime(stars, level, step, calculateRemainingTime(timestamp)))
+    /*
+     * InsertNewVideoRecord - if no videos have ever been watched during game
+     * */
+    case InsertNewVideoRecord(playerToken, stats, videoIds) =>
+      val level = stats.level
+      val step = stats.step
       // Initialize hint count
       val hintCount = 1
+      // Generate timestamp
+      val timeStamp = generateTimestamp
+      // stars
+      val stars = calculateStars(3, videoIds.length)
       // Handle creating hintTaken
-      val hintTaken = HintTaken(level, step, generateTimestamp, hintCount)
+      val hintTaken = HintTaken(level, step, timeStamp, hintCount, stars)
       // Handle creating videoHint record
-      val videoHint = VideoHint(playerToken.token_id, List(hintTaken))
+      val videoHint = HintsTaken(playerToken.token_id, List(hintTaken))
       // Handle inserting video hint into db
       videoHintDAO.insert(videoHint)
-      // Handle updating playerToken
-      val updatedPlayerToken = updatePlayerToken(playerToken, level, step, hintCount)
-      playerTokenDAO.updateToken(updatedPlayerToken)
       // respond to client
       val videoUrl = embedURL(videoIds(hintCount - 1))
-      out ! VideoCompiled(playerToken.token_id, videoUrl, updatedPlayerToken.stats.get)
+      out ! HintPrepared(playerToken.token_id,
+                         videoUrl,
+                         RemainingTime(stars, level, step, calculateRemainingTime(timeStamp)))
+    /*
+     * GetHintsTaken - returns a list of hints taken with a remaining time in minutes
+     * */
+    case GetHintsTaken(tokenId) =>
+      videoHintDAO.getHints(tokenId) map {
+        case Some(hintsTaken) =>
+          val filterExpired = hintsTaken.videosWatched.filterNot(ht => calculateRemainingTime(ht.timeStamp) == 0)
+          videoHintDAO.update(hintsTaken.copy(videosWatched = filterExpired))
+          out ! RemainingTimeList(tokenId, filterExpired.map { ht =>
+            RemainingTime(ht.stars, ht.level, ht.step, calculateRemainingTime(ht.timeStamp))
+          })
+        case None => out ! RemainingTimeList(tokenId, List.empty[RemainingTime])
+      }
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }

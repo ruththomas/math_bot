@@ -198,7 +198,6 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
         case (None, Nil) =>
         // This case does nothing, should never happen
       }
-
   }
 
   override def unhandled(message : Any) : Unit = {

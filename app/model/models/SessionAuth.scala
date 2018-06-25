@@ -1,10 +1,11 @@
 package model.models
 
-import dataentry.utility.SecureIdentifier
+import utils.SecureIdentifier
 import model.models.AuthSources.AuthSource
 import org.bson.{ BsonInvalidOperationException, BsonReader, BsonWriter }
 import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
 import play.api.libs.json._
+import utils.SecureIdentifier
 
 import scala.util.{ Failure, Success, Try }
 

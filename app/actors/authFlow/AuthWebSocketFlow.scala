@@ -4,7 +4,7 @@ import akka.actor.ActorRef
 import akka.http.scaladsl.model.ws.{ Message, TextMessage }
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{ Flow, Source }
-import dataentry.utility.SecureIdentifier
+import utils.SecureIdentifier
 import model.{ PlayerTokenDAO, SessionDAO }
 import play.api.libs.json._
 

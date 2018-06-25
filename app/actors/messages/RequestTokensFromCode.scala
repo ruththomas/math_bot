@@ -1,5 +1,5 @@
 package dataentry.actors.messages
 
-import dataentry.utility.SecureIdentifier
+import utils.SecureIdentifier
 
 case class RequestTokensFromCode(sessionId : SecureIdentifier, code : String)
