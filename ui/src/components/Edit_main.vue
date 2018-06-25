@@ -109,6 +109,7 @@ export default {
           put: true
         },
         animation: 100,
+        scrollSensitivity: 500,
         ghostClass: 'ghost',
         chosenClass: 'chosen',
         filter: '.noDrag',
