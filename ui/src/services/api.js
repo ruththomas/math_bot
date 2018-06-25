@@ -2,20 +2,23 @@ import Vue from 'vue'
 import vueResource from 'vue-resource'
 import urlEncode from 'urlencode'
 
-import CompilerWebSocket from './CompilerSocket'
+import CompilerSocket from './CompilerSocket'
+import VideoHintSocket from './VideoHintSocket'
 
 Vue.use(vueResource)
 
 export default {
 
   compilerWebSocket: null,
+  videoHintSocket: null,
 
   getUserToken ({tokenId}, cb) {
     Vue.http.post('/api/token', JSON.stringify({token_id: tokenId}))
       .then(res => res.body)
       .then(token => {
-        // console.log('GET TOKEN ~ ', token)
-        this.compilerWebSocket = new CompilerWebSocket()
+        // console.log('GET TOKEN ~ ', JSON.parse(JSON.stringify(token)))
+        this.compilerWebSocket = new CompilerSocket(token.token_id)
+        this.videoHintSocket = new VideoHintSocket(token.token_id)
         cb(token)
       })
       .catch(console.error)

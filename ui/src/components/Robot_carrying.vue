@@ -64,4 +64,55 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/robotCarrying.scss" lang="scss"></style>
+<style scoped lang="scss">
+  .robot-carrying {
+    min-height: 20px;
+    min-width: 20px;
+    display: inline-block;
+    justify-content: center;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .robot-carrying img {
+    height: 20px;
+    width: 20px;
+  }
+
+  .robot-carrying p {
+    height: 20px;
+    font-size: 20px;
+  }
+
+  /* Large Phones, landscape*/
+  @media only screen and (max-width : 992px) {
+
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+    .robot-carrying {
+      min-height: 20px;
+    }
+
+    .robot-carrying img {
+      height: 10px;
+      width: 10px;
+    }
+
+    .robot-carrying p {
+      height: 10px;
+      font-size: 10px;
+    }
+  }
+
+  /* Extra Small Devices, Phones */
+  @media only screen and (max-width : 480px) {
+  }
+
+  /* Custom, iPhone 5 Retina */
+  @media only screen and (max-width : 320px) {
+
+  }
+
+</style>

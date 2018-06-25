@@ -1,4 +1,4 @@
-package dataentry.utility
+package utils
 
 import java.security.SecureRandom
 import java.util.Base64

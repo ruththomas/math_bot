@@ -1,12 +1,12 @@
 package model
 
 import com.google.inject.Inject
-import dataentry.utility
-import model.models._
+import model.models.{ FuncToken, Lambdas, PlayerToken, Stats, StepToken }
 import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
 import org.bson.codecs.configuration.{ CodecRegistries, CodecRegistry }
 import org.mongodb.scala.bson.codecs.{ DEFAULT_CODEC_REGISTRY, Macros }
 import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.{ DeleteResult, UpdateResult }
 import org.mongodb.scala.{ Completed, _ }
 import types.TokenId
@@ -27,7 +27,7 @@ class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionC
         Macros.createCodecProvider[FuncToken](),
         Macros.createCodecProvider[StepToken]()
       ),
-      CodecRegistries.fromCodecs(new utility.SecureIdentifier.SecureIdentifierCodec),
+      CodecRegistries.fromCodecs(new utils.SecureIdentifier.SecureIdentifierCodec),
       DEFAULT_CODEC_REGISTRY
     )
 

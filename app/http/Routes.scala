@@ -1,20 +1,19 @@
 package http
 
 import actors.authFlow.AuthWebSocketFlow
+import actors.messages.ProvideGoogleApiCode
 import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ StatusCodes, Uri }
-import com.google.inject.Inject
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
-import dataentry.actors.messages.ProvideGoogleApiCode
-import dataentry.utility.SecureIdentifier
+import com.google.inject.Inject
 import model.SessionDAO
-import utils.WebClientConfig
+import utils.{ SecureIdentifier, WebClientConfig }
 
-import scala.concurrent.{ Await, ExecutionContextExecutor }
 import scala.concurrent.duration.Duration
+import scala.concurrent.{ Await, ExecutionContextExecutor }
 
 
 class Routes @Inject()(

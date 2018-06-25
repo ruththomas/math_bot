@@ -1,6 +1,8 @@
 package model.models
 
-import dataentry.utility.SecureIdentifier
+import utils.SecureIdentifier
+import actors.messages.PreparedStepData
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class PlayerToken(

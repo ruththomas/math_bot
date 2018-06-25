@@ -30,7 +30,6 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-all" % "1.9.5" % Test
 )
 
-
 // The Play project itself
 lazy val root = (project in file("."))
   .enablePlugins(Common, PlayScala, GatlingPlugin)

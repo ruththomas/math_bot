@@ -1,5 +1,5 @@
-package dataentry.actors.messages
+package actors.messages
 
-import dataentry.utility.SecureIdentifier
+import utils.SecureIdentifier
 
 case class ProvideGoogleApiCode(sessionId : SecureIdentifier, code : String)

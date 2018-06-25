@@ -1,6 +1,6 @@
 package actors.convert_flow
 
-import actors.VideoHintActor.GetVideo
+import actors.VideoHintActor.{GetHintsTaken, GetRemainingTime, GetVideo}
 import actors.messages._
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
@@ -17,8 +17,12 @@ object VideoRequestConvertFlow extends SocketRequestConvertFlow {
 
   def jsonToCompilerCommand(msg: JsValue): Any = {
     Json.fromJson[VideoRequest](msg).asOpt match {
-      case Some(VideoRequest(action, Some(tokenId), Some(level), Some(step))) if action == "get-video" =>
-        GetVideo(tokenId, level, step)
+      case Some(VideoRequest(action, Some(tokenId), None, None)) if action == "get-hint" =>
+        GetVideo(tokenId)
+      case Some(VideoRequest(action, Some(tokenId), None, None)) if action == "get-hints-taken" =>
+        GetHintsTaken(tokenId)
+      case Some(VideoRequest(action, Some(tokenId), Some(level), Some(step))) if action == "get-remaining-time" =>
+        GetRemainingTime(tokenId, level, step)
       case _ => ActorFailed("Invalid socket request json.")
     }
   }

@@ -1,4 +1,4 @@
-package dataentry.utility
+package utils
 
 import akka.http.scaladsl.model.{StatusCode, Uri}
 

@@ -79,7 +79,7 @@ export default {
     position: relative;
     height: 75px;
     width: 75px;
-    margin-left: 9px;
+    margin: 0 4px 0 4px;
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px;
     color: white;
