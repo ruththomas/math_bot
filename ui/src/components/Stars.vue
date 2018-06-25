@@ -1,9 +1,9 @@
 <template>
   <div class="stars" :class="starGroup">
-    <star class="star-two" :active="isActive(2)"></star>
-    <star class="star-one" :active="isActive(1)"></star>
-    <star class="star-three" :active="isActive(3)"></star>
-    <span v-if="stepStats.stars < 3" class="star-timer">{{ convertTime(remainingTime) }}</span>
+    <star class="star-two" :active="stepStats.active" :success="success(2)"></star>
+    <star class="star-one" :active="stepStats.active" :success="success(1)"></star>
+    <star class="star-three" :active="stepStats.active" :success="success(3)"></star>
+    <span v-if="timer.stars < 3" class="star-timer">{{ convertTime(remainingTime) }}</span>
   </div>
 </template>
 
@@ -13,10 +13,12 @@ import Star from './Star'
 export default {
   name: 'Timer',
   computed: {
+    timer () {
+      return this.videoTimers[`${this.level}/${this.step}`] || {stars: 3}
+    },
     remainingTime () {
-      const timer = this.videoTimers[`${this.level}/${this.step}`]
-      if (timer) return timer.remainingTime
-      else return -1
+      if (this.timer) return this.timer.remainingTime
+      else return 0
     },
     videoTimers () {
       return this.$store.getters.getVideoTimers
@@ -29,16 +31,14 @@ export default {
       m = m < 10 ? '0' + m : m
       return h + ':' + m
     },
-    isActive (starNumber) {
-      if (this.stepStats.active) {
-        if (starNumber === 1) {
-          return this.stepStats.stars >= 1
-        } else if (starNumber === 2) {
-          return this.stepStats.stars >= 3
-        } else {
-          return this.stepStats.stars >= 2
-        }
-      } else return false
+    success (starNumber) {
+      if (starNumber === 1) {
+        return this.timer.stars >= 1
+      } else if (starNumber === 2) {
+        return this.timer.stars >= 3
+      } else {
+        return this.timer.stars >= 2
+      }
     }
   },
   components: {

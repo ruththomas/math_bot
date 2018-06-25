@@ -39,13 +39,6 @@ class VideoHintSocket extends Ws {
     })
   }
 
-  getTime (level, step, cb) {
-    this._openSocket(() => {
-      this._wsOnMessage(cb)
-      this._send(JSON.stringify({action: 'get-remaining-time', tokenId: this.tokenId, level: level, step: step}))
-    })
-  }
-
   getHint (cb) {
     this._openSocket(() => {
       this._wsOnMessage(cb)
