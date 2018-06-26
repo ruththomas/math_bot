@@ -1,5 +1,5 @@
 package actors.convert_flow
-import actors.VideoHintActor.{HintPrepared, RemainingTime, RemainingTimeList}
+import actors.VideoHintActor.{HintPrepared, NoVideos, RemainingTime, RemainingTimeList}
 import actors.messages.ActorFailed
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
@@ -24,6 +24,8 @@ object VideoResponseConvertFlow extends SocketResponseConvertFlow {
         VideoResponse("success", None, Some(videoUrl), None, Some(remainingTime))
       case RemainingTimeList(_, remainingTimes) =>
         VideoResponse("success", None, None, Some(remainingTimes), None)
+      case NoVideos(_, level, step) =>
+        VideoResponse("no-videos", None, None, None, None)
       case ActorFailed(message) => VideoResponse("failed", Some(message), None, None, None)
       case _ => VideoResponse("failed", None, None, None, None)
     }

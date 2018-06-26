@@ -23,7 +23,6 @@ const utils = {
 
     (function ordEm () {
       if (stepsInOrder[stepsInOrder.length - 1].nextStep === 'None') return
-
       stepsInOrder.push(steps[stepsInOrder[stepsInOrder.length - 1].nextStep])
 
       ordEm()
