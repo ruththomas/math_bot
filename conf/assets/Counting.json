@@ -33,7 +33,7 @@
       "problem": "1",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["l_CnNj5aO6E",	"lnCPjFhMU-s", "BSVWStDirZg"],
       "prevStep": "None",
       "nextStep": "Pickup3"
     },
@@ -66,7 +66,7 @@
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["l24v6ot_fYw",	"Ty-eyXkXW4o", "UtPNfChYedM"],
       "prevStep": "Counting",
       "nextStep": "Pickup5"
     },
@@ -99,7 +99,7 @@
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["aC3-fCaFErk",	"jjYQlsgXvyE", "RGgNlFSKErg"],
       "prevStep": "Pickup3",
       "nextStep": "Pickup4"
     },
@@ -132,7 +132,7 @@
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["F5ZWSTBwZNU", "OGLNVzup_TM"],
       "prevStep": "Pickup5",
       "nextStep": "Navigate"
     },
@@ -165,7 +165,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["jePF1-i3tck",	"7GYsnAFv_qk"],
       "prevStep": "Pickup4",
       "nextStep": "Pickup2WithFunction"
     },
@@ -198,7 +198,7 @@
       "problem": "2",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["92eDgAbBF9w",	"6hTzddZVJ4Q"],
       "prevStep": "Navigate",
       "nextStep": "Pickup1WithFunction"
     },
@@ -231,7 +231,7 @@
       "problem": "1",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["lsZo8ZpnrBo",	"IiYfP6Fb3Cw"],
       "prevStep": "Pickup2WithFunction",
       "nextStep": "Pickup5WithFunction"
     },
@@ -264,7 +264,7 @@
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["s8bVR65tR_U",	"cqiaefo9zXY"],
       "prevStep": "Pickup1WithFunction",
       "nextStep": "Pickup9WithFunction"
     },
@@ -297,7 +297,7 @@
       "problem": "9",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["rpO3fqlm33A",	"o06S52Fsuvw"],
       "prevStep": "Pickup5WithFunction",
       "nextStep": "Pickup4WithFunction"
     },
@@ -330,7 +330,7 @@
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["tXzR4s9Ptns",	"rAp3CisZJYM"],
       "prevStep": "Pickup9WithFunction",
       "nextStep": "Pickup6WithFunction"
     },
@@ -363,7 +363,7 @@
       "problem": "6",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["--p0EUiWF1I"],
       "prevStep": "Pickup4WithFunction",
       "nextStep": "Pickup8WithFunction"
     },
@@ -396,7 +396,7 @@
       "problem": "8",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["V3EKeXdQDBM"],
       "prevStep": "Pickup6WithFunction",
       "nextStep": "Pickup3WithFunction"
     },
@@ -429,7 +429,7 @@
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
-      "videoHints": [],
+      "videoHints": ["zWLznLyDVPU"],
       "prevStep": "Pickup8WithFunction",
       "nextStep": "None"
     }
