@@ -167,7 +167,7 @@
       "initFocus": [],
       "videoHints": [],
       "prevStep": "Pickup4",
-      "nextStep": "Pickup2"
+      "nextStep": "Pickup2WithFunction"
     },
     "Pickup2WithFunction": {
       "level": "Counting",
@@ -199,7 +199,7 @@
       "clearMain": false,
       "initFocus": [],
       "videoHints": [],
-      "prevStep": "Pickup2",
+      "prevStep": "Navigate",
       "nextStep": "Pickup1WithFunction"
     },
     "Pickup1WithFunction": {
