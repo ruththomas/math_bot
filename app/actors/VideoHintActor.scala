@@ -129,7 +129,7 @@ class VideoHintActor @Inject()(out: ActorRef,
         }
       } yield
         videoHintOpt match {
-          // If videoHint field exists in VideoHint table
+          // If videoHint field exists in VideoHintControls table
           case Some(hintsTaken) =>
             // Test if level/step exist in videos watched
             hintsTaken.videosWatched.find(v => v.level == stats.level && v.step == stats.step) match {

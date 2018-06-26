@@ -1,6 +1,6 @@
 import api from './api'
 /*
-* VideoHint - controls video hints
+* VideoHintControls - controls video hints
 * */
 class VideoHint {
   constructor (context) {
