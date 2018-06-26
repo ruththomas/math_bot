@@ -1,18 +1,19 @@
 package actors
 
-import actors.LevelGenerationActor.{GetGridMap, GetStep}
-import actors.StatsActor.{StatsDoneUpdating, UpdateStats}
+import actors.LevelGenerationActor.{ GetGridMap, GetStep }
+import actors.StatsActor.{ StatsDoneUpdating, UpdateStats }
 import actors.messages._
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{ Actor, ActorRef, Props }
 import akka.pattern.ask
 import akka.util.Timeout
-import compiler.processor.{Frame, Processor}
-import compiler.{Compiler, GridAndProgram}
+import compiler.operations.NoOperation
+import compiler.processor.{ Frame, Processor, Register, RobotLocation }
+import compiler.{ Compiler, GridAndProgram }
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import model.PlayerTokenModel
-import model.models.{GridMap, Stats}
+import model.models.{ GridMap, Stats }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.modules.reactivemongo.ReactiveMongoApi
 import utils.CompilerConfiguration
@@ -122,11 +123,13 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       self ! CompilerContinue(steps)
 
     case CompilerContinue(steps) =>
-      logger.LogInfo(className, s"Stepping compiler for $steps steps")
+      logger.LogInfo(className, s"Stepping compiler for $steps steps with actor ${context.self.path.toSerializationFormat}")
         // filter out non-robot frames (eg function calls and program start)
         val maxStepsReached = config.maxProgramSteps < currentCompiler.stepCount + steps
         val takeSteps = if (maxStepsReached) config.maxProgramSteps - currentCompiler.stepCount else steps
-        val robotFrames = currentCompiler.iterator.filter(f => f.robotLocation.isDefined).take(takeSteps).toList
+        val robotFrames = currentCompiler.iterator.filter(f => {
+          f.robotLocation.isDefined
+        }).take(takeSteps).toList
 
         val executeSomeFrames = (if (currentCompiler.exitOnSuccess) {
                                    if (currentCompiler.leftoverFrame.exists(lf => checkForSuccess(currentCompiler, lf))) {
@@ -199,7 +202,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
             } yield sendFrames(currentCompiler, createFrames(List(leftover)) ++ lastFrame)
               context.become(createCompile())
           case (None, Nil) =>
-          // This case does nothing, should never happen
+          // It's an empty program, or one that consists of only empty functions
+            for {
+              lastFrame <- createLastFrame(currentCompiler, Frame(NoOperation(), Register(), currentCompiler.program.grid, None, None))
+            } yield sendFrames(currentCompiler, lastFrame)
         }
 
     case _: CompilerHalt =>
