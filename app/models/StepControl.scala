@@ -1,4 +1,4 @@
-package model.models
+package models
 
 import actors.messages.RawStepData
 import compiler.CellType

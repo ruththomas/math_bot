@@ -1,6 +1,6 @@
-package model
+package daos
 
-import model.models.FuncToken
+import models.FuncToken
 
 object CommandIds extends Enumeration {
   val changeRobotDirection = "changeRobotDirection"

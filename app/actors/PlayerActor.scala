@@ -7,8 +7,8 @@ import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.pattern.{ask, pipe}
 import akka.util.Timeout
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models._
+import daos.PlayerTokenDAO
+import models._
 import play.api.Environment
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsValue, Json, Reads}

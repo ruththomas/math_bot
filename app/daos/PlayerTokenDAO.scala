@@ -1,7 +1,7 @@
-package model
+package daos
 
 import com.google.inject.Inject
-import model.models.{ FuncToken, Lambdas, PlayerToken, Stats, StepToken }
+import models.{ FuncToken, Lambdas, PlayerToken, Stats, StepToken }
 import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
 import org.bson.codecs.configuration.{ CodecRegistries, CodecRegistry }
 import org.mongodb.scala.bson.codecs.{ DEFAULT_CODEC_REGISTRY, Macros }

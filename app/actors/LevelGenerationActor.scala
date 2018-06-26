@@ -1,18 +1,16 @@
 package actors
 
-import java.io.File
-
-import actors.messages._
-import akka.actor.{Actor, Props}
-import akka.pattern.pipe
-import loggers.MathBotLogger
-import model.{models, DefaultCommands, PlayerTokenDAO}
-import model.models._
-import play.api.Environment
-import messages.PreparedStepData._
 import java.security.MessageDigest
 
-import types.{LevelName, StepName, TokenId}
+import actors.messages.PreparedStepData._
+import actors.messages._
+import akka.actor.{ Actor, Props }
+import akka.pattern.pipe
+import daos.{ DefaultCommands, PlayerTokenDAO }
+import loggers.MathBotLogger
+import models._
+import play.api.Environment
+import types.{ LevelName, StepName, TokenId }
 
 import scala.concurrent.Future
 

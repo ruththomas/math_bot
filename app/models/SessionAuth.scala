@@ -1,7 +1,7 @@
-package model.models
+package models
 
 import utils.SecureIdentifier
-import model.models.AuthSources.AuthSource
+import models.AuthSources.AuthSource
 import org.bson.{ BsonInvalidOperationException, BsonReader, BsonWriter }
 import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
 import play.api.libs.json._
