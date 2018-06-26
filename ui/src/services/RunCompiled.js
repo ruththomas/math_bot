@@ -167,7 +167,6 @@ class RunCompiled extends GridAnimator {
   async _processFrames (_) {
     // console.log('frames ~ ', this.robotFrames.slice())
     const current = this.robotFrames.shift()
-    this.programCreate = false
     this._controlAsk()
     const run = await this[`_${current.programState}`](current)
     run(current)
@@ -183,7 +182,6 @@ class RunCompiled extends GridAnimator {
   }
 
   _askCompiler (startRunning) {
-    this._stopIfNoResponse()
     api.compilerWebSocket.compileWs({problem: this.stepData.problem.encryptedProblem}, (compiled) => {
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()

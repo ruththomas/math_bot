@@ -124,7 +124,7 @@ export default {
     }
 
     .instructions-filler-left {
-      width: 95px;
+      width: 120px;
     }
   }
 
@@ -135,7 +135,13 @@ export default {
     }
 
     .instructions-filler-left {
-      width: 140px;
+      width: 170px;
+    }
+  }
+
+  @media only screen and (max-width: 569px) {
+    .instructions-filler-left {
+      width: 125px;
     }
   }
 
