@@ -54,7 +54,7 @@ object VideoHintActor {
     Math.max(0, stars - starRatio)
   }
 
-  private val starExpiration = 300 // bump up to 3600
+  private val starExpiration = 120 // bump up to 3600
 
   def calculateRemainingTime(timeStamp: Long): Long = {
     val expiredTime = timeStamp + starExpiration
