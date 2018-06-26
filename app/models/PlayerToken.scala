@@ -1,4 +1,4 @@
-package model.models
+package models
 
 import utils.SecureIdentifier
 import actors.messages.PreparedStepData

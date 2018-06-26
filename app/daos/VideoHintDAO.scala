@@ -1,7 +1,7 @@
-package model
+package daos
 
 import com.google.inject.Inject
-import model.models.{HintTaken, HintsTaken}
+import models.{HintTaken, HintsTaken}
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}

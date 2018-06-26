@@ -1,4 +1,4 @@
-package model.models
+package models
 
 import com.github.pdorobisz.mathexpressionevaluator.Evaluator
 import play.api.libs.json.{JsPath, Json, Reads}

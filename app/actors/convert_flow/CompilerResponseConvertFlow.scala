@@ -6,7 +6,7 @@ import akka.stream.scaladsl.Flow
 import compiler.Point
 import compiler.processor.AnimationType
 import controllers.MathBotCompiler._
-import model.models.Problem
+import models.Problem
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsString, JsValue, Writes, _}
 

@@ -1,14 +1,19 @@
 package actors.authFlow
 
+import actors.messages.SessionAuthorized
 import akka.actor.ActorRef
 import akka.http.scaladsl.model.ws.{ Message, TextMessage }
+import akka.http.scaladsl.util.FastFuture
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{ Flow, Source }
-import utils.SecureIdentifier
-import model.{ PlayerTokenDAO, SessionDAO }
+import daos.SessionDAO
+import dataentry.caches.KeyValueCache
+import models.JwtToken
 import play.api.libs.json._
+import utils.SecureIdentifier
 
 import scala.collection.immutable
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait SocketAction {
   val action: Symbol
@@ -18,7 +23,6 @@ case class RequestSession(action: Symbol = 'requestSession) extends SocketAction
 case class ResumeSession(sessionId: SecureIdentifier, action: Symbol = 'resumeSession) extends SocketAction
 case class ProvideSession(sessionId: SecureIdentifier, action: Symbol = 'provideSession) extends SocketAction
 case class NeedsAuthorization(sessionId: SecureIdentifier, action: Symbol = 'needsAuthorization) extends SocketAction
-case class IsAuthorized(sessionId: SecureIdentifier, action: Symbol = 'isAuthorized) extends SocketAction
 case class InvalidMessage(msg: String, action: Symbol = 'invalidMessage) extends SocketAction
 
 object AuthWebSocketFlow {
@@ -36,7 +40,7 @@ object AuthWebSocketFlow {
   implicit val resumeSessionFormat : Format[ResumeSession] = Json.format[ResumeSession]
   implicit val provideSessionFormat : Format[ProvideSession] = Json.format[ProvideSession]
   implicit val needsAuthorizationFormat : Format[NeedsAuthorization] = Json.format[NeedsAuthorization]
-  implicit val isAuthorizedFormat : Format[IsAuthorized] = Json.format[IsAuthorized]
+  implicit val sessionAuthorizedFormat : Format[SessionAuthorized] = Json.format[SessionAuthorized]
   implicit val invalidMessageFormat : Format[InvalidMessage] = Json.format[InvalidMessage]
 
   def fromMessage(value: Message): SocketAction = {
@@ -51,28 +55,40 @@ object AuthWebSocketFlow {
     Json.stringify(value match {
       case msg: ProvideSession => Json.toJson[ProvideSession](msg)
       case msg: NeedsAuthorization => Json.toJson[NeedsAuthorization](msg)
-      case msg: IsAuthorized => Json.toJson[IsAuthorized](msg)
+      case msg: SessionAuthorized => Json.toJson[SessionAuthorized](msg)
       case msg: InvalidMessage => Json.toJson[InvalidMessage](msg)
       case msg: SocketAction => Json.toJson[InvalidMessage](InvalidMessage(msg.toString))
     })
   )
 
-  def apply(provideActor: ActorRef => Unit, sessionDAO: SessionDAO): Flow[Message, Message, Any] = {
+  def apply(
+             provideActor: ActorRef => Unit,
+             sessionDAO: SessionDAO,
+             sessionCache : KeyValueCache[SecureIdentifier, Option[JwtToken]]
+           )(implicit ec : ExecutionContext): Flow[Message, Message, Any] = {
 
     val actor = Source.actorRef[SocketAction](16, OverflowStrategy.dropNew).mapMaterializedValue(ar => provideActor(ar))
 
     Flow[Message]
       .map[SocketAction](fromMessage)
-      .mapConcat[SocketAction] {
+      .mapConcat[Future[SocketAction]] {
         case _: RequestSession =>
-          val sid = SecureIdentifier(32)
-          sessionDAO.insert(sid)
-          immutable.Seq(ProvideSession(sid), NeedsAuthorization(sid))
-        case ResumeSession(msg, _) =>
-          immutable.Seq(InvalidMessage("standin"))
+            val sid = SecureIdentifier(32)
+            sessionCache.put(sid, None)
+            immutable.Seq(FastFuture.successful(ProvideSession(sid)), FastFuture.successful(NeedsAuthorization(sid)))
+        case ResumeSession(sessionId, _) =>
+          immutable.Seq(
+          for {
+            idTokenOpt <- sessionDAO.find(sessionId)
+          } yield idTokenOpt match {
+            case Some(idToken) => SessionAuthorized(sessionId, s"${idToken.getIssuerShortName}|${idToken.sub}", idToken.email)
+            case _ => NeedsAuthorization(sessionId)
+          }
+          )
         case m =>
-          immutable.Seq(InvalidMessage(m.toString))
+          immutable.Seq(FastFuture.successful(InvalidMessage(m.toString)))
       }
+      .mapAsync[SocketAction](5)((f : Future[SocketAction]) => f) // Waits for the above futures to complete
       .merge(actor)
       .map[Message](toMessage)
   }

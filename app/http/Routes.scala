@@ -9,7 +9,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import com.google.inject.Inject
-import model.SessionDAO
+import daos.SessionDAO
+import dataentry.caches.KeyValueCache
+import models.JwtToken
 import utils.{ SecureIdentifier, WebClientConfig }
 
 import scala.concurrent.duration.Duration
@@ -20,7 +22,8 @@ class Routes @Inject()(
                         implicit val system : ActorSystem,
                         config              : WebClientConfig,
                         googleOAuth         : ActorRef,
-                        sessionDAO: SessionDAO
+                        sessionDAO: SessionDAO,
+                        sessionCache : KeyValueCache[SecureIdentifier, Option[JwtToken]]
                       ) {
 
   implicit def ec : ExecutionContextExecutor = system.dispatcher
@@ -30,7 +33,7 @@ class Routes @Inject()(
   lazy val routes : Route =
     path("authSocket") {
       handleWebSocketMessages(
-        AuthWebSocketFlow(a => {}, sessionDAO)
+        AuthWebSocketFlow(a => {}, sessionDAO, sessionCache )
       )
     } ~ path("ping") {
       get {

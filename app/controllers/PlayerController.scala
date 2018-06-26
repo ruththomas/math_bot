@@ -11,8 +11,8 @@ import akka.actor.ActorSystem
 import akka.pattern.ask
 import akka.util.Timeout
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models.PlayerToken
+import daos.PlayerTokenDAO
+import models.PlayerToken
 import play.api.Environment
 import play.api.mvc._
 import play.api.libs.json._

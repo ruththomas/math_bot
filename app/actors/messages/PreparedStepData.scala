@@ -2,7 +2,7 @@ package actors.messages
 
 import actors.LevelGenerationActor.createdIdGen
 import actors.messages.PreparedStepData.InitialRobotState
-import model.models.{ToolList, _}
+import models.{ToolList, _}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import types.{LevelName, StepName, TokenId}
@@ -28,7 +28,7 @@ case class PreparedStepData(
 )
 
 object PreparedStepData {
-  import model.models.Problem._
+  import models.Problem._
 
   def apply(playerToken: PlayerToken, rawStepData: RawStepData): PreparedStepData = {
     val preparedLambdas = prepareLambdas(playerToken, rawStepData)
@@ -55,7 +55,7 @@ object PreparedStepData {
 
   case class InitialRobotState(location: Map[String, Int], orientation: String, holding: List[String])
 
-  import model.DefaultCommands._
+  import daos.DefaultCommands._
 
   def findRobotCoords(grid: List[String], coords: Map[String, Int] = Map("x" -> 0, "y" -> 0)): Map[String, Int] =
     grid match {

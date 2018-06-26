@@ -4,8 +4,8 @@ import actors.PlayerActor.UpdatePlayerToken
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.pipe
 import loggers.MathBotLogger
-import model.DefaultCommands
-import model.models._
+import daos.DefaultCommands
+import models._
 import play.api.Environment
 
 import actors.LevelGenerationActor.createdIdGen

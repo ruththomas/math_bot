@@ -11,8 +11,8 @@ import compiler.{ Compiler, GridAndProgram }
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models.{GridMap, Stats}
+import daos.PlayerTokenDAO
+import models.{GridMap, Stats}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
 import utils.CompilerConfiguration

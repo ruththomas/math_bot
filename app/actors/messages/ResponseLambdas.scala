@@ -1,7 +1,7 @@
 package actors.messages
 
-import model.DefaultCommands.main
-import model.models.{FuncToken, Lambdas}
+import daos.DefaultCommands.main
+import models.{FuncToken, Lambdas}
 import play.api.libs.json.Json
 
 object ResponseLambdas {

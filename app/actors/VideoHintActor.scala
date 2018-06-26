@@ -5,8 +5,8 @@ import java.time.Instant
 import actors.messages.ActorFailed
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
-import model.models._
-import model.{PlayerTokenDAO, VideoHintDAO}
+import models._
+import daos.{PlayerTokenDAO, VideoHintDAO}
 import play.api.Environment
 import play.api.libs.json.{Json, OFormat}
 import play.api.libs.ws.WSClient

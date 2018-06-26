@@ -1,6 +1,6 @@
-package model.models
+package models
 
-import model.DefaultCommands.{cmds, funcs, main}
+import daos.DefaultCommands.{cmds, funcs, main}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads}
 
