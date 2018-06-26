@@ -129,7 +129,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["rocket"],
-      "videoHints": ["NvEIoXrjc0A", "V5vqJcPBTI0"],
+      "videoHints": ["NvEIoXrjc0A"],
       "prevStep": "WalkFour",
       "nextStep": "EditFirstFunction"
     },
