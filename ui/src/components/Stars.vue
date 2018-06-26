@@ -1,97 +1,278 @@
 <template>
-  <div class="stars">
-    <i class="star star-one" :class="[starGroup, starOneActiveClass]"></i>
-    <i class="star star-two" :class="[starGroup, starTwoActiveClass]"></i>
-    <i class="star star-three" :class="[starGroup, starThreeActiveClass]"></i>
+  <div class="stars" :class="starGroup">
+    <star class="star-two" :active="stepStats.active" :success="success(2)"></star>
+    <star class="star-one" :active="stepStats.active" :success="success(1)"></star>
+    <star class="star-three" :active="stepStats.active" :success="success(3)"></star>
+    <span v-if="timer.stars < 3" class="star-timer">{{ convertTime(remainingTime) }}</span>
   </div>
 </template>
 
 <script>
+import Star from './Star'
+
 export default {
-  name: 'Stars',
-  mounted () {
-  },
-  data () {
-    return {
-      starOneActiveClass: 'active-star',
-      starTwoActiveClass: 'active-star',
-      starThreeActiveClass: 'active-star'
+  name: 'Timer',
+  computed: {
+    timer () {
+      return this.videoTimers[`${this.level}/${this.step}`] || {stars: 3}
+    },
+    remainingTime () {
+      if (this.timer) return this.timer.remainingTime
+      else return 0
+    },
+    videoTimers () {
+      return this.$store.getters.getVideoTimers
     }
   },
   methods: {
+    convertTime (minutes) {
+      let h = Math.floor(minutes / 60)
+      let m = minutes % 60
+      m = m < 10 ? '0' + m : m
+      return h + ':' + m
+    },
+    success (starNumber) {
+      if (starNumber === 1) {
+        return this.timer.stars >= 1
+      } else if (starNumber === 2) {
+        return this.timer.stars >= 3
+      } else {
+        return this.timer.stars >= 2
+      }
+    }
   },
-  props: ['level', 'step', 'starGroup']
+  components: {
+    Star
+  },
+  props: ['level', 'step', 'stepStats', 'starGroup']
 }
 </script>
 
-<style scoped lang="sass">
-  $star-active-color: #F8E71C
-  $star-inactive-color: rgba(104, 104, 104, 1)
-  $star-size: 25px
-  .stars
-    display: inline-flex
+<style scoped lang="scss">
+$star-cluster-star-one-size: 50px;
+$star-cluster-star-two-three-size: 30px;
+$star-spread-star-size: 50px;
+$stars-shadow: inset 0 0 100px #D3D3D3;
+$star-congrats-star-size: 70px;
+$star-margin: 5px 0 5px 0;
+$star-timer-right: 100%;
+$star-timer-bottom: 0;
+$star-timer-font-size: 16px;
+.stars {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  box-shadow: $stars-shadow;
+  border-radius: 5px;
+  * {
+    margin: $star-margin;
+  }
+}
 
-  .star
-    position: relative
+.star-timer {
+  position: absolute;
+  right: $star-timer-right;
+  bottom: $star-timer-bottom;
+  font-size: $star-timer-font-size;
+}
 
-    display: inline-block
-    width: 0
-    height: 0
+.star-cluster {
+  .star-one {
+    height: $star-cluster-star-one-size;
+    width: $star-cluster-star-one-size;
+    align-self: flex-start;
+  }
 
-    border-right:  .3em solid transparent
-    border-left:   .3em solid transparent
+  .star-two, .star-three {
+    height: $star-cluster-star-two-three-size;
+    width: $star-cluster-star-two-three-size;
+    align-self: flex-end;
+  }
+}
 
-    /* Controls the size of the stars. */
-    font-size: $star-size
+.star-spread {
+  .star-one, .star-two, .star-three {
+    height: $star-spread-star-size;
+    width: $star-spread-star-size;
+    align-self: center;
+  }
 
-    &:before, &:after
-      content: ''
+}
+@media only screen and (max-width : 1280px) and (max-height: 900px) {
+}
 
-      display: block
-      width: 0
-      height: 0
+@media only screen and (max-width : 992px) {
+  $star-cluster-star-one-size: 15px;
+  $star-cluster-star-two-three-size: 13px;
+  $star-spread-star-size: 18px;
+  $stars-shadow: inset 0 0 100px #D3D3D3;
+  $star-congrats-star-size: 70px;
+  $star-timer-font-size: 10px;
+  .star-spread {
+    .star-one, .star-two, .star-three {
+      height: $star-spread-star-size;
+      width: $star-spread-star-size;
+    }
 
-      position: absolute
-      top: .6em
-      left: -1em
+    .star-timer {
+      font-size: $star-timer-font-size;
+    }
+  }
 
-      border-right:  1em solid transparent
-      border-left:   1em solid transparent
+  .star-cluster {
+    .star-one {
+      height: $star-cluster-star-one-size;
+      width: $star-cluster-star-one-size;
+      align-self: flex-start;
+    }
 
-      transform: rotate(-35deg)
+    .star-two, .star-three {
+      height: $star-cluster-star-two-three-size;
+      width: $star-cluster-star-two-three-size;
+      align-self: flex-end;
+    }
 
-    &:after
-      transform: rotate(35deg)
+    .star-timer {
+      font-size: $star-timer-font-size;
+    }
+  }
+}
 
-  .active-star
-    border-bottom: .7em solid $star-active-color
+/* Small Devices */
+@media only screen and (max-width : 736px) {
+  $star-cluster-star-one-size: 15px;
+  $star-cluster-star-two-three-size: 13px;
+  $star-spread-star-size: 18px;
+  $stars-shadow: inset 0 0 100px #D3D3D3;
+  $star-congrats-star-size: 70px;
+  $star-timer-font-size: 10px;
+  .star-spread {
+    .star-one, .star-two, .star-three {
+      height: $star-spread-star-size;
+      width: $star-spread-star-size;
+    }
 
-    &:before, &:after
-      border-bottom: .7em solid $star-active-color
+    .star-timer {
+      right: $star-timer-right;
+      bottom: $star-timer-bottom;
+      font-size: $star-timer-font-size;
+    }
+  }
 
-  .inactive-star
-    opacity: 0.5
-    border-bottom: .7em solid $star-inactive-color
+  .star-cluster {
+    .star-one {
+      height: $star-cluster-star-one-size;
+      width: $star-cluster-star-one-size;
+      align-self: flex-start;
+    }
 
-    &:before, &:after
-      border-bottom: .7em solid $star-inactive-color
+    .star-two, .star-three {
+      height: $star-cluster-star-two-three-size;
+      width: $star-cluster-star-two-three-size;
+      align-self: flex-end;
+    }
 
-  .star-cluster
-    margin-left: 0
-    margin-right: 0
-    margin-bottom: 1.2em
+    .star-timer {
+      font-size: $star-timer-font-size;
+      top: 80%;
+      left: 50%;
+    }
+  }
+}
 
-    &:first-child, &:last-child
-      margin-top: 1.2em
+/* Small Devices */
+@media only screen and (max-width : 667px) {
+}
 
-    &:first-child
-      margin-right: 1em
+@media only screen and (max-width: 568px) {
+}
 
-    &:last-child
-      margin-left: 1em
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px) {
+}
 
-  .star-spread
-    margin-left: .7em
-    margin-right: .7em
-    margin-bottom: 1.2em
+/* iPad */
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+  $star-cluster-star-one-size: 30px;
+  $star-cluster-star-two-three-size: 25px;
+  $star-spread-star-size: 40px;
+  $stars-shadow: inset 0 0 100px #D3D3D3;
+  $star-congrats-star-size: 70px;
+  $star-timer-right: 100%;
+  $star-timer-bottom: 0;
+  $star-timer-font-size: 16px;
+  .star-spread {
+    .star-one, .star-two, .star-three {
+      height: $star-spread-star-size;
+      width: $star-spread-star-size;
+    }
+
+    .star-timer {
+      right: $star-timer-right;
+      bottom: $star-timer-bottom;
+      font-size: $star-timer-font-size;
+    }
+  }
+
+  .star-cluster {
+    .star-one {
+      height: $star-cluster-star-one-size;
+      width: $star-cluster-star-one-size;
+      align-self: flex-start;
+    }
+
+    .star-two, .star-three {
+      height: $star-cluster-star-two-three-size;
+      width: $star-cluster-star-two-three-size;
+      align-self: flex-end;
+    }
+
+    .star-timer {
+      right: $star-timer-right;
+      bottom: $star-timer-bottom;
+      font-size: $star-timer-font-size;
+    }
+  }
+}
+
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+  $star-cluster-star-one-size: 15px;
+  $star-cluster-star-two-three-size: 13px;
+  $star-spread-star-size: 30px;
+  $stars-shadow: inset 0 0 100px #D3D3D3;
+  $star-congrats-star-size: 70px;
+  $star-timer-font-size: 18px;
+  .star-spread {
+    .star-one, .star-two, .star-three {
+      height: $star-spread-star-size;
+      width: $star-spread-star-size;
+    }
+
+    .star-timer {
+      right: $star-timer-right;
+      bottom: $star-timer-bottom;
+      font-size: $star-timer-font-size;
+    }
+  }
+
+  .star-cluster {
+    .star-one {
+      height: $star-cluster-star-one-size;
+      width: $star-cluster-star-one-size;
+      align-self: flex-start;
+    }
+
+    .star-two, .star-three {
+      height: $star-cluster-star-two-three-size;
+      width: $star-cluster-star-two-three-size;
+      align-self: flex-end;
+    }
+
+    .star-timer {
+      font-size: $star-timer-font-size;
+      top: 80%;
+      left: 50%;
+    }
+  }
+}
 </style>

@@ -169,39 +169,6 @@
       "prevStep": "Pickup4",
       "nextStep": "Pickup2"
     },
-    "Pickup2": {
-      "level": "Counting",
-      "step": "Pickup2",
-      "gridMap": [
-        "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-        "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-        "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-        "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-        "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-      ],
-      "description": "Use your function to get to the kitties and put 2 on the portal.",
-      "mainMax": 9,
-      "robotOrientation": 0,
-      "stagedEnabled": true,
-      "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
-      "cmdsAvailable": [
-        "moveRobotForwardOneSpot",
-        "changeRobotDirection",
-        "pickUpItem",
-        "setItemDown"
-      ],
-      "specialParameters": ["functionRequired"],
-      "problem": "2",
-      "clearMain": false,
-      "initFocus": [],
-      "videoHints": [],
-      "prevStep": "Pickup7",
-      "nextStep": "Pickup2WithFunction"
-    },
     "Pickup2WithFunction": {
       "level": "Counting",
       "step": "Pickup2WithFunction",
