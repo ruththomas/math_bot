@@ -157,4 +157,105 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/robot.scss" lang="scss"></style>
+<style scoped lang="scss">
+  .robot-container {
+    height: 100%;
+    width: 100%;
+    background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
+    background-size: cover;
+  }
+
+  #robot {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    overflow: visible;
+    margin: 0 auto;
+    padding: 1vh 20px 0 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #control-panel-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  #grid-box {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    justify-content: flex-start;
+    /*border: 1px solid yellowgreen;*/
+  }
+
+  #edit-main-box {
+    display: flex;
+    /*border: 1px solid mediumvioletred;*/
+  }
+
+  #commands-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*border: 1px solid firebrick;*/
+  }
+
+  .filler-box {
+    display: flex;
+  }
+
+  .grow {
+    height: 40%;
+    -webkit-transition: height 1s; /* For Safari 3.1 to 6.0 */
+    transition: height 1s;
+  }
+
+  /* Medium Devices, Desktops */
+  @media only screen and (max-width : 992px) {
+    #robot {
+      width: 80vw;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+    #control-panel-box {
+    }
+
+    #grid-box {
+      justify-content: flex-start;
+    }
+
+    #edit-main-box {
+    }
+
+    #robot {
+      width: 100vw;
+    }
+  }
+
+  /* Extra Small Devices, Phones */
+  @media only screen and (max-width : 480px) {
+  }
+
+  /* Custom, iPhone Retina */
+  @media only screen and (max-width : 320px) {
+
+  }
+
+  /* iPad */
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+    #robot {
+      width: 100vw;
+    }
+  }
+
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+
+  }
+
+</style>

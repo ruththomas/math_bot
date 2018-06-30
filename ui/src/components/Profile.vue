@@ -59,4 +59,33 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/profile.scss" lang="scss"></style>
+<style scoped lang="scss">
+  .profile-container {
+    background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522347137/misc/profileSpace.png");
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+  .profile-main {
+    height: 100%;
+  }
+
+  .profile {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .profile-action {
+    display: flex;
+    flex-grow: 2;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+</style>
