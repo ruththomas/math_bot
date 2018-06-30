@@ -33,6 +33,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["AxPKFXxcFFY", "zcHdtTmMddM"],
       "prevStep": "None",
       "nextStep": "Number8"
     },
@@ -65,6 +66,7 @@
       "problem": "8",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["clFSrrU-h3k"],
       "prevStep": "Number7",
       "nextStep": "SevenAgain"
     },
@@ -97,6 +99,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["HOm0_YM1V_A"],
       "prevStep": "Number8",
       "nextStep": "Number2"
     },
@@ -129,6 +132,7 @@
       "problem": "2",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["URxnxjxRz1w"],
       "prevStep": "SevenAgain",
       "nextStep": "SevenAgainAgain"
     },
@@ -161,6 +165,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["GXO_6gDCU7s"],
       "prevStep": "Number2",
       "nextStep": "Number3"
     },
@@ -193,6 +198,7 @@
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["vtg0vTHLG9o"],
       "prevStep": "SevenAgainAgain",
       "nextStep": "Reuse7"
     },
@@ -225,6 +231,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["LZ9zgvQOE_8"],
       "prevStep": "Number7",
       "nextStep": "Number5"
     },
@@ -257,6 +264,7 @@
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["UpxGarD5nn4"],
       "prevStep": "Reuse7",
       "nextStep": "ReuseCode"
     },
@@ -270,7 +278,7 @@
         "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
         "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
-      "description": "You know what to do. No more repetative tasks for you!",
+      "description": "You know what to do. No more repetitive tasks for you!",
       "mainMax": 1,
       "robotOrientation": 0,
       "stagedEnabled": true,
@@ -289,6 +297,7 @@
       "problem": "7",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["UZZpDk8SpUI"],
       "prevStep": "Number5",
       "nextStep": "None"
     }

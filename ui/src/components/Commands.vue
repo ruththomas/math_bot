@@ -142,8 +142,8 @@ export default {
         },
         filter: '.command-name',
         dragClass: 'dragging',
-        sort: false,
-        ghostClass: 'ghost'
+        ghostClass: 'ghost',
+        sort: false
       },
       functionOptions: {
         group: {
@@ -153,8 +153,8 @@ export default {
         },
         filter: '.command-name',
         dragClass: 'dragging',
-        sort: false,
-        ghostClass: 'ghost'
+        ghostClass: 'ghost',
+        sort: false
       },
       currentColor: this.colorSelected
     }
@@ -196,7 +196,7 @@ export default {
     },
     toggleFunctionAdd (evt) {
       this.commandEvt = evt
-      this.togglePopoverBucket({ind: -1, show: this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction'})
+      this.togglePopoverBucket({ind: null, show: this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction'})
     },
     closeFunctionBox () {
       this.commandEvt = null
@@ -263,4 +263,242 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/commands.scss" lang="scss"></style>
+<style scoped lang="scss">
+  .invisible {
+    visibility: hidden;
+  }
+
+  .commands {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    height: 105px;
+    position: relative;
+    padding: 10px 0;
+  }
+
+  .commands-slide {
+    transition-duration: 300ms;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .commands-slide > * {
+    display: flex;
+    padding: 0 3px 0 0;
+    height: 100%;
+    z-index: 100;
+    justify-content: flex-start;
+  }
+
+  .command-border-info {
+    border: 1px solid rgb(0, 0, 255)!important;
+  }
+
+  .methods {
+    border-right: 2px solid #B8E986;
+  }
+
+  .methods > * {
+    float: left;
+  }
+
+  .functions {
+    flex-wrap: wrap;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+
+  .functions-show-overflow {
+    overflow: visible;
+  }
+
+  .functions > * {
+    margin-bottom: 20px!important;
+  }
+
+  .two-x-command-name {
+    top: 40px;
+    height: 25px;
+  }
+
+  .three-x-command-name {
+    top: 46px;
+    height: 37px;
+  }
+
+  .four-x-command-name {
+    top: 52px;
+    height: 49px;
+  }
+
+  .five-x-command-name {
+    top: 58px;
+    height: 60px;
+  }
+
+  .funcText {
+    width: 94%;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .commandText {
+    position: absolute;
+    top: 1px;
+    left: 0;
+    right: 0;
+    white-space: nowrap;
+  }
+
+  .command-control-button-group {
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin-right: 20px;
+  }
+
+  .command-control-button-group:after {
+    content:"";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 2px solid #B8E986;
+    transform: translate(-50%);
+  }
+
+  .command-control-button {
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    right: -21px;
+  }
+
+  .command-button {
+    max-height: 30px;
+    max-width: 30px;
+  }
+
+  .commands-up {
+    -webkit-transform: rotate(-90deg);
+    transform:rotate(-90deg);
+  }
+
+  .commands-down {
+    -webkit-transform: rotate(90deg);
+    transform:rotate(90deg);
+  }
+
+  #commands-box {
+    margin: 0;
+  }
+
+  #open-staged {
+    display: flex;
+    align-self: flex-start;
+    cursor: pointer;
+  }
+
+  .rotate-to-x {
+    -webkit-transform: rotate(45deg);
+    transform:rotate(45deg);
+  }
+
+  .rotate-to-plus {
+    -webkit-transform: rotate(0);
+    transform:rotate(0);
+  }
+
+  /* Medium Devices, Desktops */
+  @media only screen and (max-width : 992px) {
+    .commands {
+      margin-bottom: 5px;
+      height: 55px;
+    }
+
+    .commands-slide {
+      margin: 0 auto;
+    }
+
+    .commands-slide > * {
+      /*height: 35px;*/
+    }
+
+    .command-control-button-group {
+      margin-right: 10px;
+    }
+
+    .command-control-button {
+      height: 15px;
+      width: 15px;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+    .commands {
+      margin-bottom: 5px;
+      height: 65px;
+    }
+
+    .commands-slide {
+      margin: 0 auto;
+    }
+
+    .commands-slide > * {
+      /*height: 35px;*/
+    }
+
+    .methods {
+    }
+
+    .command-control-button-group {
+      height: 35px;
+      margin-right: 10px;
+    }
+
+    .command-control-button {
+      height: 15px;
+      width: 15px;
+    }
+  }
+
+  /* Extra Small Devices, Phones */
+  @media only screen and (max-width : 480px) {
+
+  }
+
+  /* Custom, iPhone Retina */
+  @media only screen and (max-width : 320px) {
+
+  }
+
+  /* iPad */
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+    .commands {
+      height: 115px;
+    }
+  }
+
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+    .commands {
+      height: 115px;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+</style>
