@@ -4,6 +4,7 @@
     <div
       v-if="pieceToShow === 'closed'"
       class="piece closed-piece border-right"
+      :class="'piece-' + color"
       :style="{'background-image': `url(${backgroundImg})`}">
       <div v-if="showName">
         <div v-if="funcName !== ''" class="command-name">{{funcName}}</div>
@@ -14,6 +15,7 @@
     <div
       v-else-if="pieceToShow === 'start'"
       class="piece puzzle-start"
+      :class="'piece-' + color"
       :style="{'background-image': `url(${backgroundImg})`}">
       <div class="tab-insert">
         <div class="top-insert insert"></div>
@@ -25,6 +27,7 @@
     <div
       v-else-if="pieceToShow === 'middle'"
       class="piece puzzle-middle"
+      :class="'piece-' + color"
       :style="{'background-image': `url(${backgroundImg})`}">
       <div class="left-tab"></div>
       <div class="tab-insert">
@@ -37,6 +40,7 @@
     <div
       v-else-if="pieceToShow === 'end'"
       class="piece puzzle-end border-right"
+      :class="'piece-' + color"
       :style="{'background-image': `url(${backgroundImg})`}">
       <div class="left-tab"></div>
     </div>
@@ -47,32 +51,53 @@
 <script>
 export default {
   name: 'puzzle_pieces',
-  mounted () {
-    this.changeColor(this.color)
-  },
-  data () {
-    return {
-      colors: {
-        default: '#FFFFFF',
-        green: '#FF98B1',
-        blue: '#4A90E2',
-        red: '#F25C5C',
-        purple: '#CA7AFF'
-      }
-    }
-  },
-  methods: {
-    changeColor (color) {
-      document.documentElement.style.setProperty(`--puzzle-piece-border-color`, this.colors[color])
-    }
-  },
   props: ['pieceToShow', 'backgroundImg', 'color', 'funcName', 'showName']
 }
 </script>
 
-<style lang="scss">
-  :root {
-    --puzzle-piece-border-color: #FFFFFF;
+<style scoped lang="scss">
+  $puzzle-piece-border-color: #FFFFFF;
+
+  .piece-default {
+    border-color: #FFFFFF!important;
+    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
+      border-color: #FFFFFF!important;
+    }
+  }
+
+  .piece-green {
+    border-color: #50E3C2!important;
+    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
+      border-color: #50E3C2!important;
+    }
+  }
+
+  .piece-blue {
+    border-color: #4A90E2!important;
+    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
+      border-color: #4A90E2!important;
+    }
+  }
+
+  .piece-pink {
+    border-color: #FF98B1!important;
+    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
+      border-color: #FF98B1!important;
+    }
+  }
+
+  .piece-red {
+    border-color: #F25C5C!important;
+    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
+      border-color: #F25C5C!important;
+    }
+  }
+
+  .piece-purple {
+    border-color: #CA7AFF!important;
+    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
+      border-color: #CA7AFF!important;
+    }
   }
 
   .piece {
@@ -84,7 +109,7 @@ export default {
     border-top-left-radius: 3px;
     color: white;
     background-color: #000000;
-    border: 1px solid var(--puzzle-piece-border-color);
+    border: 1px solid $puzzle-piece-border-color;
     border-right: none;
     background-size: 70%;
     background-position: center;
@@ -105,7 +130,7 @@ export default {
   }
 
   .border-right {
-    border-right: 1px solid var(--puzzle-piece-border-color);
+    border-right: 1px solid $puzzle-piece-border-color;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
   }
@@ -130,7 +155,7 @@ export default {
     background-color: #000000;
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
-    border: 1px solid var(--puzzle-piece-border-color);
+    border: 1px solid $puzzle-piece-border-color;
     border-left: 0;
     box-sizing: border-box;
     transform: rotate(180deg);
@@ -145,15 +170,15 @@ export default {
     width: 10px;
     height: 75px;
     background: radial-gradient(transparent 10px, rgba(0,0,0,1) 20px);
-    border-top: 1px solid var(--puzzle-piece-border-color);
-    border-bottom: 1px solid var(--puzzle-piece-border-color);
+    border-top: 1px solid $puzzle-piece-border-color;
+    border-bottom: 1px solid $puzzle-piece-border-color;
   }
 
   .top-insert, .bottom-insert {
     content: "";
     flex-grow: 1;
     width: 100%;
-    border-right: 1px solid var(--puzzle-piece-border-color);
+    border-right: 1px solid $puzzle-piece-border-color;
     background-color: #000000;
   }
 
@@ -187,7 +212,7 @@ export default {
     word-wrap: break-word;
     white-space: normal;
     border-radius: 3px;
-    background-color: var(--puzzle-piece-border-color);
+    background-color: $puzzle-piece-border-color;
   }
 
   .command-name-empty {
