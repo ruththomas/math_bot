@@ -2,25 +2,21 @@ package actors
 
 import actors.messages.ActorFailed
 import akka.actor.{Actor, Props}
-
 import akka.pattern.pipe
 import loggers.MathBotLogger
-import model.PlayerTokenModel
+import model.PlayerTokenDAO
 import play.api.Environment
-import play.modules.reactivemongo.ReactiveMongoApi
 
 object GameStatsActor {
   final case class GetTokenCount()
 
-  final case class GameStatsFinished(userCount: Option[Int])
+  final case class GameStatsFinished(userCount: Option[String])
 
-  def props(reactiveMongoApi: ReactiveMongoApi, logger: MathBotLogger, environment: Environment) =
-    Props(new GameStatsActor()(reactiveMongoApi, logger, environment))
+  def props(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger, environment: Environment) =
+    Props(new GameStatsActor()(playerTokenDAO, logger, environment))
 }
 
-class GameStatsActor()(val reactiveMongoApi: ReactiveMongoApi, logger: MathBotLogger, environment: Environment)
-    extends Actor
-    with PlayerTokenModel {
+class GameStatsActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger, environment: Environment) extends Actor {
   import GameStatsActor._
   import context.dispatcher
 
@@ -28,7 +24,7 @@ class GameStatsActor()(val reactiveMongoApi: ReactiveMongoApi, logger: MathBotLo
 
   override def receive: Receive = {
     case GetTokenCount =>
-      getTokenCount
+      playerTokenDAO.getTokenCount
         .map { count =>
           GameStatsFinished(userCount = Some(count))
         }

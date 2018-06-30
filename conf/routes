@@ -8,7 +8,7 @@ GET         /api/levels/getLevel/:level                                         
 # Compiler
 POST        /api/compile/:tokenId                                                  controllers.MathBotCompiler.compile(tokenId)
 GET         /ws/compilews/:tokenId                                                 controllers.MathBotCompiler.compileWs(tokenId)
-GET         /api/wsPath/:tokenId                                                   controllers.MathBotCompiler.wsPath(tokenId)
+GET         /api/wsPath/:tokenId/:connection                                       controllers.MathBotCompiler.wsPath(tokenId, connection)
 
 # PLAYER
 PUT         /api/token/editLambdas                                                 controllers.PlayerController.editLambdas
@@ -22,6 +22,9 @@ GET         /api/stats/switch/:tokenId/:level/:step                             
 GET         /api/stats/unlock/:tokenId                                             controllers.StatsController.unlock(tokenId)
 GET         /api/stats/reset/:tokenId                                              controllers.StatsController.reset(tokenId)
 GET         /api/stats/:tokenId                                                    controllers.StatsController.getStats(tokenId)
+
+# Video hints
+GET         /ws/videohint                                                          controllers.VideoHintController.videoSocket
 
 # Get game stats
 GET         /api/gameStats/getTokenCount                                           controllers.GameStatsController.getCount

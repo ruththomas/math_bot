@@ -33,6 +33,7 @@
       "problem": "1",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["l_CnNj5aO6E",	"lnCPjFhMU-s", "BSVWStDirZg"],
       "prevStep": "None",
       "nextStep": "Pickup3"
     },
@@ -65,6 +66,7 @@
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["l24v6ot_fYw",	"Ty-eyXkXW4o", "UtPNfChYedM"],
       "prevStep": "Counting",
       "nextStep": "Pickup5"
     },
@@ -97,6 +99,7 @@
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["aC3-fCaFErk",	"jjYQlsgXvyE", "RGgNlFSKErg"],
       "prevStep": "Pickup3",
       "nextStep": "Pickup4"
     },
@@ -129,6 +132,7 @@
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["F5ZWSTBwZNU", "OGLNVzup_TM"],
       "prevStep": "Pickup5",
       "nextStep": "Navigate"
     },
@@ -161,39 +165,8 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["jePF1-i3tck",	"7GYsnAFv_qk"],
       "prevStep": "Pickup4",
-      "nextStep": "Pickup2"
-    },
-    "Pickup2": {
-      "level": "Counting",
-      "step": "Pickup2",
-      "gridMap": [
-        "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-        "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-        "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-        "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-        "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-      ],
-      "description": "Use your function to get to the kitties and put 2 on the portal.",
-      "mainMax": 9,
-      "robotOrientation": 0,
-      "stagedEnabled": true,
-      "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
-      "cmdsAvailable": [
-        "moveRobotForwardOneSpot",
-        "changeRobotDirection",
-        "pickUpItem",
-        "setItemDown"
-      ],
-      "specialParameters": ["functionRequired"],
-      "problem": "2",
-      "clearMain": false,
-      "initFocus": [],
-      "prevStep": "Pickup7",
       "nextStep": "Pickup2WithFunction"
     },
     "Pickup2WithFunction": {
@@ -225,7 +198,8 @@
       "problem": "2",
       "clearMain": false,
       "initFocus": [],
-      "prevStep": "Pickup2",
+      "videoHints": ["92eDgAbBF9w",	"6hTzddZVJ4Q"],
+      "prevStep": "Navigate",
       "nextStep": "Pickup1WithFunction"
     },
     "Pickup1WithFunction": {
@@ -257,6 +231,7 @@
       "problem": "1",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["lsZo8ZpnrBo",	"IiYfP6Fb3Cw"],
       "prevStep": "Pickup2WithFunction",
       "nextStep": "Pickup5WithFunction"
     },
@@ -289,6 +264,7 @@
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["s8bVR65tR_U",	"cqiaefo9zXY"],
       "prevStep": "Pickup1WithFunction",
       "nextStep": "Pickup9WithFunction"
     },
@@ -321,6 +297,7 @@
       "problem": "9",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["rpO3fqlm33A",	"o06S52Fsuvw"],
       "prevStep": "Pickup5WithFunction",
       "nextStep": "Pickup4WithFunction"
     },
@@ -353,6 +330,7 @@
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["tXzR4s9Ptns",	"rAp3CisZJYM"],
       "prevStep": "Pickup9WithFunction",
       "nextStep": "Pickup6WithFunction"
     },
@@ -385,6 +363,7 @@
       "problem": "6",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["--p0EUiWF1I"],
       "prevStep": "Pickup4WithFunction",
       "nextStep": "Pickup8WithFunction"
     },
@@ -417,6 +396,7 @@
       "problem": "8",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["V3EKeXdQDBM"],
       "prevStep": "Pickup6WithFunction",
       "nextStep": "Pickup3WithFunction"
     },
@@ -449,6 +429,7 @@
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["zWLznLyDVPU"],
       "prevStep": "Pickup8WithFunction",
       "nextStep": "None"
     }
