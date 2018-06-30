@@ -10,12 +10,18 @@
         >
         </div>
         <div
-          class='color-selector'
+          class='function-control'
           :style="{'background-color': colorSelected.hex}"
         >
+          <!--@click="applyColorConditional"-->
         </div>
-
         <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="52" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
+
+        <div
+          class='function-control trash'
+          @click="deleteFuncContents"
+        >
+        </div>
       </div>
 
       <img class="close-edit-function dialog-button" @click="closeEditFunction" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
@@ -140,7 +146,7 @@ export default {
       buildUtils.updateFunctionsOnChange({ context: this, currentFunction: this.editingFunction, addedFunction: null, newIndex: this.editingFunction.index, newColor: newColor })
       this.color = 'default'
     },
-    deleteFuncContents () { // in case we want to implement later
+    deleteFuncContents () {
       let deleteFuncContents = buildUtils.currentFunc(this)
       deleteFuncContents.func = []
       buildUtils.updateFunctionsOnChange(({context: this, currentFunction: deleteFuncContents, addedFunction: null, newIndex: null}))
@@ -234,11 +240,18 @@ export default {
     margin-right: 12px;
   }
 
-  .color-selector {
+  .function-control {
     height: 25px;
     width: 25px;
     border-radius: 5px;
     margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .function-control.trash {
+    background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png");
+    background-size: cover;
+    float: right;
   }
 
   .func-name {
