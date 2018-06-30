@@ -40,7 +40,6 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
                           exitOnSuccess: Boolean = false) {
     def addSteps(steps: Int): ProgramState = this.copy(stepCount = this.stepCount + steps)
   }
-
   implicit val timeout: Timeout = 5000.minutes
 
   private val className = "CompilerActor"
@@ -208,6 +207,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
                                          Frame(NoOperation(), Register(), currentCompiler.program.grid, None, None))
           } yield sendFrames(currentCompiler, lastFrame)
       }
+
     case _: CompilerHalt =>
       logger.LogInfo(className, "Compiler halted")
       context.become(createCompile())

@@ -218,6 +218,7 @@ class VideoHintActor @Inject()(out: ActorRef,
                          RemainingTime(stars, level, step, calculateRemainingTime(timeStamp)))
     /*
      * GetHintsTaken - returns a list of hints taken with a remaining time in minutes
+     * also filters out expired videos.
      * */
     case GetHintsTaken(tokenId) =>
       videoHintDAO.getHints(tokenId) map {
