@@ -13,7 +13,7 @@
         :key="step + ':' + value"
       >
         <div class="step-info-text-container">
-          <div class="step-info-text">{{ parseCamelCase(step.name) }}</div>
+          <div class="step-info-text">{{ value + 1 }}:{{ parseCamelCase(step.name) }}</div>
         </div>
         <div class="step-info-image-container">
           <stars :level="level" :step="step.name" :step-stats="step" :star-group="'star-cluster'"></stars>
