@@ -34,7 +34,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["74tUfeuLEg8"],
       "prevStep": "None",
       "nextStep": "WalkAround"
     },
@@ -68,7 +68,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["iZL0xwsXGT4", "muzWKrXK1cU", "lPX2d666xhc"],
       "prevStep": "RecurForward",
       "nextStep": "SmallSpiral"
     },
@@ -102,7 +102,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["orA768io-sM"],
       "prevStep": "WalkAround",
       "nextStep": "BigSpiral"
     },
@@ -170,7 +170,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["AfZpAmvrSf0", "cDTFBfdrR5I"],
       "prevStep": "BigSpiral",
       "nextStep": "LongStairs"
     },
@@ -204,7 +204,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["iSGLCrv9YkQ"],
       "prevStep": "Stairs",
       "nextStep": "Snake"
     },
@@ -238,7 +238,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["tbTcCSPODZw", "ohTSwV29tOk", "aMcAgpFzSUY"],
       "prevStep": "LongStairs",
       "nextStep": "ZigZag"
     },
@@ -272,7 +272,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["Vr54qVFP5dE"],
       "prevStep": "LongStairs",
       "nextStep": "CleanUp"
     },
@@ -306,7 +306,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["Le5w3d8ZsX8", "Sba-RuRtXPM", "81lPIL9WQbU"],
       "prevStep": "ZigZag",
       "nextStep": "CleanUpMore"
     },
@@ -340,7 +340,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["EP6QjYL3aFk"],
       "prevStep": "CleanUp",
       "nextStep": "PickupPile"
     },
@@ -374,7 +374,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["4ruzychwloY"],
       "prevStep": "CleanUpMore",
       "nextStep": "CleanComb"
     },
@@ -408,7 +408,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["6BtxMYaTHZI", "fj6NAFFpi4E", "WRrcc4EU344"],
       "prevStep": "PickupPile",
       "nextStep": "CleanComb2"
     },
@@ -442,7 +442,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["HkZpxXXGx0w", "vSUc3cIb184"],
       "prevStep": "CleanComb",
       "nextStep": "CleanComb3"
     },
@@ -476,7 +476,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["MgJMW6VSkj8", "Imvvc6sWP4U"],
       "prevStep": "CleanComb2",
       "nextStep": "CleanZigZags"
     },
@@ -510,7 +510,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["pn53eWiqibk"],
       "prevStep": "CleanComb3",
       "nextStep": "None"
     }
