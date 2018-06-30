@@ -69,6 +69,13 @@ export default {
       })
       .catch(console.error)
   },
+  updateActives ({tokenId, actives}, cb) {
+    Vue.http.put('/api/token/updateActives', {tokenId, actives})
+      .then(res => {
+        cb(res.body)
+      })
+      .catch(console.error)
+  },
   /*
   * @deprecated
   * statsWin updates JWT stats when the user wins.

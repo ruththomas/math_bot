@@ -34,6 +34,7 @@
         :list="activeFunctions"
         :options="functionOptions"
         @start="start"
+        @change="moveFunction"
         @end="end"
         @add="addToActiveFunc"
       >
@@ -153,8 +154,7 @@ export default {
         },
         filter: '.command-name',
         dragClass: 'dragging',
-        ghostClass: 'ghost',
-        sort: false
+        ghostClass: 'ghost'
       },
       currentColor: this.colorSelected
     }
@@ -217,6 +217,11 @@ export default {
     },
     end () {
       this.$store.dispatch('toggleShowMesh', false)
+    },
+    moveFunction (evt) {
+      api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
+        this.$store.dispatch('updateActives', actives)
+      })
     },
     addToActiveFunc (evt) {
       const index = evt.item.getAttribute('data-function-index')
