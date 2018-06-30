@@ -72,8 +72,6 @@ export default {
   }
 
   .dragging, .ghost, .chosen {
-    height: 75px;
-    width: 75px;
   }
 
   .dragging {
@@ -82,7 +80,7 @@ export default {
 
   .function-drop {
     .ghost, .chosen {
-      margin: 0 20px 0 20px;
+      margin: 0 12px 0 12px;
     }
 
     .ghost {

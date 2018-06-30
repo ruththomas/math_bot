@@ -11,7 +11,7 @@ import model.PlayerTokenDAO
 import model.models._
 import play.api.Environment
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, JsValue, Json, Reads}
+import play.api.libs.json._
 import types.TokenId
 
 import scala.concurrent.Future
@@ -163,6 +163,16 @@ object PlayerActor {
 
   case class PreparedPlayerToken(playerToken: PlayerToken)
 
+  case class UpdateActives(body: JsValue)
+
+  object ChangeActives {
+    implicit val changeActivesFormat: OFormat[ChangeActives] = Json.format[ChangeActives]
+  }
+
+  case class ChangeActives(tokenId: TokenId, actives: List[FuncToken])
+
+  case class UpdatedActives(actives: List[FuncToken])
+
   object PrepareLambdas {
     implicit val prepareLambdasReads: Reads[PrepareLambdas] = (
       (JsPath \ "tokenId").read[String] and
@@ -211,6 +221,24 @@ class PlayerActor()(system: ActorSystem,
             )
         }
         .pipeTo(self)(sender)
+    case UpdateActives(jsValue) =>
+      jsValue.validate[ChangeActives].asOpt match {
+        case Some(changeActives) =>
+          playerTokenDAO
+            .getToken(changeActives.tokenId)
+            .map {
+              case Some(playerToken) =>
+                val updatedPlayerToken =
+                  playerToken.copy(
+                    lambdas = Some(playerToken.lambdas.get.copy(activeFuncs = indexFunctions(changeActives.actives)))
+                  )
+                playerTokenDAO.updateToken(updatedPlayerToken)
+                UpdatedActives(updatedPlayerToken.lambdas.get.activeFuncs)
+              case None => ActorFailed("No player token")
+            }
+            .pipeTo(self)(sender)
+        case None => Future { "Invalid json" }.map { ActorFailed.apply }.pipeTo(self)(sender)
+      }
     case getPlayerToken: GetPlayerToken =>
       playerTokenDAO
         .getToken(getPlayerToken.playerToken.token_id)
@@ -368,6 +396,9 @@ class PlayerActor()(system: ActorSystem,
             .pipeTo(self)(sender)
         }
 
+    case updatedActives: UpdatedActives =>
+      logger.LogDebug(className, "Actives updated.")
+      sender ! Left(updatedActives)
     case updatedLambdasToken: PreparedLambdasToken =>
       logger.LogDebug(className, "PreparedLambdasToken generated.")
       sender ! Left(updatedLambdasToken)

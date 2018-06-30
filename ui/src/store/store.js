@@ -84,6 +84,9 @@ export default new Vuex.Store({
     videoTimers: {}
   },
   mutations: {
+    UPDATE_ACTIVES (state, actives) {
+      state.auth.userToken.lambdas.activeFuncs = actives
+    },
     ADD_VIDEO_TIMER (state, remainingTime) {
       Vue.set(state.videoTimers, `${remainingTime.level}/${remainingTime.step}`, new VideoTimer({state, level: remainingTime.level, step: remainingTime.step, stars: remainingTime.stars, remainingTime: remainingTime.remainingTime}))
     },
@@ -244,6 +247,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateActives ({commit}, actives) {
+      commit('UPDATE_ACTIVES', actives)
+    },
     addVideoTimer ({commit}, context) {
       commit('ADD_VIDEO_TIMER', context)
     },
