@@ -30,6 +30,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["Walk"],
+      "videoHints": ["u5BqiML0q70"],
       "prevStep": "None",
       "nextStep": "WalkThree"
     },
@@ -59,6 +60,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["Walk"],
+      "videoHints": ["aGRc1MR91Fk", "hAOSQnzbVLY", "CUbBgS7llOI"],
       "prevStep": "WalkOne",
       "nextStep": "WalkFour"
     },
@@ -88,6 +90,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["Walk"],
+      "videoHints": ["9p4DJYmFL6o", "52Qjuc9AU-Y", "pwNEp_Yoi8w"],
       "prevStep": "WalkThree",
       "nextStep": "WalkFourWithFunction"
     },
@@ -126,6 +129,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["rocket"],
+      "videoHints": ["NvEIoXrjc0A"],
       "prevStep": "WalkFour",
       "nextStep": "EditFirstFunction"
     },
@@ -157,6 +161,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["rocket"],
+      "videoHints": ["Vlu_7mILe1g", "V5vqJcPBTI0"],
       "prevStep": "WalkFourWithFunction",
       "nextStep": "TurnRight"
     },
@@ -187,6 +192,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["Turn Right"],
+      "videoHints": ["qi-PCVruzZs", "lwc-qpKeRAA"],
       "prevStep": "EditFirstFunction",
       "nextStep": "CreateNewFunction"
     },
@@ -221,6 +227,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["open-staged"],
+      "videoHints": ["377dFh51QzM", "OGV9_vN5qoU", "vExSvJwCLU4"],
       "prevStep": "TurnRight",
       "nextStep": "TurnLeft"
     },
@@ -255,6 +262,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["open-staged"],
+      "videoHints": ["C0bpqUxtep0", "zHVg48iPvCg", "JTVWGig1h9o"],
       "prevStep": "Uturn",
       "nextStep": "WalkAndTurn"
     },
@@ -285,6 +293,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["VO_IA7AZvjQ", "iAxdJdNOjp0", "9BQxnQ1ScJs"],
       "prevStep": "TurnLeft",
       "nextStep": "WalkAndTurnWithFunctions"
     },
@@ -317,6 +326,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": ["rocket"],
+      "videoHints": ["1bDucaHrFwo", "swF5vuJHLF0"],
       "prevStep": "WalkAndTurn",
       "nextStep": "Maze1"
     },
@@ -349,6 +359,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["rHfsl5BNEkQ", "pJdlVLrZH7M", "wPOC7wsw_z8"],
       "prevStep": "WalkAndTurnWithFunctions",
       "nextStep": "Maze2"
     },
@@ -381,6 +392,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["zTo5nxCvUtI", "AEMDZOOlSBA", "ODEMhj9BZ94"],
       "prevStep": "Maze1",
       "nextStep": "Maze3"
     },
@@ -413,6 +425,7 @@
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
+      "videoHints": ["yJ68pORn3_A", "cpd6QRuzwfc", "9kRdp-D59_Q"],
       "prevStep": "Maze2",
       "nextStep": "None"
     }
