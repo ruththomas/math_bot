@@ -369,12 +369,14 @@ class PlayerActor()(system: ActorSystem,
           for {
             lambdas <- playerToken.lambdas
             funcToMove <- lambdas.stagedFuncs.lift(stagedIndex.toInt)
+
             updatedStagedFuncs = lambdas.stagedFuncs
               .filterNot(_.index.contains(stagedIndex.toInt))
 
             updatedActiveFuncs = lambdas.activeFuncs
               .take(activeIndex.toInt) ++ List(funcToMove) ++ lambdas.activeFuncs
               .drop(activeIndex.toInt)
+
             updatedToken = playerToken.copy(
               lambdas = Some(
                 lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
