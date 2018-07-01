@@ -38,7 +38,6 @@ class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionC
 
   def getToken(tokenId: TokenId): Future[Option[PlayerToken]] =
     collection.find(equal(tokenIdField, tokenId)).first().toFutureOption()
-
   def delete(tokenId: TokenId): Future[Option[DeleteResult]] =
     collection.deleteOne(equal(tokenIdField, tokenId)).toFutureOption()
 
