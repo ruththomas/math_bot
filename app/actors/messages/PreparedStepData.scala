@@ -129,7 +129,9 @@ object PreparedStepData {
           case None => lambdas.main.copy(func = Some(List.empty[FuncToken]))
         }
 
-        lambdas.copy(activeFuncs = lambdas.activeFuncs, main = main, cmds = cmds)
+        val actives = lambdas.activeFuncs.take(rawStepData.activeQty)
+
+        lambdas.copy(activeFuncs = actives, main = main, cmds = cmds)
       case None => Lambdas()
     }
   }

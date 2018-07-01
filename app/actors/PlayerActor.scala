@@ -247,8 +247,7 @@ class PlayerActor()(system: ActorSystem,
            * If user is in db continue
            * */
           case Some(playerToken) =>
-            val t = GatherLevel(playerToken)
-            t
+            GatherLevel(playerToken)
           /*
            * else create user token and continue
            * */

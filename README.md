@@ -391,6 +391,7 @@ The project has been built thus far with Intellij
 Current Special Parameters
 ```$xslt
     "functionRequired" - user must use a built function
+    "recursionRequired" - user must use recursion (currently only checks top level)
 ```
 
 #### Building a Problem
