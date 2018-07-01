@@ -40,7 +40,7 @@
       >
         <function-box
           v-for="(func, ind) in activeFunctions"
-          :key="func.created_id"
+          :key="ind + '/' + func.created_id"
           :func="func"
           :ind="ind"
           :collection="activeFunctions"
@@ -67,6 +67,7 @@ import draggable from 'vuedraggable'
 import api from '../services/api'
 import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
+import uId from 'uid'
 
 export default {
   name: 'FunctionDrop',
@@ -160,6 +161,7 @@ export default {
     }
   },
   methods: {
+    uid: int => uId(int),
     notEditableMessage (evt) {
       const messageBuilder = {
         type: 'warn',
@@ -219,9 +221,11 @@ export default {
       this.$store.dispatch('toggleShowMesh', false)
     },
     moveFunction (evt) {
-      api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
-        this.$store.dispatch('updateActives', actives)
-      })
+      if (evt.moved) {
+        api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
+          this.$store.dispatch('updateActives', actives)
+        })
+      }
     },
     addToActiveFunc (evt) {
       const index = evt.item.getAttribute('data-function-index')
