@@ -316,8 +316,13 @@ class PlayerActor()(system: ActorSystem,
         val funcType = funcToken.`type`.getOrElse("Nothing")
         val mainFunc = lambdas.main.func.getOrElse(List.empty[FuncToken])
 
-        val updatedPlayerToken =
-          if (funcType == "function" || (funcType == "main-function" && mainFunc.length < rawStepData.mainMax) || overrideBool) {
+        val updatedPlayerToken = {
+
+          val funcTokenLengthInBounds = funcType == "function" && funcToken.func.get.length <= funcToken.sizeLimit
+            .getOrElse(10000)
+          val mainFuncLengthInBounds = funcType == "main-function" && mainFunc.length < rawStepData.mainMax
+
+          if (funcTokenLengthInBounds || mainFuncLengthInBounds || overrideBool) {
             playerToken.copy(lambdas = Some(if (funcType == "function") {
               lambdas.copy(
                 activeFuncs = indexFunctions(
@@ -332,6 +337,7 @@ class PlayerActor()(system: ActorSystem,
           } else {
             playerToken
           }
+        }
 
         playerTokenDAO
           .updateToken(updatedPlayerToken)
@@ -363,9 +369,7 @@ class PlayerActor()(system: ActorSystem,
                                activeQty = makeQtyUnlimited(rsd.activeQty),
                                mainMax = makeQtyUnlimited(rsd.mainMax))
       } yield
-        if (rawStepData.activeEnabled && lambdas.activeFuncs.lengthCompare(
-              makeQtyUnlimited(rawStepData.activeQty)
-            ) <= 0) {
+        if (rawStepData.activeEnabled && lambdas.activeFuncs.lengthCompare(rawStepData.activeQty) <= 0) {
           for {
             lambdas <- playerToken.lambdas
             funcToMove <- lambdas.stagedFuncs.lift(stagedIndex.toInt)

@@ -180,16 +180,17 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
             val assignedStaged =
               rawStepData.assignedStaged.toList.map { s =>
                 val name = s._1
-                val image = s._2
+                val assignedStagedModel = s._2
                 FuncToken(
-                  created_id = createdIdGen(image),
+                  created_id = createdIdGen(assignedStagedModel.image),
                   func = Option(List.empty[FuncToken]),
                   set = Some(false),
                   name = Some(parseCamelCase(name)),
-                  image = Some(image),
+                  image = Some(assignedStagedModel.image),
                   index = Some(playerToken.lambdas.get.stagedFuncs.length),
                   `type` = Some("function"),
-                  commandId = Some("function")
+                  commandId = Some("function"),
+                  sizeLimit = Some(assignedStagedModel.sizeLimit)
                 )
               }
             // Create List[FuncToken] of pre built active functions
