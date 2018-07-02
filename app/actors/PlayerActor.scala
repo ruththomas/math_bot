@@ -318,8 +318,9 @@ class PlayerActor()(system: ActorSystem,
 
         val updatedPlayerToken = {
 
-          val funcTokenLengthInBounds = funcType == "function" && funcToken.func.get.length <= funcToken.sizeLimit
-            .getOrElse(10000)
+          val funcTokenLengthInBounds = funcType == "function" && funcToken.func.get.length <= makeQtyUnlimited(
+            funcToken.sizeLimit.getOrElse(-1)
+          )
           val mainFuncLengthInBounds = funcType == "main-function" && mainFunc.length < rawStepData.mainMax
 
           if (funcTokenLengthInBounds || mainFuncLengthInBounds || overrideBool) {

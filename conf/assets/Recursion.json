@@ -21,8 +21,8 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": {
-        "Walk4ever": {
-          "image": "walk4ever",
+        "WalkForever": {
+          "image": "walkForever",
           "sizeLimit": 2
         }
       },
