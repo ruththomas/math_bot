@@ -39,6 +39,7 @@ module.exports = {
     turnLeft: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522350096/functionIcons/leftArrow_bq64oj.png',
     uTurn: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522349067/functionIcons/noun_923693_cc_afcgbm.png',
     main: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522350153/functionIcons/robot_ootonv.png',
+    walk4ever: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524239159/functionIcons/digitalMonkey_dwa0a1.png',
     '1': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234339/functionIcons/football_b1uiqd.svg',
     '2': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234600/functionIcons/baseball_lqjqyo.svg',
     '3': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234702/functionIcons/soccerBall_cdx3da.svg',
@@ -90,13 +91,13 @@ module.exports = {
     '49': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524238932/functionIcons/angryMonkey_kyqjou.png',
     '50': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524239000/functionIcons/shockedMonkey_uvv6l5.png',
     '51': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524239080/functionIcons/weirdBear_slkmc3.png',
-    '52': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524239159/functionIcons/digitalMonkey_dwa0a1.png',
-    '53': 'https://dummyimage.com/600x400/000/fff&text=2',
-    '54': 'https://dummyimage.com/600x400/000/fff&text=4',
-    '55': 'https://dummyimage.com/600x400/000/fff&text=8',
-    '56': 'https://dummyimage.com/600x400/000/fff&text=16',
-    '57': 'https://dummyimage.com/600x400/000/fff&text=32',
-    '58': 'https://dummyimage.com/600x400/000/fff&text=64'
+    '52': 'https://dummyimage.com/600x400/000/fff&text=52',
+    '53': 'https://dummyimage.com/600x400/000/fff&text=53',
+    '54': 'https://dummyimage.com/600x400/000/fff&text=54',
+    '55': 'https://dummyimage.com/600x400/000/fff&text=55',
+    '56': 'https://dummyimage.com/600x400/000/fff&text=56',
+    '57': 'https://dummyimage.com/600x400/000/fff&text=57',
+    '58': 'https://dummyimage.com/600x400/000/fff&text=58'
   },
   tools: {
     kitty: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348238/tools/noun_1241059_cc_xsu8cz.svg',

@@ -213,7 +213,10 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": {
-        "UTurn": "uTurn"
+        "UTurn": {
+          "image": "uTurn",
+          "sizeLimit": 2
+        }
       },
       "activeQty": -1,
       "preBuiltActive": {},
@@ -248,7 +251,10 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": {
-        "TurnLeft": "turnLeft"
+        "TurnLeft": {
+          "image": "turnLeft",
+          "sizeLimit": 3
+        }
       },
       "activeQty": -1,
       "preBuiltActive": {},

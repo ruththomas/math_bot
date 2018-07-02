@@ -19,8 +19,13 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 1,
-      "assignedStaged": {},
+      "stagedQty": 0,
+      "assignedStaged": {
+        "Walk4ever": {
+          "image": "walk4ever",
+          "sizeLimit": 2
+        }
+      },
       "activeQty": -1,
       "preBuiltActive": {},
       "cmdsAvailable": [

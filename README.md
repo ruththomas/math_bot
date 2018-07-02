@@ -314,7 +314,7 @@ The project has been built thus far with Intellij
       "stagedEnabled": <{boolean}INDICATES IF THE USER IS ABLE TO OPEN THE STAGED FUNCTION POPOVER>,
       "activeEnabled": <{boolean}INDICATES IF THE USER CAN ADD ANYTHING TO ACTIVE FUNCTIONS (almost always true)>,
       "stagedQty": <{int}QTY OF STAGED FUNCTIONS AVAILABLE (if infinite -1)>,
-      "assignedStaged": <{object[string, string]}SEE `Adding Assigned Staged` SECTION>,
+      "assignedStaged": <{object[string, object]}SEE `Adding Assigned Staged` SECTION>,
       "activeQty": <{int}INDICATES HOW MANY STAGED FUNCTIONS CAN BE MOVED TO ACTIVE FUNCTIONS (if infinite -1)>,
       "preBuiltActive": <{object[string, array[string]}SEE `Adding Pre-Built Actives` SECTION>,
       "cmdsAvailable": <{array[string]}ARRAY OF COMMAND NAMES, SEE `Command Names` SECTION FOR COMMAND NAMES>,
@@ -381,7 +381,10 @@ The project has been built thus far with Intellij
 2) Create assigned staged object in json
 ```$xslt
 {
-    "<NAME OF ASSIGNED STAGED (Must start with a capital letter and be camel cased>": <{string}IMAGE NAME IN ASSESTS>
+    "<NAME OF ASSIGNED STAGED (Must start with a capital letter and be camel cased>": {
+        "image": <{string}NAME OF IMAGE IN ASSETS>,
+        "sizeLimit": <{int}MAX SIZE FUNCTION CAN BE>
+    }
 }
 ```
 
@@ -406,7 +409,7 @@ Current Special Parameters
 ```$xslt
 {
     <{string}NAME OF FUNCTION>: [
-        <{string}COMMAND NAME (see COMMAND NAMES section),          
+        <{string}COMMAND NAME (see COMMAND NAMES section)>,          
         "moveRobotForwardOneSpot",
         "moveRobotForwardOneSpot",
         "moveRobotForwardOneSpot"
