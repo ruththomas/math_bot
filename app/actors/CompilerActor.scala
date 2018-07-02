@@ -8,16 +8,17 @@ import akka.pattern.ask
 import akka.util.Timeout
 import compiler.operations.NoOperation
 import compiler.processor.{ Frame, Processor, Register, RobotLocation }
-import compiler.{ Compiler, GridAndProgram }
+import compiler.{ Compiler, GridAndProgram, Point }
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import model.PlayerTokenModel
-import model.models.{ GridMap, Stats }
+import model.models.{ GridMap, Problem, Stats }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.modules.reactivemongo.ReactiveMongoApi
 import utils.CompilerConfiguration
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
@@ -76,6 +77,21 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
     }
   }
 
+  private def createLastFromFromNothing() = {
+    for {
+      // Update stats, and get the updated stats
+      stats <- (statsActor ? UpdateStats(success = false, tokenId = tokenId))
+        .mapTo[Either[Stats, ActorFailed]]
+        .map(_.left.get)
+      // Gather the prepared step data
+      stepData <- (levelActor ? GetStep(stats.level, stats.step, Some(tokenId)))
+        .mapTo[Either[PreparedStepData, ActorFailed]]
+        .map(_.left.get)
+    } yield {
+      MathBotCompiler.ClientFrame(ClientRobotState(Point(0, 0), "0", List.empty[String]), "failure", Some(stats), Some(stepData))
+    }
+  }
+
   private def sendFrames(programState: ProgramState,
                          clientFrames: List[ClientFrame]): Unit = {
     out ! CompilerOutput(clientFrames, programState.grid.problem)
@@ -115,6 +131,13 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           self ! CompilerContinue(steps)
         }
       }
+    case CompilerContinue(_) =>
+      // We see this in production and don't know why the client is still sending continues after the actor
+      // has signaled end of program.  So we try to create a fake last frame.
+      logger.LogDebug("CompilerActor", "Continue received during create state.")
+      for {
+        lastFrame <- createLastFromFromNothing()
+      } yield out ! CompilerOutput(List(lastFrame), Problem(""))
   }
 
   def compileContinue(currentCompiler : ProgramState): Receive = {
@@ -181,7 +204,6 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
             sendFrames(currentCompiler, createFrames(leftover +: leadingFrames))
             context.become(
               compileContinue(currentCompiler.copy(leftoverFrame = Some(last)).addSteps(takeSteps))
-
             )
           case (Some(leftover), leadingFrames :+ last) if programCompleted =>
             // With the program completed, we send all the remaining frames
@@ -206,6 +228,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
             for {
               lastFrame <- createLastFrame(currentCompiler, Frame(NoOperation(), Register(), currentCompiler.program.grid, None, None))
             } yield sendFrames(currentCompiler, lastFrame)
+            context.become(createCompile())
         }
 
     case _: CompilerHalt =>
