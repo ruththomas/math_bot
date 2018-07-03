@@ -56,7 +56,7 @@ $stars-shadow: inset 0 0 100px #D3D3D3;
 $star-congrats-star-size: 70px;
 $star-margin: 5px 0 5px 0;
 $star-timer-right: 100%;
-$star-timer-bottom: 0;
+$star-timer-bottom: -10px;
 $star-timer-font-size: 16px;
 .stars {
   position: relative;
