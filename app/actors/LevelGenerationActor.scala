@@ -150,10 +150,14 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
          * If this lambdas contain the pre built active image name or assigned staged image name
          * only reset main func if step requires it
          * */
-        case Some(lambdas) if lambdas.activeFuncs.exists { ft =>
-              (rawStepData.preBuiltActive.map(_.image) ::: rawStepData.assignedStaged.map(_.image))
-                .map(createdIdGen)
-                .contains(ft.created_id)
+        case Some(lambdas) if {
+              val preBuildIds =
+                (rawStepData.preBuiltActive.map(_.image) ::: rawStepData.assignedStaged.map(_.image)).map(createdIdGen)
+              if (preBuildIds.nonEmpty) {
+                val actives = lambdas.activeFuncs.map(_.created_id)
+                val diff = preBuildIds.intersect(actives)
+                diff.length == preBuildIds.length
+              } else false
             } =>
           for {
             lambdas <- playerToken.lambdas
@@ -179,33 +183,45 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
           } yield {
             // Create List[FuncToken] of assigned staged
             val assignedStaged =
-              rawStepData.assignedStaged.map { as =>
-                FuncToken(
-                  created_id = createdIdGen(as.image),
-                  func = Some(List.empty[FuncToken]),
-                  set = Some(false),
-                  name = Some(as.name),
-                  image = Some(as.image),
-                  index = Some(playerToken.lambdas.get.stagedFuncs.length),
-                  `type` = Some("function"),
-                  commandId = Some("function"),
-                  sizeLimit = Some(makeQtyUnlimited(as.sizeLimit))
-                )
+              rawStepData.assignedStaged.flatMap { as =>
+                val createdId = createdIdGen(as.image)
+                if (lambdas.activeFuncs.exists(_.created_id == createdId)) None
+                else {
+                  Some(
+                    FuncToken(
+                      created_id = createdIdGen(as.image),
+                      func = Some(List.empty[FuncToken]),
+                      set = Some(false),
+                      name = Some(as.name),
+                      image = Some(as.image),
+                      index = Some(playerToken.lambdas.get.stagedFuncs.length),
+                      `type` = Some("function"),
+                      commandId = Some("function"),
+                      sizeLimit = Some(makeQtyUnlimited(as.sizeLimit))
+                    )
+                  )
+                }
               }
 
             // Create List[FuncToken] of pre built active functions
             val preBuiltActive =
-              rawStepData.preBuiltActive.map { pa =>
-                FuncToken(
-                  created_id = createdIdGen(pa.image),
-                  func = Some(pa.func.flatMap(fn => lambdas.cmds.find(_.commandId.contains(fn)))),
-                  name = Some(pa.name),
-                  image = Some(pa.image),
-                  index = Some(playerToken.lambdas.get.activeFuncs.length),
-                  `type` = Some("function"),
-                  commandId = Some("function"),
-                  sizeLimit = Some(pa.sizeLimit)
-                )
+              rawStepData.preBuiltActive.flatMap { pa =>
+                val createdId = createdIdGen(pa.image)
+                if (lambdas.activeFuncs.exists(_.created_id == createdId)) None
+                else {
+                  Some(
+                    FuncToken(
+                      created_id = createdIdGen(pa.image),
+                      func = Some(pa.func.flatMap(fn => lambdas.cmds.find(_.commandId.contains(fn)))),
+                      name = Some(pa.name),
+                      image = Some(pa.image),
+                      index = Some(playerToken.lambdas.get.activeFuncs.length),
+                      `type` = Some("function"),
+                      commandId = Some("function"),
+                      sizeLimit = Some(pa.sizeLimit)
+                    )
+                  )
+                }
               }
 
             // Move new staged function between default and staged functions
