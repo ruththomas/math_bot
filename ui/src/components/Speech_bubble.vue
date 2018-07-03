@@ -7,7 +7,7 @@
         :level="level"
         :step="step"
         :step-stats="stepStats"></stars>
-      <span href="#">Need a hint?</span>
+      <span>Need a hint?</span>
     </div>
   </div>
 </template>
