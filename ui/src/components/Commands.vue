@@ -229,7 +229,6 @@ export default {
     },
     addToActiveFunc (evt) {
       const index = evt.item.getAttribute('data-function-index')
-      console.log(evt)
       // console.log('INDEX IN ~ ', index);
 
       // if (evt.added) {
