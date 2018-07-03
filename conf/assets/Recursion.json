@@ -19,7 +19,7 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 1,
       "assignedStaged": {},
       "activeQty": -1,
       "preBuiltActive": {},
@@ -29,11 +29,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["74tUfeuLEg8"],
       "prevStep": "None",
       "nextStep": "WalkAround"
     },
@@ -62,11 +63,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["iZL0xwsXGT4", "muzWKrXK1cU", "lPX2d666xhc"],
       "prevStep": "RecurForward",
       "nextStep": "SmallSpiral"
     },
@@ -95,11 +97,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["orA768io-sM"],
       "prevStep": "WalkAround",
       "nextStep": "BigSpiral"
     },
@@ -128,11 +131,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": [],
       "prevStep": "SmallSpiral",
       "nextStep": "Stairs"
     },
@@ -161,11 +165,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["AfZpAmvrSf0", "cDTFBfdrR5I"],
       "prevStep": "BigSpiral",
       "nextStep": "LongStairs"
     },
@@ -194,11 +199,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["iSGLCrv9YkQ"],
       "prevStep": "Stairs",
       "nextStep": "Snake"
     },
@@ -227,11 +233,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["tbTcCSPODZw", "ohTSwV29tOk", "aMcAgpFzSUY"],
       "prevStep": "LongStairs",
       "nextStep": "ZigZag"
     },
@@ -260,11 +267,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["Vr54qVFP5dE"],
       "prevStep": "LongStairs",
       "nextStep": "CleanUp"
     },
@@ -293,11 +301,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "8",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["Le5w3d8ZsX8", "Sba-RuRtXPM", "81lPIL9WQbU"],
       "prevStep": "ZigZag",
       "nextStep": "CleanUpMore"
     },
@@ -326,11 +335,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["EP6QjYL3aFk"],
       "prevStep": "CleanUp",
       "nextStep": "PickupPile"
     },
@@ -359,11 +369,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["4ruzychwloY"],
       "prevStep": "CleanUpMore",
       "nextStep": "CleanComb"
     },
@@ -392,11 +403,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["6BtxMYaTHZI", "fj6NAFFpi4E", "WRrcc4EU344"],
       "prevStep": "PickupPile",
       "nextStep": "CleanComb2"
     },
@@ -425,11 +437,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["HkZpxXXGx0w", "vSUc3cIb184"],
       "prevStep": "CleanComb",
       "nextStep": "CleanComb3"
     },
@@ -458,11 +471,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "2",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["MgJMW6VSkj8", "Imvvc6sWP4U"],
       "prevStep": "CleanComb2",
       "nextStep": "CleanZigZags"
     },
@@ -491,11 +505,12 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
+      "videoHints": ["pn53eWiqibk"],
       "prevStep": "CleanComb3",
       "nextStep": "None"
     }

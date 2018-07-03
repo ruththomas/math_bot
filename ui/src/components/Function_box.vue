@@ -51,11 +51,6 @@ export default {
       return this.$store.getters.getColors
     }
   },
-  methods: {
-    puzzlePiece (func, ind, collection) {
-      return ind === 0 ? this.permanentImages.puzzlePieces.start[func.color] : ind === collection.length - 1 ? this.permanentImages.puzzlePieces.end[func.color] : this.permanentImages.puzzlePieces.middle[func.color]
-    }
-  },
   components: {
     PuzzlePieces
   },
@@ -63,4 +58,4 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/functionBox.scss" lang="scss"></style>
+<style scoped lang="scss"></style>

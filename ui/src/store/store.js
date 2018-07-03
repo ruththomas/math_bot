@@ -5,6 +5,8 @@ import permanentImages from '../assets/assets'
 import Message from '../services/Message'
 import AuthService from '../services/AuthService'
 import utils from '../services/utils'
+// import api from '../services/api'
+import VideoTimer from '../services/VideoTimer'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -74,9 +76,28 @@ export default new Vuex.Store({
     messageList: [],
     auth: new AuthService(),
     showMesh: false,
-    splashScreenShowing: false
+    splashScreenShowing: false,
+    hintShowing: {
+      showing: false,
+      videoURL: ''
+    },
+    videoTimers: {}
   },
   mutations: {
+    UPDATE_ACTIVES (state, actives) {
+      state.auth.userToken.lambdas.activeFuncs = actives
+    },
+    ADD_VIDEO_TIMER (state, remainingTime) {
+      Vue.set(state.videoTimers, `${remainingTime.level}/${remainingTime.step}`, new VideoTimer({state, level: remainingTime.level, step: remainingTime.step, stars: remainingTime.stars, remainingTime: remainingTime.remainingTime}))
+    },
+    START_EXISTING_TIMERS (state, remainingTimes) {
+      remainingTimes.forEach(rt => {
+        Vue.set(state.videoTimers, `${rt.level}/${rt.step}`, new VideoTimer({state, level: rt.level, step: rt.step, stars: rt.stars, remainingTime: rt.remainingTime}))
+      })
+    },
+    TOGGLE_HINT_SHOWING (state, {showing, videoURL}) {
+      state.hintShowing = {showing, videoURL}
+    },
     UPDATE_STEP_DATA (state, stepData) {
       function reverseTools (stepData) {
         stepData.gridMap = stepData.gridMap.map(row => {
@@ -87,8 +108,7 @@ export default new Vuex.Store({
         })
         return stepData
       }
-      const data = Object.keys(stepData).length ? reverseTools(stepData) : stepData
-      state.stepData = data
+      state.stepData = Object.keys(stepData).length ? reverseTools(stepData) : stepData
     },
     UPDATE_SPLASH_SCREEN_SHOWING (state, bool) {
       state.splashScreenShowing = bool
@@ -227,6 +247,18 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateActives ({commit}, actives) {
+      commit('UPDATE_ACTIVES', actives)
+    },
+    addVideoTimer ({commit}, context) {
+      commit('ADD_VIDEO_TIMER', context)
+    },
+    startExistingTimers ({commit}, remainingTimes) {
+      commit('START_EXISTING_TIMERS', remainingTimes)
+    },
+    toggleHintShowing ({commit}, {showing, videoURL}) {
+      commit('TOGGLE_HINT_SHOWING', {showing, videoURL})
+    },
     updateStepData ({commit}, stepData) {
       commit('UPDATE_STEP_DATA', stepData)
     },
@@ -346,6 +378,8 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getVideoTimers: state => state.videoTimers,
+    getHintShowing: state => state.hintShowing,
     getCurrentUser: state => state.currentUser,
     getStepData: state => state.stepData,
     getSplashScreenShowing: state => state.splashScreenShowing,

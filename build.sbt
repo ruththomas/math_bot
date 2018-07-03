@@ -13,11 +13,11 @@ libraryDependencies += "io.gatling.highcharts" % "gatling-charts-highcharts" % "
 libraryDependencies += "io.gatling" % "gatling-test-framework" % "2.2.5" % Test
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 libraryDependencies += filters
-libraryDependencies += "org.reactivemongo" %% "play2-reactivemongo" % "0.12.5-play25"
 libraryDependencies += "com.github.pdorobisz" %% "math-expression-evaluator" % "1.0.0"
 resolvers += "dl-john-ky" at "http://dl.john-ky.io/maven/releases"
 libraryDependencies += "io.john-ky" %% "hashids-scala" % "1.1.2-2974446"
-
+libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0"
+libraryDependencies += ws
 
 // The Play project itself
 lazy val root = (project in file("."))
@@ -39,7 +39,7 @@ lazy val docs = (project in file("docs")).enablePlugins(ParadoxPlugin).
   )
 
 // Pre - Prod deploy
-// herokuAppName in Compile := HerokuDeployKeys.NAME
-// herokuJdkVersion in Compile := "1.8"
-// herokuConfigVars in Compile := HerokuDeployKeys.CONFIG_VARS
-// herokuProcessTypes in Compile := HerokuDeployKeys.PROCESS_TYPES
+ herokuAppName in Compile := HerokuDeployKeys.NAME
+ herokuJdkVersion in Compile := "1.8"
+ herokuConfigVars in Compile := HerokuDeployKeys.CONFIG_VARS
+ herokuProcessTypes in Compile := HerokuDeployKeys.PROCESS_TYPES

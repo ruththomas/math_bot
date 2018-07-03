@@ -1,8 +1,9 @@
 package actors
 
-import actors.messages.{ RawLevelData, RawStepData }
+import actors.messages.{RawLevelData, RawStepData}
 import play.api.Environment
 import play.api.libs.json.Json
+import types.LevelName
 
 import scala.io.Source
 
@@ -46,7 +47,7 @@ class LevelGenerator(environment: Environment) {
   def getJsonFromFile(filePath: String): Option[RawLevelData] =
     Json.parse(Source.fromFile(filePath).getLines().mkString("")).validate[RawLevelData].asOpt
 
-  def getRawStepData(level: String, step: String): Option[RawStepData] =
+  def getRawStepData(level: LevelName, step: LevelName): Option[RawStepData] =
     getAllLevels.get(level) match {
       case Some(levelData) => levelData.steps.get(step)
       case None => None
