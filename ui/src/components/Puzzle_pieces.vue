@@ -5,7 +5,8 @@
       v-if="pieceToShow === 'closed'"
       class="piece closed-piece border-right"
       :class="'piece-' + color"
-      :style="{'background-image': `url(${backgroundImg})`}">
+      :style="{'background-image': `url(${backgroundImg})`}"
+      data-toggle="tooltip" :title="funcName">
       <div v-if="showName">
         <div v-if="funcName !== ''" class="command-name">{{funcName}}</div>
         <div v-else class="command-name command-name-empty">Name me!</div>
@@ -16,7 +17,8 @@
       v-else-if="pieceToShow === 'start'"
       class="piece puzzle-start"
       :class="'piece-' + color"
-      :style="{'background-image': `url(${backgroundImg})`}">
+      :style="{'background-image': `url(${backgroundImg})`}"
+      data-toggle="tooltip" :title="funcName">
       <div class="tab-insert">
         <div class="top-insert insert"></div>
         <div class="notch"></div>
@@ -28,7 +30,8 @@
       v-else-if="pieceToShow === 'middle'"
       class="piece puzzle-middle"
       :class="'piece-' + color"
-      :style="{'background-image': `url(${backgroundImg})`}">
+      :style="{'background-image': `url(${backgroundImg})`}"
+      data-toggle="tooltip" :title="funcName">
       <div class="left-tab"></div>
       <div class="tab-insert">
         <div class="top-insert insert"></div>
@@ -41,7 +44,8 @@
       v-else-if="pieceToShow === 'end'"
       class="piece puzzle-end border-right"
       :class="'piece-' + color"
-      :style="{'background-image': `url(${backgroundImg})`}">
+      :style="{'background-image': `url(${backgroundImg})`}"
+      data-toggle="tooltip" :title="funcName">
       <div class="left-tab"></div>
     </div>
 

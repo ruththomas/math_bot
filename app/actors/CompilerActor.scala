@@ -12,9 +12,8 @@ import compiler.{Compiler, GridAndProgram, Point}
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
-import model.PlayerTokenModel
+import model.PlayerTokenDAO
 import model.models.{GridMap, Problem, Stats}
-
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
 import utils.CompilerConfiguration
