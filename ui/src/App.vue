@@ -5,11 +5,19 @@
 </template>
 
 <script>
+import api from './services/api'
+import utils from './services/utils'
+
 export default {
   name: 'app',
   mounted () {
     window.scrollTo(0, 1)
     this.auth.isAuthenticated()
+    utils.watcher(() => !this.auth.authenticated, () => {
+      api.videoHintSocket.requestHintsTaken(res => {
+        this.$store.dispatch('startExistingTimers', res.remainingTimes)
+      })
+    })
   },
   computed: {
     auth () {
@@ -19,4 +27,173 @@ export default {
 }
 </script>
 
-<style src="./css/global/styles.css"></style>
+<style lang="scss">
+  body {
+    font-family: "Proba Pro Regular", serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #FFFFFF;
+    height: 100vh;
+    width: 100vw;
+    background-color: #000000;
+    position: relative;
+    display: flex;
+    z-index: 200;
+  }
+
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .handle {
+    cursor: move;
+    cursor: -webkit-grabbing;
+  }
+
+  .dialog-button {
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+  }
+
+  /*This is where v-html styles must go*/
+  .speechImage {
+    height: 20px !important;
+    width: 20px !important;
+  }
+
+  .dragging, .ghost, .chosen {
+  }
+
+  .dragging {
+    opacity: 1;
+  }
+
+  .function-drop {
+    .ghost, .chosen {
+      margin: 0 12px 0 12px;
+    }
+
+    .ghost {
+      opacity: 0;
+    }
+  }
+
+  .pulse {
+    box-shadow: 0 0 0 rgb(184, 233, 134);
+    animation: pulse 1s;
+    animation-iteration-count: 2;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgb(184, 233, 134);
+    }
+    70% {
+      box-shadow: 0 0 0 50px rgba(184, 233, 134, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(184, 233, 134, 0);
+    }
+  }
+
+  @-webkit-keyframes spin1 {
+    0% { -webkit-transform: rotate(360deg);}
+    100% { -webkit-transform: rotate(0deg);}
+  }
+  @-moz-keyframes spin1 {
+    0% { -webkit-transform: rotate(360deg);}
+    100% { -webkit-transform: rotate(0deg);}
+  }
+  @-o-keyframes spin1 {
+    0% { -webkit-transform: rotate(360deg);}
+    100% { -webkit-transform: rotate(0deg);}
+  }
+  @-ms-keyframes spin1 {
+    0% { -webkit-transform: rotate(360deg);}
+    100% { -webkit-transform: rotate(0deg);}
+  }
+  @keyframes spin1 {
+    0% { -webkit-transform: rotate(360deg);}
+    100% { -webkit-transform: rotate(0deg);}
+  }
+
+  @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+
+  /* Medium Devices, Desktops */
+  @media only screen and (max-width : 992px) {
+    .dialog-button {
+      height: 20px;
+      width: 20px;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+    .dialog-button {
+      height: 20px;
+      width: 20px;
+    }
+  }
+
+  /* Extra Small Devices, Phones */
+  @media only screen and (max-width : 480px) {
+
+  }
+
+  /* Custom, iPhone Retina */
+  @media only screen and (max-width : 320px) {
+
+  }
+
+  /* iPad */
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+    .dialog-button {
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+    .dialog-button {
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 22px;
+    height: 22px;
+  }
+
+  ::-webkit-scrollbar-track {
+    visibility: hidden;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px rgba(216, 216, 216, 0.5);
+    border: solid 8px transparent;
+    border-radius: 10px;
+  }
+</style>

@@ -27,7 +27,6 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
 
   @tailrec
   private def execute(state: ProcessorState, maybeOperation: Option[Operation], post: Seq[Operation]): Stream[Frame] = {
-
     maybeOperation match {
       case Some(operation) if passColorCheck(operation, state) =>
         operation match {

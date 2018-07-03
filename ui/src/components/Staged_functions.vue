@@ -62,4 +62,18 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/stagedFunctions.scss" lang="scss"></style>
+<style scoped lang="scss">
+  .staged-functions {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 20px 10px 20px;
+  }
+
+  .staged-functions > * {
+    margin: 10px 10px 10px 0;
+  }
+
+</style>

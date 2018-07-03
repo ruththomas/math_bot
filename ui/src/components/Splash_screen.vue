@@ -15,4 +15,29 @@ export default {
 }
 </script>
 
-<style scoped src="../css/scoped/splashScreen.scss" lang="scss"></style>
+<style scoped lang="scss">
+  #splash-screen {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .space-ship {
+    position: absolute;
+    transform-origin: 0% 0%;
+  }
+
+  .black-hole {
+    width: 200px;
+
+    -webkit-animation: spin1 2s infinite linear;
+    -moz-animation: spin1 2s infinite linear;
+    -o-animation: spin1 2s infinite linear;
+    -ms-animation: spin1 2s infinite linear;
+    animation: spin1 2s infinite linear;
+    display: block;
+  }
+
+</style>
