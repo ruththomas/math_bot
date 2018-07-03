@@ -151,8 +151,9 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
          * only reset main func if step requires it
          * */
         case Some(lambdas) if lambdas.activeFuncs.exists { ft =>
-              (rawStepData.preBuiltActive.keys.toList ::: rawStepData.assignedStaged.values.toList)
-                .contains(ft.image.getOrElse(""))
+              (rawStepData.preBuiltActive.map(_.image) ::: rawStepData.assignedStaged.map(_.image))
+                .map(createdIdGen)
+                .contains(ft.created_id)
             } =>
           for {
             lambdas <- playerToken.lambdas
@@ -178,42 +179,37 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
           } yield {
             // Create List[FuncToken] of assigned staged
             val assignedStaged =
-              rawStepData.assignedStaged.toList.map { s =>
-                val name = s._1
-                val assignedStagedModel = s._2
+              rawStepData.assignedStaged.map { as =>
                 FuncToken(
-                  created_id = createdIdGen(assignedStagedModel.image),
-                  func = Option(List.empty[FuncToken]),
+                  created_id = createdIdGen(as.image),
+                  func = Some(List.empty[FuncToken]),
                   set = Some(false),
-                  name = Some(parseCamelCase(name)),
-                  image = Some(assignedStagedModel.image),
+                  name = Some(as.name),
+                  image = Some(as.image),
                   index = Some(playerToken.lambdas.get.stagedFuncs.length),
                   `type` = Some("function"),
                   commandId = Some("function"),
-                  sizeLimit = Some(assignedStagedModel.sizeLimit)
-                )
-              }
-            // Create List[FuncToken] of pre built active functions
-            val preBuiltActive = rawStepData.preBuiltActive.toList
-              .map { p =>
-                val name = p._1
-                val func = p._2.map { c =>
-                  playerToken.lambdas.get.cmds.find(v => v.commandId.contains(c)).get
-                }
-                models.FuncToken(
-                  created_id = createdIdGen(name),
-                  func = Some(func),
-                  name = Some(parseCamelCase(name)),
-                  image = Some("rocket"),
-                  index = Some(playerToken.lambdas.get.activeFuncs.length),
-                  `type` = Some("function"),
-                  commandId = Some("function")
+                  sizeLimit = Some(makeQtyUnlimited(as.sizeLimit))
                 )
               }
 
-            // Move new staged function between defualt and staged functions
+            // Create List[FuncToken] of pre built active functions
+            val preBuiltActive =
+              rawStepData.preBuiltActive.map { pa =>
+                FuncToken(
+                  created_id = createdIdGen(pa.image),
+                  func = Some(pa.func.flatMap(fn => lambdas.cmds.find(_.commandId.contains(fn)))),
+                  name = Some(pa.name),
+                  image = Some(pa.image),
+                  index = Some(playerToken.lambdas.get.activeFuncs.length),
+                  `type` = Some("function"),
+                  commandId = Some("function"),
+                  sizeLimit = Some(pa.sizeLimit)
+                )
+              }
+
+            // Move new staged function between default and staged functions
             val newStagedAndDefault: Map[String, List[FuncToken]] = {
-              val stagedFuncs = lambdas.stagedFuncs
               val defaultFuncs = lambdas.defaultFuncs.getOrElse(DefaultCommands.funcs)
               val qty = rawStepData.stagedQty
 
@@ -223,12 +219,9 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
               Map("newStaged" -> newStaged, "newDefault" -> newDefault)
             }
 
-            //  Commands
-            val cmds = lambdas.cmds
-
             // Copy lambdas and update values
             val updatedLambdas = lambdas.copy(
-              cmds = cmds,
+              cmds = lambdas.cmds,
               stagedFuncs = newStagedAndDefault.getOrElse("newStaged", List.empty[FuncToken]),
               defaultFuncs = newStagedAndDefault.get("newDefault"),
               activeFuncs = (activeFuncs ::: preBuiltActive).zipWithIndex

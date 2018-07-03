@@ -39,7 +39,7 @@ module.exports = {
     turnLeft: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522350096/functionIcons/leftArrow_bq64oj.png',
     uTurn: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522349067/functionIcons/noun_923693_cc_afcgbm.png',
     main: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522350153/functionIcons/robot_ootonv.png',
-    walkForever: 'http://res.cloudinary.com/doohickey/image/upload/v1530492517/noun_infinite_878473_ffffff_gcswfj.svg',
+    walkForever: 'http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg',
     '1': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234339/functionIcons/football_b1uiqd.svg',
     '2': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234600/functionIcons/baseball_lqjqyo.svg',
     '3': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234702/functionIcons/soccerBall_cdx3da.svg',
