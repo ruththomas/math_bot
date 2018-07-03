@@ -2,20 +2,23 @@ import Vue from 'vue'
 import vueResource from 'vue-resource'
 import urlEncode from 'urlencode'
 
-import CompilerWebSocket from './CompilerSocket'
+import CompilerSocket from './CompilerSocket'
+import VideoHintSocket from './VideoHintSocket'
 
 Vue.use(vueResource)
 
 export default {
 
   compilerWebSocket: null,
+  videoHintSocket: null,
 
   getUserToken ({tokenId}, cb) {
     Vue.http.post('/api/token', JSON.stringify({token_id: tokenId}))
       .then(res => res.body)
       .then(token => {
-        // console.log('GET TOKEN ~ ', token);
-        this.compilerWebSocket = new CompilerWebSocket()
+        // console.log('GET TOKEN ~ ', JSON.parse(JSON.stringify(token)))
+        this.compilerWebSocket = new CompilerSocket(token.token_id)
+        this.videoHintSocket = new VideoHintSocket(token.token_id)
         cb(token)
       })
       .catch(console.error)
@@ -42,6 +45,7 @@ export default {
       .catch(console.error)
   },
   /*
+  * @deprecated
   * putToken replaces JWT with updated JWT
   * !!This call is deprecated but may be useful at times. Updates entire JWT so is able to max server request!!
   * @param token = entire JWT
@@ -65,7 +69,15 @@ export default {
       })
       .catch(console.error)
   },
+  updateActives ({tokenId, actives}, cb) {
+    Vue.http.put('/api/token/updateActives', {tokenId, actives})
+      .then(res => {
+        cb(res.body)
+      })
+      .catch(console.error)
+  },
   /*
+  * @deprecated
   * statsWin updates JWT stats when the user wins.
   * @param tokenId = JWT token_id
   * @response.body = stats property of JWT

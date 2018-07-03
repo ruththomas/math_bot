@@ -14,21 +14,21 @@ import javax.inject.Inject
 import loggers.MathBotLogger
 import model.PlayerTokenModel
 import model.models.{GridMap, Problem, Stats}
+
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.modules.reactivemongo.ReactiveMongoApi
+import types.TokenId
 import utils.CompilerConfiguration
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
-    val reactiveMongoApi: ReactiveMongoApi,
+class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
+    playerTokenDAO: PlayerTokenDAO,
     statsActor: ActorRef,
     levelActor: ActorRef,
     logger: MathBotLogger,
     config: CompilerConfiguration
-) extends Actor
-    with PlayerTokenModel {
+) extends Actor {
 
   import MathBotCompiler._
 
@@ -42,7 +42,6 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                           exitOnSuccess: Boolean = false) {
     def addSteps(steps: Int): ProgramState = this.copy(stepCount = this.stepCount + steps)
   }
-
   implicit val timeout: Timeout = 5000.minutes
 
   private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
@@ -109,7 +108,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       logger.LogInfo(className, "Creating new compiler.")
 
       for {
-        tokenList <- getToken(tokenId)
+        tokenList <- playerTokenDAO.getToken(tokenId)
         grid <- (levelActor ? GetGridMap(tokenList)).mapTo[GridMap]
       } yield {
         for {
@@ -260,10 +259,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
 object CompilerActor {
   def props(out: ActorRef,
             tokenId: String,
-            reactiveMongoApi: ReactiveMongoApi,
+            playerTokenDAO: PlayerTokenDAO,
             statsActor: ActorRef,
             levelActor: ActorRef,
             logger: MathBotLogger,
             config: CompilerConfiguration) =
-    Props(new CompilerActor(out, tokenId)(reactiveMongoApi, statsActor, levelActor, logger, config))
+    Props(new CompilerActor(out, tokenId)(playerTokenDAO, statsActor, levelActor, logger, config))
 }

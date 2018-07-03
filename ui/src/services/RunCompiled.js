@@ -16,6 +16,8 @@ class RunCompiled extends GridAnimator {
       this.stepData = this.$store.getters.getStepData
       this.toolList = this.stepData.toolList
 
+      this.programCreate = true
+
       this._askCompiler = this._askCompiler.bind(this)
       this._processFrames = this._processFrames.bind(this)
       this._initializeStep = this._initializeStep.bind(this)
@@ -29,9 +31,11 @@ class RunCompiled extends GridAnimator {
 
   start () {
     const mainFunction = this.$store.getters.getMainFunction.func
+    // console.log('start ~ ', this.robotFrames.slice())
     if (!mainFunction.length) {
       this._mainEmptyMessage()
     } else if (this.robot.state !== 'paused') {
+      this.robotFrames = []
       this.robot.setState('running')
       this._askCompiler(this._processFrames)
     } else {
@@ -135,6 +139,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _success (frame) {
+    // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
@@ -142,6 +147,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _failure (frame) {
+    // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
@@ -159,19 +165,25 @@ class RunCompiled extends GridAnimator {
   }
 
   async _processFrames (_) {
+    // console.log('frames ~ ', this.robotFrames.slice())
     const current = this.robotFrames.shift()
-    const last = this.robotFrames[this.robotFrames.length - 1]
-
-    if (this.robotFrames.length && last.programState === 'running') {
-      this._askCompiler()
-    }
-
+    this._controlAsk()
     const run = await this[`_${current.programState}`](current)
     run(current)
   }
 
+  _controlAsk () {
+    if (this.robotFrames.length && this.robotFrames.length < 8) {
+      const last = this.robotFrames[this.robotFrames.length - 1]
+      if (this.robotFrames.length < 8 && last.programState === 'running') {
+        this._askCompiler()
+      }
+    }
+  }
+
   _askCompiler (startRunning) {
-    api.compilerWebSocket.compileWs({context: this, problem: this.stepData.problem.encryptedProblem}, (compiled) => {
+    api.compilerWebSocket.compileWs({problem: this.stepData.problem.encryptedProblem}, (compiled) => {
+      // console.log(compiled)
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()
     })
