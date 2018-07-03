@@ -4,12 +4,6 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import types.{LevelName, StepName}
 
-object AssignedStagedModel {
-  implicit val assignedStagedModelFormat: OFormat[AssignedStagedModel] = Json.format[AssignedStagedModel]
-}
-
-case class AssignedStagedModel(image: String, sizeLimit: Int)
-
 case class RawStepData(
     level: LevelName,
     step: StepName,
@@ -20,9 +14,9 @@ case class RawStepData(
     stagedEnabled: Boolean,
     activeEnabled: Boolean,
     stagedQty: Int,
-    assignedStaged: Map[String, AssignedStagedModel],
+    assignedStaged: List[AssignedFunctionModel],
     activeQty: Int,
-    preBuiltActive: Map[String, List[String]],
+    preBuiltActive: List[AssignedFunctionModel],
     cmdsAvailable: List[String],
     specialParameters: List[String],
     problem: String,
@@ -45,9 +39,9 @@ object RawStepData {
     (JsPath \ "stagedEnabled").read[Boolean] and
     (JsPath \ "activeEnabled").read[Boolean] and
     (JsPath \ "stagedQty").read[Int] and
-    (JsPath \ "assignedStaged").read[Map[String, AssignedStagedModel]] and
+    (JsPath \ "assignedStaged").read[List[AssignedFunctionModel]] and
     (JsPath \ "activeQty").read[Int] and
-    (JsPath \ "preBuiltActive").read[Map[String, List[String]]] and
+    (JsPath \ "preBuiltActive").read[List[AssignedFunctionModel]] and
     (JsPath \ "cmdsAvailable").read[List[String]] and
     (JsPath \ "specialParameters").read[List[String]] and
     (JsPath \ "problem").read[String] and
@@ -69,9 +63,9 @@ object RawStepData {
     (JsPath \ "stagedEnabled").write[Boolean] and
     (JsPath \ "activeEnabled").write[Boolean] and
     (JsPath \ "stagedQty").write[Int] and
-    (JsPath \ "assignedStaged").write[Map[String, AssignedStagedModel]] and
+    (JsPath \ "assignedStaged").write[List[AssignedFunctionModel]] and
     (JsPath \ "activeQty").write[Int] and
-    (JsPath \ "preBuiltActive").write[Map[String, List[String]]] and
+    (JsPath \ "preBuiltActive").write[List[AssignedFunctionModel]] and
     (JsPath \ "cmdsAvailable").write[List[String]] and
     (JsPath \ "specialParameters").write[List[String]] and
     (JsPath \ "problem").write[String] and
