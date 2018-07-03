@@ -30,6 +30,7 @@
       ],
       "activeQty": -1,
       "preBuiltActive": [],
+      "allowedActives": ["uTurn", "turnLeft"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -38,7 +39,7 @@
       ],
       "specialParameters": ["recursionRequired"],
       "problem": "0",
-      "clearMain": false,
+      "clearMain": true,
       "initFocus": [],
       "evalEachFrame": true,
       "videoHints": ["74tUfeuLEg8"],

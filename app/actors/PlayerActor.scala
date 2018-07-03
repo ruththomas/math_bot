@@ -347,7 +347,6 @@ class PlayerActor()(system: ActorSystem,
               PreparedLambdasToken(
                 PreparedStepData
                   .prepareLambdas(updatedPlayerToken, rawStepData)
-                  .copy(activeFuncs = updatedPlayerToken.lambdas.get.activeFuncs)
               )
             case None => ActorFailed("Failed to update player token")
           }
