@@ -8,16 +8,17 @@ import akka.pattern.ask
 import akka.util.Timeout
 import compiler.operations.NoOperation
 import compiler.processor.{Frame, Processor, Register, RobotLocation}
-import compiler.{Compiler, GridAndProgram}
+import compiler.{Compiler, GridAndProgram, Point}
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import model.PlayerTokenDAO
-import model.models.{GridMap, Stats}
+import model.models.{GridMap, Problem, Stats}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
 import utils.CompilerConfiguration
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
@@ -42,7 +43,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
   }
   implicit val timeout: Timeout = 5000.minutes
 
-  private val className = "CompilerActor"
+  private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
 
   private def createFrames(leadingFrames: List[Frame]) = {
 
@@ -71,6 +72,24 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       } else {
         List(MathBotCompiler.ClientFrame.failure(frame, stats, stepData))
       }
+    }
+  }
+
+  private def createLastFromFromNothing() = {
+    for {
+      // Update stats, and get the updated stats
+      stats <- (statsActor ? UpdateStats(success = false, tokenId = tokenId))
+        .mapTo[Either[Stats, ActorFailed]]
+        .map(_.left.get)
+      // Gather the prepared step data
+      stepData <- (levelActor ? GetStep(stats.level, stats.step, Some(tokenId)))
+        .mapTo[Either[PreparedStepData, ActorFailed]]
+        .map(_.left.get)
+    } yield {
+      MathBotCompiler.ClientFrame(ClientRobotState(Point(0, 0), "0", List.empty[String]),
+                                  "failure",
+                                  Some(stats),
+                                  Some(stepData))
     }
   }
 
@@ -112,6 +131,13 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           self ! CompilerContinue(steps)
         }
       }
+    case CompilerContinue(_) =>
+      // We see this in production and don't know why the client is still sending continues after the actor
+      // has signaled end of program.  So we try to create a fake last frame.
+      logger.LogDebug("CompilerActor", "Continue received during create state.")
+      for {
+        lastFrame <- createLastFromFromNothing()
+      } yield out ! CompilerOutput(List(lastFrame), Problem(""))
   }
 
   def compileContinue(currentCompiler: ProgramState): Receive = {
@@ -206,6 +232,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
             lastFrame <- createLastFrame(currentCompiler,
                                          Frame(NoOperation(), Register(), currentCompiler.program.grid, None, None))
           } yield sendFrames(currentCompiler, lastFrame)
+          context.become(createCompile())
       }
 
     case _: CompilerHalt =>
@@ -221,6 +248,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       self ! invalidJson.msg
 
     case _ => out ! ActorFailed("Unknown command submitted to compiler")
+  }
+
+  override def postStop() = {
+    logger.LogInfo(className, "Actor Stopped")
   }
 }
 
