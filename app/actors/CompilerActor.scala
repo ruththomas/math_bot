@@ -37,9 +37,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
                           program: GridAndProgram,
                           clientFrames: List[ClientFrame] = List.empty[ClientFrame],
                           stepCount: Int = 0,
-                          leftoverFrame: Option[Frame] = None,
+                          leftover : Option[Frame] = None,
                           exitOnSuccess: Boolean = false) {
     def addSteps(steps: Int): ProgramState = this.copy(stepCount = this.stepCount + steps)
+    def withLeftover(l : Frame) : ProgramState = this.copy(leftover = Some(l))
   }
   implicit val timeout: Timeout = 5000.minutes
 
@@ -150,7 +151,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
                      s"Stepping compiler for $steps steps with actor ${context.self.path.toSerializationFormat}")
       // filter out non-robot frames (eg function calls and program start)
       val maxStepsReached = config.maxProgramSteps < currentCompiler.stepCount + steps
-      val takeSteps = if (maxStepsReached) config.maxProgramSteps - currentCompiler.stepCount else steps
+      val takeSteps = if (maxStepsReached)
+        config.maxProgramSteps - currentCompiler.stepCount
+      else
+        steps + (if (currentCompiler.leftover.isEmpty) 1 else 0) // Add an additional step for a leftover
       val robotFrames = currentCompiler.iterator
         .filter(f => {
           f.robotLocation.isDefined
@@ -158,43 +162,50 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
         .take(takeSteps)
         .toList
 
-      val executeSomeFrames = (if (currentCompiler.exitOnSuccess) {
-                                 if (currentCompiler.leftoverFrame.exists(lf => checkForSuccess(currentCompiler, lf))) {
-                                   Seq.empty[Frame] // When the leftover is the success frame, don't return addtional frames
-                                 } else {
-                                   // Generate a temporary index for the program frames and search for a success frame.
-                                   // Truncate the frames to the first successful frame
-                                   val frames = robotFrames.zipWithIndex
-                                   frames
-                                     .find(frame => checkForSuccess(currentCompiler, frame._1))
-                                     .map(successFrame => frames.take(successFrame._2 + 1))
-                                     .getOrElse(frames)
-                                     .map(f => f._1)
-                                 }
-                               } else {
-                                 robotFrames
-                               }).toList
+      // The reason for a leftover frame.  Since the processor can run in a forever loop, we are left to
+      // deciding when the last requested frame (say the 4th frame in a request for 4 steps) is the end
+      // of program or not.  By asking for an additional frame (a 5th in the example) we can determine if the
+      // program is still running.  If we get less than the requested amount, we know the program exited.
+      // However, we have to keep that extra frame around fro when the client requests another 4 frames.
+      //
+      // If you are curious about this topic in general, google "the halting problem" :-)
+
+      val executeSomeFrames = if (currentCompiler.exitOnSuccess) {
+        // Generate a temporary index for the program frames and search for a success frame.
+        // Truncate the frames to the first successful frame
+        val frames = robotFrames.zipWithIndex
+        frames
+          .find(frame => checkForSuccess(currentCompiler, frame._1))
+          .map(successFrame => frames.take(successFrame._2 + 1))
+          .getOrElse(frames)
+          .map(f => f._1)
+      } else {
+        // If there is a leftover, add it to the front
+        currentCompiler.leftover match {
+          case Some(leftover) =>
+            leftover +: robotFrames
+          case None =>
+            robotFrames
+        }
+      }
 
       // if the compiler generated less frames than requested we assume the program completed
       val programCompleted = executeSomeFrames.length < takeSteps || maxStepsReached
 
-      // This logic is done this way for now because the client has to query to get group of frames and will hang
-      // if a query never responds with a frame. Eventually this gets replaced with an async stream of frames coming
-      // from the compiler that will be controlled with back pressure message coming from the client.
-      (currentCompiler.leftoverFrame, executeSomeFrames) match {
-        case (None, List(frame)) =>
+      executeSomeFrames match {
+        case List(frame) =>
           // When the compiler generates a single frame, assume its the last frame.
           for {
             lastFrame <- createLastFrame(currentCompiler, frame)
           } yield sendFrames(currentCompiler, lastFrame)
           context.become(createCompile())
-        case (None, leadingFrames :+ last) if !programCompleted =>
+        case leadingFrames :+ leftover if !programCompleted =>
           // More than one frame, send the leading frames and save the last frame for the next request
           sendFrames(currentCompiler, createFrames(leadingFrames))
           context.become(
-            compileContinue(currentCompiler.copy(leftoverFrame = Some(last)).addSteps(takeSteps))
+            compileContinue(currentCompiler.withLeftover(leftover).addSteps(leadingFrames.length))
           )
-        case (None, leadingFrames :+ last) if programCompleted =>
+        case leadingFrames :+ last if programCompleted =>
           // When short the requested frames, assume the program has finished and compute the last frame too **
           for {
             lastFrame <- createLastFrame(currentCompiler, last)
@@ -202,31 +213,8 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           context.become(
             createCompile()
           )
-        case (Some(leftover), leadingFrames :+ last) if !programCompleted =>
-          // With a leftover, and last, this is executing somewhere in the middle of the program.
-          sendFrames(currentCompiler, createFrames(leftover +: leadingFrames))
-          context.become(
-            compileContinue(currentCompiler.copy(leftoverFrame = Some(last)).addSteps(takeSteps))
-          )
-        case (Some(leftover), leadingFrames :+ last) if programCompleted =>
-          // With the program completed, we send all the remaining frames
-          for {
-            lastFrame <- createLastFrame(currentCompiler, last)
-          } yield sendFrames(currentCompiler, createFrames(leftover +: leadingFrames) ++ lastFrame)
           context.become(createCompile())
-        case (Some(leftover), Nil) =>
-          // The compiler generates no more frames, so the leftover is now the last.
-          for {
-            lastFrame <- createLastFrame(currentCompiler, leftover)
-          } yield sendFrames(currentCompiler, lastFrame)
-          context.become(createCompile())
-        case (Some(leftover), List(last)) =>
-          // The compiler generated one more frame, and there was one leftover, send both frames
-          for {
-            lastFrame <- createLastFrame(currentCompiler, last)
-          } yield sendFrames(currentCompiler, createFrames(List(leftover)) ++ lastFrame)
-          context.become(createCompile())
-        case (None, Nil) =>
+        case Nil =>
           // It's an empty program, or one that consists of only empty functions
           for {
             lastFrame <- createLastFrame(currentCompiler,

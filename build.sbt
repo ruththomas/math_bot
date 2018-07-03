@@ -38,8 +38,10 @@ lazy val docs = (project in file("docs")).enablePlugins(ParadoxPlugin).
     paradoxProperties += ("download_url" -> "https://example.lightbend.com/v1/download/play-rest-api")
   )
 
-// Pre - Prod deploy
+/*
+// Pre - Prod deploy comment out for development, or uncomment if deploying
  herokuAppName in Compile := HerokuDeployKeys.NAME
  herokuJdkVersion in Compile := "1.8"
  herokuConfigVars in Compile := HerokuDeployKeys.CONFIG_VARS
  herokuProcessTypes in Compile := HerokuDeployKeys.PROCESS_TYPES
+*/
