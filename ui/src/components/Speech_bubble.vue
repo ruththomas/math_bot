@@ -7,7 +7,7 @@
         :level="level"
         :step="step"
         :step-stats="stepStats"></stars>
-      <a href="#">Need a hint?</a>
+      <span>Need a hint?</span>
     </div>
   </div>
 </template>
@@ -69,10 +69,16 @@ export default {
     align-items: center;
     justify-content: flex-end;
     flex-direction: column;
-    a {
+    span {
+      color: #4a90e2;
       margin: 0;
       font-size: 16px;
       bottom: -10px;
+    }
+
+    span:hover {
+      cursor: pointer;
+      text-decoration: underline;
     }
   }
 
@@ -161,7 +167,7 @@ export default {
     }
 
     .bubble-stars {
-      a {
+      span {
         font-size: 8px;
       }
     }
