@@ -247,8 +247,7 @@ class PlayerActor()(system: ActorSystem,
            * If user is in db continue
            * */
           case Some(playerToken) =>
-            val t = GatherLevel(playerToken)
-            t
+            GatherLevel(playerToken)
           /*
            * else create user token and continue
            * */
@@ -370,12 +369,14 @@ class PlayerActor()(system: ActorSystem,
           for {
             lambdas <- playerToken.lambdas
             funcToMove <- lambdas.stagedFuncs.lift(stagedIndex.toInt)
+
             updatedStagedFuncs = lambdas.stagedFuncs
               .filterNot(_.index.contains(stagedIndex.toInt))
 
             updatedActiveFuncs = lambdas.activeFuncs
               .take(activeIndex.toInt) ++ List(funcToMove) ++ lambdas.activeFuncs
               .drop(activeIndex.toInt)
+
             updatedToken = playerToken.copy(
               lambdas = Some(
                 lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),

@@ -19,7 +19,7 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 1,
       "assignedStaged": {},
       "activeQty": -1,
       "preBuiltActive": {},
@@ -29,7 +29,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
@@ -63,7 +63,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
@@ -97,7 +97,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
@@ -131,7 +131,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
@@ -165,7 +165,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
@@ -199,7 +199,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
@@ -233,7 +233,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
@@ -267,7 +267,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "0",
       "clearMain": false,
       "initFocus": [],
@@ -301,7 +301,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "8",
       "clearMain": false,
       "initFocus": [],
@@ -335,7 +335,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
@@ -369,7 +369,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "5",
       "clearMain": false,
       "initFocus": [],
@@ -403,7 +403,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "4",
       "clearMain": false,
       "initFocus": [],
@@ -437,7 +437,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
@@ -471,7 +471,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "2",
       "clearMain": false,
       "initFocus": [],
@@ -505,7 +505,7 @@
         "pickUpItem",
         "setItemDown"
       ],
-      "specialParameters": [],
+      "specialParameters": ["recursionRequired"],
       "problem": "3",
       "clearMain": false,
       "initFocus": [],
