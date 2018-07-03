@@ -129,7 +129,14 @@ object PreparedStepData {
           case None => lambdas.main.copy(func = Some(List.empty[FuncToken]))
         }
 
-        val actives = lambdas.activeFuncs.take(rawStepData.activeQty)
+        val actives = rawStepData.allowedActives match {
+          case Some(allowed) =>
+            val createdIds = allowed.map(createdIdGen) ++
+            (rawStepData.preBuiltActive ++ rawStepData.assignedStaged.map(f => createdIdGen(f.image)))
+            lambdas.activeFuncs.filter(af => createdIds.contains(af.created_id))
+          case None =>
+            lambdas.activeFuncs.take(rawStepData.activeQty)
+        }
 
         lambdas.copy(activeFuncs = actives, main = main, cmds = cmds)
       case None => Lambdas()
