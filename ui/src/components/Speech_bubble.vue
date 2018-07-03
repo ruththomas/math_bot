@@ -1,12 +1,13 @@
 <template>
   <div class="speech-bubble" :class="!showing ? 'hide-speech-bubble' : ''">
     <div class="bubble-text" v-html="html"></div>
-    <div class="bubble-stars" @click="videoHint.getHint()" v-if="videoHint !== null">
+    <div class="bubble-stars" @click="videoHint.getHint()" v-if="videoHint !== null" data-toggle="tooltip" title="Get a hint">
       <stars
         :star-group="'star-spread'"
         :level="level"
         :step="step"
         :step-stats="stepStats"></stars>
+      <a href="#">Need a hint?</a>
     </div>
   </div>
 </template>
@@ -65,7 +66,14 @@ export default {
 
   .bubble-stars {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    a {
+      margin: 0;
+      font-size: 16px;
+      bottom: -10px;
+    }
   }
 
   .hide-speech-bubble {
@@ -150,6 +158,12 @@ export default {
       height: 45px;
       width: 240px;
       margin-left: -2px;
+    }
+
+    .bubble-stars {
+      a {
+        font-size: 8px;
+      }
     }
 
     .speech-bubble:before {
