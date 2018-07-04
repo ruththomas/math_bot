@@ -3,14 +3,15 @@ package controllers
 import java.net.URLDecoder
 
 import actors._
-import actors.convert_flow.{CompilerRequestConvertFlow, CompilerResponseConvertFlow}
-import actors.messages.{ClientRobotState, PreparedStepData}
-import akka.actor.{Actor, ActorSystem, Props}
+import actors.convert_flow.{ CompilerRequestConvertFlow, CompilerResponseConvertFlow }
+import actors.messages.{ ClientRobotState, PreparedStepData }
+import akka.actor.{ Actor, ActorSystem, Props }
 import akka.pattern.ask
 import akka.stream.Materializer
 import akka.util.Timeout
 import compiler.processor.Frame
-import compiler.{Cell, Point}
+import compiler.{ Cell, Point }
+import configuration.CompilerConfiguration
 import javax.inject.Inject
 import loggers.MathBotLogger
 import daos.PlayerTokenDAO
@@ -19,9 +20,8 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
-import play.api.{Configuration, Environment}
+import play.api.{ Configuration, Environment }
 import types.TokenId
-import utils.CompilerConfiguration
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
