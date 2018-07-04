@@ -9,10 +9,11 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import com.google.inject.Inject
+import configuration.WebClientConfig
 import daos.SessionDAO
 import dataentry.caches.KeyValueCache
 import models.JwtToken
-import utils.{ SecureIdentifier, WebClientConfig }
+import utils.SecureIdentifier
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ Await, ExecutionContextExecutor }

@@ -8,14 +8,14 @@ import akka.pattern.ask
 import akka.util.Timeout
 import compiler.processor.{ Frame, Processor }
 import compiler.{ Compiler, GridAndProgram }
+import configuration.CompilerConfiguration
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import daos.PlayerTokenDAO
-import models.{GridMap, Stats}
+import models.{ GridMap, Stats }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
-import utils.CompilerConfiguration
 
 import scala.concurrent.duration._
 

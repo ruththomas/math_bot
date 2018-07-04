@@ -8,11 +8,11 @@ import akka.http.scaladsl.model.headers.Date
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.http.scaladsl.{ Http, HttpExt }
 import akka.stream.ActorMaterializer
+import configuration.GoogleApiConfig
 import dataentry.actors.messages._
 import dataentry.actors.models.GoogleApiHelpers
 import dataentry.actors.models.GoogleApiHelpers.GoogleTokens
 import utils.{ AkkaSemanticLog, SecureIdentifier, SemanticLog }
-import utils.GoogleApiConfig
 
 import scala.concurrent.ExecutionContext
 import scala.util.Failure
@@ -55,22 +55,6 @@ class GoogleOAuth(
 
   }
 
-  private def revokeTokens(sessionId : SecureIdentifier, access_token : String) : Unit = {
-    for {
-      response <- http.singleRequest(
-        HttpRequest(
-          method = GET,
-          uri = config.revokeTokenUri.withQuery(Query(("token", access_token)))
-        )
-      )
-      body <- Unmarshal(response.entity).to[String]
-    } yield {
-      if (response.status.isFailure()) {
-        log.warning(SemanticLog.tags.outboundHttp(sessionId, config.revokeTokenUri, response.status, body))
-      }
-    }
-  }
-
   override def receive : Receive = {
     case RequestTokensFromCode(sessionId, code) =>
       retrieveTokens(code) map {
@@ -83,7 +67,5 @@ class GoogleOAuth(
         case Failure(e) => sender() ! TokensFromCodeFailure(sessionId, config.oauthTokenUri, StatusCodes.InternalServerError, e.toString)
         case _ => // Success handled by the pipeTo
       }
-    case RevokeTokens(sessionId, access_token) =>
-      revokeTokens(sessionId, access_token)
   }
 }

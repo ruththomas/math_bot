@@ -8,9 +8,9 @@ import akka.http.scaladsl.model.headers._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.http.scaladsl.util.FastFuture
+import configuration.GoogleApiConfig
 import org.joda.time.Instant
 import spray.json._
-import utils.GoogleApiConfig
 
 import scala.compat.java8.OptionConverters._
 import scala.concurrent.{ ExecutionContext, Future }
