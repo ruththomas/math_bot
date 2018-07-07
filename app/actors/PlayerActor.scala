@@ -309,9 +309,7 @@ class PlayerActor()(system: ActorSystem,
         stats <- playerToken.stats
         lambdas <- playerToken.lambdas
         rsd <- levelGenerator.getRawStepData(stats.level, stats.step)
-        rawStepData = rsd.copy(stagedQty = makeQtyUnlimited(rsd.stagedQty),
-                               activeQty = makeQtyUnlimited(rsd.activeQty),
-                               mainMax = makeQtyUnlimited(rsd.mainMax))
+        rawStepData = rsd.copy(stagedQty = makeQtyUnlimited(rsd.stagedQty), mainMax = makeQtyUnlimited(rsd.mainMax))
       } yield {
         val funcType = funcToken.`type`.getOrElse("Nothing")
         val mainFunc = lambdas.main.func.getOrElse(List.empty[FuncToken])
@@ -344,10 +342,7 @@ class PlayerActor()(system: ActorSystem,
           .updateToken(updatedPlayerToken)
           .map {
             case Some(_) =>
-              PreparedLambdasToken(
-                PreparedStepData
-                  .prepareLambdas(updatedPlayerToken, rawStepData)
-              )
+              PreparedLambdasToken(updatedPlayerToken.lambdas.getOrElse(Lambdas()))
             case None => ActorFailed("Failed to update player token")
           }
           .pipeTo(self)(sender)
@@ -363,13 +358,10 @@ class PlayerActor()(system: ActorSystem,
     case MoveFunc(playerToken, stagedIndex, activeIndex) =>
       for {
         stats <- playerToken.stats
-        rsd <- levelGenerator.getRawStepData(stats.level, stats.step)
+        rawStepData <- levelGenerator.getRawStepData(stats.level, stats.step)
         lambdas <- playerToken.lambdas
-        rawStepData = rsd.copy(stagedQty = makeQtyUnlimited(rsd.stagedQty),
-                               activeQty = makeQtyUnlimited(rsd.activeQty),
-                               mainMax = makeQtyUnlimited(rsd.mainMax))
       } yield
-        if (rawStepData.activeEnabled && lambdas.activeFuncs.lengthCompare(rawStepData.activeQty) <= 0) {
+        if (rawStepData.activeEnabled) {
           for {
             lambdas <- playerToken.lambdas
             funcToMove <- lambdas.stagedFuncs.lift(stagedIndex.toInt)
@@ -381,22 +373,20 @@ class PlayerActor()(system: ActorSystem,
               .take(activeIndex.toInt) ++ List(funcToMove) ++ lambdas.activeFuncs
               .drop(activeIndex.toInt)
 
+            updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
+                                          activeFuncs = indexFunctions(updatedActiveFuncs))
+
             updatedToken = playerToken.copy(
-              lambdas = Some(
-                lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
-                             activeFuncs = indexFunctions(updatedActiveFuncs))
-              )
+              lambdas = Some(updatedLambdas)
             )
           } for {
             _ <- playerTokenDAO.updateToken(updatedToken)
           } yield
-            Future { updatedToken }
-              .map { pToken =>
-                PreparedLambdasToken(PreparedStepData.prepareLambdas(pToken, rawStepData))
-              }
+            Future { updatedLambdas }
+              .map { PreparedLambdasToken.apply }
               .pipeTo(self)(sender)
         } else {
-          Future { PreparedStepData.prepareLambdas(playerToken, rawStepData) }
+          Future { lambdas }
             .map { PreparedLambdasToken.apply }
             .pipeTo(self)(sender)
         }
