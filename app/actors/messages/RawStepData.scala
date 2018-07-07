@@ -15,7 +15,6 @@ case class RawStepData(
     activeEnabled: Boolean,
     stagedQty: Int,
     assignedStaged: List[AssignedFunctionModel],
-    activeQty: Int,
     preBuiltActive: List[AssignedFunctionModel],
     allowedActives: Option[List[String]],
     cmdsAvailable: List[String],
@@ -41,7 +40,6 @@ object RawStepData {
     (JsPath \ "activeEnabled").read[Boolean] and
     (JsPath \ "stagedQty").read[Int] and
     (JsPath \ "assignedStaged").read[List[AssignedFunctionModel]] and
-    (JsPath \ "activeQty").read[Int] and
     (JsPath \ "preBuiltActive").read[List[AssignedFunctionModel]] and
     (JsPath \ "allowedActives").readNullable[List[String]] and
     (JsPath \ "cmdsAvailable").read[List[String]] and
@@ -66,7 +64,6 @@ object RawStepData {
     (JsPath \ "activeEnabled").write[Boolean] and
     (JsPath \ "stagedQty").write[Int] and
     (JsPath \ "assignedStaged").write[List[AssignedFunctionModel]] and
-    (JsPath \ "activeQty").write[Int] and
     (JsPath \ "preBuiltActive").write[List[AssignedFunctionModel]] and
     (JsPath \ "allowedActives").writeNullable[List[String]] and
     (JsPath \ "cmdsAvailable").write[List[String]] and

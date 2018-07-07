@@ -315,7 +315,6 @@ The project has been built thus far with Intellij
       "activeEnabled": <{boolean}INDICATES IF THE USER CAN ADD ANYTHING TO ACTIVE FUNCTIONS (almost always true)>,
       "stagedQty": <{int}QTY OF STAGED FUNCTIONS AVAILABLE (if infinite -1)>,
       "assignedStaged": <{list[object]}SEE `Adding Assigned Staged` SECTION>,
-      "activeQty": <{int}INDICATES HOW MANY STAGED FUNCTIONS CAN BE MOVED TO ACTIVE FUNCTIONS (if infinite -1)>,
       "preBuiltActive": <{list[object]}SEE `Adding Pre-Built Actives` SECTION>,
       "cmdsAvailable": <{array[string]}ARRAY OF COMMAND NAMES, SEE `Command Names` SECTION FOR COMMAND NAMES>,
       "specialParameters": <{array[string]}LIST OF SPECIAL PARAMETERS, SEE `Special Parameters` SECTION FOR CURRENT SPECIAL PARAMETERS>,

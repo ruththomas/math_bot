@@ -28,7 +28,6 @@
           "func": []
         }
       ],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": [],
       "cmdsAvailable": [
@@ -70,7 +69,6 @@
           "func": []
         }
       ],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["rocket"],
       "cmdsAvailable": [
@@ -105,7 +103,6 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["spiral", "rocket"],
       "cmdsAvailable": [
@@ -140,7 +137,6 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["spiral", "rocket"],
       "cmdsAvailable": [
@@ -182,7 +178,6 @@
           "func": []
         }
       ],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["turnLeft"],
       "cmdsAvailable": [
@@ -217,7 +212,6 @@
       "activeEnabled": true,
       "stagedQty": -1,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["stairs", "turnLeft", "rocket"],
       "cmdsAvailable": [
@@ -259,7 +253,6 @@
           "func": []
         }
       ],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["turnLeft", "rocket"],
       "cmdsAvailable": [
@@ -294,7 +287,6 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["snake", "rocket", "turnLeft"],
       "cmdsAvailable": [
@@ -348,7 +340,6 @@
           "func": []
         }
       ],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": [],
       "cmdsAvailable": [
@@ -383,7 +374,6 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["cleanup", "dropN", "pickupN"],
       "cmdsAvailable": [
@@ -418,7 +408,6 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["cleanup", "pickupN", "dropN"],
       "cmdsAvailable": [
@@ -460,7 +449,6 @@
           "func": []
         }
       ],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["turnLeft", "uTurn", "rocket", "pickupN", "dropN"],
       "cmdsAvailable": [
@@ -495,7 +483,6 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["cleanComb", "turnLeft", "uTurn", "rocket", "pickupN", "dropN"],
       "cmdsAvailable": [
@@ -530,7 +517,6 @@
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "allowedActives": ["cleanComb", "turnLeft", "uTurn", "rocket", "pickupN", "dropN"],
       "cmdsAvailable": [
@@ -565,7 +551,6 @@
       "activeEnabled": true,
       "stagedQty": -1,
       "assignedStaged": [],
-      "activeQty": -1,
       "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",

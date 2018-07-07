@@ -31,7 +31,6 @@ object PreparedStepData {
   import model.models.Problem._
 
   def apply(playerToken: PlayerToken, rawStepData: RawStepData): PreparedStepData = {
-    val preparedLambdas = prepareLambdas(playerToken, rawStepData)
     new PreparedStepData(
       tokenId = playerToken.token_id,
       level = rawStepData.level,
@@ -42,14 +41,14 @@ object PreparedStepData {
       initialRobotState = setInitialRobot(rawStepData),
       stagedEnabled = rawStepData.stagedEnabled,
       activeEnabled = rawStepData.activeEnabled,
-      lambdas = ResponseLambdas(preparedLambdas),
+      lambdas = ResponseLambdas(playerToken.lambdas.getOrElse(Lambdas())),
       toolList = ToolList(),
       specialParameters = rawStepData.specialParameters,
       problem = problemGen(rawStepData),
       prevStep = rawStepData.prevStep,
       nextStep = rawStepData.nextStep,
       initFocus = createInitFocus(rawStepData.initFocus),
-      stepControl = new StepControl(rawStepData, preparedLambdas)
+      stepControl = new StepControl(rawStepData, playerToken.lambdas.getOrElse(Lambdas()))
     )
   }
 
@@ -113,33 +112,6 @@ object PreparedStepData {
       prepRow(row) map { key =>
         GridPart.apply(key)
       }
-    }
-  }
-
-  def prepareLambdas(playerToken: PlayerToken, rawStepData: RawStepData): Lambdas = {
-    playerToken.lambdas match {
-      case Some(lambdas) =>
-        val cmds = lambdas.cmds
-          .filter(ft => rawStepData.cmdsAvailable.contains(ft.commandId.getOrElse("nothing")))
-
-        val main = lambdas.main.func match {
-          case Some(funcs) =>
-            val updatedMain = Some(funcs.take(rawStepData.mainMax))
-            lambdas.main.copy(func = updatedMain)
-          case None => lambdas.main.copy(func = Some(List.empty[FuncToken]))
-        }
-
-        val actives = rawStepData.allowedActives match {
-          case Some(allowed) =>
-            val createdIds = allowed.map(createdIdGen) ++
-            (rawStepData.preBuiltActive ++ rawStepData.assignedStaged.map(f => createdIdGen(f.image)))
-            lambdas.activeFuncs.filter(af => createdIds.contains(af.created_id))
-          case None =>
-            lambdas.activeFuncs.take(rawStepData.activeQty)
-        }
-
-        lambdas.copy(activeFuncs = actives, main = main, cmds = cmds)
-      case None => Lambdas()
     }
   }
 
