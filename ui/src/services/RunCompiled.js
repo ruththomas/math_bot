@@ -1,6 +1,7 @@
 import api from './api'
 import Robot from './RobotState'
 import GridAnimator from './GridAnimator'
+import _ from 'underscore'
 
 class RunCompiled extends GridAnimator {
   constructor (context) {
@@ -15,7 +16,6 @@ class RunCompiled extends GridAnimator {
       this.robot = this.$store.getters.getRobot
       this.stepData = this.$store.getters.getStepData
       this.toolList = this.stepData.toolList
-
       this.programCreate = true
 
       this._askCompiler = this._askCompiler.bind(this)
@@ -29,11 +29,28 @@ class RunCompiled extends GridAnimator {
     }
   }
 
-  start () {
+  _testForEmptyFunctions () {
     const mainFunction = this.$store.getters.getMainFunction.func
+    const activeFuncs = this.$store.getters.getActiveFunctions
+
+    if (!mainFunction.length) return [{name: 'Main'}]
+
+    return _.chain(mainFunction)
+      .map(f => {
+        const funcToken = activeFuncs.find(af => af.created_id === f.created_id)
+        if (funcToken) return funcToken
+        else return null
+      })
+      .filter(func => func !== null)
+      .filter(func => !func.func.length)
+      .value()
+  }
+
+  start () {
     // console.log('start ~ ', this.robotFrames.slice())
-    if (!mainFunction.length) {
-      this._mainEmptyMessage()
+    const emptyFuncs = this._testForEmptyFunctions()
+    if (emptyFuncs.length) {
+      this._mainEmptyMessage(emptyFuncs)
     } else if (this.robot.state !== 'paused') {
       this.robotFrames = []
       this.robot.setState('running')
@@ -72,10 +89,12 @@ class RunCompiled extends GridAnimator {
     this._addMessage(messageBuilder)
   }
 
-  _mainEmptyMessage () {
+  _mainEmptyMessage (emptyFuncs) {
+    console.log(emptyFuncs)
+
     const messageBuilder = {
       type: 'warn',
-      msg: 'Main is empty',
+      msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : 'One of your functions is empty',
       handlers () {
         const $bar = $('.bar')
 
