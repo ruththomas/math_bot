@@ -49,6 +49,7 @@ class RunCompiled extends GridAnimator {
   start () {
     // console.log('start ~ ', this.robotFrames.slice())
     const emptyFuncs = this._testForEmptyFunctions()
+
     if (emptyFuncs.length) {
       this._mainEmptyMessage(emptyFuncs)
     } else if (this.robot.state !== 'paused') {
@@ -90,8 +91,6 @@ class RunCompiled extends GridAnimator {
   }
 
   _mainEmptyMessage (emptyFuncs) {
-    console.log(emptyFuncs)
-
     const messageBuilder = {
       type: 'warn',
       msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : 'One of your functions is empty',
