@@ -13,7 +13,7 @@ import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import model.PlayerTokenDAO
-import model.models.{GridMap, Problem, Stats}
+import model.models.{FuncToken, GridMap, Problem, Stats}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
 import utils.CompilerConfiguration
@@ -114,7 +114,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
         for {
           token <- tokenList
           main = token.lambdas.head.main
-          funcs = token.lambdas.head.activeFuncs
+          funcs = token.lambdas.head.activeFuncs ++ token.lambdas.head.inactiveActives.getOrElse(List.empty[FuncToken])
           commands = token.lambdas.head.cmds
           program <- Compiler.compile(main, funcs, commands, grid, problem)
         } yield {
