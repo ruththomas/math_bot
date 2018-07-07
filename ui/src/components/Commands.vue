@@ -222,6 +222,7 @@ export default {
     },
     moveFunction (evt) {
       if (evt.moved) {
+        console.log('MOVE CALLED')
         api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
           this.$store.dispatch('updateActives', actives)
         })
