@@ -12,7 +12,8 @@ case class FuncToken(
     image: Option[String],
     index: Option[Int],
     `type`: Option[String],
-    commandId: Option[String]
+    commandId: Option[String],
+    sizeLimit: Option[Int] = Some(-1)
 )
 
 object FuncToken {
@@ -25,7 +26,8 @@ object FuncToken {
     (JsPath \ "image").readNullable[String] and
     (JsPath \ "index").readNullable[Int] and
     (JsPath \ "type").readNullable[String] and
-    (JsPath \ "commandId").readNullable[String]
+    (JsPath \ "commandId").readNullable[String] and
+    (JsPath \ "sizeLimit").readNullable[Int]
   )(FuncToken.apply _)
 
   val funcTokenWrites: Writes[FuncToken] = (
@@ -37,7 +39,8 @@ object FuncToken {
     (JsPath \ "image").writeNullable[String] and
     (JsPath \ "index").writeNullable[Int] and
     (JsPath \ "type").writeNullable[String] and
-    (JsPath \ "commandId").writeNullable[String]
+    (JsPath \ "commandId").writeNullable[String] and
+    (JsPath \ "sizeLimit").writeNullable[Int]
   )(unlift(FuncToken.unapply))
 
   implicit val funcTokenFormat: Format[FuncToken] =

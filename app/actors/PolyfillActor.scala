@@ -73,7 +73,7 @@ class PolyfillActor()(system: ActorSystem, logger: MathBotLogger, environment: E
 
   override def receive: Receive = {
     case ApplyPolyfills(playerToken) =>
-      Future { playerToken.lambdas.get.defaultFuncs }
+      Future { playerToken.lambdas.get.inactiveStaged }
         .map {
           case Some(_) => AddNamesToCommands(playerToken)
           case None => AddDefaultFuncsField(playerToken)
@@ -82,7 +82,7 @@ class PolyfillActor()(system: ActorSystem, logger: MathBotLogger, environment: E
     case AddDefaultFuncsField(playerToken) => // Polyfill to ensure field added to existing users
       for {
         lambdas <- playerToken.lambdas
-        updatedLambdas = lambdas.copy(stagedFuncs = List.empty[FuncToken], defaultFuncs = Some(DefaultCommands.funcs))
+        updatedLambdas = lambdas.copy(stagedFuncs = List.empty[FuncToken], inactiveStaged = Some(DefaultCommands.funcs))
       } yield
         Future { playerToken.copy(lambdas = Some(updatedLambdas)) }
           .map { AddNamesToCommands.apply }

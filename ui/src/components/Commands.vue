@@ -222,6 +222,7 @@ export default {
     },
     moveFunction (evt) {
       if (evt.moved) {
+        console.log('MOVE CALLED')
         api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
           this.$store.dispatch('updateActives', actives)
         })
@@ -229,7 +230,6 @@ export default {
     },
     addToActiveFunc (evt) {
       const index = evt.item.getAttribute('data-function-index')
-      console.log(evt)
       // console.log('INDEX IN ~ ', index);
 
       // if (evt.added) {
