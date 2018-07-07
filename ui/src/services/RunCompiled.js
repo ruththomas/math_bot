@@ -26,6 +26,7 @@ class RunCompiled extends GridAnimator {
       this.pause = this.pause.bind(this)
       this.stop = this.stop.bind(this)
       this._resetStep = this._resetStep.bind(this)
+      this._waitForFrames = this._waitForFrames.bind(this)
     }
   }
 
@@ -91,9 +92,11 @@ class RunCompiled extends GridAnimator {
   }
 
   _mainEmptyMessage (emptyFuncs) {
+    const emptyCount = emptyFuncs.length
+
     const messageBuilder = {
       type: 'warn',
-      msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : 'One of your functions is empty',
+      msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : `${emptyFuncs.length} of your functions ${emptyCount > 1 ? 'are' : 'is'} empty`,
       handlers () {
         const $bar = $('.bar')
 
@@ -172,10 +175,23 @@ class RunCompiled extends GridAnimator {
     })
   }
 
+  /*
+  * In case program state is still running but server has not responded yet
+  * */
+  _waitForFrames (waitTime) {
+    if (this.robotFrames.length) return this._processFrames()
+    else if (waitTime === 0) return this._stopRobot()
+    setTimeout(() => this._waitForFrames(waitTime - 1), 50)
+  }
+
   _running (frame) {
     return this.initializeAnimation(this.$store, frame, () => {
       if (this.robot.state === 'running') {
-        this._processFrames()
+        if (this.robotFrames.length) {
+          this._processFrames()
+        } else {
+          this._waitForFrames(50)
+        }
       } else if (this.robot.state === 'stopped') {
         this._stopRobot()
       }
@@ -201,7 +217,6 @@ class RunCompiled extends GridAnimator {
 
   _askCompiler (startRunning) {
     api.compilerWebSocket.compileWs({problem: this.stepData.problem.encryptedProblem}, (compiled) => {
-      // console.log(compiled)
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()
     })
