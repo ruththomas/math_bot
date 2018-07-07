@@ -206,9 +206,10 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         // Move actives to inactive actives
         val activesAndInactiveActives: Map[String, List[FuncToken]] = rawStepData.allowedActives match {
           case Some(allowed) if allowed.nonEmpty => // allowed is a non empty list
+            val consolidatedFuncs = lambdas.activeFuncs ++ lambdas.inactiveActives.getOrElse(List.empty[FuncToken])
             val allowedIds = (rawStepData.assignedStaged.map(_.image) ++ allowed).map(createdIdGen)
-            val allowedActives = activeFuncs.filter(ft => allowedIds.contains(ft.created_id))
-            val inActives = activeFuncs.filterNot(ft => allowedIds.contains(ft.created_id))
+            val allowedActives = consolidatedFuncs.filter(ft => allowedIds.contains(ft.created_id))
+            val inActives = consolidatedFuncs.filterNot(ft => allowedIds.contains(ft.created_id))
             Map("newActives" -> (preBuiltActive ++ allowedActives), "newInActives" -> inActives)
           case None => // allowed is None (all actives allowed)
             Map("newActives" -> (preBuiltActive ++ activeFuncs ++ inactiveActives.getOrElse(List.empty[FuncToken])),
