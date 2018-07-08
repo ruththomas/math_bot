@@ -147,12 +147,13 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         lambdas <- playerToken.lambdas
         activeFuncs = lambdas.activeFuncs
         inactiveActives = lambdas.inactiveActives
+        activesCombined = activeFuncs ++ inactiveActives.getOrElse(List.empty[FuncToken])
       } yield {
         // Create List[FuncToken] of assigned staged
-        val assignedStaged =
+        val assignedStaged = {
           rawStepData.assignedStaged.flatMap { as =>
             val createdId = createdIdGen(as.image)
-            if (lambdas.activeFuncs.exists(_.created_id == createdId)) None
+            if (activesCombined.exists(_.created_id == createdId)) None
             else {
               Some(
                 FuncToken(
@@ -169,13 +170,13 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
               )
             }
           }
+        }
 
         // Create List[FuncToken] of pre built active functions
-        val preBuiltActive =
+        val preBuiltActive = {
           rawStepData.preBuiltActive.flatMap { pa =>
             val createdId = createdIdGen(pa.image)
-            val activeAndInactive = lambdas.activeFuncs ++ lambdas.inactiveActives.getOrElse(List.empty[FuncToken])
-            if (activeAndInactive.exists(_.created_id == createdId)) None
+            if (activesCombined.exists(_.created_id == createdId)) None
             else {
               Some(
                 FuncToken(
@@ -191,10 +192,11 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
               )
             }
           }
+        }
 
         // Move staged functions to inactive staged
         val stagedAndInactiveStaged: Map[String, List[FuncToken]] = {
-          val inactiveStaged = lambdas.inactiveStaged.getOrElse(DefaultCommands.funcs)
+          val inactiveStaged = lambdas.inactiveStaged.getOrElse(List.empty[FuncToken])
           val qty = rawStepData.stagedQty
 
           val newStaged = assignedStaged ++ inactiveStaged.take(qty)
@@ -212,11 +214,9 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
             val inActives = consolidatedFuncs.filterNot(ft => allowedIds.contains(ft.created_id))
             Map("newActives" -> (preBuiltActive ++ allowedActives), "newInActives" -> inActives)
           case None => // allowed is None (all actives allowed)
-            Map("newActives" -> (preBuiltActive ++ activeFuncs ++ inactiveActives.getOrElse(List.empty[FuncToken])),
-                "newInActives" -> List.empty[FuncToken])
+            Map("newActives" -> (preBuiltActive ++ activesCombined), "newInActives" -> List.empty[FuncToken])
           case _ => // allowed is an empty list (no actives allowed)
-            Map("newActives" -> List.empty[FuncToken],
-                "newInActives" -> (activeFuncs ++ inactiveActives.getOrElse(List.empty[FuncToken])))
+            Map("newActives" -> List.empty[FuncToken], "newInActives" -> (activeFuncs ++ activesCombined))
         }
 
         // Move actives to inactive commands

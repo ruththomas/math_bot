@@ -231,7 +231,7 @@ export default {
     addToActiveFunc (evt) {
       const index = evt.item.getAttribute('data-function-index')
       // console.log('INDEX IN ~ ', index);
-
+      console.log('addToActiveFunc', evt)
       // if (evt.added) {
       api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
         // console.log('NEW LAMBDAS ~ ', lambdas)
