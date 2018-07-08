@@ -379,12 +379,12 @@ class PlayerActor()(system: ActorSystem,
             updatedToken = playerToken.copy(
               lambdas = Some(updatedLambdas)
             )
-          } for {
-            _ <- playerTokenDAO.updateToken(updatedToken)
-          } yield
-            Future { updatedLambdas }
-              .map { PreparedLambdasToken.apply }
-              .pipeTo(self)(sender)
+          } yield {
+            playerTokenDAO.updateToken(updatedToken)
+            Future {
+              updatedLambdas
+            }.map { PreparedLambdasToken.apply }.pipeTo(self)(sender)
+          }
         } else {
           Future { lambdas }
             .map { PreparedLambdasToken.apply }

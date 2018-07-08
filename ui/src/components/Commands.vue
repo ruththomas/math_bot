@@ -222,7 +222,6 @@ export default {
     },
     moveFunction (evt) {
       if (evt.moved) {
-        console.log('MOVE CALLED')
         api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
           this.$store.dispatch('updateActives', actives)
         })
@@ -231,13 +230,12 @@ export default {
     addToActiveFunc (evt) {
       const index = evt.item.getAttribute('data-function-index')
       // console.log('INDEX IN ~ ', index);
-      console.log('addToActiveFunc', evt)
-      // if (evt.added) {
-      api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
-        // console.log('NEW LAMBDAS ~ ', lambdas)
-        this.$store.dispatch('updateLambdas', lambdas)
-      })
-      // }
+      if (evt.added) {
+        api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
+          // console.log('NEW LAMBDAS ~ ', lambdas)
+          this.$store.dispatch('updateLambdas', lambdas)
+        })
+      }
     },
     moveSwiper (direction) {
       const $functions = $('.functions')
