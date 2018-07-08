@@ -22,14 +22,14 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
-          "name": "Walk Forever",
+          "name": "Walk Forward Forever",
           "image": "walkForever",
           "sizeLimit": 2,
           "func": []
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": [],
+      "allowedActives": ["walkForever"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -63,14 +63,14 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
-          "name": "Spiral",
+          "name": "Walk and Turn Right",
           "image": "spiral",
-          "sizeLimit": 3,
+          "sizeLimit": 11,
           "func": []
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["rocket"],
+      "allowedActives": ["spiral"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -104,7 +104,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["spiral", "rocket"],
+      "allowedActives": ["spiral"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -138,7 +138,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["spiral", "rocket"],
+      "allowedActives": ["spiral"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -172,9 +172,9 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
-          "name": "Stairs",
+          "name": "Walk and Turn Left and Walk",
           "image": "stairs",
-          "sizeLimit": 5,
+          "sizeLimit": 6,
           "func": []
         }
       ],
@@ -213,7 +213,7 @@
       "stagedQty": -1,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["stairs", "turnLeft", "rocket"],
+      "allowedActives": ["stairs", "turnLeft"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -247,14 +247,14 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
-          "name": "Snake",
+          "name": "Walk a Full U Shape",
           "image": "snake",
           "sizeLimit": 20,
           "func": []
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["turnLeft", "rocket"],
+      "allowedActives": ["turnLeft"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -288,7 +288,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["snake", "rocket", "turnLeft"],
+      "allowedActives": ["snake", "turnLeft"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -322,26 +322,20 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
-          "name": "Cleanup",
-          "image": "cleanup",
+          "name": "Pickup All Kitties",
+          "image": "pickupN",
           "sizeLimit": 100,
           "func": []
         },
         {
-          "name": "Drop n",
-          "image": "dropN",
-          "sizeLimit": 10,
-          "func": []
-        },
-        {
-          "name": "Pickup n",
-          "image": "pickupN",
+          "name": "Clean Up 8 or More",
+          "image": "cleanup",
           "sizeLimit": 10,
           "func": []
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": [],
+      "allowedActives": ["pickupN", "cleanup"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
