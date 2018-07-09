@@ -74,6 +74,8 @@ export default {
     background-color: black;
     margin: 0 auto;
     position: relative;
+    display: flex;
+    align-items: center;
   }
 
   .pointer-slider {

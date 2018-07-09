@@ -9,6 +9,10 @@ import Callback from '@/components/Callback'
 
 import $store from '../store/store'
 
+// require styles
+import 'swiper/dist/css/swiper.css'
+
+Vue.use(VueAwesomeSwiper)
 Vue.use(Router)
 Vue.use(VueResource)
 Vue.use(Sortable)
