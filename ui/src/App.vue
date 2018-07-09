@@ -198,3 +198,55 @@ export default {
     border-radius: 10px;
   }
 </style>
+
+<style lang="scss">
+  $pagination-active-color: #B8E986;
+  $pagination-inactive-color: rgba(255, 255, 255, 0.3);
+  $pagination-bullet-size: 14px;
+
+  .swiper-container {
+  }
+
+  .swiper-slide {
+  }
+
+  .swiper-pagination.swiper-pagination-bullets {
+    position: relative;
+    top: 5px;
+  }
+
+  .swiper-pagination-bullet-custom {
+    width: $pagination-bullet-size;
+    height: $pagination-bullet-size;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    color: #000;
+    opacity: 1;
+    background: $pagination-inactive-color;
+  }
+
+  .swiper-pagination-bullet-custom.swiper-pagination-bullet-active {
+    color: #fff;
+    background: $pagination-active-color;
+  }
+
+  .swiper-button-next, .swiper-button-prev {
+    height: 100px;
+    width: 30px;
+    top: 0;
+    background-image: none;
+  }
+
+  .swiper-button-prev:focus, .swiper-button-next:focus {
+    outline: none;
+  }
+
+  .swiper-button-next {
+    right: 0;
+  }
+
+  .swiper-button-prev {
+    left: 0;
+  }
+</style>
