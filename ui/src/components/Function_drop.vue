@@ -1,43 +1,38 @@
 <template>
-  <div class="function-drop" :class="showMesh ? 'mesh-background' : ''">
-    <draggable
-      class="function-drop-drop-zone"
-      :list="list"
-      :options="options"
-      @change="change"
-      @start="start"
-      @add="functionAreaShowing === 'editMain' ? adjustJustify() : ''"
-      @remove="functionAreaShowing === 'editMain' ? adjustJustify() : ''"
-      @end="end"
-    >
-        <function-box
-          v-for="(func, ind) in list"
-          :key="'function-drop/' + ind"
-          :func="func"
-          :ind="ind"
-          :collection="list"
-          :origin="origin"
-        ></function-box>
+  <div></div>
+  <!--<swiper-->
+    <!--:class="showMesh ? 'mesh-background' : ''"-->
+    <!--:options="functionDropSwiperOptions">-->
+    <!--<swiper-slide-->
+      <!--v-for="(func, ind) in list"-->
+      <!--:key="'function-drop-swiper/' + ind">-->
+      <!--<draggable-->
+        <!--class="function-drop-drop-zone"-->
+        <!--:list="list"-->
+        <!--:options="options"-->
+        <!--@change="change"-->
+        <!--@start="start"-->
+        <!--@end="end"-->
+      <!--&gt;-->
+          <!--<function-box-->
+            <!--:func="func"-->
+            <!--:ind="ind"-->
+            <!--:collection="list"-->
+            <!--:origin="origin"-->
+          <!--&gt;</function-box>-->
 
-    </draggable>
-  </div>
+      <!--</draggable>-->
+    <!--</swiper-slide>-->
+  <!--</swiper>-->
 </template>
 
 <script>
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
+import Swiper from '../services/Swiper'
 
 export default {
   name: 'function_drop',
-  mounted () {
-    this.adjustJustify()
-    window.addEventListener('resize', () => {
-      if (window.location.hash === '#/robot') this.adjustJustify()
-    })
-  },
-  updated () {
-    this.$nextTick(this.adjustJustify)
-  },
   computed: {
     showMesh () {
       return this.$store.getters.getShowMesh
@@ -47,6 +42,11 @@ export default {
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
+    }
+  },
+  data () {
+    return {
+      functionDropSwiperOptions: new Swiper(this.list).options
     }
   },
   methods: {

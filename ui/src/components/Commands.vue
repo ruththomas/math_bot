@@ -228,7 +228,7 @@ export default {
       }
     },
     addToActiveFunc (evt) {
-      const index = evt.item.getAttribute('data-function-index')
+      const index = evt.item.getAttribute('data-function-index') - 1
       // console.log('INDEX IN ~ ', index)
       if (evt.type === 'add') {
         api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {

@@ -5,7 +5,12 @@ import Sortable from 'vue-sortable'
 import Robot from '@/components/Robot'
 import Profile from '@/components/Profile'
 import Marketing from '@/components/marketing/Marketing'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 
+// require styles
+import 'swiper/dist/css/swiper.css'
+
+Vue.use(VueAwesomeSwiper)
 Vue.use(Router)
 Vue.use(VueResource)
 Vue.use(Sortable)
