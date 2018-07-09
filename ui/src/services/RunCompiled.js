@@ -160,8 +160,9 @@ class RunCompiled extends GridAnimator {
   }
 
   _success (frame) {
-    // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
+      // console.log('[last frame grid]', JSON.parse(JSON.stringify(frame.robotState.grid)))
+      // console.log('[grid]', JSON.parse(JSON.stringify(this.grid)))
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
     })

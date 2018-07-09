@@ -26,7 +26,11 @@ class GridAnimator {
   }
 
   _updateGrid () {
+    // console.log('[cells]', JSON.parse(JSON.stringify(this.robotState.grid.cells)))
     this.robotState.grid.cells.forEach(cell => {
+      if (cell.location.x === 2) {
+        // console.log(`[x: ${cell.location.x}, y: ${cell.location.y}]`, this.grid[cell.location.x][cell.location.y].tools)
+      }
       this.grid[cell.location.x][cell.location.y].tools = cell.items.map(name => this.toolList[name])
     })
   }

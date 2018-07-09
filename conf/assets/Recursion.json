@@ -322,20 +322,26 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
-          "name": "Pickup All Kitties",
+          "name": "Pickup N",
           "image": "pickupN",
-          "sizeLimit": 100,
+          "sizeLimit": 10,
           "func": []
         },
         {
-          "name": "Clean Up 8 or More",
+          "name": "Drop N",
+          "image": "dropN",
+          "sizeLimit": 10,
+          "func": []
+        },
+        {
+          "name": "Cleanup",
           "image": "cleanup",
           "sizeLimit": 10,
           "func": []
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["pickupN", "cleanup"],
+      "allowedActives": ["pickupN", "dropN", "cleanup"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
