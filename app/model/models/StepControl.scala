@@ -14,6 +14,24 @@ object StepControl {
     spotSum == solution.toInt
   }
 
+  private def discoverRecursion(main: FuncToken,
+                                actives: List[FuncToken],
+                                visited: Set[FuncToken] = Set.empty[FuncToken]): Boolean = {
+    visited.contains(main) match {
+      case true =>
+        true
+      case false =>
+        main.func match {
+          case Some(contents) =>
+            contents
+              .flatMap(func => actives.find(_.created_id == func.created_id))
+              .exists(func => discoverRecursion(func, actives, visited + main))
+          case None =>
+            false
+        }
+    }
+  }
+
   def checkParams(parameters: List[String], activeFuncs: List[FuncToken], lambdas: Lambdas): Boolean = {
     val main: FuncToken = lambdas.main
     val actives: List[FuncToken] = lambdas.activeFuncs
@@ -28,14 +46,7 @@ object StepControl {
               }
             }
           case "recursionRequired" =>
-            main.func.getOrElse(List.empty[FuncToken]).exists { ft =>
-              actives.find(_.created_id == ft.created_id) match {
-                case Some(fullFunc) =>
-                  fullFunc.func.getOrElse(List.empty[FuncToken]).exists(_.created_id == ft.created_id)
-                case None =>
-                  false
-              }
-            }
+            discoverRecursion(main, actives)
           case _ => true
         }
       } else bool
@@ -52,10 +63,6 @@ class StepControl(rawStepData: RawStepData, lambdas: Lambdas) {
   val activeFuncs: List[FuncToken] = lambdas.activeFuncs
 
   def success(frame: Frame, problem: Problem): Boolean = {
-    val finalSpotBool = isFinalSpot(frame)
-    val totalDroppedBool = totalDropped(frame, problem)
-    val specialParamsBool = checkParams(parameters, activeFuncs, lambdas)
-
-    finalSpotBool && totalDroppedBool && specialParamsBool
+    isFinalSpot(frame) && totalDropped(frame, problem) && checkParams(parameters, activeFuncs, lambdas)
   }
 }
