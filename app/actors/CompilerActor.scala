@@ -94,6 +94,13 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     }
   }
 
+  def clientFramePrint(frame: ClientFrame) = {
+    s"location: ${frame.robotState.location}\n" +
+    s"register: ${frame.robotState.holding.mkString(", ")}\n" +
+    "grid: \n" +
+    frame.robotState.grid.map(cel => cel.cells.map(c => s"  (${c.location.x}, ${c.location.y} -> ${c.items.mkString(", ")}")).map(_.mkString("\n")).getOrElse(" No Grid")
+  }
+
   private def sendFrames(programState: ProgramState, clientFrames: List[ClientFrame]): Unit = {
     out ! CompilerOutput(clientFrames, programState.grid.problem)
   }
@@ -173,7 +180,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       val executeSomeFrames = if (currentCompiler.exitOnSuccess) {
         // Generate a temporary index for the program frames and search for a success frame.
         // Truncate the frames to the first successful frame
-        val frames = robotFrames.zipWithIndex
+        val frames = (currentCompiler.leftover match {
+          case Some(leftover) => leftover +: robotFrames
+          case None => robotFrames
+        }).zipWithIndex
         frames
           .find(frame => checkForSuccess(currentCompiler, frame._1))
           .map(successFrame => frames.take(successFrame._2 + 1))
