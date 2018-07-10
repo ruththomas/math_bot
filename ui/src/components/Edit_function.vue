@@ -184,25 +184,25 @@ export default {
 
 <style scoped lang="scss">
   .edit-function {
-    position: absolute;
-    /*height: 250px;*/
+    position: relative;
+    height: 100%;
     width: 100%;
-    top: -70px;
     z-index: 10001;
     overflow: visible;
   }
 
   .edit-function-data {
-    position: relative;
+    position: absolute;
+    top: -70px;
+    right: 0;
+    left: 0;
     height: 105px;
-    margin-bottom: 12px;
   }
 
   .edit-function-content {
     position: relative;
     overflow: hidden;
-    padding: 10px 20px 10px 20px;
-    height: 130px;
+    height: 100%;
   }
 
   .edit-function-drop > * {
@@ -224,7 +224,7 @@ export default {
     align-items: flex-end;
     position: absolute;
     bottom: 0;
-    left: 26px;
+    left: 38px;
   }
 
   .displayed-func {
@@ -239,7 +239,7 @@ export default {
     align-items: center;
     border: 1px solid #B8E986;
     border-radius: 3px;
-    margin-right: 12px;
+    margin-right: 8px;
   }
 
   .function-control {
