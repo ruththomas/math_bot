@@ -229,6 +229,9 @@ export default {
   .swiper-pagination-bullet-custom.swiper-pagination-bullet-active {
     color: #fff;
     background: $pagination-active-color;
+    &:focus {
+      outline: none;
+    }
   }
 
   .swiper-button-next, .swiper-button-prev {
