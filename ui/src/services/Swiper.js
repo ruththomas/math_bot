@@ -1,6 +1,7 @@
 class Swiper {
   options = {
     spaceBetween: 0,
+    mousewheel: true,
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
