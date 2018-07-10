@@ -91,5 +91,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     padding: 10px 20px 10px 20px;
+    justify-content: center;
+    align-items: center;
   }
 </style>
