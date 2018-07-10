@@ -1,14 +1,18 @@
 <template>
   <div class="edit-main">
 
-    <function-drop
-      :list="mainFunctionFunc"
-      :options="mainDraggableOptions"
-      :change="copyCommand"
-      :start="moving"
-      :end="end"
-      :origin="'editMain'"
-    ></function-drop>
+    <div class="edit-main-drop">
+      <function-drop
+        :id="'edit-main'"
+        :list="mainFunctionFunc"
+        :options="mainDraggableOptions"
+        :change="copyCommand"
+        :start="moving"
+        :end="end"
+        :origin="'editMain'"
+        :group-size="10"
+      ></function-drop>
+    </div>
 
     <div class="bar noDrag" v-if="Object.keys(robot).length">
       <main-placeholder></main-placeholder>
@@ -166,28 +170,23 @@ export default {
 
 <style scoped lang="scss">
   .edit-main {
-    z-index: 1000!important;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    overflow: visible;
     width: 100%;
     height: 120px;
-    /*border: 1px solid goldenrod;*/
+    z-index: 1000;
   }
 
-  .edit-main .function-drop {
-    width: 65%!important;
-    /*border: 1px solid teal;*/
+  .edit-main-drop {
+    width: 70%;
+    height: 100%;
+    margin: 0 auto;
   }
 
   .bar {
     position: absolute;
     left: 48px;
     right: 48px;
-    top: 39.5%;
+    top: 50%;
     height: 2px;
     background-color: #B8E986;
     display: flex;
