@@ -59,12 +59,12 @@ export default {
 
 <style scoped lang="scss">
   .popover-bucket {
-    height: 200px;
+    height: 190px;
     left: 0;
     right: 0;
     z-index: 1010;
     position: absolute;
-    top: -200%;
+    top: -190%;
   }
 
   .popover-bucket-content {
