@@ -213,6 +213,7 @@ export default {
   }
 
   .swiper-pagination.swiper-pagination-bullets {
+    bottom: -3px;
   }
 
   .swiper-pagination-bullet-custom {
