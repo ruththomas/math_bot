@@ -22,6 +22,8 @@
           @click="deleteFuncContents"
         >
         </div>
+
+        <span class="function-limit-indicator" v-if="editingFunction.sizeLimit > 0">Size limit: {{ editingFunction.sizeLimit }}</span>
       </div>
 
       <img class="close-edit-function dialog-button" @click="closeEditFunction" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
