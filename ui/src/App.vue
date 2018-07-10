@@ -206,7 +206,7 @@ export default {
 
   .swiper-container {
     display: flex;
-    height: 110%;
+    height: 100%;
   }
 
   .swiper-slide {
