@@ -1,31 +1,36 @@
 <template>
-  <swiper :options="swiper.options">
-    <swiper-slide
-      v-for="(group, gInd) in functionGroups"
-      :key="'staged-swiper/' + gInd"
-      :dude="logGroup(group)"
-    >
-      <draggable
-        class="staged-functions"
-        :list="stagedFunctions"
-        :options="draggableOptions"
+  <div class="staged-functions-container">
+    <div class="staged-functions-header">
+      <span>Staged functions</span>
+    </div>
+    <swiper :options="swiper.options">
+      <swiper-slide
+        v-for="(group, gInd) in functionGroups"
+        :key="'staged-swiper/' + gInd"
+        :dude="logGroup(group)"
       >
-        <function-box
-          v-for="(func, fInd) in group"
-          :key="'staged-func/' + fInd"
-          :func="func"
-          :ind="func.index"
-          :collection="stagedFunctions"
-          :origin="'stagedFunctions'"
-          :data-function-index="func.index"
-        ></function-box>
-        <!--:method="addToActiveFunc"-->
-      </draggable>
-    </swiper-slide>
-    <div class="swiper-button-prev" slot="button-prev"></div>
-    <div class="swiper-button-next" slot="button-next"></div>
-    <div class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
-  </swiper>
+        <draggable
+          class="staged-functions"
+          :list="stagedFunctions"
+          :options="draggableOptions"
+        >
+          <function-box
+            v-for="(func, fInd) in group"
+            :key="'staged-func/' + fInd"
+            :func="func"
+            :ind="func.index"
+            :collection="stagedFunctions"
+            :origin="'stagedFunctions'"
+            :data-function-index="func.index"
+          ></function-box>
+          <!--:method="addToActiveFunc"-->
+        </draggable>
+      </swiper-slide>
+      <div class="swiper-button-prev" slot="button-prev"></div>
+      <div class="swiper-button-next" slot="button-next"></div>
+      <div class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
+    </swiper>
+  </div>
 </template>
 
 <script>
@@ -84,14 +89,28 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .staged-functions-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  .staged-functions-header {
+    position: absolute;
+    top: 10px;
+    left: 38px;
+    span {
+      font-size: 18px;
+    }
+  }
+
   .staged-functions {
     height: 100%;
     width: 100%;
     overflow: auto;
     display: flex;
-    flex-wrap: wrap;
-    padding: 10px 20px 10px 20px;
-    justify-content: center;
+    padding-left: 33px;
+    justify-content: flex-start;
     align-items: center;
   }
 </style>
