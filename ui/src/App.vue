@@ -244,4 +244,8 @@ export default {
   .swiper-button-prev {
     transform: rotate(180deg);
   }
+
+  .swiper-button-disabled {
+    display: none
+  }
 </style>

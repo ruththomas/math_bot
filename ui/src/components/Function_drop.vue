@@ -14,6 +14,7 @@
         @end="end"
       >
         <function-box
+          v-if="group !== null"
           v-for="(func, fInd) in group"
           :key="'staged-func/' + fInd"
           :func="func"
@@ -38,7 +39,8 @@ export default {
   name: 'function_drop',
   computed: {
     functionGroups () {
-      return this.swiper.groupFunctions(this.list.slice(), 14)
+      const groups = this.swiper.groupFunctions(this.list.slice(), 14)
+      return groups.length ? groups : [null]
     },
     showMesh () {
       return this.$store.getters.getShowMesh
