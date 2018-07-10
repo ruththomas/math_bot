@@ -1,12 +1,13 @@
 <template>
-  <div :id="id" class="function-box" @click="method ? method($event, func, ind) : ''">
-    <puzzle-pieces
-      :piece-to-show="pieceToShow"
-      :background-img="funcAndcmdImages[func.image]"
-      :color="func.color"
-      :func-name="func.name"
-      :show-name="showName"></puzzle-pieces>
-  </div>
+  <puzzle-pieces
+    :id="id"
+    :ind="ind"
+    :func="func"
+    :piece-to-show="pieceToShow"
+    :background-img="funcAndcmdImages[func.image]"
+    :show-name="showName"
+    :method="method">
+  </puzzle-pieces>
 </template>
 
 <script>
@@ -58,4 +59,8 @@ export default {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .function-box {
+    display: inline-block;
+  }
+</style>

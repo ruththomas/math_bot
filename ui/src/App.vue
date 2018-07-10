@@ -184,14 +184,14 @@ export default {
   $pagination-bullet-size: 14px;
 
   .swiper-container {
+    display: flex;
+    height: 110%;
   }
 
   .swiper-slide {
   }
 
   .swiper-pagination.swiper-pagination-bullets {
-    position: relative;
-    top: 5px;
   }
 
   .swiper-pagination-bullet-custom {
@@ -211,21 +211,13 @@ export default {
   }
 
   .swiper-button-next, .swiper-button-prev {
-    height: 100px;
-    width: 30px;
-    top: 0;
-    background-image: none;
-  }
-
-  .swiper-button-prev:focus, .swiper-button-next:focus {
-    outline: none;
-  }
-
-  .swiper-button-next {
-    right: 0;
+    background: url("assets/next-arrow.svg");
+    &:focus {
+      outline: none;
+    }
   }
 
   .swiper-button-prev {
-    left: 0;
+    transform: rotate(180deg);
   }
 </style>

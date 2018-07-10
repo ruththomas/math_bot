@@ -1,24 +1,26 @@
 <template>
-  <div class="puzzle-piece">
-
     <div
+      :id="id"
       v-if="pieceToShow === 'closed'"
       class="piece closed-piece border-right"
-      :class="'piece-' + color"
+      :class="'piece-' + func.color"
       :style="{'background-image': `url(${backgroundImg})`}"
-      data-toggle="tooltip" :title="funcName">
+      data-toggle="tooltip" :title="func.name"
+      @click="method ? method($event, func, ind) : ''">
       <div v-if="showName">
-        <div v-if="funcName !== ''" class="command-name">{{funcName}}</div>
+        <div v-if="func.name !== ''" class="command-name">{{func.name}}</div>
         <div v-else class="command-name command-name-empty">Name me!</div>
       </div>
     </div>
 
     <div
+      :id="id"
       v-else-if="pieceToShow === 'start'"
       class="piece puzzle-start"
-      :class="'piece-' + color"
+      :class="'piece-' + func.color"
       :style="{'background-image': `url(${backgroundImg})`}"
-      data-toggle="tooltip" :title="funcName">
+      data-toggle="tooltip" :title="func.name"
+      @click="method ? method($event, func, ind) : ''">
       <div class="tab-insert">
         <div class="top-insert insert"></div>
         <div class="notch"></div>
@@ -27,11 +29,13 @@
     </div>
 
     <div
+      :id="id"
       v-else-if="pieceToShow === 'middle'"
       class="piece puzzle-middle"
-      :class="'piece-' + color"
+      :class="'piece-' + func.color"
       :style="{'background-image': `url(${backgroundImg})`}"
-      data-toggle="tooltip" :title="funcName">
+      data-toggle="tooltip" :title="func.name"
+      @click="method ? method($event, func, ind) : ''">
       <div class="left-tab"></div>
       <div class="tab-insert">
         <div class="top-insert insert"></div>
@@ -41,26 +45,31 @@
     </div>
 
     <div
+      :id="id"
       v-else-if="pieceToShow === 'end'"
       class="piece puzzle-end border-right"
-      :class="'piece-' + color"
+      :class="'piece-' + func.color"
       :style="{'background-image': `url(${backgroundImg})`}"
-      data-toggle="tooltip" :title="funcName">
+      data-toggle="tooltip" :title="func.name"
+      @click="method ? method($event, func, ind) : ''">
       <div class="left-tab"></div>
     </div>
 
-  </div>
 </template>
 
 <script>
 export default {
   name: 'puzzle_pieces',
-  props: ['pieceToShow', 'backgroundImg', 'color', 'funcName', 'showName']
+  props: ['id', 'ind', 'func', 'pieceToShow', 'backgroundImg', 'showName', 'method']
 }
 </script>
 
 <style scoped lang="scss">
   $puzzle-piece-border-color: #FFFFFF;
+
+  .puzzle-piece {
+    display: flex;
+  }
 
   .piece-default {
     border-color: #FFFFFF!important;
