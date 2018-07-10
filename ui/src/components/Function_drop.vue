@@ -1,29 +1,32 @@
 <template>
-  <div></div>
-  <!--<swiper-->
-    <!--:class="showMesh ? 'mesh-background' : ''"-->
-    <!--:options="functionDropSwiperOptions">-->
-    <!--<swiper-slide-->
-      <!--v-for="(func, ind) in list"-->
-      <!--:key="'function-drop-swiper/' + ind">-->
-      <!--<draggable-->
-        <!--class="function-drop-drop-zone"-->
-        <!--:list="list"-->
-        <!--:options="options"-->
-        <!--@change="change"-->
-        <!--@start="start"-->
-        <!--@end="end"-->
-      <!--&gt;-->
-          <!--<function-box-->
-            <!--:func="func"-->
-            <!--:ind="ind"-->
-            <!--:collection="list"-->
-            <!--:origin="origin"-->
-          <!--&gt;</function-box>-->
-
-      <!--</draggable>-->
-    <!--</swiper-slide>-->
-  <!--</swiper>-->
+  <swiper
+    :class="showMesh ? 'mesh-background' : ''"
+    :options="swiper.options">
+    <swiper-slide
+      v-for="(group, sInd) in functionGroups"
+      :key="'function-drop-swiper/' + sInd">
+      <draggable
+        class="function-drop"
+        :list="list"
+        :options="options"
+        @change="change"
+        @start="start"
+        @end="end"
+      >
+        <function-box
+          v-for="(func, fInd) in group"
+          :key="'staged-func/' + fInd"
+          :func="func"
+          :ind="func.index"
+          :collection="list"
+          :origin="origin"
+        ></function-box>
+      </draggable>
+    </swiper-slide>
+    <div class="swiper-button-prev" slot="button-prev"></div>
+    <div class="swiper-button-next" slot="button-next"></div>
+    <div class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
+  </swiper>
 </template>
 
 <script>
@@ -34,6 +37,9 @@ import Swiper from '../services/Swiper'
 export default {
   name: 'function_drop',
   computed: {
+    functionGroups () {
+      return this.swiper.groupFunctions(this.list.slice(), 14)
+    },
     showMesh () {
       return this.$store.getters.getShowMesh
     },
@@ -46,7 +52,7 @@ export default {
   },
   data () {
     return {
-      functionDropSwiperOptions: new Swiper(this.list).options
+      swiper: new Swiper()
     }
   },
   methods: {
@@ -78,23 +84,15 @@ export default {
 
 <style scoped lang="scss">
   .function-drop {
+    /*border: 1px solid teal;*/
     width: 100%;
     height: 100%;
     z-index: 2001;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 33px;
     margin: 0 auto;
-  }
-
-  .function-drop-drop-zone {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    overflow-x: scroll;
-    overflow-y: visible;
-    height: 100%;
-    width: 99%;
   }
 
   .mesh-background {
