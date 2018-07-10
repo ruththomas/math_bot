@@ -1,7 +1,5 @@
 class Swiper {
   options = {
-    slidesPerView: 1,
-    centerSlides: true,
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
