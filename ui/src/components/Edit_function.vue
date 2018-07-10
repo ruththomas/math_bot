@@ -225,6 +225,7 @@ export default {
     position: absolute;
     bottom: 0;
     left: 38px;
+    z-index: 1001;
   }
 
   .displayed-func {
