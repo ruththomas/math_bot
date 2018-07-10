@@ -1,7 +1,9 @@
 <template>
   <swiper
-    :class="showMesh ? 'mesh-background' : ''"
+    :id="id"
+    class="function-drop-container"
     :options="swiper.options">
+    <div v-if="showMesh" class="mesh-background"></div>
     <swiper-slide
       v-for="(group, sInd) in functionGroups"
       :key="'function-drop-swiper/' + sInd">
@@ -39,7 +41,7 @@ export default {
   name: 'function_drop',
   computed: {
     functionGroups () {
-      const groups = this.swiper.groupFunctions(this.list.slice(), 14)
+      const groups = this.swiper.groupFunctions(this.list.slice(), this.groupSize)
       return groups.length ? groups : [null]
     },
     showMesh () {
@@ -80,13 +82,18 @@ export default {
     draggable,
     FunctionBox
   },
-  props: ['origin', 'list', 'options', 'change', 'start', 'end']
+  props: ['id', 'origin', 'list', 'options', 'change', 'start', 'end', 'groupSize']
 }
 </script>
 
 <style scoped lang="scss">
+  .function-drop-container {
+    position: relative;
+    height: 100%;
+    width:100%;
+  }
+
   .function-drop {
-    /*border: 1px solid teal;*/
     width: 100%;
     height: 100%;
     z-index: 2001;
@@ -98,10 +105,25 @@ export default {
   }
 
   .mesh-background {
-    background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522345998/misc/grid-mesh_auu3wh.svg") top center no-repeat;
-    background-size: contain;
-    background-position: 0 -10px;
-    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 5px;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.3) 5px,
+        rgba(74, 74, 74, 0.5) 7px,
+        rgba(74, 74, 74, 0.5) 9px
+    ), repeating-linear-gradient(
+        -45deg,
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.3) 5px,
+        rgba(74, 74, 74, 0.5) 7px,
+        rgba(74, 74, 74, 0.5) 9px
+    );
   }
 
   /* Medium Devices, Desktops */

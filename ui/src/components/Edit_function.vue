@@ -32,12 +32,14 @@
     <div class="edit-function-content">
 
       <function-drop
+        :id="'edit-function'"
         :list="functions"
         :options="mainDraggableOptions"
         :change="copyCommand"
         :start="moving"
         :end="end"
         :origin="'editFunction'"
+        :group-size="14"
       ></function-drop>
 
     </div>
@@ -157,6 +159,7 @@ export default {
       if (!evt.hasOwnProperty('removed')) {
         const command = evt.hasOwnProperty('added') ? evt.added.element : evt.moved.element
         const ind = evt.hasOwnProperty('added') ? evt.added.newIndex : evt.moved.newIndex
+        console.log(ind)
         buildUtils.updateFunctionsOnChange({context: this, currentFunction: buildUtils.currentFunc(this), addedFunction: command, newIndex: ind})
       }
     },
