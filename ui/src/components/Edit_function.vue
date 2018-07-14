@@ -39,11 +39,10 @@
         :start="moving"
         :end="end"
         :origin="'editFunction'"
-        :group-size="14"
+        :group-size="groupSize"
       ></function-drop>
 
     </div>
-
   </div>
 </template>
 
@@ -87,6 +86,7 @@ export default {
   },
   data () {
     return {
+      groupSize: 14,
       func: {
         color: 'default',
         commandId: null,
@@ -138,6 +138,9 @@ export default {
     }
   },
   methods: {
+    calcIndex (groupInd, funcInd) {
+      return this.groupSize * groupInd + funcInd
+    },
     findColor () {
       return this.colors[this.currentColor].next
     },
@@ -155,12 +158,20 @@ export default {
       deleteFuncContents.func = []
       buildUtils.updateFunctionsOnChange(({context: this, currentFunction: deleteFuncContents, addedFunction: null, newIndex: null}))
     },
-    copyCommand (evt) {
+    copyCommand (evt, groupInd) {
       if (!evt.hasOwnProperty('removed')) {
+        buildUtils.updateFunctionsOnChange()
+
+        const newIndex = this.calcIndex(groupInd, evt.added.newIndex)
         const command = evt.hasOwnProperty('added') ? evt.added.element : evt.moved.element
-        const ind = evt.hasOwnProperty('added') ? evt.added.newIndex : evt.moved.newIndex
-        console.log(ind)
-        buildUtils.updateFunctionsOnChange({context: this, currentFunction: buildUtils.currentFunc(this), addedFunction: command, newIndex: ind})
+        const currentFunction = buildUtils.currentFunc(this)
+        currentFunction.func.splice(evt.added.newIndex, 1)
+        currentFunction.func.splice(newIndex, 1, command)
+
+        console.log('command', command)
+        console.log('newIndex', newIndex)
+        console.log('currentFunction', currentFunction.func)
+        // buildUtils.updateFunctionsOnChange({context: this, currentFunction: currentFunction, addedFunction: command, newIndex: ind})
       }
     },
     closeEditFunction () {
@@ -173,7 +184,7 @@ export default {
     moving (evt) {
       this.$store.dispatch('updateTrashVisible', true)
     },
-    end () {
+    end (evt) {
       this.$store.dispatch('updateTrashVisible', false)
     }
   },
