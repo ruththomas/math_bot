@@ -6,6 +6,7 @@ export default {
     if (editingFunctionIndex === null) return context.$store.getters.getMainFunction
     else return context.$store.getters.getActiveFunctions[editingFunctionIndex]
   },
+  updateFunctionsOnChange () {},
   /*
    * updateFunctionsOnChange preps the current function to be sent to server
    * then sends the currentFunction to the server.
@@ -14,7 +15,7 @@ export default {
    * @param addedFunction {function being added to currentFunction}
    * @param newIndex {addedFunctoins new position on current function}
    **/
-  updateFunctionsOnChange ({context, currentFunction, addedFunction, newIndex, newColor, override}) {
+  _updateFunctionsOnChange ({context, currentFunction, addedFunction, newIndex, newColor, override}) {
     const token = context.$store.getters.getToken
 
     if (addedFunction !== null) {
