@@ -160,18 +160,11 @@ export default {
     },
     copyCommand (evt, groupInd) {
       if (!evt.hasOwnProperty('removed')) {
-        buildUtils.updateFunctionsOnChange()
-
-        const newIndex = this.calcIndex(groupInd, evt.added.newIndex)
-        const command = evt.hasOwnProperty('added') ? evt.added.element : evt.moved.element
-        const currentFunction = buildUtils.currentFunc(this)
-        currentFunction.func.splice(evt.added.newIndex, 1)
-        currentFunction.func.splice(newIndex, 1, command)
-
-        console.log('command', command)
-        console.log('newIndex', newIndex)
-        console.log('currentFunction', currentFunction.func)
-        // buildUtils.updateFunctionsOnChange({context: this, currentFunction: currentFunction, addedFunction: command, newIndex: ind})
+        buildUtils.newupdateFunctionsOnChange({
+          context: this,
+          newIndex: this.calcIndex(groupInd, evt.added.newIndex),
+          added: evt.hasOwnProperty('added') ? evt.added : evt.moved
+        })
       }
     },
     closeEditFunction () {
