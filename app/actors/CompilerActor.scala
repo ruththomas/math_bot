@@ -37,10 +37,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
                           program: GridAndProgram,
                           clientFrames: List[ClientFrame] = List.empty[ClientFrame],
                           stepCount: Int = 0,
-                          leftover : Option[Frame] = None,
+                          leftover: Option[Frame] = None,
                           exitOnSuccess: Boolean = false) {
     def addSteps(steps: Int): ProgramState = this.copy(stepCount = this.stepCount + steps)
-    def withLeftover(l : Frame) : ProgramState = this.copy(leftover = Some(l))
+    def withLeftover(l: Frame): ProgramState = this.copy(leftover = Some(l))
   }
   implicit val timeout: Timeout = 5000.minutes
 
@@ -98,7 +98,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     s"location: ${frame.robotState.location}\n" +
     s"register: ${frame.robotState.holding.mkString(", ")}\n" +
     "grid: \n" +
-    frame.robotState.grid.map(cel => cel.cells.map(c => s"  (${c.location.x}, ${c.location.y} -> ${c.items.mkString(", ")}")).map(_.mkString("\n")).getOrElse(" No Grid")
+    frame.robotState.grid
+      .map(cel => cel.cells.map(c => s"  (${c.location.x}, ${c.location.y} -> ${c.items.mkString(", ")}"))
+      .map(_.mkString("\n"))
+      .getOrElse(" No Grid")
   }
 
   private def sendFrames(programState: ProgramState, clientFrames: List[ClientFrame]): Unit = {
@@ -158,10 +161,11 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
                      s"Stepping compiler for $steps steps with actor ${context.self.path.toSerializationFormat}")
       // filter out non-robot frames (eg function calls and program start)
       val maxStepsReached = config.maxProgramSteps < currentCompiler.stepCount + steps
-      val takeSteps = if (maxStepsReached)
-        config.maxProgramSteps - currentCompiler.stepCount
-      else
-        steps + (if (currentCompiler.leftover.isEmpty) 1 else 0) // Add an additional step for a leftover
+      val takeSteps =
+        if (maxStepsReached)
+          config.maxProgramSteps - currentCompiler.stepCount
+        else
+          steps + (if (currentCompiler.leftover.isEmpty) 1 else 0) // Add an additional step for a leftover
       val robotFrames = currentCompiler.iterator
         .filter(f => {
           f.robotLocation.isDefined
@@ -177,30 +181,33 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       //
       // If you are curious about this topic in general, google "the halting problem" :-)
 
-      val executeSomeFrames = if (currentCompiler.exitOnSuccess) {
-        // Generate a temporary index for the program frames and search for a success frame.
-        // Truncate the frames to the first successful frame
-        val frames = (currentCompiler.leftover match {
-          case Some(leftover) => leftover +: robotFrames
-          case None => robotFrames
-        }).zipWithIndex
-        frames
-          .find(frame => checkForSuccess(currentCompiler, frame._1))
-          .map(successFrame => frames.take(successFrame._2 + 1))
-          .getOrElse(frames)
-          .map(f => f._1)
-      } else {
-        // If there is a leftover, add it to the front
-        currentCompiler.leftover match {
-          case Some(leftover) =>
-            leftover +: robotFrames
-          case None =>
-            robotFrames
-        }
+      val frames = currentCompiler.leftover match {
+        case Some(leftover) => leftover +: robotFrames
+        case None => robotFrames
       }
 
-      // if the compiler generated less frames than requested we assume the program completed
-      val programCompleted = executeSomeFrames.length < takeSteps || maxStepsReached
+      val (executeSomeFrames, programCompleted) = if (currentCompiler.exitOnSuccess) {
+        // Generate a temporary index for the program frames and search for a success frame.
+        // Truncate the frames to the first successful frame
+        val checkedFrames = frames.zipWithIndex
+          .map(frame => (frame._1, checkForSuccess(currentCompiler, frame._1), frame._2))
+
+        checkedFrames.find(f => f._2).map(_._3) match {
+          case Some(index) => (
+            checkedFrames.takeWhile(_._3 <= index).map(_._1), // Just the frames up until success
+            true // program completion
+            )
+          case _ => (
+            frames, // All the frames
+            robotFrames.length < takeSteps || maxStepsReached // If the program stopped early or hit max frame count
+          )
+        }
+      } else {
+        (
+          frames, // All the frames
+          robotFrames.length < takeSteps || maxStepsReached // If the program stopped early or hit max frame count
+        )
+      }
 
       executeSomeFrames match {
         case List(frame) =>
