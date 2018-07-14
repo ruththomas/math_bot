@@ -6,7 +6,17 @@ export default {
     if (editingFunctionIndex === null) return context.$store.getters.getMainFunction
     else return context.$store.getters.getActiveFunctions[editingFunctionIndex]
   },
-  updateFunctionsOnChange () {},
+  newupdateFunctionsOnChange ({context, newIndex, added, override}) {
+    const currentFunction = this.currentFunc(context)
+
+    currentFunction.func.splice(added.newIndex, 1)
+    currentFunction.func.splice(newIndex, 0, added.element)
+
+    api.putFunc({tokenId: context.$store.getters.getToken.token_id, funcToken: currentFunction, override}, lambdas => {
+      console.log(lambdas)
+      context.$store.dispatch('updateLambdas', lambdas)
+    })
+  },
   /*
    * updateFunctionsOnChange preps the current function to be sent to server
    * then sends the currentFunction to the server.
@@ -15,7 +25,7 @@ export default {
    * @param addedFunction {function being added to currentFunction}
    * @param newIndex {addedFunctoins new position on current function}
    **/
-  _updateFunctionsOnChange ({context, currentFunction, addedFunction, newIndex, newColor, override}) {
+  updateFunctionsOnChange ({context, currentFunction, addedFunction, newIndex, newColor, override}) {
     const token = context.$store.getters.getToken
 
     if (addedFunction !== null) {
