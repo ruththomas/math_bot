@@ -1,6 +1,5 @@
 <template>
-  <div class="edit-main">
-
+  <div class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
     <div class="edit-main-drop">
       <function-drop
         :id="'edit-main'"
@@ -174,6 +173,10 @@ export default {
     width: 100%;
     height: 120px;
     z-index: 1000;
+  }
+
+  .deactivate-edit-main {
+    opacity: 0;
   }
 
   .edit-main-drop {

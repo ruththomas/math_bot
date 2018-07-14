@@ -249,4 +249,8 @@ export default {
   .swiper-button-disabled {
     display: none
   }
+
+  .hidden-swiper-pagination {
+    opacity: 0;
+  }
 </style>
