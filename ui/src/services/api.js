@@ -72,6 +72,7 @@ export default {
   updateActives ({tokenId, actives}, cb) {
     Vue.http.put('/api/token/updateActives', {tokenId, actives})
       .then(res => {
+        // console.log(res.body)
         cb(res.body)
       })
       .catch(console.error)

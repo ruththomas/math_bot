@@ -11,7 +11,7 @@
         class="function-drop"
         :list="list"
         :options="options"
-        @change="change"
+        @change="change($event, sInd)"
         @start="start"
         @end="end"
       >
