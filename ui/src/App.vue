@@ -79,14 +79,12 @@ export default {
     opacity: 1;
   }
 
-  .function-drop {
-    .ghost, .chosen {
-      margin: 0 12px 0 12px;
-    }
+  .ghost, .chosen {
+    margin: 0 12px 0 12px;
+  }
 
-    .ghost {
-      opacity: 0;
-    }
+  .ghost {
+    opacity: 0;
   }
 
   .pulse {

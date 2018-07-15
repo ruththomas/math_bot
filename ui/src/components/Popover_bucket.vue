@@ -64,7 +64,7 @@ export default {
     right: 0;
     z-index: 1010;
     position: absolute;
-    top: -190%;
+    top: -135%;
   }
 
   .popover-bucket-content {

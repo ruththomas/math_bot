@@ -7,10 +7,10 @@
       <swiper-slide
         v-for="(group, gInd) in functionGroups"
         :key="'staged-swiper/' + gInd"
-        :dude="logGroup(group)"
       >
         <draggable
           class="staged-functions"
+          :staged-group-ind="gInd"
           :list="stagedFunctions"
           :options="draggableOptions"
         >
@@ -23,7 +23,6 @@
             :origin="'stagedFunctions'"
             :data-function-index="func.index"
           ></function-box>
-          <!--:method="addToActiveFunc"-->
         </draggable>
       </swiper-slide>
       <div class="swiper-button-prev" slot="button-prev"></div>
@@ -74,11 +73,6 @@ export default {
         sort: false
       },
       swiper: new Swiper()
-    }
-  },
-  methods: {
-    logGroup (group) {
-      // console.log(group)
     }
   },
   components: {
