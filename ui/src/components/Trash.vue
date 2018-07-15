@@ -14,7 +14,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import buildUtils from '../services/build_function_utils'
+import buildUtils from '../services/BuildFunction'
 
 export default {
   data () {
@@ -39,12 +39,9 @@ export default {
     }
   },
   methods: {
-    dumpTrash (evt) {
+    dumpTrash () {
       this.$store.dispatch('updateTrashVisible', false)
-      buildUtils.updateFunctionsOnChange({context: this, currentFunction: buildUtils.currentFunc(this), addedFunction: null, newIndex: null, override: true})
-    },
-    test (evt) {
-      console.log(evt)
+      buildUtils.deleteItemFromFunction({context: this})
     }
   },
   components: {
