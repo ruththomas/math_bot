@@ -6,11 +6,6 @@
       :evt="evt"
     ></popover-bucket>
 
-    <div class="command-control-button-group">
-      <img class="command-button commands-up dialog-button" @click="moveSwiper('up')" :src="permanentImages.buttons.playButton">
-      <img class="command-button commands-down dialog-button" @click="moveSwiper('down')" :src="permanentImages.buttons.playButton">
-    </div>
-
     <div class="commands-slide">
       <draggable
         class="methods"
@@ -29,26 +24,36 @@
           v-on:click.native="notEditableMessage"
         ></function-box>
       </draggable>
-      <draggable
-        class="functions"
-        :list="activeFunctions"
-        :options="functionOptions"
-        @start="start"
-        @change="moveFunction"
-        @end="end"
-        @add="addToActiveFunc"
-      >
-        <function-box
-          v-for="(func, ind) in activeFunctions"
-          :key="ind + '/' + func.created_id"
-          :func="func"
-          :ind="ind"
-          :collection="activeFunctions"
-          :origin="'functions'"
-          :method="toggleFunctionEdit"
-          v-on:click.native="editingFunctionMessage(func)"
-        ></function-box>
-      </draggable>
+
+      <swiper :options="swiper.options">
+        <swiper-slide
+          v-for="(group, gInd) in activeFunctionGroups"
+          :key="'active-functions/' + gInd"
+        >
+          <draggable
+            class="functions"
+            :list="activeFunctions"
+            :options="functionOptions"
+            @start="start"
+            @change="moveFunction($event, gInd)"
+            @end="end"
+            @add="addToActiveFunc($event, gInd)"
+          >
+            <function-box
+              v-for="(func, ind) in group"
+              :key="ind + '/' + func.created_id"
+              :func="func"
+              :ind="ind"
+              :collection="activeFunctions"
+              :origin="'functions'"
+              v-on:click.native="editFunction($event, func, gInd, ind)"
+            ></function-box>
+          </draggable>
+        </swiper-slide>
+        <div class="swiper-button-prev" slot="button-prev"></div>
+        <div class="swiper-button-next" slot="button-next"></div>
+        <div class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
+      </swiper>
     </div>
 
     <img
@@ -64,20 +69,15 @@
 
 <script>
 import draggable from 'vuedraggable'
-import api from '../services/api'
 import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
 import uId from 'uid'
+import Swiper from '../services/Swiper'
+import buildUtils from '../services/BuildFunction'
 
 export default {
   name: 'FunctionDrop',
   mounted () {
-    window.addEventListener('resize', () => {
-      if (window.location.hash === '#/robot') {
-        this.functionsPosition = 0
-        this.moveSwiper('up')
-      }
-    })
   },
   computed: {
     evt () {
@@ -106,6 +106,9 @@ export default {
     },
     commands () {
       return this.$store.getters.getCommands
+    },
+    activeFunctionGroups () {
+      return this.swiper.groupFunctions(this.activeFunctions.slice(), this.activeFunctionsGroupsSize)
     },
     activeFunctions () {
       return this.$store.getters.getActiveFunctions
@@ -143,7 +146,7 @@ export default {
           put: false
         },
         filter: '.command-name',
-        dragClass: 'dragging',
+        chosenClass: 'chosen',
         ghostClass: 'ghost',
         sort: false
       },
@@ -153,16 +156,19 @@ export default {
           pull: 'clone',
           put: ['commands-staged']
         },
+        animation: 100,
         filter: '.command-name',
-        dragClass: 'dragging',
+        chosenClass: 'chosen',
         ghostClass: 'ghost'
       },
+      swiper: new Swiper(),
+      activeFunctionsGroupsSize: 10,
       currentColor: this.colorSelected
     }
   },
   methods: {
     uid: int => uId(int),
-    notEditableMessage (evt) {
+    notEditableMessage () {
       const messageBuilder = {
         type: 'warn',
         msg: 'Can\'t edit'
@@ -171,13 +177,11 @@ export default {
       this.$store.dispatch('addMessage', messageBuilder)
     },
     editingFunctionMessage (func) {
-      if (this.editingFunction) {
-        const messageBuilder = {
-          type: 'success',
-          msg: `${func.name ? `Edit: ${func.name}` : 'Edit: Function'}`
-        }
-        this.$store.dispatch('addMessage', messageBuilder)
+      const messageBuilder = {
+        type: 'success',
+        msg: `${func.name ? `Edit: ${func.name}` : 'Edit: Function'}`
       }
+      this.$store.dispatch('addMessage', messageBuilder)
     },
     findColor () {
       return this.colors[this.colorSelected].next
@@ -186,23 +190,21 @@ export default {
       const color = this.findColor()
       this.$store.dispatch('colorSelected', color)
     },
-    togglePopoverBucket ({ind, show}) {
+    toggleEditFunction (ind) {
       this.$store.dispatch('updateEditingIndex', ind)
-      this.$store.dispatch('updateFunctionAreaShowing', show)
-    },
-    toggleFunctionEdit (evt, _2, ind) {
-      this.commandEvt = evt
-      const i = ind === this.editingIndex ? null : ind
-      const show = i === null ? 'editMain' : 'editFunction'
-      this.togglePopoverBucket({ind: i, show: show})
+      this.$store.dispatch('updateFunctionAreaShowing', ind === null ? 'editMain' : 'editFunction')
     },
     toggleFunctionAdd (evt) {
       this.commandEvt = evt
-      this.togglePopoverBucket({ind: null, show: this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction'})
+      this.$store.dispatch('updateEditingIndex', null)
+      this.$store.dispatch('updateFunctionAreaShowing', this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction')
     },
-    closeFunctionBox () {
-      this.commandEvt = null
-      this.togglePopoverBucket({ind: null, show: 'editMain'})
+    editFunction (evt, func, groupInd, funcInd) {
+      this.commandEvt = evt
+      const ind = buildUtils._calcIndex(this.activeFunctionsGroupsSize, groupInd, funcInd)
+      const i = ind === this.editingIndex ? null : ind
+      if (i !== null) this.editingFunctionMessage(func)
+      this.toggleEditFunction(i)
     },
     start () {
       if (this.functionAreaShowing === 'editMain') {
@@ -220,48 +222,23 @@ export default {
     end () {
       this.$store.dispatch('toggleShowMesh', false)
     },
-    moveFunction (evt) {
+    moveFunction (evt, groupInd) {
       if (evt.moved) {
-        api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
-          this.$store.dispatch('updateActives', actives)
+        buildUtils.moveFunction({
+          context: this,
+          groupSize: this.activeFunctionsGroupsSize,
+          groupInd: groupInd,
+          evt: evt
         })
       }
     },
-    addToActiveFunc (evt) {
-      const index = evt.item.getAttribute('data-function-index') - 1
-      // console.log('INDEX IN ~ ', index)
-      if (evt.type === 'add') {
-        api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
-          // console.log('NEW LAMBDAS ~ ', lambdas)
-          this.$store.dispatch('updateLambdas', lambdas)
-        })
-      }
-    },
-    moveSwiper (direction) {
-      const $functions = $('.functions')
-      const $functionBoxes = $functions.children()
-      if ($functionBoxes.length) {
-        (function (windowWidth, dis) {
-          const functionsWidth = $functions.width()
-          const $firstFunctionBox = $functionBoxes.first()
-          const functionBoxMarginRight = Number($firstFunctionBox.css('margin-right').replace('px', ''))
-          const functionBoxMarginBottom = Number($firstFunctionBox.css('margin-bottom').replace('px', ''))
-          const functionBoxWidth = $firstFunctionBox.outerWidth() + (functionBoxMarginRight * 2)
-          const functionBoxHeight = $firstFunctionBox.outerHeight() + (functionBoxMarginBottom)
-          const amtPerRow = Math.floor(functionsWidth / functionBoxWidth)
-          const rowCount = Math.ceil($functionBoxes.length / amtPerRow)
-          const allRowsHeight = functionBoxHeight * rowCount
-          const ableToScrollDown = (dis.functionsPosition + functionBoxHeight) < allRowsHeight
-
-          if (direction === 'up' && dis.functionsPosition > 0) {
-            dis.functionsPosition -= functionBoxHeight
-          } else if (direction === 'down' && ableToScrollDown) {
-            dis.functionsPosition += functionBoxHeight
-          }
-
-          $functions.animate({scrollTop: dis.functionsPosition + 'px'}, 300, 'linear')
-        })($(window).width(), this)
-      }
+    addToActiveFunc (evt, groupInd) {
+      buildUtils.activateFunction({
+        context: this,
+        groupSize: this.activeFunctionsGroupsSize,
+        groupInd: groupInd,
+        evt: evt
+      })
     }
   },
   components: {
@@ -282,7 +259,7 @@ export default {
     align-items: center;
     flex-direction: row;
     width: 100%;
-    height: 105px;
+    height: 100%;
     position: relative;
     padding: 10px 0;
   }
@@ -308,7 +285,6 @@ export default {
   }
 
   .methods {
-    border-right: 2px solid #B8E986;
   }
 
   .methods > * {
@@ -316,17 +292,8 @@ export default {
   }
 
   .functions {
-    flex-wrap: wrap;
-    overflow: hidden;
-    flex-grow: 1;
-  }
-
-  .functions-show-overflow {
-    overflow: visible;
-  }
-
-  .functions > * {
-    margin-bottom: 20px!important;
+    display: flex;
+    padding-left: 32px;
   }
 
   .two-x-command-name {
@@ -414,9 +381,10 @@ export default {
   }
 
   #open-staged {
-    display: flex;
-    align-self: flex-start;
-    cursor: pointer;
+    position: absolute;
+    right: -10px;
+    top: 10px;
+    z-index: 1000;
   }
 
   .rotate-to-x {

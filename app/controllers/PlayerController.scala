@@ -34,12 +34,14 @@ class PlayerController @Inject()(system: ActorSystem,
   val playerActor =
     system.actorOf(PlayerActor.props(system, playerTokenDAO, polyfillActor, logger, environment), "player-actor")
 
-  def updateActives(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
-    (playerActor ? UpdateActives(request.body)).mapTo[Either[UpdatedActives, ActorFailed]].map {
-      case Left(UpdatedActives(actives)) =>
-        Ok(Json.toJson(actives))
-      case Right(actorFailed) => BadRequest(actorFailed.msg)
-    }
+  def moveActiveFunc(tokenId: String, oldIndex: String, newIndex: String): Action[JsValue] = Action.async(parse.json) {
+    implicit request: Request[JsValue] =>
+      (playerActor ? ReorginizeActiveFunctions(URLDecoder.decode(tokenId, "UTF-8"), oldIndex, newIndex))
+        .mapTo[Either[PreparedLambdasToken, ActorFailed]]
+        .map {
+          case Left(preparedLambdasToken) => Ok(Json.toJson(preparedLambdasToken.lambdas))
+          case Right(actorFailed) => BadRequest(actorFailed.msg)
+        }
   }
 
   def addToken(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>

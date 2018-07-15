@@ -30,7 +30,7 @@ class PopoverBucket {
     const pointerWidth = this.$pointer.width()
 
     if (this.$selected.attr('id') === 'open-staged') {
-      left += ((this.$selectedWidth) / 2) - (pointerWidth / 2)
+      left += this.$selectedWidth - pointerWidth * 1.35
     } else {
       left += ((this.$selectedWidth / 2) - (pointerWidth / 4))
     }

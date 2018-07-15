@@ -5,14 +5,14 @@
     :options="swiper.options">
     <div v-if="showMesh" class="mesh-background"></div>
     <swiper-slide
-      v-for="(group, sInd) in functionGroups"
-      :key="'function-drop-swiper/' + sInd">
+      v-for="(group, gInd) in functionGroups"
+      :key="'function-drop-swiper/' + gInd">
       <draggable
         class="function-drop"
         :class="origin === 'editMain' ? functionGroups.length === 1 ? 'center-function-drop' : '' : ''"
         :list="list"
         :options="options"
-        @change="change($event, sInd)"
+        @change="change($event, gInd)"
         @start="start"
         @end="end"
       >
