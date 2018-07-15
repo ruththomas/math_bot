@@ -61,12 +61,11 @@ export default {
       })
       .catch(console.error)
   },
-  updateActives ({tokenId, actives}, cb) {
-    Vue.http.put('/api/token/updateActives', {tokenId, actives})
-      .then(res => {
-        // console.log(res.body)
-        cb(res.body)
-      })
+
+  updateActives ({tokenId, oldIndex, newIndex}, cb) {
+    Vue.http.get(`/api/token/updateActives/${urlEncode(tokenId)}/${oldIndex}/${newIndex}`)
+      .then(res => res.body)
+      .then(cb)
       .catch(console.error)
   },
   /*
