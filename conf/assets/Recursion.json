@@ -19,17 +19,9 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
-      "assignedStaged": [
-        {
-          "name": "Walk Forward Forever",
-          "image": "walkForever",
-          "sizeLimit": 2,
-          "func": []
-        }
-      ],
+      "stagedQty": -1,
+      "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["walkForever"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -60,17 +52,9 @@
       "robotOrientation": 270,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
-      "assignedStaged": [
-        {
-          "name": "Walk and Turn Right",
-          "image": "spiral",
-          "sizeLimit": 11,
-          "func": []
-        }
-      ],
+      "stagedQty": -1,
+      "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["spiral"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -99,12 +83,11 @@
       "description": "Walk to the portal.",
       "mainMax": 1,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
+      "stagedQty": -1,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["spiral"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -133,12 +116,11 @@
       "description": "Walk to the portal.",
       "mainMax": 1,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
+      "stagedQty": -1,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["spiral"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -169,17 +151,9 @@
       "robotOrientation": 180,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
-      "assignedStaged": [
-        {
-          "name": "Walk and Turn Left and Walk",
-          "image": "stairs",
-          "sizeLimit": 6,
-          "func": []
-        }
-      ],
+      "stagedQty": -1,
+      "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["turnLeft"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -208,7 +182,7 @@
       "description": "Walk to the portal.",
       "mainMax": 1,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": -1,
       "assignedStaged": [],
@@ -244,17 +218,9 @@
       "robotOrientation": 0,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
-      "assignedStaged": [
-        {
-          "name": "Walk a Full U Shape",
-          "image": "snake",
-          "sizeLimit": 20,
-          "func": []
-        }
-      ],
+      "stagedQty": -1,
+      "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["turnLeft"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -283,12 +249,11 @@
       "description": "Walk to the portal.",
       "mainMax": 1,
       "robotOrientation": 0,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
+      "stagedQty": -1,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["snake", "turnLeft"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -315,33 +280,13 @@
         "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
       "description": "Pickup all kitties and place them on the portal.",
-      "mainMax": 1,
+      "mainMax": 2,
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
-      "assignedStaged": [
-        {
-          "name": "Pickup N",
-          "image": "pickupN",
-          "sizeLimit": 10,
-          "func": []
-        },
-        {
-          "name": "Drop N",
-          "image": "dropN",
-          "sizeLimit": 10,
-          "func": []
-        },
-        {
-          "name": "Cleanup",
-          "image": "cleanup",
-          "sizeLimit": 10,
-          "func": []
-        }
-      ],
+      "stagedQty": -1,
+      "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["pickupN", "dropN", "cleanup"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -368,14 +313,13 @@
         "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
       "description": "Pickup all kitties and place them on the portal.",
-      "mainMax": 1,
+      "mainMax": 2,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
+      "stagedQty": -1,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["cleanup", "dropN", "pickupN"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -402,14 +346,13 @@
         "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
       "description": "Pickup stack of kitties and place them on the portal.",
-      "mainMax": 1,
+      "mainMax": 2,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["cleanup", "pickupN", "dropN"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -436,21 +379,13 @@
         "(R) |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
       "description": "Pickup all kitties and place them on the portal.",
-      "mainMax": 1,
+      "mainMax": 2,
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
-      "assignedStaged": [
-        {
-          "name": "Clean comb",
-          "image": "cleanComb",
-          "sizeLimit": 20,
-          "func": []
-        }
-      ],
+      "stagedQty": -1,
+      "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["turnLeft", "uTurn", "rocket", "pickupN", "dropN"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -479,12 +414,11 @@
       "description": "Pickup all kitties and place them on the portal.",
       "mainMax": 1,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
+      "stagedQty": -1,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["cleanComb", "turnLeft", "uTurn", "rocket", "pickupN", "dropN"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -513,12 +447,11 @@
       "description": "Pickup all kitties and place them on the portal.",
       "mainMax": 2,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": 0,
+      "stagedQty": -1,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["cleanComb", "turnLeft", "uTurn", "rocket", "pickupN", "dropN"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
