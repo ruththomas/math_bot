@@ -9,6 +9,7 @@
       :key="'function-drop-swiper/' + sInd">
       <draggable
         class="function-drop"
+        :class="origin === 'editMain' ? functionGroups.length === 1 ? 'center-function-drop' : '' : ''"
         :list="list"
         :options="options"
         @change="change($event, sInd)"
@@ -104,8 +105,14 @@ export default {
     margin: 0 auto;
   }
 
+  .center-function-drop {
+    justify-content: center;
+    padding-left: 0;
+  }
+
   .mesh-background {
     position: absolute;
+    opacity: 0.8;
     top: 0;
     right: 0;
     bottom: 0;
