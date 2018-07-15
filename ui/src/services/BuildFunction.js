@@ -17,12 +17,8 @@ class BuildFunction {
   }
 
   _updatedLambdas (context, lambdas) {
-    console.log(lambdas)
+    // console.log(lambdas)
     context.$store.dispatch('updateLambdas', lambdas)
-  }
-
-  _updateActives (context, actives) {
-    context.$store.dispatch('updateActives', actives)
   }
 
   _putFunc ({context, funcToken}) {
@@ -33,8 +29,8 @@ class BuildFunction {
     api.activateFunction({tokenId: this._tokenId(context), stagedIndex, activeIndex}, lambdas => this._updatedLambdas(context, lambdas))
   }
 
-  _moveFunction ({context, actives}) {
-    api.updateActives({tokenId: this._tokenId(context), actives: actives}, actives => this._updateActives(context, actives))
+  _moveFunction ({context, oldIndex, newIndex}) {
+    api.updateActives({tokenId: this._tokenId(context), oldIndex, newIndex}, lambdas => this._updatedLambdas(context, lambdas))
   }
 
   _calcIndex (groupSize, groupInd, funcInd) {
@@ -83,13 +79,8 @@ class BuildFunction {
   moveFunction ({context, groupSize, groupInd, evt}) {
     const oldIndex = this._calcIndex(groupSize, groupInd, evt.moved.oldIndex)
     const newIndex = this._calcIndex(groupSize, groupInd, evt.moved.newIndex)
-    const activeFunctions = this._getActiveFunctions(context)
 
-    console.log('oi', oldIndex)
-    console.log('ni', newIndex)
-
-    this._updateActives(context, activeFunctions)
-    // this._moveFunction({context, actives: activeFunctions})
+    this._moveFunction({context, oldIndex: oldIndex, newIndex: newIndex})
   }
 }
 
