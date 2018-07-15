@@ -5,11 +5,11 @@
         :id="'edit-main'"
         :list="mainFunctionFunc"
         :options="mainDraggableOptions"
-        :change="copyCommand"
+        :change="editFunction"
         :start="moving"
         :end="end"
         :origin="'editMain'"
-        :group-size="10"
+        :group-size="groupSize"
       ></function-drop>
     </div>
 
@@ -45,7 +45,7 @@
 <script>
 import {_} from 'underscore'
 import utils from '../services/utils'
-import buildUtils from '../services/build_function_utils'
+import buildUtils from '../services/BuildFunction'
 import draggable from 'vuedraggable'
 import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
@@ -118,7 +118,8 @@ export default {
         filter: '.noDrag',
         dragClass: 'dragging'
       },
-      runCompiled: new RunCompiled(this)
+      runCompiled: new RunCompiled(this),
+      groupSize: 10
     }
   },
   methods: {
@@ -128,12 +129,14 @@ export default {
     togglePut (bool) {
       this.mainDraggableOptions.group.put = bool
     },
-    copyCommand (evt) {
+    editFunction (evt, groupInd) {
       if (!evt.hasOwnProperty('removed')) {
-        const command = evt.hasOwnProperty('added') ? evt.added.element : evt.moved.element
-        const ind = evt.hasOwnProperty('added') ? evt.added.newIndex : evt.moved.newIndex
-        const currentFunc = buildUtils.currentFunc(this)
-        buildUtils.updateFunctionsOnChange({context: this, currentFunction: currentFunc, addedFunction: command, newIndex: ind, override: evt.hasOwnProperty('moved')})
+        buildUtils.addToFunction({
+          context: this,
+          groupSize: this.groupSize,
+          groupInd: groupInd,
+          added: evt.hasOwnProperty('added') ? evt.added : evt.moved
+        })
       }
       this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
     },
@@ -144,7 +147,8 @@ export default {
     },
     wipeFunction () {
       this.$store.dispatch('clearCurrentFunction')
-      buildUtils.updateFunctionsOnChange({context: this, currentFunction: buildUtils.currentFunc(this), addedFunction: null, newIndex: null, override: true})
+
+      buildUtils.deleteFunction({context: this})
     },
     adjustSpeed () {
       this.$store.dispatch('changeRobotSpeed')

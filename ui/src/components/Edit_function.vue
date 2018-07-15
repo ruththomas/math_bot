@@ -35,7 +35,7 @@
         :id="'edit-function'"
         :list="functions"
         :options="mainDraggableOptions"
-        :change="copyCommand"
+        :change="editFunction"
         :start="moving"
         :end="end"
         :origin="'editFunction'"
@@ -49,7 +49,7 @@
 <script>
 import draggable from 'vuedraggable'
 import {_} from 'underscore'
-import buildUtils from '../services/build_function_utils'
+import buildUtils from '../services/BuildFunction'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
@@ -138,31 +138,31 @@ export default {
     }
   },
   methods: {
-    calcIndex (groupInd, funcInd) {
-      return this.groupSize * groupInd + funcInd
-    },
     findColor () {
       return this.colors[this.currentColor].next
     },
     updateName () {
-      buildUtils.updateFunctionsOnChange({context: this, currentFunction: this.editingFunction, addedFunction: null, newIndex: this.editingFunction.index, newColor: null})
+      buildUtils._putFunc({
+        context: this,
+        funcToken: this.editingFunction
+      })
     },
     applyColorConditional () {
-      const newColor = this.findColor()
-      this.color = newColor
-      buildUtils.updateFunctionsOnChange({ context: this, currentFunction: this.editingFunction, addedFunction: null, newIndex: this.editingFunction.index, newColor: newColor })
+      buildUtils.adjustColor({
+        context: this,
+        color: this.findColor()
+      })
       this.color = 'default'
     },
     deleteFuncContents () {
-      let deleteFuncContents = buildUtils.currentFunc(this)
-      deleteFuncContents.func = []
-      buildUtils.updateFunctionsOnChange(({context: this, currentFunction: deleteFuncContents, addedFunction: null, newIndex: null}))
+      buildUtils.deleteFunction({context: this})
     },
-    copyCommand (evt, groupInd) {
+    editFunction (evt, groupInd) {
       if (!evt.hasOwnProperty('removed')) {
-        buildUtils.newupdateFunctionsOnChange({
+        buildUtils.addToFunction({
           context: this,
-          newIndex: this.calcIndex(groupInd, evt.added.newIndex),
+          groupSize: this.groupSize,
+          groupInd: groupInd,
           added: evt.hasOwnProperty('added') ? evt.added : evt.moved
         })
       }
