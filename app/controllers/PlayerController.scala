@@ -34,8 +34,8 @@ class PlayerController @Inject()(system: ActorSystem,
   val playerActor =
     system.actorOf(PlayerActor.props(system, playerTokenDAO, polyfillActor, logger, environment), "player-actor")
 
-  def moveActiveFunc(tokenId: String, oldIndex: String, newIndex: String): Action[JsValue] = Action.async(parse.json) {
-    implicit request: Request[JsValue] =>
+  def moveActiveFunc(tokenId: String, oldIndex: String, newIndex: String): Action[AnyContent] = Action.async {
+    implicit request: Request[AnyContent] =>
       (playerActor ? ReorginizeActiveFunctions(URLDecoder.decode(tokenId, "UTF-8"), oldIndex, newIndex))
         .mapTo[Either[PreparedLambdasToken, ActorFailed]]
         .map {

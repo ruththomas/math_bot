@@ -16,7 +16,7 @@ PUT         /api/token/editLambdas                                              
 POST        /api/token                                                             controllers.PlayerController.addToken
 GET         /api/token/activateFunction/:tokenId/:stagedIndex/:activeIndex         controllers.PlayerController.activateFunction(tokenId, stagedIndex, activeIndex)
 POST        /api/token/test                                                        controllers.PlayerController.test
-PUT         /api/token/updateActives                                               controllers.PlayerController.updateActives
+GET         /api/token/updateActives/:tokenId/:oldIndex/:newIndex                  controllers.PlayerController.moveActiveFunc(tokenId, oldIndex, newIndex)
 
 # Stats
 GET         /api/stats/update/:tokenId                                             controllers.StatsController.advanceStats(tokenId, success: Option[String])

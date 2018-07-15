@@ -218,25 +218,6 @@ class PlayerActor()(system: ActorSystem,
             )
         }
         .pipeTo(self)(sender)
-    case ReorginizeActiveFunctions(tokenId, oldInd, newInd) =>
-      playerTokenDAO
-        .getToken(tokenId)
-        .map {
-          case Some(playerToken) =>
-            val oldIndex = oldInd.toInt
-            val newIndex = newInd.toInt
-            for {
-              lambdas <- playerToken.lambdas
-              activeFuncs = lambdas.activeFuncs
-              funcToMove = activeFuncs(oldIndex)
-              dropOld = activeFuncs.take(oldIndex) ++ activeFuncs.drop(oldIndex + 1)
-              updatedActives = (dropOld.take(newIndex) :+ funcToMove) ++ dropOld.drop(newIndex + 1)
-              updatedLambdas = lambdas.copy(activeFuncs = indexFunctions(updatedActives))
-            } yield PreparedLambdasToken(updatedLambdas)
-          case None =>
-            ActorFailed(s"Unable to locate token $tokenId")
-        }
-        .pipeTo(self)(sender)
     case getPlayerToken: GetPlayerToken =>
       playerTokenDAO
         .getToken(getPlayerToken.playerToken.token_id)
@@ -373,6 +354,24 @@ class PlayerActor()(system: ActorSystem,
         )
       } yield {
         playerTokenDAO.updateToken(updatedToken)
+        updatedLambdas
+      }).map { PreparedLambdasToken.apply }
+        .pipeTo(self)(sender)
+    case ReorginizeActiveFunctions(tokenId, oldInd, newInd) =>
+      val oldIndex = oldInd.toInt
+      val newIndex = newInd.toInt
+      (for {
+        playerTokenOpt <- playerTokenDAO.getToken(tokenId)
+        playerToken = playerTokenOpt.get
+        lambdas = playerToken.lambdas.getOrElse(Lambdas())
+        activeFuncs = lambdas.activeFuncs
+        funcToMove = activeFuncs(oldIndex)
+        dropOld = activeFuncs.take(oldIndex) ++ activeFuncs.drop(oldIndex + 1)
+        updatedActives = (dropOld.take(newIndex) :+ funcToMove) ++ dropOld.drop(newIndex)
+        updatedLambdas = lambdas.copy(activeFuncs = indexFunctions(updatedActives))
+        updatedPlayerToken = playerToken.copy(lambdas = Some(updatedLambdas))
+      } yield {
+        playerTokenDAO.updateToken(updatedPlayerToken)
         updatedLambdas
       }).map { PreparedLambdasToken.apply }
         .pipeTo(self)(sender)
