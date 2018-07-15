@@ -60,7 +60,10 @@ export default {
       return this.$store.getters.getEditingIndex
     },
     editingFunction () {
-      return this.$store.getters.getActiveFunctions[this.editingIndex]
+      return this.activeFunctions[this.editingIndex]
+    },
+    activeFunctions () {
+      return this.$store.getters.getActiveFunctions
     },
     colorSelected () {
       return this.colors[this.currentColor]

@@ -201,6 +201,8 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex: 1;
+    max-height: 150px;
     /*border: 1px solid firebrick;*/
   }
 
