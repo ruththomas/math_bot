@@ -40,7 +40,7 @@ import Swiper from '../services/Swiper'
 export default {
   computed: {
     functionGroups () {
-      return this.swiper.groupFunctions(this.stagedFunctions.slice(), 14)
+      return this.swiper.groupFunctions(this.stagedFunctions.slice(), this.groupSize)
     },
     stagedFunctions () {
       return this.$store.getters.getStagedFunctions
@@ -72,7 +72,8 @@ export default {
         chosenClass: 'chosen',
         sort: false
       },
-      swiper: new Swiper()
+      swiper: new Swiper(),
+      groupSize: 14
     }
   },
   components: {
