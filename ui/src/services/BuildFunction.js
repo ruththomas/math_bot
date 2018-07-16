@@ -16,6 +16,10 @@ class BuildFunction {
     return context.$store.getters.getActiveFunctions
   }
 
+  _getMethods (context) {
+    return context.$store.getters.getCommands
+  }
+
   _updatedLambdas (context, lambdas) {
     // console.log(lambdas)
     context.$store.dispatch('updateLambdas', lambdas)
@@ -62,14 +66,20 @@ class BuildFunction {
   }
 
   addToFunction ({context, groupSize, groupInd, added}) {
-    const swipes = document.querySelector('.functions-swiper-container').swiper
     const currentFunction = this._getCurrentFunction(context)
     const indexInCurrent = this._calcIndex(groupSize, groupInd, added.newIndex)
 
-    console.log(swipes)
-
     currentFunction.func.splice(added.newIndex, 1)
-    currentFunction.func.splice(indexInCurrent, 0, _.omit(added.element, 'func'))
+
+    if (added.element.created_id < 1999) { // if a command
+      const methods = this._getMethods(context)
+      currentFunction.func.splice(indexInCurrent, 0, _.omit(methods[added.element.index], 'func'))
+    } else { // if a function
+      const swiperIndex = document.querySelector('.functions-swiper-container').swiper.realIndex
+      const activeIndex = this._calcIndex(10, swiperIndex, added.element.index)
+      const activeFunctions = this._getActiveFunctions(context)
+      currentFunction.func.splice(indexInCurrent, 0, _.omit(activeFunctions[activeIndex], 'func'))
+    }
 
     this._putFunc({context, funcToken: currentFunction})
   }
