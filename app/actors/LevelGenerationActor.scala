@@ -214,7 +214,7 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
           case None => // allowed is None (all actives allowed)
             Map("newActives" -> (preBuiltActive ++ activesCombined), "newInActives" -> List.empty[FuncToken])
           case _ => // allowed is an empty list (no actives allowed)
-            Map("newActives" -> List.empty[FuncToken], "newInActives" -> (activeFuncs ++ activesCombined))
+            Map("newActives" -> List.empty[FuncToken], "newInActives" -> (preBuiltActive ++ activesCombined))
         }
 
         // Move actives to inactive commands
