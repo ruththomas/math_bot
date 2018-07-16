@@ -18,6 +18,8 @@ import PuzzlePieces from './Puzzle_pieces'
 
 export default {
   name: 'function_box',
+  mounted () {
+  },
   computed: {
     id () {
       return this.origin === 'functions' ? this.func.created_id : uId(7)
