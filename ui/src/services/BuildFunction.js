@@ -21,8 +21,8 @@ class BuildFunction {
     context.$store.dispatch('updateLambdas', lambdas)
   }
 
-  _putFunc ({context, funcToken}) {
-    api.putFunc({tokenId: this._tokenId(context), funcToken}, lambdas => this._updatedLambdas(context, lambdas))
+  _putFunc ({context, funcToken, override}) {
+    api.putFunc({tokenId: this._tokenId(context), funcToken, override}, lambdas => this._updatedLambdas(context, lambdas))
   }
 
   _activateFunc ({context, stagedIndex, activeIndex}) {
@@ -44,14 +44,14 @@ class BuildFunction {
 
   deleteItemFromFunction ({context}) {
     const currentFunction = this._getCurrentFunction(context)
-    this._putFunc({context, funcToken: currentFunction})
+    this._putFunc({context, funcToken: currentFunction, override: true})
   }
 
   deleteFunction ({context}) {
     const currentFunction = this._getCurrentFunction(context)
     currentFunction.func = []
 
-    this._putFunc({context, funcToken: currentFunction})
+    this._putFunc({context, funcToken: currentFunction, override: true})
   }
 
   adjustColor ({context, color}) {
@@ -62,10 +62,14 @@ class BuildFunction {
   }
 
   addToFunction ({context, groupSize, groupInd, added}) {
+    const swipes = document.querySelector('.functions-swiper-container').swiper
     const currentFunction = this._getCurrentFunction(context)
+    const indexInCurrent = this._calcIndex(groupSize, groupInd, added.newIndex)
+
+    console.log(swipes)
 
     currentFunction.func.splice(added.newIndex, 1)
-    currentFunction.func.splice(this._calcIndex(groupSize, groupInd, added.newIndex), 0, _.omit(added.element, 'func'))
+    currentFunction.func.splice(indexInCurrent, 0, _.omit(added.element, 'func'))
 
     this._putFunc({context, funcToken: currentFunction})
   }

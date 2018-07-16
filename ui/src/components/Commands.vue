@@ -25,7 +25,7 @@
         ></function-box>
       </draggable>
 
-      <swiper :options="swiper.options">
+      <swiper class="functions-swiper-container" :options="swiper.options">
         <swiper-slide
           v-for="(group, gInd) in activeFunctionGroups"
           :key="'active-functions/' + gInd"
@@ -77,8 +77,6 @@ import buildUtils from '../services/BuildFunction'
 
 export default {
   name: 'FunctionDrop',
-  mounted () {
-  },
   computed: {
     evt () {
       return this.commandEvt
