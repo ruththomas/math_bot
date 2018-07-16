@@ -53,8 +53,6 @@ import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import MainPlaceholder from './Main_placeholder'
 
-import FunctionPlaceholders from '../services/FunctionPlaceholders'
-
 export default {
   computed: {
     mainFunctionFunc () {
@@ -122,8 +120,7 @@ export default {
         dragClass: 'dragging'
       },
       runCompiled: new RunCompiled(this),
-      groupSize: 10,
-      functionPlaceholders: new FunctionPlaceholders(this, 'edit-main')
+      groupSize: 10
     }
   },
   methods: {
