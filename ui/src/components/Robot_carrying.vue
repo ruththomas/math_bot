@@ -67,8 +67,10 @@ export default {
 <style scoped lang="scss">
   .robot-carrying {
     min-height: 20px;
-    min-width: 20px;
     display: inline-block;
+    position: absolute;
+    left: 0;
+    right: 0;
     justify-content: center;
     margin: 0 auto;
     flex-wrap: wrap;
