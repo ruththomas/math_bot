@@ -55,14 +55,17 @@ import _ from 'underscore'
 export default {
   name: 'function_drop',
   mounted () {
+    console.log(this.sizeLimit)
   },
   computed: {
     groupedPlaceholders () {
       return this.swiper.groupFunctions(this.placeHolders.slice(), this.groupSize)
     },
     placeHolders () {
-      if (this.sizeLimit < 10000) {
+      if (this.sizeLimit < 10000 && this.sizeLimit > 0) {
         return this.createPlaceHolders(this.sizeLimit)
+      } else {
+        return []
       }
     },
     functionGroups () {

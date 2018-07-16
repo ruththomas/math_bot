@@ -179,7 +179,9 @@ export default {
           added: evt.hasOwnProperty('added') ? evt.added : evt.moved
         })
       }
-      this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
+      if (this.editFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
+        this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
+      }
     },
     closeEditFunction () {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
