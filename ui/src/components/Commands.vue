@@ -39,6 +39,7 @@
             @add="addToActiveFunc($event, gInd)"
           >
             <function-box
+              v-if="group !== null"
               v-for="(func, ind) in group"
               :key="ind + '/' + func.created_id"
               :func="func"
@@ -108,7 +109,8 @@ export default {
       return this.$store.getters.getCommands
     },
     activeFunctionGroups () {
-      return this.swiper.groupFunctions(this.activeFunctions.slice(), this.activeFunctionsGroupsSize)
+      const groups = this.swiper.groupFunctions(this.activeFunctions.slice(), this.activeFunctionsGroupsSize)
+      return groups.length ? groups : [null]
     },
     activeFunctions () {
       return this.$store.getters.getActiveFunctions
@@ -217,14 +219,6 @@ export default {
     start () {
       if (this.functionAreaShowing === 'editMain') {
         this.$store.dispatch('toggleShowMesh', true)
-        // If main is full apply message letting the user know
-        if (this.mainFunctionFunc.length >= this.stepData.mainMax) {
-          const messageBuilder = {
-            type: 'warn',
-            msg: `Main full`
-          }
-          this.$store.dispatch('addMessage', messageBuilder)
-        }
       }
     },
     end () {
@@ -302,6 +296,7 @@ export default {
   .functions {
     display: flex;
     padding-left: 32px;
+    height: 100%;
   }
 
   .two-x-command-name {
