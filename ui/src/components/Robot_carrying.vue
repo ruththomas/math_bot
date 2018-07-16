@@ -69,11 +69,12 @@ export default {
     min-height: 20px;
     display: inline-block;
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 20%;
+    right: 20%;
     justify-content: center;
     margin: 0 auto;
     flex-wrap: wrap;
+    z-index: 10000;
   }
 
   .robot-carrying img {
