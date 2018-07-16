@@ -1,6 +1,5 @@
 <template>
   <div class="commands" v-if="commands !== null && activeFunctions !== null">
-
     <popover-bucket
       v-if="commandEvt !== null"
       :evt="evt"
@@ -77,6 +76,9 @@ import buildUtils from '../services/BuildFunction'
 
 export default {
   name: 'FunctionDrop',
+  mounted () {
+    this.activeFunctionsGroupsSize = this.calculateGroupSize()
+  },
   computed: {
     evt () {
       return this.commandEvt
@@ -160,12 +162,20 @@ export default {
         ghostClass: 'ghost'
       },
       swiper: new Swiper(),
-      activeFunctionsGroupsSize: 10,
+      activeFunctionsGroupsSize: 14,
       currentColor: this.colorSelected
+    }
+  },
+  watch: {
+    commands (_) {
+      this.activeFunctionsGroupsSize = this.calculateGroupSize()
     }
   },
   methods: {
     uid: int => uId(int),
+    calculateGroupSize () {
+      return 14 - this.commands.length
+    },
     notEditableMessage () {
       const messageBuilder = {
         type: 'warn',

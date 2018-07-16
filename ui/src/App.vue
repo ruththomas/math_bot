@@ -184,6 +184,11 @@ export default {
   .swiper-container {
     display: flex;
     height: 100%;
+    width: 100%;
+  }
+
+  .swiper-wrapper {
+    width: 100%;
   }
 
   .swiper-slide {
