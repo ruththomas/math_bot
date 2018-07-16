@@ -11,7 +11,7 @@ class FunctionPlaceholders {
   }
 
   _appendPlaceholders () {
-    console.log(this.bucket)
+    // console.log(this.bucket)
   }
 }
 
