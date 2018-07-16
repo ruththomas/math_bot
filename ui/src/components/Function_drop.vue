@@ -9,7 +9,6 @@
       :key="'function-drop-swiper/' + gInd">
       <draggable
         class="function-drop"
-        :class="origin === 'editMain' ? functionGroups.length === 1 ? 'center-function-drop' : '' : ''"
         :list="list"
         :options="options"
         @change="change($event, gInd)"
@@ -19,13 +18,27 @@
         <function-box
           v-if="group !== null"
           v-for="(func, fInd) in group"
-          :key="'staged-func/' + fInd"
+          :key="origin + '-drop/' + fInd"
           :func="func"
           :ind="func.index"
           :collection="list"
           :origin="origin"
         ></function-box>
       </draggable>
+
+      <div class="drop-placeholder"
+        v-if="stepData.mainMax < 10000"
+      >
+        <function-box
+          v-for="(placeHolder, pInd) in groupedPlaceholders[gInd]"
+          :key="origin + '-placeholder/' + pInd"
+          :func="placeHolder"
+          :ind="placeHolder.index"
+          :collection="placeHolders"
+          :origin="'placeHolder'"
+        ></function-box>
+      </div>
+
     </swiper-slide>
     <div class="swiper-button-prev" slot="button-prev"></div>
     <div class="swiper-button-next" slot="button-next"></div>
@@ -37,12 +50,36 @@
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import Swiper from '../services/Swiper'
+import _ from 'underscore'
 
 export default {
   name: 'function_drop',
+  mounted () {
+  },
   computed: {
+    groupedPlaceholders () {
+      return this.swiper.groupFunctions(this.placeHolders.slice(), this.groupSize)
+    },
+    placeHolders () {
+      if (this.origin === 'editMain' && this.stepData.mainMax < 10000) {
+        return _.chain(this.stepData.mainMax)
+          .range()
+          .map((val, ind) => {
+            return {
+              index: ind
+            }
+          })
+          .value()
+      } else if (this.origin === 'editFunction') {
+        return [{}]
+      }
+    },
+    stepData () {
+      return this.$store.getters.getStepData
+    },
     functionGroups () {
       const groups = this.swiper.groupFunctions(this.list.slice(), this.groupSize)
+
       return groups.length ? groups : [null]
     },
     showMesh () {
@@ -61,23 +98,6 @@ export default {
     }
   },
   methods: {
-    adjustJustify () {
-      const $dropZone = document.querySelector('.function-drop-drop-zone')
-      if (this.list.length && this.functionAreaShowing === 'editMain' && $dropZone !== null) {
-        const dropZoneWidth = $dropZone.offsetWidth
-        const $lastButton = $dropZone.lastChild
-        const lastButtonWidth = $lastButton.offsetWidth
-        const lastButtonLeft = $lastButton.offsetLeft
-
-        if ((dropZoneWidth + lastButtonWidth) < lastButtonLeft) {
-          $dropZone.style['justify-content'] = 'flex-start'
-        } else {
-          $dropZone.style['justify-content'] = 'center'
-        }
-      } else {
-        $dropZone.style['justify-content'] = 'center'
-      }
-    }
   },
   components: {
     draggable,
@@ -95,8 +115,11 @@ export default {
   }
 
   .function-drop {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     z-index: 2001;
     display: flex;
     align-items: center;
@@ -131,6 +154,20 @@ export default {
         rgba(74, 74, 74, 0.5) 7px,
         rgba(74, 74, 74, 0.5) 9px
     );
+  }
+
+  .drop-placeholder {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 33px;
+    opacity: 0.2;
+    justify-content: flex-start;
   }
 
   /* Medium Devices, Desktops */
