@@ -27,7 +27,7 @@
       </draggable>
 
       <div class="drop-placeholder"
-        v-if="stepData.mainMax < 10000"
+        v-if="sizeLimit < 10000"
       >
         <function-box
           v-for="(placeHolder, pInd) in groupedPlaceholders[gInd]"
@@ -35,7 +35,7 @@
           :func="placeHolder"
           :ind="placeHolder.index"
           :collection="placeHolders"
-          :origin="'placeHolder'"
+          :origin="origin"
         ></function-box>
       </div>
 
@@ -61,21 +61,9 @@ export default {
       return this.swiper.groupFunctions(this.placeHolders.slice(), this.groupSize)
     },
     placeHolders () {
-      if (this.origin === 'editMain' && this.stepData.mainMax < 10000) {
-        return _.chain(this.stepData.mainMax)
-          .range()
-          .map((val, ind) => {
-            return {
-              index: ind
-            }
-          })
-          .value()
-      } else if (this.origin === 'editFunction') {
-        return [{}]
+      if (this.sizeLimit < 10000) {
+        return this.createPlaceHolders(this.sizeLimit)
       }
-    },
-    stepData () {
-      return this.$store.getters.getStepData
     },
     functionGroups () {
       const groups = this.swiper.groupFunctions(this.list.slice(), this.groupSize)
@@ -98,12 +86,20 @@ export default {
     }
   },
   methods: {
+    createPlaceHolders (size) {
+      return _.chain(size)
+        .range()
+        .map((_val, ind) => {
+          return {index: ind}
+        })
+        .value()
+    }
   },
   components: {
     draggable,
     FunctionBox
   },
-  props: ['id', 'origin', 'list', 'options', 'change', 'start', 'end', 'groupSize']
+  props: ['id', 'origin', 'list', 'options', 'change', 'start', 'end', 'groupSize', 'sizeLimit']
 }
 </script>
 
