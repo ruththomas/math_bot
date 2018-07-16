@@ -14,7 +14,7 @@
     </div>
 
     <div class="bar noDrag" v-if="Object.keys(robot).length">
-      <main-placeholder></main-placeholder>
+      <!--<main-placeholder></main-placeholder>-->
       <img class="trash noDrag dialog-button" :src="permanentImages.buttons.trashButton"  @click="wipeFunction" data-toggle="tooltip" title="Clear main" />
       <div class="speed dialog-button" @click="adjustSpeed" data-toggle="tooltip" title="Adjust speed"> {{ robotSpeedDisplay }}</div>
 
@@ -51,6 +51,8 @@ import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import MainPlaceholder from './Main_placeholder'
+
+import FunctionPlaceholders from '../services/FunctionPlaceholders'
 
 export default {
   computed: {
@@ -119,7 +121,8 @@ export default {
         dragClass: 'dragging'
       },
       runCompiled: new RunCompiled(this),
-      groupSize: 10
+      groupSize: 10,
+      functionPlaceholders: new FunctionPlaceholders(this, 'edit-main')
     }
   },
   methods: {
@@ -146,8 +149,6 @@ export default {
       }
     },
     wipeFunction () {
-      this.$store.dispatch('clearCurrentFunction')
-
       buildUtils.deleteFunction({context: this})
     },
     adjustSpeed () {
