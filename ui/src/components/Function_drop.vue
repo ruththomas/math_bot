@@ -55,7 +55,6 @@ import _ from 'underscore'
 export default {
   name: 'function_drop',
   mounted () {
-    console.log(this.sizeLimit)
   },
   computed: {
     groupedPlaceholders () {
