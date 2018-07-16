@@ -29,7 +29,7 @@
     </swiper-slide>
     <div class="swiper-button-prev" slot="button-prev"></div>
     <div class="swiper-button-next" slot="button-next"></div>
-    <div class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
+    <div class="swiper-pagination swiper-pagination-bullets" :class="functionGroups.length < 2 ? 'hidden-swiper-pagination' : ''" slot="pagination"></div>
   </swiper>
 </template>
 
