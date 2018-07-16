@@ -10,6 +10,7 @@
         :end="end"
         :origin="'editMain'"
         :group-size="groupSize"
+        :size-limit="stepData.mainMax"
       ></function-drop>
     </div>
 
@@ -129,8 +130,16 @@ export default {
     closeHint () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
     },
+    fullMessage () {
+      const messageBuilder = {
+        type: 'success',
+        msg: `Main full`
+      }
+      this.$store.dispatch('addMessage', messageBuilder)
+    },
     togglePut (bool) {
       this.mainDraggableOptions.group.put = bool
+      if (!bool) this.fullMessage()
     },
     editFunction (evt, groupInd) {
       if (!evt.hasOwnProperty('removed')) {

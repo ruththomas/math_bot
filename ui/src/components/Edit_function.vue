@@ -22,8 +22,6 @@
           @click="deleteFuncContents"
         >
         </div>
-
-        <span class="function-limit-indicator" v-if="editingFunction.sizeLimit > 0">Size limit: {{ editingFunction.sizeLimit }}</span>
       </div>
 
       <img class="close-edit-function dialog-button" @click="closeEditFunction" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
@@ -34,12 +32,13 @@
       <function-drop
         :id="'edit-function'"
         :list="functions"
-        :options="mainDraggableOptions"
+        :options="functionDraggableOptions"
         :change="editFunction"
         :start="moving"
         :end="end"
         :origin="'editFunction'"
         :group-size="groupSize"
+        :size-limit="editingFunction.sizeLimit"
       ></function-drop>
 
     </div>
@@ -127,7 +126,7 @@ export default {
           next: 'default'
         }
       },
-      mainDraggableOptions: {
+      functionDraggableOptions: {
         group: {
           name: 'commands-slide',
           pull: true,
@@ -160,6 +159,17 @@ export default {
     deleteFuncContents () {
       buildUtils.deleteFunction({context: this})
     },
+    fullMessage () {
+      const messageBuilder = {
+        type: 'success',
+        msg: `Function full`
+      }
+      this.$store.dispatch('addMessage', messageBuilder)
+    },
+    togglePut (bool) {
+      this.functionDraggableOptions.group.put = bool
+      if (!bool) this.fullMessage()
+    },
     editFunction (evt, groupInd) {
       if (!evt.hasOwnProperty('removed')) {
         buildUtils.addToFunction({
@@ -169,6 +179,7 @@ export default {
           added: evt.hasOwnProperty('added') ? evt.added : evt.moved
         })
       }
+      this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
     },
     closeEditFunction () {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
