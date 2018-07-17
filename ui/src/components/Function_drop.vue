@@ -38,9 +38,8 @@
           :origin="origin"
         ></function-box>
       </div>
-
     </swiper-slide>
-    <div class="swiper-button-prev" slot="button-prev">
+    <div class="swiper-button swiper-button-prev" slot="button-prev">
       <function-box
         v-if="prevLastFunc"
         :func="prevLastFunc"
@@ -49,7 +48,7 @@
         :origin="origin"
       ></function-box>
     </div>
-    <div class="swiper-button-next" slot="button-next">
+    <div class="swiper-button swiper-button-next" slot="button-next">
       <function-box
         v-if="nextFirstFunc"
         :func="nextFirstFunc"
