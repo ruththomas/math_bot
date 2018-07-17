@@ -3,7 +3,7 @@
     <div class="staged-functions-header">
       <span>Staged functions</span>
     </div>
-    <swiper :options="swiper.options">
+    <swiper class="staged-functions-swiper" :options="swiper.options">
       <swiper-slide
         v-for="(group, gInd) in functionGroups"
         :key="'staged-swiper/' + gInd"
@@ -25,8 +25,18 @@
           ></function-box>
         </draggable>
       </swiper-slide>
-      <div class="swiper-button-prev" slot="button-prev"></div>
-      <div class="swiper-button-next" slot="button-next"></div>
+      <div class="swiper-button-prev" slot="button-prev">
+        <puzzle-pieces
+          :piece-to-show="'closed'"
+          :func="prevButton"
+        ></puzzle-pieces>
+      </div>
+      <div class="swiper-button-next" slot="button-next">
+        <puzzle-pieces
+          :piece-to-show="'closed'"
+          :func="nextButton"
+        ></puzzle-pieces>
+      </div>
       <div class="swiper-pagination swiper-pagination-bullets" :class="functionGroups.length < 2 ? 'hidden-swiper-pagination' : ''" slot="pagination"></div>
     </swiper>
   </div>
@@ -36,9 +46,44 @@
 import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
 import Swiper from '../services/Swiper'
+import PuzzlePieces from './Puzzle_pieces'
 
 export default {
+  mounted () {
+    this.swiperMethods = document.querySelector('.staged-functions-swiper').swiper
+  },
   computed: {
+    nextButton () {
+      return {
+        name: '',
+        image: this.nextFirstImage,
+        color: 'default'
+      }
+    },
+    prevButton () {
+      return {
+        name: '',
+        image: this.prevLastImage,
+        color: 'default'
+      }
+    },
+    nextFirstImage () {
+      const nextInd = this.currentSwiperInd + 1
+
+      if (this.functionGroups.length > nextInd) {
+        return this.functionGroups[nextInd][0].image
+      }
+    },
+    prevLastImage () {
+      const prevInd = this.currentSwiperInd - 1
+
+      if (prevInd >= 0) {
+        return this.functionGroups[prevInd][this.functionGroups[prevInd].length - 1].image
+      }
+    },
+    currentSwiperInd () {
+      return this.swiperMethods.realIndex
+    },
     functionGroups () {
       return this.swiper.groupFunctions(this.stagedFunctions.slice(), this.groupSize)
     },
@@ -72,13 +117,15 @@ export default {
         chosenClass: 'chosen',
         sort: false
       },
+      swiperMethods: {},
       swiper: new Swiper(),
       groupSize: 14
     }
   },
   components: {
     draggable,
-    FunctionBox
+    FunctionBox,
+    PuzzlePieces
   }
 }
 </script>

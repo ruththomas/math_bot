@@ -4,14 +4,12 @@
     :ind="ind"
     :func="func"
     :piece-to-show="pieceToShow"
-    :background-img="funcAndcmdImages[func.image]"
     :show-name="showName"
     :method="method">
   </puzzle-pieces>
 </template>
 
 <script>
-import { _ } from 'underscore'
 import uId from 'uid'
 
 import PuzzlePieces from './Puzzle_pieces'
@@ -37,18 +35,6 @@ export default {
       } else {
         return 'middle'
       }
-    },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    },
-    commandImages () {
-      return this.permanentImages.cmdImages
-    },
-    funcImages () {
-      return this.permanentImages.funcImages
-    },
-    funcAndcmdImages () {
-      return _.extend(this.funcImages, this.commandImages)
     },
     colors () {
       return this.$store.getters.getColors
