@@ -339,6 +339,8 @@ export default {
   }
 
   .methods {
+    margin-left: -20px;
+    margin-right: 20px;
   }
 
   .methods > * {
