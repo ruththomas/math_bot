@@ -249,6 +249,16 @@ export default {
     right: -44px;
   }
 
+  .editMain-function-drop-swiper {
+    .swiper-button-prev {
+      left: -41px;
+    }
+
+    .swiper-button-next {
+      right: -35px;
+    }
+  }
+
   .swiper-button-disabled {
     display: none
   }
