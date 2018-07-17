@@ -270,6 +270,16 @@ export default {
     right: -44px;
   }
 
+  .swiper-button-slide-right {
+    transition-duration: 300ms;
+    transform: translate3d(90px, 0px, 0px);
+  }
+
+  .swiper-button-slide-left {
+    transition-duration: 300ms;
+    transform: translate3d(-90px, 0px, 0px);
+  }
+
   .editMain-function-drop-swiper {
     .swiper-button-prev {
       left: -41px;
