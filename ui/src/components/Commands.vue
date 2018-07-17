@@ -24,7 +24,7 @@
         ></function-box>
       </draggable>
 
-      <swiper class="functions-swiper-container" :options="swiper.options">
+      <swiper class="functions-swiper" :options="swiper.options">
         <swiper-slide
           v-for="(group, gInd) in activeFunctionGroups"
           :key="'active-functions/' + gInd"
@@ -50,8 +50,20 @@
             ></function-box>
           </draggable>
         </swiper-slide>
-        <div class="swiper-button-prev" slot="button-prev"></div>
-        <div class="swiper-button-next" slot="button-next"></div>
+        <div class="swiper-button-prev" slot="button-prev">
+          <puzzle-pieces
+            :piece-to-show="'closed'"
+            :func="prevButton"
+            :show-name="true"
+          ></puzzle-pieces>
+        </div>
+        <div class="swiper-button-next" slot="button-next">
+          <puzzle-pieces
+            :piece-to-show="'closed'"
+            :func="nextButton"
+            :show-name="true"
+          ></puzzle-pieces>
+        </div>
         <div class="swiper-pagination swiper-pagination-bullets" :class="activeFunctionGroups.length < 2 ? 'hidden-swiper-pagination' : ''" slot="pagination"></div>
       </swiper>
     </div>
@@ -74,13 +86,50 @@ import PopoverBucket from './Popover_bucket'
 import uId from 'uid'
 import Swiper from '../services/Swiper'
 import buildUtils from '../services/BuildFunction'
+import PuzzlePieces from './Puzzle_pieces'
 
 export default {
   name: 'FunctionDrop',
   mounted () {
     this.activeFunctionsGroupsSize = this.calculateGroupSize()
+    this.swiperMethods = document.querySelector('.functions-swiper').swiper
   },
   computed: {
+    nextButton () {
+      return {
+        name: this.nextFirstFunction.name,
+        image: this.nextFirstFunction.image,
+        color: 'default'
+      }
+    },
+    prevButton () {
+      return {
+        name: this.prevFirstFunction.name,
+        image: this.prevFirstFunction.image,
+        color: 'default'
+      }
+    },
+    nextFirstFunction () {
+      const nextInd = this.currentSwiperInd + 1
+
+      if (this.activeFunctionGroups.length > nextInd) {
+        return this.activeFunctionGroups[nextInd][0]
+      } else {
+        return {name: '', image: ''}
+      }
+    },
+    prevFirstFunction () {
+      const prevInd = this.currentSwiperInd - 1
+
+      if (prevInd >= 0) {
+        return this.activeFunctionGroups[prevInd][this.activeFunctionGroups[prevInd].length - 1]
+      } else {
+        return {name: '', image: ''}
+      }
+    },
+    currentSwiperInd () {
+      return this.swiperMethods.realIndex
+    },
     evt () {
       return this.commandEvt
     },
@@ -163,6 +212,7 @@ export default {
         chosenClass: 'chosen',
         ghostClass: 'ghost'
       },
+      swiperMethods: {},
       swiper: new Swiper(),
       activeFunctionsGroupsSize: 14,
       currentColor: this.colorSelected
@@ -246,7 +296,8 @@ export default {
   components: {
     draggable,
     FunctionBox,
-    PopoverBucket
+    PopoverBucket,
+    PuzzlePieces
   }
 }
 </script>
@@ -385,7 +436,7 @@ export default {
 
   #open-staged {
     position: absolute;
-    right: -10px;
+    right: -50px;
     top: 10px;
     z-index: 1000;
   }
