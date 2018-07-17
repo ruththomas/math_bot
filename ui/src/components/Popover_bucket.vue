@@ -67,6 +67,11 @@ export default {
     top: -135%;
   }
 
+  .staged-popover-bucket {
+    left: 48px;
+    right: -48px;
+  }
+
   .popover-bucket-content {
     width: 100%;
     height: 100%;
@@ -85,10 +90,9 @@ export default {
   }
 
   .pointer {
-    position: relative;
+    position: absolute;
     width: 40px;
     height: 20px;
-    margin-right: 1px;
     margin-top: -1px;
   }
 
