@@ -69,7 +69,6 @@ export default {
     },
     functionGroups () {
       const groups = this.swiper.groupFunctions(this.list.slice(), this.groupSize)
-
       return groups.length ? groups : [null]
     },
     showMesh () {

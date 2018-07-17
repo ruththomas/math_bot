@@ -235,6 +235,12 @@ export default {
     }
   }
 
+  .functions-swiper {
+    .swiper-button-next, .swiper-button-prev {
+      align-items: flex-start;
+    }
+  }
+
   .swiper-button-prev {
     left: -44px;
   }

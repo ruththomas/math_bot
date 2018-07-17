@@ -75,7 +75,7 @@ class BuildFunction {
       const methods = this._getMethods(context)
       currentFunction.func.splice(indexInCurrent, 0, _.omit(methods[added.element.index], 'func'))
     } else { // if a function
-      const swiperIndex = document.querySelector('.functions-swiper-container').swiper.realIndex
+      const swiperIndex = document.querySelector('.functions-swiper').swiper.realIndex
       const activeIndex = this._calcIndex(10, swiperIndex, added.element.index)
       const activeFunctions = this._getActiveFunctions(context)
       currentFunction.func.splice(indexInCurrent, 0, _.omit(activeFunctions[activeIndex], 'func'))
