@@ -4,7 +4,7 @@
       v-if="pieceToShow === 'closed'"
       class="piece closed-piece border-right"
       :class="'piece-' + func.color"
-      :style="{'background-image': `url(${backgroundImg})`}"
+      :style="{'background-image': `url(${funcAndCmdImages[func.image]})`}"
       data-toggle="tooltip" :title="func.name"
       @click="method ? method($event, func, ind) : ''">
       <div v-if="showName">
@@ -18,7 +18,7 @@
       v-else-if="pieceToShow === 'start'"
       class="piece puzzle-start"
       :class="'piece-' + func.color"
-      :style="{'background-image': `url(${backgroundImg})`}"
+      :style="{'background-image': `url(${funcAndCmdImages[func.image]})`}"
       data-toggle="tooltip" :title="func.name"
       @click="method ? method($event, func, ind) : ''">
       <div class="tab-insert">
@@ -33,7 +33,7 @@
       v-else-if="pieceToShow === 'middle'"
       class="piece puzzle-middle"
       :class="'piece-' + func.color"
-      :style="{'background-image': `url(${backgroundImg})`}"
+      :style="{'background-image': `url(${funcAndCmdImages[func.image]})`}"
       data-toggle="tooltip" :title="func.name"
       @click="method ? method($event, func, ind) : ''">
       <div class="left-tab"></div>
@@ -49,7 +49,7 @@
       v-else-if="pieceToShow === 'end'"
       class="piece puzzle-end border-right"
       :class="'piece-' + func.color"
-      :style="{'background-image': `url(${backgroundImg})`}"
+      :style="{'background-image': `url(${funcAndCmdImages[func.image]})`}"
       data-toggle="tooltip" :title="func.name"
       @click="method ? method($event, func, ind) : ''">
       <div class="left-tab"></div>
@@ -58,9 +58,27 @@
 </template>
 
 <script>
+import _ from 'underscore'
+
 export default {
   name: 'puzzle_pieces',
-  props: ['id', 'ind', 'func', 'pieceToShow', 'backgroundImg', 'showName', 'method']
+  mounted () {
+  },
+  computed: {
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
+    },
+    commandImages () {
+      return this.permanentImages.cmdImages
+    },
+    funcImages () {
+      return this.permanentImages.funcImages
+    },
+    funcAndCmdImages () {
+      return _.extend(this.funcImages, this.commandImages)
+    }
+  },
+  props: ['id', 'ind', 'func', 'pieceToShow', 'showName', 'method']
 }
 </script>
 

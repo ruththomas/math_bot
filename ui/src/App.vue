@@ -239,14 +239,29 @@ export default {
   }
 
   .swiper-button-next, .swiper-button-prev {
-    background: url("assets/next-arrow.svg");
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    width: auto;
+    display: flex;
+    align-items: center;
+    background: none;
+    cursor: pointer;
+    .piece {
+      cursor: pointer!important;
+    }
     &:focus {
       outline: none;
     }
   }
 
   .swiper-button-prev {
-    transform: rotate(180deg);
+    left: -44px;
+  }
+
+  .swiper-button-next {
+    right: -44px;
   }
 
   .swiper-button-disabled {
