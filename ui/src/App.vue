@@ -212,7 +212,11 @@ export default {
     width: 100%;
   }
 
-  .swiper-slide {
+  .swiper-slide:first-child {
+    .function-drop {
+      justify-content: flex-end;
+      padding-right: 49px;
+    }
   }
 
   .swiper-pagination.swiper-pagination-bullets {
@@ -263,11 +267,11 @@ export default {
   }
 
   .swiper-button-prev {
-    left: -44px;
+    left: -45px;
   }
 
   .swiper-button-next {
-    right: -44px;
+    right: -45px;
   }
 
   .swiper-button-slide-right {
@@ -286,7 +290,7 @@ export default {
     }
 
     .swiper-button-next {
-      right: -35px;
+      right: -25px;
     }
   }
 
