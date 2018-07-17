@@ -1,7 +1,7 @@
 <template>
   <swiper
     :id="id"
-    :class="`${origin}-function-drop-swiper`"
+    :class="[`${origin}-function-drop-swiper`]"
     :options="swiper.options">
     <div v-if="showMesh" class="mesh-background"></div>
     <swiper-slide
@@ -9,6 +9,7 @@
       :key="'function-drop-swiper/' + gInd">
       <draggable
         class="function-drop"
+        :class="functionGroups.length <= 1 ? 'center-function-drop' : ''"
         :list="list"
         :options="options"
         @change="change($event, gInd)"
@@ -26,7 +27,9 @@
         ></function-box>
       </draggable>
 
-      <div class="drop-placeholder"
+      <div
+        class="drop-placeholder"
+        :class="groupedPlaceholders.length <= 1 ? 'center-function-drop' : ''"
         v-if="sizeLimit < 10000"
       >
         <function-box
@@ -173,11 +176,6 @@ export default {
     margin: 0 auto;
   }
 
-  .center-function-drop {
-    justify-content: center;
-    padding-left: 0;
-  }
-
   .mesh-background {
     position: absolute;
     opacity: 0.8;
@@ -213,6 +211,11 @@ export default {
     padding-left: 33px;
     opacity: 0.2;
     justify-content: flex-start;
+  }
+
+  .center-function-drop {
+    justify-content: center!important;
+    padding: 0!important;
   }
 
   /* Medium Devices, Desktops */
