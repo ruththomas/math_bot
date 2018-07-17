@@ -1,7 +1,7 @@
 <template>
   <swiper
     :id="id"
-    class="function-drop-container"
+    :class="`${origin}-function-drop-swiper`"
     :options="swiper.options">
     <div v-if="showMesh" class="mesh-background"></div>
     <swiper-slide
@@ -40,8 +40,24 @@
       </div>
 
     </swiper-slide>
-    <div class="swiper-button-prev" slot="button-prev"></div>
-    <div class="swiper-button-next" slot="button-next"></div>
+    <div class="swiper-button-prev" slot="button-prev">
+      <function-box
+        v-if="prevLastFunc"
+        :func="prevLastFunc"
+        :ind="prevLastFunc.index"
+        :collection="list"
+        :origin="origin"
+      ></function-box>
+    </div>
+    <div class="swiper-button-next" slot="button-next">
+      <function-box
+        v-if="nextFirstFunc"
+        :func="nextFirstFunc"
+        :ind="nextFirstFunc.index"
+        :collection="list"
+        :origin="origin"
+      ></function-box>
+    </div>
     <div class="swiper-pagination swiper-pagination-bullets" :class="functionGroups.length < 2 ? 'hidden-swiper-pagination' : ''" slot="pagination"></div>
   </swiper>
 </template>
@@ -55,8 +71,40 @@ import _ from 'underscore'
 export default {
   name: 'function_drop',
   mounted () {
+    this.swiperMethods = document.querySelector(`.${this.origin}-function-drop-swiper`).swiper
   },
   computed: {
+    nextButton () {
+      return {
+        name: '',
+        image: this.nextFirstImage,
+        color: 'default'
+      }
+    },
+    prevButton () {
+      return {
+        name: '',
+        image: this.prevLastImage,
+        color: 'default'
+      }
+    },
+    nextFirstFunc () {
+      const nextInd = this.currentSwiperInd + 1
+
+      if (this.functionGroups.length > nextInd) {
+        return this.functionGroups[nextInd][0]
+      }
+    },
+    prevLastFunc () {
+      const prevInd = this.currentSwiperInd - 1
+
+      if (prevInd >= 0) {
+        return this.functionGroups[prevInd][this.functionGroups[prevInd].length - 1]
+      }
+    },
+    currentSwiperInd () {
+      return this.swiperMethods.realIndex
+    },
     groupedPlaceholders () {
       return this.swiper.groupFunctions(this.placeHolders.slice(), this.groupSize)
     },
@@ -83,6 +131,7 @@ export default {
   },
   data () {
     return {
+      swiperMethods: {},
       swiper: new Swiper()
     }
   },
@@ -105,7 +154,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .function-drop-container {
+  .function-drop-swiper {
     position: relative;
     height: 100%;
     width:100%;
