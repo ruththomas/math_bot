@@ -5,6 +5,7 @@ class PopoverBucket {
     this.$pointer = $('.pointer')
 
     this.$methods = $('.methods')
+    this.$popoverBucket = $('.popover-bucket')
 
     this.$selected = $(target)
     this.$selectedPosition = this.$selected.position()
@@ -27,16 +28,21 @@ class PopoverBucket {
   }
 
   _updatePointerPosition () {
-    let left = this.$selectedPosition.left
     const pointerWidth = this.$pointer.width()
-
-    if (this.$selected.attr('id') === 'open-staged') {
-      left += this.$selectedWidth - pointerWidth * 1.35
-    } else {
-      left += ((this.$selectedWidth / 2) - (pointerWidth / 4)) + this.$methods.width()
+    const css = {
+      left: this.$selectedPosition.left
     }
 
-    this.$pointer.css({left: left})
+    if (this.$selected.attr('id') === 'open-staged') {
+      this.$popoverBucket.addClass('staged-popover-bucket')
+      css.left = 'auto'
+      css.right = '-3px'
+    } else {
+      this.$popoverBucket.removeClass('staged-popover-bucket')
+      css.left += ((this.$selectedWidth / 2) - (pointerWidth / 4)) + this.$methods.width()
+    }
+
+    this.$pointer.css(css)
   }
 
   _hidePointer () {

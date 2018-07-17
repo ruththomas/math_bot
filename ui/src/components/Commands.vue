@@ -210,7 +210,8 @@ export default {
         animation: 100,
         filter: '.command-name',
         chosenClass: 'chosen',
-        ghostClass: 'ghost'
+        ghostClass: 'ghost',
+        sort: false
       },
       swiperMethods: {},
       swiper: new Swiper(),
