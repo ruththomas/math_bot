@@ -1,16 +1,20 @@
 package configuration
 
 import akka.http.scaladsl.model.Uri
+import akka.util.Timeout
 
 case class CompilerConfiguration(maxProgramSteps : Int)
-
-case class WebClientConfig(signinSuccess : Uri, signinFail : Uri)
 
 case class GoogleApiConfig(
                             oauthTokenUri : Uri,
                             authRedirectUri : Uri,
                             clientId : String,
                             clientSecret : String,
-                            scopes : Seq[String]
+                            scopes : Seq[String],
+                            oauthPemUri : Uri
                           )
+
+case class ActorConfig(
+                      timeout : Timeout
+                      )
 

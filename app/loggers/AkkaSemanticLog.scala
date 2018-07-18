@@ -1,4 +1,4 @@
-package utils
+package loggers
 
 import akka.actor.ActorSystem
 import akka.event.{ LogSource, Logging, LoggingAdapter }
@@ -10,15 +10,15 @@ import scala.reflect.ClassTag
 // By extending from akka.event.LoggingAdapter we can apply semantic logging to internal akka log hooks.
 class AkkaSemanticLog[T : LogSource](system : ActorSystem, source : T)(implicit tag : ClassTag[T]) extends LoggingAdapter with SemanticLog {
 
-  import utils.SemanticLog.symbols
+  import loggers.SemanticLog.symbols
 
-  val log = Logging(system, source)
-  val sourceTag = (symbols.source, tag.runtimeClass.getSimpleName)
+  private val log = Logging(system, source)
+  private val sourceTag = (symbols.source, tag.runtimeClass.getSimpleName)
 
-  case class TaggedValue(tag : Symbol, value : String)
-  implicit val tvFormatter = jsonFormat2(TaggedValue)
+  private case class TaggedValue(tag : Symbol, value : String)
+  private implicit val tvFormatter : RootJsonFormat[TaggedValue] = jsonFormat2(TaggedValue)
 
-  def asTv(data : Seq[(Symbol, String)]) = data.map(d => TaggedValue(d._1, d._2))
+  private def asTv(data : Seq[(Symbol, String)]) = data.map(d => TaggedValue(d._1, d._2))
 
   override def debug(data : Seq[(Symbol, String)]) : Unit = {
     log.debug(asTv(sourceTag +: data).toJson.compactPrint)
@@ -36,17 +36,17 @@ class AkkaSemanticLog[T : LogSource](system : ActorSystem, source : T)(implicit 
     log.error(asTv(data).toJson.compactPrint)
   }
 
-  override def isErrorEnabled = log.isErrorEnabled
+  override def isErrorEnabled : Boolean = log.isErrorEnabled
 
-  override def isWarningEnabled = log.isWarningEnabled
+  override def isWarningEnabled : Boolean = log.isWarningEnabled
 
-  override def isInfoEnabled = log.isInfoEnabled
+  override def isInfoEnabled : Boolean = log.isInfoEnabled
 
-  override def isDebugEnabled = log.isDebugEnabled
+  override def isDebugEnabled : Boolean = log.isDebugEnabled
 
   override protected def notifyError(message : String) : Unit = this.error(SemanticLog.tags.description(message))
 
-  override protected def notifyError(cause : Throwable, message : String) : Unit = this.error(SemanticLog.tags.cause(cause) ++ SemanticLog.tags.description(message))
+  override protected def notifyError(cause : Throwable, message : String) : Unit = this.error(Seq(SemanticLog.tags.cause(cause),SemanticLog.tags.description(message)))
 
   override protected def notifyWarning(message : String) : Unit = this.warning(SemanticLog.tags.description(message))
 

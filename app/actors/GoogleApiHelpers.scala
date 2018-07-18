@@ -9,6 +9,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.http.scaladsl.util.FastFuture
 import configuration.GoogleApiConfig
+import models.JwtToken
 import org.joda.time.Instant
 import spray.json._
 
@@ -26,12 +27,9 @@ object GoogleApiHelpers {
       expires_in : Long,
       token_type : String,
       refresh_token : Option[String],
-      expires_on : Option[Instant] = None
+      id_token : JwtToken
   ) {
     def withAccessToken(access_token : String) = this.copy(access_token = access_token)
-    def isExpired(buffer : Long = 300) : Boolean = expires_on.forall(ex => ex.isBefore(Instant.now().plus(buffer * 1000)))
-    def isPastHalfLife = expires_on.forall(ex => ex.isBefore(Instant.now().plus((expires_in / 2) * 1000)))
-    def applyCreationTime(epoch : Long) = this.copy(expires_on = Some(new Instant(epoch + this.expires_in)))
   }
   case class GoogleValueType(value : String, `type` : String)
   case class GoogleIcon(url : String, isDefault : Boolean)
@@ -47,6 +45,7 @@ trait GoogleApiHelpers extends SprayJsonSupport with DefaultJsonProtocol {
   val http : HttpExt
   val config : GoogleApiConfig
 
+/*
   implicit object InstantFormat extends RootJsonFormat[Instant] {
     override def read(json : JsValue) = json match {
       case JsNumber(millis) => new Instant(millis)
@@ -55,6 +54,7 @@ trait GoogleApiHelpers extends SprayJsonSupport with DefaultJsonProtocol {
 
     override def write(obj : Instant) = JsNumber(obj.getMillis)
   }
+
 
   implicit val googleValueTypeFormat = jsonFormat2(GoogleValueType)
   implicit val googleTokensFormat = jsonFormat5(GoogleTokens)
@@ -104,8 +104,7 @@ trait GoogleApiHelpers extends SprayJsonSupport with DefaultJsonProtocol {
               Some(
                 tokens.copy(
                   access_token = newTokens.access_token,
-                  expires_in = newTokens.expires_in,
-                  expires_on = response.getHeader(classOf[Date]).optionInstant
+                  expires_in = newTokens.expires_in
                 )
               )
 
@@ -124,5 +123,6 @@ trait GoogleApiHelpers extends SprayJsonSupport with DefaultJsonProtocol {
       FastFuture(Success(Option.empty[GoogleTokens]))
     }
   }
+  */
 }
 

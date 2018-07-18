@@ -1,41 +1,41 @@
-package dataentry.actors
+package actors
 
 import akka.actor.Actor
-import akka.pattern.pipe
-import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.Date
-import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.http.scaladsl.{ Http, HttpExt }
+import akka.pattern.pipe
 import akka.stream.ActorMaterializer
+import com.google.inject.{ Inject, Singleton }
 import configuration.GoogleApiConfig
 import dataentry.actors.messages._
-import dataentry.actors.models.GoogleApiHelpers
 import dataentry.actors.models.GoogleApiHelpers.GoogleTokens
-import utils.{ AkkaSemanticLog, SecureIdentifier, SemanticLog }
+import loggers.{ AkkaSemanticLog, SemanticLog }
+import utils.{ AkkaToPlayMarshaller, JwtTokenParser }
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Failure
 
-class GoogleOAuth(
-    override val config : GoogleApiConfig
-) extends Actor with GoogleApiHelpers {
+@Singleton
+class GoogleOAuth @Inject()(
+                 val jwtTokenParser: JwtTokenParser,
+                 val config : GoogleApiConfig
+) extends Actor  {
 
   import HttpMethods._
 
-  implicit override val executionContext : ExecutionContext = context.dispatcher
-  implicit override val materializer : akka.stream.Materializer = ActorMaterializer()
+  implicit val executionContext : ExecutionContext = context.dispatcher
+  implicit val materializer : akka.stream.Materializer = ActorMaterializer()
 
-  override val http : HttpExt = Http(context.system)
+  val http : HttpExt = Http(context.system)
 
   val log = new AkkaSemanticLog(context.system, this)
 
   override def aroundReceive(receive : Receive, msg : Any) : Unit = {
-    log.info(SemanticLog.tags.description(msg.toString))
+    log.info(Seq(SemanticLog.tags.description(msg.toString)))
     super.aroundReceive(receive, msg)
   }
 
-  def retrieveTokens(code : String) = {
+  def retrieveTokens(code : String) : Future[Either[GoogleTokens, String]] = {
     for {
       response <- http.singleRequest(
         HttpRequest(
@@ -50,21 +50,37 @@ class GoogleOAuth(
           ).toEntity
         )
       )
-      tokensOrError <- unmarshal[GoogleTokens](response, googleTokensFormat)
-    } yield (tokensOrError, response.getHeader(classOf[Date]))
+      tokensOrError <- AkkaToPlayMarshaller.unmarshalToPlayJson(response)
+    } yield {
+      tokensOrError match {
+        case Left(Some(tokens)) =>
+          jwtTokenParser.parseAndVerify(tokens("id_token").as[String]) match {
+            case Some(idToken) =>   Left(GoogleTokens(
+              access_token = tokens("access_token").as[String],
+              expires_in = tokens("expires_in").as[Long],
+              token_type = tokens("token_type").as[String],
+              refresh_token = tokens.value.get("refresh_token").map(_.as[String]),
+              id_token = idToken
+            ))
+            case _ => Right("Unable to verify jwt")
+          }
+        case Left(None) => Right("Unable to verity jwt")
+        case Right(reason) => Right(s"Status: ${reason._1} reason: ${reason._2}")
+      }
+    }
 
   }
 
   override def receive : Receive = {
     case RequestTokensFromCode(sessionId, code) =>
       retrieveTokens(code) map {
-        case (Left(tokens), created) =>
-          TokensFromCodeSuccess(sessionId, tokens.copy(expires_on = created.optionInstant))
-        case (Right((statusCode, body)), _) =>
-          TokensFromCodeFailure(sessionId, config.oauthTokenUri, statusCode, body)
+        case Left(tokens) =>
+          TokensFromCodeSuccess(sessionId, tokens)
+        case Right(reason) =>
+          TokensFromCodeFailure(sessionId, config.oauthTokenUri, reason)
       } pipeTo sender() onComplete {
         // In practice this is usually a connectivity error. Revisit in production to see if there is a triage.
-        case Failure(e) => sender() ! TokensFromCodeFailure(sessionId, config.oauthTokenUri, StatusCodes.InternalServerError, e.toString)
+        case Failure(e) => sender() ! TokensFromCodeFailure(sessionId, config.oauthTokenUri, e.toString)
         case _ => // Success handled by the pipeTo
       }
   }
