@@ -2,13 +2,13 @@ package daos
 
 import com.google.inject.Inject
 import daos.codecs.SecureIdentifierCodec
+import loggers.SemanticLog
 import models.JwtToken
 import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecProvider
 import org.mongodb.scala.MongoDatabase
 import org.mongodb.scala.bson.codecs.Macros
-import utils.{ SecureIdentifier, SemanticLog }
-import SemanticLog._
+import utils.SecureIdentifier
 
 import scala.concurrent.ExecutionContext
 

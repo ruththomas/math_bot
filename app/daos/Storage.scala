@@ -1,19 +1,19 @@
 package daos
 
-import utils.SemanticLog
-import org.bson.{BsonReader, BsonSerializationException, BsonType, BsonWriter}
-import org.bson.codecs.{Codec, DecoderContext, EncoderContext}
-import org.bson.codecs.configuration.{CodecProvider, CodecRegistries, CodecRegistry}
-import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
-import org.mongodb.scala.MongoDatabase
+import loggers.SemanticLog
+import org.bson.{ BsonReader, BsonSerializationException, BsonType, BsonWriter }
+import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
+import org.bson.codecs.configuration.{ CodecProvider, CodecRegistries, CodecRegistry }
+import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
+import org.mongodb.scala.{ MongoCollection, MongoDatabase }
 import org.mongodb.scala.bson.BsonObjectId
 import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Indexes.hashed
-import org.mongodb.scala.model.Updates.{combine, set}
+import org.mongodb.scala.model.Updates.{ combine, set }
 
 import scala.annotation.tailrec
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.implicitConversions
 import scala.util.Failure
 
@@ -99,7 +99,7 @@ abstract class Storage[Key, Value](
     CodecRegistries.fromCodecs(keyCodec, valueCodec, new KeyValueCodec)
   )
 
-  protected val collection = db.getCollection[KeyValue](collectionLabel.name).withCodecRegistry(internalCodecRegistry)
+  protected val collection : MongoCollection[KeyValue] = db.getCollection[KeyValue](collectionLabel.name).withCodecRegistry(internalCodecRegistry)
 
   def prepare() {
     collection.createIndex(hashed(keyField.name)).toFuture().onComplete {

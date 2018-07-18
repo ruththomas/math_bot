@@ -1,11 +1,17 @@
 package modules
+import actors.{ ActorTags, GoogleOAuth }
 import com.google.inject.{ AbstractModule, Provides }
-import configuration.{ ConfigFactory, GoogleApiConfig }
+import configuration.{ ActorConfig, ConfigFactory, GoogleApiConfig }
 import org.mongodb.scala.{ MongoClient, MongoDatabase }
 import play.api.libs.concurrent.AkkaGuiceSupport
 
 class Module extends AbstractModule with AkkaGuiceSupport {
-  override def configure() = {}
+  override def configure() = {
+    bindActor[GoogleOAuth](ActorTags.googleOAuth)
+
+  }
+
+
 
   @Provides
   def provideMongoDatabase(): MongoDatabase = {
@@ -18,4 +24,10 @@ class Module extends AbstractModule with AkkaGuiceSupport {
   def provideGoogleApiConfig(configFactory: ConfigFactory) : GoogleApiConfig = {
     configFactory.googleApiConfig()
   }
+
+  @Provides
+  def provideActorConfig(configFactory: ConfigFactory) : ActorConfig = {
+    configFactory.actorConfig()
+  }
+
 }
