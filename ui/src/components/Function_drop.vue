@@ -3,10 +3,10 @@
     :id="id"
     :class="[`${origin}-function-drop-swiper`]"
     :options="swiper.options">
-    <div v-if="showMesh" class="mesh-background"></div>
     <swiper-slide
       v-for="(group, gInd) in functionGroups"
       :key="'function-drop-swiper/' + gInd">
+      <div v-if="showMesh" class="mesh-background"></div>
       <draggable
         class="function-drop"
         :class="functionGroups.length <= 1 ? 'center-function-drop' : ''"
