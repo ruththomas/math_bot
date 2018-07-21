@@ -1,8 +1,8 @@
 <template>
   <div class="profile-container">
-    <splash-screen v-if="!auth.authenticated"></splash-screen>
-    <div v-else class="profile" data-aos="fade-in">
-      <div class="profile-action">
+    <!--<splash-screen v-if="!auth.authenticated"></splash-screen>-->
+    <div class="profile" data-aos="fade-in">
+      <div v-if="auth.authenticated" class="profile-action">
         <space :permanent-images="permanentImages"></space>
         <steps :permanent-images="permanentImages"></steps>
       </div>
