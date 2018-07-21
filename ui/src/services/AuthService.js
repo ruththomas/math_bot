@@ -1,106 +1,100 @@
-import Auth0Lock from 'auth0-lock'
+import auth0 from 'auth0-js'
+import { AUTH0_DOMAIN, AUTH0_ID, AUTH_REDIRECT } from '../keys'
+import router from './../router'
 import api from '../services/api'
-import images from '../assets/assets'
-
-import { AUTH0_DOMAIN, AUTH0_ID } from '../keys'
 
 class AuthService {
+  authenticated = this.isAuthenticated()
+  userToken = {}
+  userProfile = {}
+
   constructor () {
-    this.lock = null
-    this.authenticated = false
-    this.userToken = null
-    this._init()
+    this.login = this.login.bind(this)
+    this.setSession = this.setSession.bind(this)
+    this.logout = this.logout.bind(this)
+    this.isAuthenticated = this.isAuthenticated.bind(this)
   }
 
-  /*
-  * Used in Marketing.vue to login user, or navigate to profile page
-  * */
+  auth0 = new auth0.WebAuth({
+    domain: AUTH0_DOMAIN,
+    clientID: AUTH0_ID,
+    redirectUri: AUTH_REDIRECT,
+    audience: 'https://math-academy.auth0.com/userinfo',
+    responseType: 'token id_token',
+    scope: 'openid profile'
+  })
+
   login () {
-    if (this._isAuth()) {
-      this._getUserToken()
-    } else {
-      this.lock.show()
-    }
+    this.auth0.authorize()
   }
 
-  _isAuth () {
-    return !!localStorage.getItem('accessToken')
-  }
-
-  logout () {
-    localStorage.clear()
-    this.userToken = null
-    this.authenticated = false
-    window.location = '/#/about'
-  }
-
-  /*
-  * Used in App.vue to determine if user is already signed in
-  * */
-
-  isAuthenticated () {
-    if (this._isAuth()) {
-      this._getUserToken()
-    } else {
-      this.logout()
-    }
-  }
-
-  _handleAuth (authResult) {
-    // Use the token in authResult to getUserInfo() and save it to localStorage
-    this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
-      if (error) {
-        // Handle error
-        console.log('Error Retrieving Profile')
-        return
+  handleAuthentication () {
+    this.auth0.parseHash((err, authResult) => {
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        console.log('AUTHENTICATED')
+        this.setSession(authResult)
+      } else if (err) {
+        console.log('NOT AUTHENTICATED')
+        router.push({path: '/about'})
+        console.log(err)
       }
-      localStorage.setItem('accessToken', authResult.accessToken)
-      localStorage.setItem('profile', JSON.stringify(profile))
-      this._getUserToken()
     })
   }
 
-  _getCurrentUser () {
+  getUserProfile () {
     return JSON.parse(localStorage.getItem('profile'))
   }
 
-  _getUserToken () {
-    const currentUser = this._getCurrentUser()
-    const tokenId = currentUser.user_id || currentUser.sub
+  getUserToken () {
+    this.userProfile = this.getUserProfile()
+    const tokenId = this.userProfile.sub || this.userProfile.user_id
     api.getUserToken({tokenId: tokenId}, token => {
       this.userToken = token
       this.authenticated = true
+      router.push({path: '/profile'})
     })
   }
 
-  _createLock () {
-    this.lock = new Auth0Lock(
-      AUTH0_ID,
-      AUTH0_DOMAIN,
-      {
-        autofocus: false,
-        auth: {
-          redirect: false
-        },
-        theme: {
-          primaryColor: '#00AAE4',
-          logo: images.instructionsRobot
-        },
-        languageDictionary: {
-          title: 'MATH_BOT'
-        },
-        autoclose: true
+  getProfile (accessToken, continueSetSession) {
+    this.auth0.client.userInfo(accessToken, (err, profile) => {
+      if (err) {
+        console.error(err)
+        this.logout()
       }
-    )
+      continueSetSession(profile)
+    })
   }
 
-  _init () {
-    this._createLock()
-
-    // Listening for the authenticated event
-    this.lock.on('authenticated', (authResult) => {
-      this._handleAuth(authResult)
+  setSession (authResult) {
+    this.getProfile(authResult.accessToken, profile => {
+      // Set Access Token time limit
+      const expiresAt = JSON.stringify(
+        authResult.expiresIn * 2.592e+9 + new Date().getTime()
+      )
+      localStorage.setItem('access_token', authResult.accessToken)
+      localStorage.setItem('id_token', authResult.idToken)
+      localStorage.setItem('expires_at', expiresAt)
+      localStorage.setItem('profile', JSON.stringify(profile))
+      this.getUserToken()
     })
+  }
+
+  logout () {
+    // Clear Access Token and ID Token from local storage
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('id_token')
+    localStorage.removeItem('expires_at')
+    localStorage.removeItem('profile')
+    this.authenticated = false
+    router.push({path: '/marketing'})
+  }
+
+  isAuthenticated () {
+    const expiresAt = JSON.parse(localStorage.getItem('expires_at'))
+    const expired = new Date().getTime() < expiresAt
+    if (expired) {
+      this.getUserToken()
+    }
   }
 }
 

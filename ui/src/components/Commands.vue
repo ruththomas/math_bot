@@ -229,15 +229,13 @@ export default {
     },
     addToActiveFunc (evt) {
       const index = evt.item.getAttribute('data-function-index')
-      console.log(evt)
-      // console.log('INDEX IN ~ ', index);
-
-      // if (evt.added) {
-      api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
-        // console.log('NEW LAMBDAS ~ ', lambdas)
-        this.$store.dispatch('updateLambdas', lambdas)
-      })
-      // }
+      // console.log('INDEX IN ~ ', index)
+      if (evt.type === 'add') {
+        api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
+          // console.log('NEW LAMBDAS ~ ', lambdas)
+          this.$store.dispatch('updateLambdas', lambdas)
+        })
+      }
     },
     moveSwiper (direction) {
       const $functions = $('.functions')

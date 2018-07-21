@@ -20,9 +20,9 @@
       "stagedEnabled": false,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
+      "allowedActives": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot"
       ],
@@ -50,9 +50,9 @@
       "stagedEnabled": false,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
+      "allowedActives": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot"
       ],
@@ -80,9 +80,9 @@
       "stagedEnabled": false,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
+      "allowedActives": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot"
       ],
@@ -109,17 +109,21 @@
       "robotOrientation": 90,
       "stagedEnabled": false,
       "activeEnabled": true,
-      "preBuiltActive": {
-        "rocket": [
-          "moveRobotForwardOneSpot",
-          "moveRobotForwardOneSpot",
-          "moveRobotForwardOneSpot",
-          "moveRobotForwardOneSpot"
-        ]
-      },
+      "preBuiltActive": [
+        {
+          "name": "Rocket",
+          "image": "rocket",
+          "sizeLimit": -1,
+          "func": [
+            "moveRobotForwardOneSpot",
+            "moveRobotForwardOneSpot",
+            "moveRobotForwardOneSpot",
+            "moveRobotForwardOneSpot"
+          ]
+        }
+      ],
       "stagedQty": 0,
-      "assignedStaged": {},
-      "activeQty": -1,
+      "assignedStaged": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot"
       ],
@@ -149,9 +153,8 @@
       "stagedEnabled": false,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot"
       ],
@@ -181,9 +184,8 @@
       "stagedEnabled": false,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -212,11 +214,15 @@
       "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {
-        "UTurn": "uTurn"
-      },
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [
+        {
+          "name": "U Turn",
+          "image": "uTurn",
+          "sizeLimit": 2,
+          "func": []
+        }
+      ],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -247,11 +253,15 @@
       "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {
-        "TurnLeft": "turnLeft"
-      },
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [
+        {
+          "name": "Turn Left",
+          "image": "turnLeft",
+          "sizeLimit": 3,
+          "func": []
+        }
+      ],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -282,9 +292,8 @@
       "stagedEnabled": false,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -313,9 +322,8 @@
       "stagedEnabled": false,
       "activeEnabled": true,
       "stagedQty": 0,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -346,9 +354,8 @@
       "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": -1,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -379,9 +386,8 @@
       "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": -1,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -412,9 +418,8 @@
       "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": -1,
-      "assignedStaged": {},
-      "activeQty": -1,
-      "preBuiltActive": {},
+      "assignedStaged": [],
+      "preBuiltActive": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"

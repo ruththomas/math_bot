@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "aos": "^2.2.0",
-    "auth0-lock": "^10.24.3",
+    "auth0-js": "^9.7.2",
     "bcrypt": "^1.0.2",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
@@ -29,6 +29,7 @@
     "createjs-easeljs": "^0.8.2",
     "easeljs": "0.0.0",
     "element-resize-event": "^2.0.9",
+    "eventemitter3": "^3.1.0",
     "express": "^4.15.2",
     "findorcreate-promise": "^1.0.4",
     "fs": "0.0.1-security",
