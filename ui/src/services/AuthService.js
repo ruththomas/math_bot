@@ -1,5 +1,5 @@
 import auth0 from 'auth0-js'
-import { AUTH0_DOMAIN, AUTH0_ID } from '../keys'
+import { AUTH0_DOMAIN, AUTH0_ID, AUTH_REDIRECT } from '../keys'
 import router from './../router'
 import api from '../services/api'
 
@@ -18,7 +18,7 @@ class AuthService {
   auth0 = new auth0.WebAuth({
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_ID,
-    redirectUri: 'http://localhost:8080/callback',
+    redirectUri: AUTH_REDIRECT,
     audience: 'https://math-academy.auth0.com/userinfo',
     responseType: 'token id_token',
     scope: 'openid profile'
