@@ -10,7 +10,8 @@
       <mathbot-header :font-size="headerFont" :line-height="headerFont + 2"></mathbot-header>
       <div class="user-profile-controls-text-footer">
         <div class="text nav-links about" @click="gotoMarketing">About</div>
-        <div class="text nav-links sign-out" v-if="auth !== null" @click="auth.logout()">Sign Out</div>
+        <div class="text nav-links sign-in" v-if="!auth.authenticated" @click="auth.login()">Sign In</div>
+        <div class="text nav-links sign-out" v-else @click="auth.logout()">Sign Out</div>
       </div>
     </div>
   </div>
@@ -22,7 +23,7 @@ export default {
   name: 'user_profile_controls',
   computed: {
     currentUser () {
-      return this.$store.getters.getCurrentUser
+      return this.auth.userProfile
     },
     auth () {
       return this.$store.getters.getAuth
