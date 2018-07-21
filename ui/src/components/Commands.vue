@@ -46,7 +46,7 @@
               :ind="ind"
               :collection="activeFunctions"
               :origin="'functions'"
-              v-on:click.native="editFunction($event, func, gInd, ind)"
+              @click.native="editFunction($event, func, gInd, ind)"
             ></function-box>
           </draggable>
         </swiper-slide>
@@ -211,7 +211,7 @@ export default {
         filter: '.command-name',
         chosenClass: 'chosen',
         ghostClass: 'ghost',
-        sort: false
+        sort: true
       },
       swiperMethods: {},
       swiper: new Swiper(),
@@ -226,6 +226,8 @@ export default {
   },
   methods: {
     uid: int => uId(int),
+    controlSort () {
+    },
     calculateGroupSize () {
       return 14 - this.commands.length
     },
@@ -304,6 +306,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
   .invisible {
     visibility: hidden;
   }
@@ -339,6 +342,12 @@ export default {
   }
 
   .methods {
+    border: 1px solid $click-color;
+    background-color: rgba(0, 0, 0, 0.6);
+    height: 94px;
+    padding: 5px 0 5px 0;
+    border-radius: 3px;
+    margin-top: -5px;
     margin-left: -20px;
     margin-right: 20px;
   }
@@ -407,7 +416,7 @@ export default {
     top: 0;
     bottom: 0;
     left: 50%;
-    border-left: 2px solid #B8E986;
+    border-left: 2px solid $click-color;
     transform: translate(-50%);
   }
 

@@ -213,7 +213,7 @@ export default {
   }
 
   .swiper-slide:first-child {
-    .function-drop {
+    .editMain-function-drop {
       justify-content: flex-end;
       padding-right: 49px;
     }
