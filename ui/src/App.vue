@@ -5,19 +5,19 @@
 </template>
 
 <script>
-import api from './services/api'
-import utils from './services/utils'
+// import api from './services/api'
+// import utils from './services/utils'
 
 export default {
   name: 'app',
   mounted () {
     window.scrollTo(0, 1)
     this.auth.isAuthenticated()
-    utils.watcher(() => !this.auth.authenticated, () => {
-      api.videoHintSocket.requestHintsTaken(res => {
-        this.$store.dispatch('startExistingTimers', res.remainingTimes)
-      })
-    })
+    // utils.watcher(() => !this.auth.authenticated, () => {
+    //   api.videoHintSocket.requestHintsTaken(res => {
+    //     this.$store.dispatch('startExistingTimers', res.remainingTimes)
+    //   })
+    // })
   },
   computed: {
     auth () {

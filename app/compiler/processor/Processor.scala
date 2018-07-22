@@ -31,7 +31,10 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
       case Some(operation) if passColorCheck(operation, state) =>
         operation match {
           case Program(operations) =>
-            // Execute the main program
+            // Execute the main program.
+            // Note: smh69 observed Program and UserFunction are practically the same, and they are.
+            // This is more than likely temporary, but for now its because the UI treats them differently
+            // because they display differently.
             execute(state, operations.headOption, operations.tail ++: post)
           case UserFunction(operations) =>
             if (operations.length == 1 && operations.head.isInstanceOf[UserFunction])

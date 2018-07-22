@@ -25,7 +25,9 @@ export default {
   },
   methods: {
     goToSite () {
-      this.auth.login()
+      if (!this.auth.authenticated) {
+        this.auth.login()
+      }
       this.$router.push({path: '/profile'})
     }
   }

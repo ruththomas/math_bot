@@ -1,5 +1,6 @@
 # Load index page
-GET         /                                                                      controllers.Assets.at(path="/public", file="index.html")
+GET         /                                                                     controllers.Assets.at(path="/public", file="index.html")
+GET         /callback                                                             controllers.Assets.at(path="/public", file="index.html")
 
 # Levels
 GET         /api/levels/getStep/:level/:step                                      controllers.LevelController.getStep(level, step, tokenId: Option[String])
