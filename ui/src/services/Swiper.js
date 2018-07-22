@@ -22,6 +22,11 @@ class Swiper {
     groups.push(arr.splice(0, size))
     return this.groupFunctions(arr, size, groups)
   }
+
+  calculateGroupSize () {
+    console.log('CALC')
+    return 14
+  }
 }
 
 export default Swiper
