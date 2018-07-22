@@ -45,13 +45,23 @@ class AuthService {
     return JSON.parse(localStorage.getItem('profile'))
   }
 
+  storeLastRoute () {
+    localStorage.setItem('last_location', router.history.current.fullPath)
+  }
+
   getUserToken () {
     this.userProfile = this.getUserProfile()
     const tokenId = this.userProfile.sub || this.userProfile.user_id
     api.getUserToken({tokenId: tokenId}, token => {
       this.userToken = token
       this.authenticated = true
-      router.push({path: '/profile'})
+      window.onbeforeunload = this.storeLastRoute
+      const lastPath = localStorage.getItem('last_location')
+      if (lastPath && lastPath !== '/about') {
+        router.push({path: lastPath})
+      } else {
+        router.push({path: '/profile'})
+      }
     })
   }
 
@@ -91,8 +101,8 @@ class AuthService {
 
   isAuthenticated () {
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'))
-    const expired = new Date().getTime() < expiresAt
-    if (expired) {
+    const notExpired = new Date().getTime() < expiresAt
+    if (notExpired) {
       this.getUserToken()
     }
   }
