@@ -1,5 +1,5 @@
 <template>
-  <div class="robot-container" data-aos="fade-in">
+  <div class="robot-container" data-aos="fade-in" v-if="auth.authenticated">
     <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
     <div  v-else id="robot" class="row animated">
 
@@ -79,9 +79,6 @@ export default {
     },
     commands () {
       return this.$store.getters.getCommands
-    },
-    authShowing () {
-      return this.$store.getters.getAuthShowing
     },
     congratsShowing () {
       return this.$store.getters.getCongratsShowing

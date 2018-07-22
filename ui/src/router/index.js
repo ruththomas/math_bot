@@ -6,6 +6,9 @@ import Robot from '@/components/Robot'
 import Profile from '@/components/Profile'
 import Marketing from '@/components/marketing/Marketing'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import Callback from '@/components/Callback'
+
+import $store from '../store/store'
 
 // require styles
 import 'swiper/dist/css/swiper.css'
@@ -15,22 +18,24 @@ Vue.use(Router)
 Vue.use(VueResource)
 Vue.use(Sortable)
 
-export default new Router({
+const router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/robot',
       name: 'Robot Counter',
+      secure: true,
       component: Robot
     },
     {
       path: '/signup',
       name: 'Signup',
       component: Robot
-
     },
     {
       path: '/profile',
       name: 'Profile',
+      secure: true,
       component: Profile
     },
     {
@@ -39,8 +44,27 @@ export default new Router({
       component: Marketing
     },
     {
+      path: '/callback',
+      name: 'Callback',
+      component: Callback
+    },
+    {
       path: '*',
-      redirect: localStorage.getItem('LAST_PATH') || '/about'
+      redirect: '/about'
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  // Look at all routes
+  router.options.routes.forEach((route) => {
+    // If this is the current route and it's secure
+    if (to.matched[0].path === route.path && route.secure && !$store.state.auth.authenticated) {
+      next('/about')
+    }
+  })
+  // Proceed as normal
+  next()
+})
+
+export default router
