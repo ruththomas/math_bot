@@ -140,14 +140,30 @@ export default {
 
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
+    .popover-bucket {
+      left: 4px;
+      right: 0;
+    }
 
+    .staged-popover-bucket {
+      left: -12px;
+      right: -18px;
+    }
   }
 
-  /* Custom, iPhone Retina */
+  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    .popover-bucket {
+      left: 4px;
+      right: 0;
+    }
 
+    .staged-popover-bucket {
+      left: 16px;
+      right: -17px;
+    }
   }
 
   /* iPad */

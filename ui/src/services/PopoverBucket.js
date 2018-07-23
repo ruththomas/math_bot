@@ -36,7 +36,7 @@ class PopoverBucket {
     if (this.$selected.attr('id') === 'open-staged') {
       this.$popoverBucket.addClass('staged-popover-bucket')
       css.left = 'auto'
-      css.right = '-3px'
+      css.right = '-1px'
     } else {
       this.$popoverBucket.removeClass('staged-popover-bucket')
       css.left += ((this.$selectedWidth / 2) - (pointerWidth / 4)) + this.$methods.width()

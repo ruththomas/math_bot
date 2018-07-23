@@ -84,6 +84,7 @@ export default {
 
 <style scoped lang="scss">
   $puzzle-piece-border-color: #FFFFFF;
+  $piece-margin: 4px;
 
   .puzzle-piece {
     display: flex;
@@ -135,7 +136,7 @@ export default {
     position: relative;
     height: 75px;
     width: 75px;
-    margin: 0 4px 0 4px;
+    margin: $piece-margin;
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px;
     color: white;
@@ -303,14 +304,17 @@ export default {
 
   /* Small Devices */
   @media only screen and (max-width : 667px) {
+    $piece-size: 31px;
+    $piece-margin: 2px;
+
     .command-name {
       display: none;
     }
 
     .piece {
-      height: 32px;
-      width: 32px;
-      margin-left: 4px;
+      height: $piece-size;
+      width: $piece-size;
+      margin: 0 $piece-margin 0 $piece-margin;
     }
 
     .puzzle-start, .puzzle-middle {
@@ -320,7 +324,7 @@ export default {
     .tab-insert {
       width: 5px;
       left: 26px;
-      height: 32px;
+      height: $piece-size;
     }
 
     .notch {

@@ -91,8 +91,11 @@ import PuzzlePieces from './Puzzle_pieces'
 export default {
   name: 'FunctionDrop',
   mounted () {
-    this.activeFunctionsGroupsSize = this.calculateGroupSize()
     this.swiperMethods = document.querySelector('.functions-swiper').swiper
+    this.activeFunctionsGroupsSize = this.swiper.calculateGroupSize('functions')
+    window.addEventListener('resize', () => {
+      this.activeFunctionsGroupsSize = this.swiper.calculateGroupSize('functions')
+    })
   },
   computed: {
     nextButton () {
@@ -214,23 +217,18 @@ export default {
         sort: true
       },
       swiperMethods: {},
-      swiper: new Swiper(),
+      swiper: Swiper,
       activeFunctionsGroupsSize: 14,
       currentColor: this.colorSelected
     }
   },
   watch: {
     commands (_) {
-      this.activeFunctionsGroupsSize = this.calculateGroupSize()
+      this.activeFunctionsGroupsSize = this.swiper.calculateGroupSize('functions')
     }
   },
   methods: {
     uid: int => uId(int),
-    controlSort () {
-    },
-    calculateGroupSize () {
-      return 14 - this.commands.length
-    },
     notEditableMessage () {
       const messageBuilder = {
         type: 'warn',
@@ -345,9 +343,9 @@ export default {
     border: 1px solid $click-color;
     background-color: rgba(0, 0, 0, 0.6);
     height: 94px;
-    padding: 5px 0 5px 0;
+    padding: 2px;
     border-radius: 3px;
-    margin-top: -5px;
+    margin-top: -2px;
     margin-left: -20px;
     margin-right: 20px;
   }
@@ -358,7 +356,7 @@ export default {
 
   .functions {
     display: flex;
-    padding-left: 32px;
+    padding-left: 30px;
     height: 100%;
   }
 
@@ -465,38 +463,20 @@ export default {
 
   /* Medium Devices, Desktops */
   @media only screen and (max-width : 992px) {
-    .commands {
-      margin-bottom: 5px;
-      height: 55px;
-    }
-
-    .commands-slide {
-      margin: 0 auto;
-    }
-
-    .commands-slide > * {
-      /*height: 35px;*/
-    }
-
-    .command-control-button-group {
-      margin-right: 10px;
-    }
-
-    .command-control-button {
-      height: 15px;
-      width: 15px;
-    }
   }
 
   /* Small Devices */
   @media only screen and (max-width : 667px) {
+
+  }
+
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
     .commands {
-      margin-bottom: 5px;
-      height: 65px;
+      padding-right: 7px;
     }
 
     .commands-slide {
-      margin: 0 auto;
     }
 
     .commands-slide > * {
@@ -504,6 +484,12 @@ export default {
     }
 
     .methods {
+      height: 37px;
+      margin-right: 7px;
+    }
+
+    .functions {
+      padding-left: 13px;
     }
 
     .command-control-button-group {
@@ -515,29 +501,54 @@ export default {
       height: 15px;
       width: 15px;
     }
+
+    #open-staged {
+      right: -20px;
+    }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-
-  }
-
-  /* Custom, iPhone Retina */
+  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    .commands {
+      padding-right: 8px;
+    }
 
+    .commands-slide {
+    }
+
+    .commands-slide > * {
+      /*height: 35px;*/
+    }
+
+    .methods {
+      height: 37px;
+      margin-right: 9px;
+    }
+
+    .functions {
+      padding-left: 15px;
+    }
+
+    .command-control-button-group {
+      height: 35px;
+      margin-right: 10px;
+    }
+
+    .command-control-button {
+      height: 15px;
+      width: 15px;
+    }
+
+    #open-staged {
+      right: -20px;
+    }
   }
 
   /* iPad */
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .commands {
-      height: 115px;
-    }
   }
 
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .commands {
-      height: 115px;
-    }
   }
 
   ::-webkit-scrollbar {

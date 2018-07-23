@@ -51,6 +51,10 @@ import PuzzlePieces from './Puzzle_pieces'
 export default {
   mounted () {
     this.swiperMethods = document.querySelector('.staged-functions-swiper').swiper
+    this.groupSize = this.swiper.calculateGroupSize('staged-functions')
+    window.addEventListener('resize', () => {
+      this.groupSize = this.swiper.calculateGroupSize('staged-functions')
+    })
   },
   computed: {
     nextButton () {
@@ -118,7 +122,7 @@ export default {
         sort: false
       },
       swiperMethods: {},
-      swiper: new Swiper(),
+      swiper: Swiper,
       groupSize: 14
     }
   },
@@ -131,6 +135,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $staged-functions-padding-left: 32px;
+
   .staged-functions-container {
     position: relative;
     height: 100%;
@@ -140,7 +146,7 @@ export default {
   .staged-functions-header {
     position: absolute;
     top: 10px;
-    left: 38px;
+    left: $staged-functions-padding-left;
     span {
       font-size: 18px;
     }
@@ -151,8 +157,58 @@ export default {
     width: 100%;
     overflow: auto;
     display: flex;
-    padding-left: 33px;
+    padding-left: $staged-functions-padding-left;
     justify-content: flex-start;
     align-items: center;
+  }
+
+  /* Medium Devices, Desktops */
+  @media only screen and (max-width : 992px) {
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+
+  }
+
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
+    $staged-functions-padding-left: 14px;
+
+    .staged-functions {
+      padding-left: $staged-functions-padding-left;
+    }
+
+    .staged-functions-header {
+      left: $staged-functions-padding-left;
+
+      span {
+        font-size: 12px;
+      }
+    }
+  }
+
+  /* iphone 5 portrait */
+  @media only screen and (max-width : 320px) {
+    $staged-functions-padding-left: 15.5px;
+
+    .staged-functions {
+      padding-left: $staged-functions-padding-left;
+    }
+
+    .staged-functions-header {
+      left: $staged-functions-padding-left;
+
+      span {
+        font-size: 12px;
+      }
+    }
+  }
+
+  /* iPad */
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+  }
+
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
   }
 </style>
