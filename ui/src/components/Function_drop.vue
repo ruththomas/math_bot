@@ -9,7 +9,7 @@
       <div v-if="showMesh" class="mesh-background"></div>
       <draggable
         class="function-drop"
-        :class="functionGroups.length <= 1 ? 'center-function-drop' : ''"
+        :class="[(functionGroups.length <= 1 ? 'center-function-drop' : ''), className]"
         :list="list"
         :options="options"
         @change="change($event, gInd)"
@@ -134,7 +134,7 @@ export default {
   data () {
     return {
       swiperMethods: {},
-      swiper: new Swiper()
+      swiper: Swiper
     }
   },
   methods: {
@@ -151,11 +151,13 @@ export default {
     draggable,
     FunctionBox
   },
-  props: ['id', 'origin', 'list', 'options', 'change', 'start', 'end', 'groupSize', 'sizeLimit']
+  props: ['id', 'className', 'origin', 'list', 'options', 'change', 'start', 'end', 'groupSize', 'sizeLimit']
 }
 </script>
 
 <style scoped lang="scss">
+  $function-drop-padding-left: 33px;
+
   .function-drop-swiper {
     position: relative;
     height: 100%;
@@ -172,7 +174,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding-left: 33px;
+    padding-left: $function-drop-padding-left;
     margin: 0 auto;
   }
 
@@ -208,7 +210,7 @@ export default {
     z-index: 0;
     display: flex;
     align-items: center;
-    padding-left: 33px;
+    padding-left: $function-drop-padding-left;
     opacity: 0.2;
     justify-content: flex-start;
   }
@@ -228,14 +230,50 @@ export default {
 
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
+    $function-drop-padding-left: 14px;
 
+    .function-drop {
+      padding-left: $function-drop-padding-left;
+    }
+
+    .drop-placeholder {
+      padding-left: $function-drop-padding-left;
+    }
+
+    .editMain-function-drop-swiper {
+      .function-drop {
+        padding-left: 10px;
+      }
+
+      .drop-placeholder {
+        padding-left: 10px;
+      }
+    }
   }
 
-  /* Custom, iPhone 5 Retina */
+  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    $function-drop-padding-left: 14px;
 
+    .function-drop {
+      padding-left: $function-drop-padding-left;
+    }
+
+    .drop-placeholder {
+      padding-left: $function-drop-padding-left;
+    }
+
+    .editMain-function-drop-swiper {
+      .function-drop {
+        padding-left: 10px;
+      }
+
+      .drop-placeholder {
+        padding-left: 10px;
+      }
+    }
   }
 
   /* iPad */

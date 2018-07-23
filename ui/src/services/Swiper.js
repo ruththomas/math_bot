@@ -23,10 +23,18 @@ class Swiper {
     return this.groupFunctions(arr, size, groups)
   }
 
-  calculateGroupSize () {
-    console.log('CALC')
-    return 14
+  _containerWidth (containerClass) {
+    return $(`.${containerClass}`).innerWidth()
+  }
+
+  _pieceSize (containerClass) {
+    return $(`.${containerClass}`).find('.piece:first').outerHeight()
+  }
+
+  calculateGroupSize (containerClass) {
+    return Math.floor(this._containerWidth(containerClass) / this._pieceSize(containerClass) - (containerClass !== 'edit-main-drop' ? 1 : 0))
   }
 }
 
-export default Swiper
+const swiper = new Swiper()
+export default swiper
