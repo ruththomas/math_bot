@@ -201,6 +201,10 @@ export default {
   $pagination-active-color: #B8E986;
   $pagination-inactive-color: rgba(255, 255, 255, 0.3);
   $pagination-bullet-size: 14px;
+  $button-height: 100%;
+  $button-offset: -47px;
+  $edit-main-button-offset-left: -41px;
+  $edit-main-button-offset-right: -29px;
 
   .swiper-container {
     display: flex;
@@ -209,6 +213,10 @@ export default {
   }
 
   .swiper-wrapper {
+    width: 100%;
+  }
+
+  .swiper-slide {
     width: 100%;
   }
 
@@ -267,11 +275,11 @@ export default {
   }
 
   .swiper-button-prev {
-    left: -45px;
+    left: $button-offset;
   }
 
   .swiper-button-next {
-    right: -45px;
+    right: $button-offset;
   }
 
   .swiper-button-slide-right {
@@ -286,11 +294,11 @@ export default {
 
   .editMain-function-drop-swiper {
     .swiper-button-prev {
-      left: -41px;
+      left: $edit-main-button-offset-left;
     }
 
     .swiper-button-next {
-      right: -25px;
+      right: $edit-main-button-offset-right;
     }
   }
 
@@ -300,5 +308,105 @@ export default {
 
   .hidden-swiper-pagination {
     opacity: 0;
+  }
+
+  /* Medium Devices, Desktops */
+  @media only screen and (max-width : 992px) {
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+
+  }
+
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
+    $pagination-bullet-size: 8px;
+    $button-offset: -21px;
+    $button-height: 32px;
+    $edit-main-button-offset-right: -13px;
+    $edit-main-button-offset-left: -21px;
+
+    .swiper-button-prev {
+      left: $button-offset;
+    }
+
+    .swiper-button-next {
+      right: $button-offset;
+    }
+
+    .swiper-pagination-bullet-custom {
+      width: $pagination-bullet-size;
+      height: $pagination-bullet-size;
+    }
+
+    .functions-swiper {
+      .swiper-button-prev, .swiper-button-next {
+        height: $button-height;
+      }
+
+      .swiper-pagination.swiper-pagination-bullets {
+        top: $button-height;
+      }
+    }
+
+    .editMain-function-drop-swiper {
+      .swiper-button-prev {
+        left: $edit-main-button-offset-left;
+      }
+
+      .swiper-button-next {
+        right: $edit-main-button-offset-right;
+      }
+    }
+  }
+
+  /* iphone 5 portrait */
+  @media only screen and (max-width : 320px) {
+    $pagination-bullet-size: 8px;
+    $button-offset: -21px;
+    $button-height: 32px;
+    $edit-main-button-offset-right: -13px;
+    $edit-main-button-offset-left: -21px;
+
+    .swiper-button-prev {
+      left: $button-offset;
+    }
+
+    .swiper-button-next {
+      right: $button-offset;
+    }
+
+    .swiper-pagination-bullet-custom {
+      width: $pagination-bullet-size;
+      height: $pagination-bullet-size;
+    }
+
+    .functions-swiper {
+      .swiper-button-prev, .swiper-button-next {
+        height: $button-height;
+      }
+
+      .swiper-pagination.swiper-pagination-bullets {
+        top: $button-height;
+      }
+    }
+
+    .editMain-function-drop-swiper {
+      .swiper-button-prev {
+        left: $edit-main-button-offset-left;
+      }
+
+      .swiper-button-next {
+        right: $edit-main-button-offset-right;
+      }
+    }
+  }
+
+  /* iPad */
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+  }
+
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
   }
 </style>

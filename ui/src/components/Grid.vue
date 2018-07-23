@@ -143,6 +143,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
+
   img {
     height: auto;
     width: auto;
@@ -151,9 +153,11 @@ export default {
   .total-grid {
     width: 100%;
     height: 100%;
+    display: flex;
   }
 
   .grid {
+    border: 1px solid $click-color;
     display: table;
     margin: 0 auto;
     z-index: 100;

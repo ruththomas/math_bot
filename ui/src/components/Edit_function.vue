@@ -52,8 +52,15 @@ import buildUtils from '../services/BuildFunction'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
+import Swiper from '../services/Swiper'
 
 export default {
+  mounted () {
+    this.groupSize = Swiper.calculateGroupSize('edit-function-content')
+    window.addEventListener('resize', () => {
+      this.groupSize = Swiper.calculateGroupSize('edit-function-content')
+    })
+  },
   computed: {
     editingIndex () {
       return this.$store.getters.getEditingIndex
@@ -288,7 +295,7 @@ export default {
     border-right: none !important;
     border-top: none !important;
     border-bottom: 1px solid #979797;
-    width: 350px;
+    margin-right: 20px;
     height: 23px;
     font-size: 18px;
     line-height: 21px;
@@ -303,120 +310,86 @@ export default {
 
   /* Medium Devices, Desktops */
   @media only screen and (max-width : 992px) {
-    .displayed-func {
-      height: 40px;
-      width: 40px;
-    }
-
-    .func-param-form {
-      left: 1px;
-      right: 0;
-    }
-    .func-param-form > * {
-      margin-right: 3px;
-    }
-
-    .func-name {
-      width: auto;
-      font-size: 10px;
-    }
-
-    .edit-function-data {
-      margin: 0;
-    }
-
-    .edit-function-content {
-      padding: 0;
-      height: 60px;
-    }
-
-    .close-edit-function {
-      right: -10px;
-      bottom: 26px;
-    }
   }
 
   /* Small Devices */
   @media only screen and (max-width : 667px) {
-    .displayed-func {
-      height: 40px;
-      width: 40px;
-    }
 
-    .func-param-form {
-      left: 1px;
-      right: 0;
-    }
-    .func-param-form > * {
-      margin-right: 3px;
-    }
+  }
 
-    .func-name {
-      width: auto;
-      font-size: 10px;
-    }
-
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
     .edit-function-data {
-      margin: 0;
-    }
+      top: -85px;
 
-    .edit-function-content {
-      padding: 0;
-      height: 60px;
-    }
+      .func-param-form {
+        left: 12px;
 
-    .close-edit-function {
-      right: -10px;
-      bottom: 26px;
+        .displayed-func {
+          height: 32px;
+          width: 32px;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+        }
+
+        .trash {
+          display: none;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-  }
-
-  /* Custom, iPhone Retina */
+  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    .edit-function-data {
+      top: -85px;
 
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: 32px;
+          width: 32px;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+        }
+
+        .trash {
+          display: none;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
   }
 
   /* iPad */
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .displayed-func {
-      height: 70px;
-      width: 70px;
-    }
-
-    .func-param-form {
-      left: 1px;
-      right: 0;
-    }
-    .func-param-form > * {
-      margin-right: 3px;
-    }
-
-    .func-name {
-      width: auto;
-      font-size: 18px;
-    }
-
-    .edit-function-data {
-      margin: 0;
-    }
-
-    .edit-function-content {
-      padding: 10px 20px 10px 20px;
-      height: 130px;
-    }
-
-    .close-edit-function {
-      bottom: 20px;
-      right: -20px;
-    }
   }
 
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
   }
 
 </style>
