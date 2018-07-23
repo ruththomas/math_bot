@@ -1,5 +1,5 @@
 import auth0 from 'auth0-js'
-import { AUTH0_DOMAIN, AUTH0_ID, AUTH_REDIRECT } from '../keys'
+import { AUTH0_DOMAIN, AUTH0_ID, AUTH_REDIRECT, AUTH_AUDIENCE } from '../keys'
 import router from './../router'
 import api from '../services/api'
 
@@ -19,7 +19,7 @@ class AuthService {
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_ID,
     redirectUri: AUTH_REDIRECT,
-    audience: 'https://math-academy.auth0.com/userinfo',
+    audience: AUTH_AUDIENCE,
     responseType: 'token id_token',
     scope: 'openid profile'
   })
