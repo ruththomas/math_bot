@@ -12,8 +12,8 @@
         <div
           class='function-control'
           :style="{'background-color': colorSelected.hex}"
+          @click="applyColorConditional"
         >
-          <!--@click="applyColorConditional"-->
         </div>
         <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="52" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
 
