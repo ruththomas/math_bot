@@ -1,18 +1,17 @@
 <template>
   <div class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
-    <div class="edit-main-drop">
-      <function-drop
-        :id="'edit-main'"
-        :list="mainFunctionFunc"
-        :options="mainDraggableOptions"
-        :change="editFunction"
-        :start="moving"
-        :end="end"
-        :origin="'editMain'"
-        :group-size="groupSize"
-        :size-limit="stepData.mainMax"
-      ></function-drop>
-    </div>
+    <function-drop
+      :id="'edit-main'"
+      :class="'edit-main-drop'"
+      :list="mainFunctionFunc"
+      :options="mainDraggableOptions"
+      :change="editFunction"
+      :start="moving"
+      :end="end"
+      :origin="'editMain'"
+      :group-size="groupSize"
+      :size-limit="stepData.mainMax"
+    ></function-drop>
 
     <div class="bar noDrag" v-if="Object.keys(robot).length">
       <!--<main-placeholder></main-placeholder>-->
@@ -52,8 +51,15 @@ import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import MainPlaceholder from './Main_placeholder'
+import Swiper from '../services/Swiper'
 
 export default {
+  mounted () {
+    this.groupSize = Swiper.calculateGroupSize('edit-main-drop')
+    window.addEventListener('resize', () => {
+      this.groupSize = Swiper.calculateGroupSize('edit-main-drop')
+    })
+  },
   computed: {
     mainFunctionFunc () {
       const mainToken = this.$store.getters.getMainFunction
@@ -179,27 +185,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $edit-main-padding: 12%;
+
   .edit-main {
     position: relative;
     width: 100%;
-    height: 120px;
+    height: 100%;
     z-index: 1000;
+    padding: 0 $edit-main-padding 0 $edit-main-padding;
   }
 
   .deactivate-edit-main {
     opacity: 0;
   }
 
-  .edit-main-drop {
-    width: 70%;
-    height: 100%;
-    margin: 0 auto;
-  }
-
   .bar {
     position: absolute;
-    left: 48px;
-    right: 48px;
+    left: 10px;
+    right: 10px;
     top: 50%;
     height: 2px;
     background-color: #B8E986;
@@ -256,24 +259,29 @@ export default {
 
   /* Medium Devices, Desktops */
   @media only screen and (max-width : 992px) {
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) {
+
+  }
+
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
+    $edit-main-padding-left: 12%;
+    $edit-main-padding-right: 12%;
+
     .edit-main {
-      padding: 0;
-      height: 55px;
+      padding: 0 $edit-main-padding-right 0 $edit-main-padding-left;
     }
 
-    .function-drop {
-      height: 60px;
-      width: 75%;
+    .bar {
+      right: -10px;
+      left: -10px;
     }
 
     .dialog-button {
       top: -9px;
-    }
-
-    .bar {
-      top: 30%;
-      left: -10px;
-      right: -10px;
     }
 
     .play {
@@ -281,7 +289,7 @@ export default {
     }
 
     .stop {
-      display: none;
+      right: -25px;
     }
 
     .speed {
@@ -293,30 +301,28 @@ export default {
       width: 40px;
       height: 40px;
     }
+
+    .edit-main .function-drop {
+      width: 70%!important;
+    }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  /* iphone 5 portrait */
+  @media only screen and (max-width : 320px) {
+    $edit-main-padding-left: 12%;
+    $edit-main-padding-right: 12%;
 
     .edit-main {
-      padding: 0;
-      align-items: center;
-      height: 60px;
+      padding: 0 $edit-main-padding-right 0 $edit-main-padding-left;
     }
 
-    .function-drop {
-      height: 60px;
-      width: 75%;
+    .bar {
+      right: -20px;
+      left: -10px;
     }
 
     .dialog-button {
       top: -9px;
-    }
-
-    .bar {
-      top: 30%;
-      left: -10px;
-      right: -10px;
     }
 
     .play {
@@ -342,16 +348,6 @@ export default {
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
   /* iPad */
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     .edit-main {
@@ -360,12 +356,6 @@ export default {
 
     .dialog-button {
       top: -15px;
-    }
-
-    .bar {
-      top: 39%;
-      left: -10px;
-      right: -10px;
     }
 
     .stop {

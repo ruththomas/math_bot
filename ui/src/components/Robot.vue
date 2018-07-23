@@ -185,13 +185,14 @@ export default {
     flex-direction: column;
     position: relative;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     /*border: 1px solid yellowgreen;*/
   }
 
   #edit-main-box {
     display: flex;
-    /*border: 1px solid mediumvioletred;*/
+    border: 1px solid mediumvioletred;
+    flex: 1;
   }
 
   #commands-box {
@@ -199,8 +200,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     flex: 1;
-    max-height: 150px;
-    /*border: 1px solid firebrick;*/
+    border: 1px solid firebrick;
   }
 
   .filler-box {
@@ -222,6 +222,17 @@ export default {
 
   /* Small Devices */
   @media only screen and (max-width : 667px) {
+  }
+
+  @media only screen and (max-width: 568px) {
+  }
+
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
+    #robot {
+      padding: 1vh 60px 0 60px;
+    }
+
     #control-panel-box {
     }
 
@@ -232,25 +243,44 @@ export default {
     #edit-main-box {
     }
 
+    #commands-box {
+      /*max-height: 95px;*/
+    }
+
     #robot {
       width: 100vw;
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-  }
-
-  /* Custom, iPhone Retina */
+  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    #robot {
+      padding: 1vh 20px 0 20px;
+    }
 
+    #control-panel-box {
+      flex: 1;
+    }
+
+    #grid-box {
+      justify-content: flex-start;
+      flex: 2;
+    }
+
+    #edit-main-box {
+    }
+
+    #commands-box {
+      /*max-height: 95px;*/
+    }
+
+    #robot {
+      width: 100vw;
+    }
   }
 
   /* iPad */
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    #robot {
-      width: 100vw;
-    }
   }
 
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
