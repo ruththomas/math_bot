@@ -40,6 +40,7 @@
           </div>
         </div>
       </div>
+      <splash-screen v-else></splash-screen>
     </transition>
     <robotcarrying></robotcarrying>
   </div>
@@ -51,6 +52,7 @@ import Congrats from './Congrats'
 import Tryagain from './Try_again'
 import Robotcarrying from './Robot_carrying'
 import VideoHint from './Video_hint'
+import SplashScreen from './Splash_screen'
 
 export default {
   computed: {
@@ -137,7 +139,8 @@ export default {
     Congrats,
     Tryagain,
     Robotcarrying,
-    VideoHint
+    VideoHint,
+    SplashScreen
   }
 }
 </script>
