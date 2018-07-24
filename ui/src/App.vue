@@ -164,11 +164,9 @@ export default {
     width: 22px;
     height: 22px;
   }
-
   ::-webkit-scrollbar-track {
     visibility: hidden;
   }
-
   ::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 10px 10px rgba(216, 216, 216, 0.5);
     border: solid 8px transparent;
