@@ -105,27 +105,6 @@ export default {
     }
   }
 
-  @-webkit-keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-  @-moz-keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-  @-o-keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-  @-ms-keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-  @keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-
   @keyframes shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
     10% { transform: translate(-1px, -2px) rotate(-1deg); }
