@@ -3,94 +3,36 @@
     <div class="staged-functions-header">
       <span>Staged functions</span>
     </div>
-    <swiper class="staged-functions-swiper" :options="swiper.options">
-      <swiper-slide
-        v-for="(group, gInd) in functionGroups"
-        :key="'staged-swiper/' + gInd"
+
+    <div class="staged-functions-content">
+      <draggable
+        class="staged-functions"
+        :list="stagedFunctions"
+        :options="draggableOptions"
       >
-        <draggable
-          class="staged-functions"
-          :staged-group-ind="gInd"
-          :list="stagedFunctions"
-          :options="draggableOptions"
-        >
-          <function-box
-            v-for="(func, fInd) in group"
-            :key="'staged-func/' + fInd"
-            :func="func"
-            :ind="func.index"
-            :collection="stagedFunctions"
-            :origin="'stagedFunctions'"
-            :data-function-index="func.index"
-          ></function-box>
-        </draggable>
-      </swiper-slide>
-      <div class="swiper-button-prev" slot="button-prev">
-        <puzzle-pieces
-          :piece-to-show="'closed'"
-          :func="prevButton"
-        ></puzzle-pieces>
-      </div>
-      <div class="swiper-button-next" slot="button-next">
-        <puzzle-pieces
-          :piece-to-show="'closed'"
-          :func="nextButton"
-        ></puzzle-pieces>
-      </div>
-      <div class="swiper-pagination swiper-pagination-bullets" :class="functionGroups.length < 2 ? 'hidden-swiper-pagination' : ''" slot="pagination"></div>
-    </swiper>
+        <function-box
+          v-for="(func, ind) in stagedFunctions"
+          :key="'staged-func/' + ind"
+          :func="func"
+          :ind="func.index"
+          :collection="stagedFunctions"
+          :origin="'stagedFunctions'"
+          :data-function-index="func.index"
+        ></function-box>
+      </draggable>
+    </div>
   </div>
 </template>
 
 <script>
 import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
-import Swiper from '../services/Swiper'
 import PuzzlePieces from './Puzzle_pieces'
 
 export default {
   mounted () {
-    this.swiperMethods = document.querySelector('.staged-functions-swiper').swiper
-    this.groupSize = this.swiper.calculateGroupSize('staged-functions')
-    window.addEventListener('resize', () => {
-      this.groupSize = this.swiper.calculateGroupSize('staged-functions')
-    })
   },
   computed: {
-    nextButton () {
-      return {
-        name: '',
-        image: this.nextFirstImage,
-        color: 'default'
-      }
-    },
-    prevButton () {
-      return {
-        name: '',
-        image: this.prevLastImage,
-        color: 'default'
-      }
-    },
-    nextFirstImage () {
-      const nextInd = this.currentSwiperInd + 1
-
-      if (this.functionGroups.length > nextInd) {
-        return this.functionGroups[nextInd][0].image
-      }
-    },
-    prevLastImage () {
-      const prevInd = this.currentSwiperInd - 1
-
-      if (prevInd >= 0) {
-        return this.functionGroups[prevInd][this.functionGroups[prevInd].length - 1].image
-      }
-    },
-    currentSwiperInd () {
-      return this.swiperMethods.realIndex
-    },
-    functionGroups () {
-      return this.swiper.groupFunctions(this.stagedFunctions.slice(), this.groupSize)
-    },
     stagedFunctions () {
       return this.$store.getters.getStagedFunctions
     },
@@ -106,8 +48,6 @@ export default {
   },
   data () {
     return {
-      clicks: 0,
-      timer: null,
       draggableOptions: {
         group: {
           name: 'commands-staged',
@@ -120,10 +60,7 @@ export default {
         ghostClass: 'ghost',
         chosenClass: 'chosen',
         sort: false
-      },
-      swiperMethods: {},
-      swiper: Swiper,
-      groupSize: 14
+      }
     }
   },
   components: {
@@ -135,31 +72,46 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $staged-functions-padding-left: 32px;
+  $staged-functions-padding: 32px;
+  $staged-functions-padding-right: 50%;
 
   .staged-functions-container {
     position: relative;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
+    height: 100%;
   }
 
   .staged-functions-header {
-    position: absolute;
-    top: 10px;
-    left: $staged-functions-padding-left;
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 $staged-functions-padding 0 $staged-functions-padding;
     span {
+      padding-left: 4px;
       font-size: 18px;
     }
   }
 
-  .staged-functions {
-    height: 100%;
-    width: 100%;
+  .staged-functions-content {
+    flex: 2;
     overflow: auto;
-    display: flex;
-    padding-left: $staged-functions-padding-left;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
+    position: relative;
+
+    .staged-functions {
+      padding: 0 $staged-functions-padding-right 0 $staged-functions-padding;
+      min-width: min-content;
+      display: flex;
+      margin: 0 auto;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
 
   /* Medium Devices, Desktops */
