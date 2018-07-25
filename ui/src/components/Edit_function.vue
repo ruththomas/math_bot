@@ -100,10 +100,6 @@ export default {
       colors: {
         default: {
           hex: '#FFFFFF',
-          next: 'grey'
-        },
-        grey: {
-          hex: '#CCCCCC',
           next: 'blue'
         },
         blue: {
@@ -229,6 +225,8 @@ export default {
     position: relative;
     overflow: hidden;
     height: 100%;
+    display: flex;
+    align-items: flex-end;
   }
 
   .edit-function-drop > * {
