@@ -161,6 +161,7 @@ export default {
 
   .grid {
     border: 1px solid $click-color;
+    border-radius: 3px;
     display: table;
     margin: 0 auto;
     z-index: 100;
