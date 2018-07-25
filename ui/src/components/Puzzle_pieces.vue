@@ -8,8 +8,8 @@
       data-toggle="tooltip" :title="func.name"
       @click="method ? method($event, func, ind) : ''">
       <div v-if="showName">
-        <div v-if="func.name !== ''" class="command-name">{{func.name}}</div>
-        <div v-else class="command-name command-name-empty">Name me!</div>
+        <div v-if="func.name !== ''" class="command-name" :class="'piece-' + func.color">{{func.name}}</div>
+        <div v-else class="command-name command-name-empty" :class="'piece-' + func.color">Name me!</div>
       </div>
     </div>
 
@@ -95,12 +95,18 @@ export default {
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
       border-color: #FFFFFF!important;
     }
+    .command-name {
+      background-color: #FFFFFF!important;
+    }
   }
 
   .piece-green {
     border-color: #50E3C2!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
       border-color: #50E3C2!important;
+    }
+    .command-name {
+      background-color: #50E3C2!important;
     }
   }
 
@@ -109,12 +115,18 @@ export default {
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
       border-color: #4A90E2!important;
     }
+    .command-name {
+      background-color: #4A90E2!important;
+    }
   }
 
   .piece-pink {
     border-color: #FF98B1!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
       border-color: #FF98B1!important;
+    }
+    .command-name {
+      background-color: #FF98B1!important;
     }
   }
 
@@ -123,12 +135,18 @@ export default {
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
       border-color: #F25C5C!important;
     }
+    .command-name {
+      background-color: #F25C5C!important;
+    }
   }
 
   .piece-purple {
     border-color: #CA7AFF!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
       border-color: #CA7AFF!important;
+    }
+    .command-name {
+      background-color: #CA7AFF!important;
     }
   }
 
