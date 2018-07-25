@@ -5,7 +5,7 @@
       :evt="evt"
     ></popover-bucket>
 
-    <div class="commands-slide">
+    <div class="lambdas-container">
       <draggable
         class="methods"
         :list="commands"
@@ -24,48 +24,27 @@
         ></function-box>
       </draggable>
 
-      <swiper class="functions-swiper" :options="swiper.options">
-        <swiper-slide
-          v-for="(group, gInd) in activeFunctionGroups"
-          :key="'active-functions/' + gInd"
+      <div class="functions-container">
+        <draggable
+          class="functions"
+          :list="activeFunctions"
+          :options="functionOptions"
+          @start="start"
+          @change="moveFunction"
+          @end="end"
+          @add="addToActiveFunc"
         >
-          <draggable
-            class="functions"
-            :list="activeFunctions"
-            :options="functionOptions"
-            @start="start"
-            @change="moveFunction($event, gInd)"
-            @end="end"
-            @add="addToActiveFunc($event, gInd)"
-          >
-            <function-box
-              v-if="group !== null"
-              v-for="(func, ind) in group"
-              :key="ind + '/' + func.created_id"
-              :func="func"
-              :ind="ind"
-              :collection="activeFunctions"
-              :origin="'functions'"
-              @click.native="editFunction($event, func, gInd, ind)"
-            ></function-box>
-          </draggable>
-        </swiper-slide>
-        <div class="swiper-button-prev" slot="button-prev">
-          <puzzle-pieces
-            :piece-to-show="'closed'"
-            :func="prevButton"
-            :show-name="true"
-          ></puzzle-pieces>
-        </div>
-        <div class="swiper-button-next" slot="button-next">
-          <puzzle-pieces
-            :piece-to-show="'closed'"
-            :func="nextButton"
-            :show-name="true"
-          ></puzzle-pieces>
-        </div>
-        <div class="swiper-pagination swiper-pagination-bullets" :class="activeFunctionGroups.length < 2 ? 'hidden-swiper-pagination' : ''" slot="pagination"></div>
-      </swiper>
+          <function-box
+            v-for="(func, ind) in activeFunctions"
+            :key="ind + '/' + func.created_id"
+            :func="func"
+            :ind="ind"
+            :collection="activeFunctions"
+            :origin="'functions'"
+            @click.native="editFunction($event, func, ind)"
+          ></function-box>
+        </draggable>
+      </div>
     </div>
 
     <img
@@ -84,55 +63,14 @@ import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
 import uId from 'uid'
-import Swiper from '../services/Swiper'
 import buildUtils from '../services/BuildFunction'
 import PuzzlePieces from './Puzzle_pieces'
 
 export default {
   name: 'FunctionDrop',
   mounted () {
-    this.swiperMethods = document.querySelector('.functions-swiper').swiper
-    this.activeFunctionsGroupsSize = this.swiper.calculateGroupSize('functions')
-    window.addEventListener('resize', () => {
-      this.activeFunctionsGroupsSize = this.swiper.calculateGroupSize('functions')
-    })
   },
   computed: {
-    nextButton () {
-      return {
-        name: this.nextFirstFunction.name,
-        image: this.nextFirstFunction.image,
-        color: 'default'
-      }
-    },
-    prevButton () {
-      return {
-        name: this.prevFirstFunction.name,
-        image: this.prevFirstFunction.image,
-        color: 'default'
-      }
-    },
-    nextFirstFunction () {
-      const nextInd = this.currentSwiperInd + 1
-
-      if (this.activeFunctionGroups.length > nextInd) {
-        return this.activeFunctionGroups[nextInd][0]
-      } else {
-        return {name: '', image: ''}
-      }
-    },
-    prevFirstFunction () {
-      const prevInd = this.currentSwiperInd - 1
-
-      if (prevInd >= 0) {
-        return this.activeFunctionGroups[prevInd][this.activeFunctionGroups[prevInd].length - 1]
-      } else {
-        return {name: '', image: ''}
-      }
-    },
-    currentSwiperInd () {
-      return this.swiperMethods.realIndex
-    },
     evt () {
       return this.commandEvt
     },
@@ -160,15 +98,8 @@ export default {
     commands () {
       return this.$store.getters.getCommands
     },
-    activeFunctionGroups () {
-      const groups = this.swiper.groupFunctions(this.activeFunctions.slice(), this.activeFunctionsGroupsSize)
-      return groups.length ? groups : [null]
-    },
     activeFunctions () {
       return this.$store.getters.getActiveFunctions
-    },
-    colorSelected () {
-      return this.$store.getters.getColorSelected
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
@@ -216,15 +147,7 @@ export default {
         ghostClass: 'ghost',
         sort: true
       },
-      swiperMethods: {},
-      swiper: Swiper,
-      activeFunctionsGroupsSize: 14,
       currentColor: this.colorSelected
-    }
-  },
-  watch: {
-    commands (_) {
-      this.activeFunctionsGroupsSize = this.swiper.calculateGroupSize('functions')
     }
   },
   methods: {
@@ -260,9 +183,8 @@ export default {
       this.$store.dispatch('updateEditingIndex', null)
       this.$store.dispatch('updateFunctionAreaShowing', this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction')
     },
-    editFunction (evt, func, groupInd, funcInd) {
+    editFunction (evt, func, ind) {
       this.commandEvt = evt
-      const ind = buildUtils._calcIndex(this.activeFunctionsGroupsSize, groupInd, funcInd)
       const i = ind === this.editingIndex ? null : ind
       if (i !== null) this.editingFunctionMessage(func)
       this.toggleEditFunction(i)
@@ -275,22 +197,18 @@ export default {
     end () {
       this.$store.dispatch('toggleShowMesh', false)
     },
-    moveFunction (evt, groupInd) {
+    moveFunction (evt) {
       if (evt.moved) {
         buildUtils.moveFunction({
-          context: this,
-          groupSize: this.activeFunctionsGroupsSize,
-          groupInd: groupInd,
-          evt: evt
+          oldIndex: evt.moved.oldIndex,
+          newIndex: evt.moved.newIndex
         })
       }
     },
-    addToActiveFunc (evt, groupInd) {
+    addToActiveFunc (evt) {
       buildUtils.activateFunction({
-        context: this,
-        groupSize: this.activeFunctionsGroupsSize,
-        groupInd: groupInd,
-        evt: evt
+        stagedIndex: evt.oldIndex,
+        activeIndex: evt.newIndex
       })
     }
   },
@@ -305,6 +223,9 @@ export default {
 
 <style scoped lang="scss">
   $click-color: #B8E986;
+  $functions-padding-left: 30px;
+  $functions-padding-right: 75%;
+
   .invisible {
     visibility: hidden;
   }
@@ -319,7 +240,7 @@ export default {
     padding: 10px 0;
   }
 
-  .commands-slide {
+  .lambdas-container {
     transition-duration: 300ms;
     width: 100%;
     height: 100%;
@@ -327,7 +248,7 @@ export default {
     justify-content: flex-start;
   }
 
-  .commands-slide > * {
+  .lambdas-container > * {
     display: flex;
     padding: 0 3px 0 0;
     height: 100%;
@@ -343,101 +264,25 @@ export default {
     border: 1px solid $click-color;
     background-color: rgba(0, 0, 0, 0.6);
     height: 94px;
-    padding: 2px;
     border-radius: 3px;
-    margin-top: -2px;
     margin-left: -20px;
-    margin-right: 20px;
   }
 
   .methods > * {
     float: left;
   }
 
-  .functions {
-    display: flex;
-    padding-left: 30px;
-    height: 100%;
-  }
+  .functions-container {
+    overflow: auto;
+    width: 100%;
+    margin-left: 12px;
 
-  .two-x-command-name {
-    top: 40px;
-    height: 25px;
-  }
-
-  .three-x-command-name {
-    top: 46px;
-    height: 37px;
-  }
-
-  .four-x-command-name {
-    top: 52px;
-    height: 49px;
-  }
-
-  .five-x-command-name {
-    top: 58px;
-    height: 60px;
-  }
-
-  .funcText {
-    width: 94%;
-    position: absolute;
-    top: 1px;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .commandText {
-    position: absolute;
-    top: 1px;
-    left: 0;
-    right: 0;
-    white-space: nowrap;
-  }
-
-  .command-control-button-group {
-    height: 100%;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    margin-right: 20px;
-  }
-
-  .command-control-button-group:after {
-    content:"";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    border-left: 2px solid $click-color;
-    transform: translate(-50%);
-  }
-
-  .command-control-button {
-    cursor: pointer;
-    height: 30px;
-    width: 30px;
-    right: -21px;
-  }
-
-  .command-button {
-    max-height: 30px;
-    max-width: 30px;
-  }
-
-  .commands-up {
-    -webkit-transform: rotate(-90deg);
-    transform:rotate(-90deg);
-  }
-
-  .commands-down {
-    -webkit-transform: rotate(90deg);
-    transform:rotate(90deg);
+    .functions {
+      display: flex;
+      height: 100%;
+      width: min-content;
+      padding: 0 $functions-padding-right 0 $functions-padding-left;
+    }
   }
 
   #commands-box {
@@ -476,10 +321,10 @@ export default {
       padding-right: 7px;
     }
 
-    .commands-slide {
+    .lambdas-container {
     }
 
-    .commands-slide > * {
+    .lambdas-container > * {
       /*height: 35px;*/
     }
 
@@ -513,10 +358,10 @@ export default {
       padding-right: 8px;
     }
 
-    .commands-slide {
+    .lambdas-container {
     }
 
-    .commands-slide > * {
+    .lambdas-container > * {
       /*height: 35px;*/
     }
 
@@ -550,9 +395,4 @@ export default {
 
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
   }
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-
 </style>

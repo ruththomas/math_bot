@@ -191,7 +191,7 @@ export default {
 
   #edit-main-box {
     display: flex;
-    border: 1px solid mediumvioletred;
+    /*border: 1px solid mediumvioletred;*/
     flex: 1;
   }
 
@@ -200,7 +200,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     flex: 1;
-    border: 1px solid firebrick;
+    /*border: 1px solid firebrick;*/
   }
 
   .filler-box {

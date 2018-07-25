@@ -6,10 +6,10 @@
       :list="mainFunctionFunc"
       :options="mainDraggableOptions"
       :change="editFunction"
+      :add="add"
       :start="moving"
       :end="end"
       :origin="'editMain'"
-      :group-size="groupSize"
       :size-limit="stepData.mainMax"
     ></function-drop>
 
@@ -51,14 +51,10 @@ import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import MainPlaceholder from './Main_placeholder'
-import Swiper from '../services/Swiper'
 
 export default {
   mounted () {
-    this.groupSize = Swiper.calculateGroupSize('edit-main-drop')
-    window.addEventListener('resize', () => {
-      this.groupSize = Swiper.calculateGroupSize('edit-main-drop')
-    })
+    buildUtils._positionBar()
   },
   computed: {
     mainFunctionFunc () {
@@ -119,14 +115,13 @@ export default {
           put: true
         },
         animation: 100,
-        scrollSensitivity: 500,
         ghostClass: 'ghost',
         chosenClass: 'chosen',
         filter: '.noDrag',
-        dragClass: 'dragging'
+        dragClass: 'dragging',
+        sort: true
       },
-      runCompiled: new RunCompiled(this),
-      groupSize: 10
+      runCompiled: new RunCompiled(this)
     }
   },
   methods: {
@@ -144,14 +139,9 @@ export default {
       this.mainDraggableOptions.group.put = bool
       if (!bool) this.fullMessage()
     },
-    editFunction (evt, groupInd) {
+    editFunction (evt) {
       if (!evt.hasOwnProperty('removed')) {
-        buildUtils.addToFunction({
-          context: this,
-          groupSize: this.groupSize,
-          groupInd: groupInd,
-          added: evt.hasOwnProperty('added') ? evt.added : evt.moved
-        })
+        buildUtils.addToFunction()
       }
       this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
     },
@@ -166,13 +156,18 @@ export default {
     adjustSpeed () {
       this.$store.dispatch('changeRobotSpeed')
     },
+    add () {
+      buildUtils._positionBar()
+    },
     moving () {
       this.$store.dispatch('updateTrashVisible', true)
       this.$store.dispatch('toggleShowMesh', true)
+      buildUtils._positionBar()
     },
     end () {
       this.$store.dispatch('toggleShowMesh', false)
       this.$store.dispatch('updateTrashVisible', false)
+      buildUtils._positionBar()
     }
   },
   components: {
@@ -201,14 +196,15 @@ export default {
 
   .bar {
     position: absolute;
-    left: 10px;
-    right: 10px;
+    left: -50px;
+    right: -50px;
     top: 50%;
     height: 2px;
     background-color: #B8E986;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 0;
   }
 
   .red-bar {
