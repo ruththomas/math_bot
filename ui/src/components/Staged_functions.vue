@@ -79,14 +79,13 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 100%;
     height: 100%;
   }
 
   .staged-functions-header {
     display: flex;
-    flex: 1;
     justify-content: flex-start;
     align-items: center;
     padding: 0 $staged-functions-padding 0 $staged-functions-padding;
@@ -97,20 +96,12 @@ export default {
   }
 
   .staged-functions-content {
-    flex: 2;
     overflow: auto;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-
     .staged-functions {
       padding: 0 $staged-functions-padding-right 0 $staged-functions-padding;
       min-width: min-content;
       display: flex;
       margin: 0 auto;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
     }
   }
 
