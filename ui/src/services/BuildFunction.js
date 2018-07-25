@@ -1,100 +1,96 @@
 import api from './api'
 import _ from 'underscore'
+import $store from '../store/store'
 
 class BuildFunction {
-  _tokenId (context) {
-    return context.$store.getters.getToken.token_id
+  $store = $store
+
+  _tokenId () {
+    return this.$store.getters.getToken.token_id
   }
 
-  _getCurrentFunction (context) {
-    const editingFunctionIndex = context.$store.getters.getEditingIndex
-    if (editingFunctionIndex === null) return context.$store.getters.getMainFunction
-    else return context.$store.getters.getActiveFunctions[editingFunctionIndex]
+  _getCurrentFunction () {
+    const editingFunctionIndex = this.$store.getters.getEditingIndex
+    if (editingFunctionIndex === null) return this.$store.getters.getMainFunction
+    else return this.$store.getters.getActiveFunctions[editingFunctionIndex]
   }
 
-  _getActiveFunctions (context) {
-    return context.$store.getters.getActiveFunctions
+  _getActiveFunctions () {
+    return this.$store.getters.getActiveFunctions
   }
 
-  _getMethods (context) {
-    return context.$store.getters.getCommands
+  _getMethods () {
+    return this.$store.getters.getCommands
   }
 
-  _updatedLambdas (context, lambdas) {
+  _updatedLambdas (lambdas) {
     // console.log(lambdas)
-    context.$store.dispatch('updateLambdas', lambdas)
+    this.$store.dispatch('updateLambdas', lambdas)
   }
 
-  _putFunc ({context, funcToken, override}) {
-    api.putFunc({tokenId: this._tokenId(context), funcToken, override}, lambdas => this._updatedLambdas(context, lambdas))
+  _putFunc ({funcToken, override}) {
+    api.putFunc({tokenId: this._tokenId(), funcToken, override}, lambdas => this._updatedLambdas(lambdas))
   }
 
-  _activateFunc ({context, stagedIndex, activeIndex}) {
-    api.activateFunction({tokenId: this._tokenId(context), stagedIndex, activeIndex}, lambdas => this._updatedLambdas(context, lambdas))
+  _activateFunc ({stagedIndex, activeIndex}) {
+    api.activateFunction({tokenId: this._tokenId(), stagedIndex, activeIndex}, lambdas => this._updatedLambdas(lambdas))
   }
 
-  _moveFunction ({context, oldIndex, newIndex}) {
-    api.updateActives({tokenId: this._tokenId(context), oldIndex, newIndex}, lambdas => this._updatedLambdas(context, lambdas))
+  _moveFunction ({oldIndex, newIndex}) {
+    api.updateActives({tokenId: this._tokenId(), oldIndex, newIndex}, lambdas => this._updatedLambdas(lambdas))
   }
 
-  _calcIndex (groupSize, groupInd, funcInd) {
-    return groupSize * groupInd + funcInd
+  _positionBar (reset) {
+    const $mainDropZone = $('.edit-main > .function-drop > .function-drop-drop-zone')
+    const $bar = $('.bar')
+    const mainDropZoneHalf = $mainDropZone.height() / 2
+    const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
+    const barOffsetTop = $bar.offset().top
+    const barPosTop = $bar.position().top
+    if (reset) {
+      $bar.css({top: '50%'})
+    } else {
+      $bar.css({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'})
+    }
   }
 
-  updateName ({context}) {
-    const currentFunction = this._getCurrentFunction(context)
-    this._putFunc({context, funcToken: currentFunction})
+  updateName () {
+    const currentFunction = this._getCurrentFunction()
+    this._putFunc({funcToken: currentFunction})
   }
 
-  deleteItemFromFunction ({context}) {
-    const currentFunction = this._getCurrentFunction(context)
-    this._putFunc({context, funcToken: currentFunction, override: true})
+  deleteItemFromFunction () {
+    const currentFunction = this._getCurrentFunction()
+    this._positionBar()
+    this._putFunc({funcToken: currentFunction, override: true})
   }
 
-  deleteFunction ({context}) {
-    const currentFunction = this._getCurrentFunction(context)
+  deleteFunction () {
+    const currentFunction = this._getCurrentFunction()
     currentFunction.func = []
-
-    this._putFunc({context, funcToken: currentFunction, override: true})
+    this._positionBar()
+    this._putFunc({funcToken: currentFunction, override: true})
   }
 
-  adjustColor ({context, color}) {
-    const currentFunction = this._getCurrentFunction(context)
+  adjustColor ({color}) {
+    const currentFunction = this._getCurrentFunction()
     currentFunction.color = color
 
-    this._putFunc({context, funcToken: currentFunction})
+    this._putFunc({funcToken: currentFunction})
   }
 
-  addToFunction ({context, groupSize, groupInd, added}) {
-    const currentFunction = this._getCurrentFunction(context)
-    const indexInCurrent = this._calcIndex(groupSize, groupInd, added.newIndex)
-
-    currentFunction.func.splice(added.newIndex, 1)
-
-    if (added.element.created_id < 1999) { // if a command
-      const methods = this._getMethods(context)
-      currentFunction.func.splice(indexInCurrent, 0, _.omit(methods[added.element.index], 'func'))
-    } else { // if a function
-      const swiperIndex = document.querySelector('.functions-swiper').swiper.realIndex
-      const activeIndex = this._calcIndex(10, swiperIndex, added.element.index)
-      const activeFunctions = this._getActiveFunctions(context)
-      currentFunction.func.splice(indexInCurrent, 0, _.omit(activeFunctions[activeIndex], 'func'))
-    }
-
-    this._putFunc({context, funcToken: currentFunction})
+  addToFunction () {
+    const currentFunc = this._getCurrentFunction()
+    currentFunc.func = currentFunc.func.map(f => _.omit(f, 'func'))
+    this._putFunc({funcToken: currentFunc})
   }
 
-  activateFunction ({context, groupSize, groupInd, evt}) {
-    const stagedIndex = this._calcIndex(14, evt.from.getAttribute('staged-group-ind'), evt.oldIndex)
-    const activeIndex = this._calcIndex(groupSize, groupInd, evt.newIndex)
-    this._activateFunc({context, stagedIndex: stagedIndex, activeIndex: activeIndex})
+  activateFunction ({stagedIndex, activeIndex}) {
+    this._activateFunc({stagedIndex: stagedIndex, activeIndex: activeIndex})
   }
 
-  moveFunction ({context, groupSize, groupInd, evt}) {
-    const oldIndex = this._calcIndex(groupSize, groupInd, evt.moved.oldIndex)
-    const newIndex = this._calcIndex(groupSize, groupInd, evt.moved.newIndex)
-
-    this._moveFunction({context, oldIndex: oldIndex, newIndex: newIndex})
+  moveFunction ({oldIndex, newIndex}) {
+    this._moveFunction({oldIndex: oldIndex, newIndex: newIndex})
   }
 }
 

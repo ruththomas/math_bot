@@ -315,6 +315,7 @@ export default {
       height: $piece-size;
       width: $piece-size;
       margin: 0 $piece-margin 0 $piece-margin;
+      z-index: 1000;
     }
 
     .puzzle-start, .puzzle-middle {

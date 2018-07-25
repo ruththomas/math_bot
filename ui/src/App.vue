@@ -72,7 +72,8 @@ export default {
   }
 
   .dragging, .ghost, .chosen {
-    height: 75px;
+    height: 70px;
+    width: 70px;
   }
 
   .dragging {

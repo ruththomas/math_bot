@@ -36,8 +36,8 @@
         :change="editFunction"
         :start="moving"
         :end="end"
+        :add="add"
         :origin="'editFunction'"
-        :group-size="groupSize"
         :size-limit="editingFunction.sizeLimit"
       ></function-drop>
 
@@ -52,14 +52,9 @@ import buildUtils from '../services/BuildFunction'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
-import Swiper from '../services/Swiper'
 
 export default {
   mounted () {
-    this.groupSize = Swiper.calculateGroupSize('edit-function-content')
-    window.addEventListener('resize', () => {
-      this.groupSize = Swiper.calculateGroupSize('edit-function-content')
-    })
   },
   computed: {
     editingIndex () {
@@ -95,7 +90,6 @@ export default {
   },
   data () {
     return {
-      groupSize: 14,
       func: {
         color: 'default',
         commandId: null,
@@ -199,6 +193,8 @@ export default {
     },
     moving (evt) {
       this.$store.dispatch('updateTrashVisible', true)
+    },
+    add (evt) {
     },
     end (evt) {
       this.$store.dispatch('updateTrashVisible', false)
