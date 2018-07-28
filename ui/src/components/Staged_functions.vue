@@ -86,6 +86,7 @@ export default {
 
   .staged-functions-header {
     display: flex;
+    height: 20%;
     justify-content: flex-start;
     align-items: center;
     padding: 0 $staged-functions-padding 0 $staged-functions-padding;
@@ -97,10 +98,15 @@ export default {
 
   .staged-functions-content {
     overflow: auto;
+    height: 100%;
+    width: 100%;
     .staged-functions {
       padding: 0 $staged-functions-padding-right 0 $staged-functions-padding;
       min-width: min-content;
       display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
       margin: 0 auto;
     }
   }

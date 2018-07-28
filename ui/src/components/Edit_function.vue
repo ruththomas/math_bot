@@ -15,7 +15,7 @@
           @click="applyColorConditional"
         >
         </div>
-        <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="52" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
+        <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="27" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
 
         <div
           class='function-control trash'
@@ -205,6 +205,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $form-left: 34px;
+
   .edit-function {
     position: relative;
     height: 100%;
@@ -248,7 +250,7 @@ export default {
     align-items: flex-end;
     position: absolute;
     bottom: 0;
-    left: 38px;
+    left: $form-left;
     z-index: 1001;
   }
 

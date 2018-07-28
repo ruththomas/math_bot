@@ -2,7 +2,7 @@
   <div class="function-drop">
     <draggable
       class="function-drop-drop-zone"
-      :class="showMesh ? 'mesh-background' : ''"
+      :class="[showMesh ? 'mesh-background' : '', origin + '-drop-zone']"
       :list="list"
       :options="options"
       @add="add"
@@ -11,27 +11,15 @@
       @end="end"
     >
       <function-box
-        v-for="(func, ind) in list"
+        v-for="(func, ind) in list.concat(placeHolders)"
+        :class="func.placeholder ? 'placeholder-piece noDrag' : ''"
         :key="origin + '-drop/' + ind"
         :func="func"
         :ind="ind"
-        :collection="list"
+        :collection="list.concat(placeHolders)"
         :origin="origin"
       ></function-box>
     </draggable>
-
-    <div
-      class="drop-placeholder"
-    >
-      <function-box
-        v-for="(placeHolder, ind) in placeHolders"
-        :key="origin + '-placeholder/' + ind"
-        :func="placeHolder"
-        :ind="ind"
-        :collection="placeHolders"
-        :origin="origin"
-      ></function-box>
-    </div>
   </div>
 </template>
 
@@ -45,8 +33,12 @@ export default {
   mounted () {
   },
   computed: {
-    placeHolders () { // todo
-      return []
+    placeHolders () {
+      if (this.sizeLimit < 100) {
+        return this.createPlaceHolders(this.sizeLimit).slice(this.list.length)
+      } else {
+        return []
+      }
     },
     showMesh () {
       return this.$store.getters.getShowMesh
@@ -67,9 +59,15 @@ export default {
       return _.chain(size)
         .range()
         .map((_val, ind) => {
-          return {index: ind}
+          return {index: ind, placeholder: true}
         })
         .value()
+    },
+    enter () {
+      console.log('enter')
+    },
+    leave () {
+      console.log('leave')
     }
   },
   components: {
@@ -82,7 +80,7 @@ export default {
 
 <style scoped lang="scss">
   $drop-zone-padding-left: 30px;
-  $drop-zone-padding-right: 10%;
+  $drop-zone-padding-right: 30px;
 
   .function-drop {
     overflow: auto;
@@ -98,7 +96,11 @@ export default {
       justify-content: center;
       align-items: center;
       z-index: 999;
-      padding: 0 $drop-zone-padding-right 0 $drop-zone-padding-left;
+      padding-left: $drop-zone-padding-left;
+      padding-right: $drop-zone-padding-right;
+    }
+    .editFunction-drop-zone {
+      justify-content: flex-start;
     }
   }
 
@@ -106,24 +108,24 @@ export default {
     border-radius: 3px;
     background: repeating-linear-gradient(
         45deg,
-        rgba(0, 0, 0, 0.3),
-        rgba(0, 0, 0, 0.3) 5px,
-        rgba(74, 74, 74, 0.5) 7px,
-        rgba(74, 74, 74, 0.5) 9px
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 5px,
+        rgba(74, 74, 74, 0.3) 7px,
+        rgba(74, 74, 74, 0.3) 9px
     ), repeating-linear-gradient(
         -45deg,
-        rgba(0, 0, 0, 0.3),
-        rgba(0, 0, 0, 0.3) 5px,
-        rgba(74, 74, 74, 0.5) 7px,
-        rgba(74, 74, 74, 0.5) 9px
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 5px,
+        rgba(74, 74, 74, 0.3) 7px,
+        rgba(74, 74, 74, 0.3) 9px
     );
   }
 
-  .drop-placeholder {
-    display: flex;
-    align-items: center;
-    opacity: 0.2;
-    justify-content: flex-start;
+  .placeholder-piece {
+    opacity: 0.4;
+  }
+
+  .placeholder-piece:first-child {
   }
 
   .center-function-drop {
@@ -143,48 +145,10 @@ export default {
 
   /* iphone 5 landscape */
   @media only screen and (max-width : 568px) {
-    $function-drop-padding-left: 14px;
-
-    .function-drop {
-      padding-left: $function-drop-padding-left;
-    }
-
-    .drop-placeholder {
-      padding-left: $function-drop-padding-left;
-    }
-
-    .editMain-function-drop-swiper {
-      .function-drop {
-        padding-left: 10px;
-      }
-
-      .drop-placeholder {
-        padding-left: 10px;
-      }
-    }
   }
 
   /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
-    $function-drop-padding-left: 14px;
-
-    .function-drop {
-      padding-left: $function-drop-padding-left;
-    }
-
-    .drop-placeholder {
-      padding-left: $function-drop-padding-left;
-    }
-
-    .editMain-function-drop-swiper {
-      .function-drop {
-        padding-left: 10px;
-      }
-
-      .drop-placeholder {
-        padding-left: 10px;
-      }
-    }
   }
 
   /* iPad */

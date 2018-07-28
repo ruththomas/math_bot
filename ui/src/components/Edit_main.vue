@@ -55,6 +55,7 @@ import MainPlaceholder from './Main_placeholder'
 export default {
   mounted () {
     buildUtils._positionBar()
+    $(window).on('resize', buildUtils._positionBar.bind(buildUtils))
   },
   computed: {
     mainFunctionFunc () {
@@ -152,6 +153,7 @@ export default {
     },
     wipeFunction () {
       buildUtils.deleteFunction({context: this})
+      this.togglePut(true)
     },
     adjustSpeed () {
       this.$store.dispatch('changeRobotSpeed')
@@ -180,14 +182,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $edit-main-padding: 12%;
+  $edit-main-side-padding: 12%;
+  $edit-main-top-bottom-padding: 0;
 
   .edit-main {
     position: relative;
     width: 100%;
+    margin: 0 auto;
     height: 100%;
     z-index: 1000;
-    padding: 0 $edit-main-padding 0 $edit-main-padding;
+    padding: $edit-main-top-bottom-padding $edit-main-side-padding $edit-main-top-bottom-padding $edit-main-side-padding;
   }
 
   .deactivate-edit-main {
@@ -196,8 +200,8 @@ export default {
 
   .bar {
     position: absolute;
-    left: -50px;
-    right: -50px;
+    left: 0;
+    right: 0;
     top: 50%;
     height: 2px;
     background-color: #B8E986;
@@ -267,10 +271,6 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
 
-    .edit-main {
-      padding: 0 $edit-main-padding-right 0 $edit-main-padding-left;
-    }
-
     .bar {
       right: -10px;
       left: -10px;
@@ -285,21 +285,17 @@ export default {
     }
 
     .stop {
-      right: -25px;
+      right: 24px;
     }
 
     .speed {
-      right: 24px;
+      left: 24px;
       font-size: 12px;
     }
 
     .ghost, .sortable-chosen, .dragging {
       width: 40px;
       height: 40px;
-    }
-
-    .edit-main .function-drop {
-      width: 70%!important;
     }
   }
 
@@ -308,13 +304,9 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
 
-    .edit-main {
-      padding: 0 $edit-main-padding-right 0 $edit-main-padding-left;
-    }
-
     .bar {
-      right: -20px;
-      left: -10px;
+      right: -15px;
+      left: -15px;
     }
 
     .dialog-button {
@@ -326,21 +318,17 @@ export default {
     }
 
     .stop {
-      display: none;
+      right: 24px;
     }
 
     .speed {
-      right: 24px;
+      left: 24px;
       font-size: 12px;
     }
 
     .ghost, .sortable-chosen, .dragging {
       width: 40px;
       height: 40px;
-    }
-
-    .edit-main .function-drop {
-      width: 70%!important;
     }
   }
 

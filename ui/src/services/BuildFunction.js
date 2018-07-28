@@ -29,7 +29,10 @@ class BuildFunction {
   }
 
   _putFunc ({funcToken, override}) {
-    api.putFunc({tokenId: this._tokenId(), funcToken, override}, lambdas => this._updatedLambdas(lambdas))
+    api.putFunc({tokenId: this._tokenId(), funcToken, override}, lambdas => {
+      this._updatedLambdas(lambdas)
+      this._positionBar()
+    })
   }
 
   _activateFunc ({stagedIndex, activeIndex}) {
@@ -40,18 +43,22 @@ class BuildFunction {
     api.updateActives({tokenId: this._tokenId(), oldIndex, newIndex}, lambdas => this._updatedLambdas(lambdas))
   }
 
+  _$dropZone () {
+    return $('.edit-main > .function-drop > .function-drop-drop-zone')
+  }
+
+  _$ele (targetClass) {
+    return $(`.${targetClass}`)
+  }
+
   _positionBar (reset) {
-    const $mainDropZone = $('.edit-main > .function-drop > .function-drop-drop-zone')
+    const $mainDropZone = this._$dropZone()
     const $bar = $('.bar')
     const mainDropZoneHalf = $mainDropZone.height() / 2
     const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
     const barOffsetTop = $bar.offset().top
     const barPosTop = $bar.position().top
-    if (reset) {
-      $bar.css({top: '50%'})
-    } else {
-      $bar.css({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'})
-    }
+    $bar.animate({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'}, 100)
   }
 
   updateName () {
@@ -61,14 +68,12 @@ class BuildFunction {
 
   deleteItemFromFunction () {
     const currentFunction = this._getCurrentFunction()
-    this._positionBar()
     this._putFunc({funcToken: currentFunction, override: true})
   }
 
   deleteFunction () {
     const currentFunction = this._getCurrentFunction()
     currentFunction.func = []
-    this._positionBar()
     this._putFunc({funcToken: currentFunction, override: true})
   }
 
