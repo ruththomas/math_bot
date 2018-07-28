@@ -36,18 +36,17 @@ class PopoverBucket {
 
   _updatePointerPosition () {
     const pointerWidth = this.$pointer.outerWidth()
-    const pointerOffset = Math.floor(((this.$selectedWidth / 2) - (pointerWidth / 2)) + 4)
+    const pointerOffset = Math.floor(((this.$selectedWidth / 2) - (pointerWidth / 2)) + 8)
     const newPointerPosition = this.$selected.position().left + pointerOffset
-    const robotWidth = $('#robot').width()
+    const commandsWidth = $('.commands').width()
     const pointerRight = newPointerPosition + pointerWidth
     const isFunction = this.$selected.hasClass('piece')
     const $functionsContainer = $('.functions-container')
     const containerOffsetRight = $functionsContainer.offset().left + $functionsContainer.width()
     const selectedOffsetRight = this.$selected.offset().left + this.$pointer.width() + 6
-
-    if (pointerRight > robotWidth && !isFunction) {
-      this._positionPopover(robotWidth - pointerRight, pointerRight - robotWidth)
-      this._positionPointer(0, 'auto')
+    if (pointerRight > commandsWidth && !isFunction) {
+      this._positionPopover(commandsWidth - pointerRight, pointerRight - commandsWidth)
+      this._positionPointer(6, 'auto')
       this._togglePointer(true)
     } else {
       this._positionPopover(0, 0)
@@ -74,7 +73,7 @@ class PopoverBucket {
 
   _handlePosition () {
     this._updatePointerPosition()
-    if (this.watcherRunning) setTimeout(this._handlePosition, 5)
+    if (this.watcherRunning) setTimeout(this._handlePosition, 50)
   }
 }
 
