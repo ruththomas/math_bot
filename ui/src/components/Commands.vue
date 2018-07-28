@@ -234,8 +234,9 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: row;
-    width: 100%;
+    width: 1000px;
     height: 100%;
+    margin: 0 auto;
     position: relative;
     padding: 10px 0;
   }
@@ -251,7 +252,6 @@ export default {
   .lambdas-container > * {
     display: flex;
     padding: 0 3px 0 0;
-    height: 100%;
     z-index: 100;
     justify-content: flex-start;
   }
@@ -265,7 +265,7 @@ export default {
     background-color: rgba(0, 0, 0, 0.6);
     height: 94px;
     border-radius: 3px;
-    margin-left: -20px;
+    margin-left: -50px;
   }
 
   .methods > * {
@@ -275,6 +275,7 @@ export default {
   .functions-container {
     overflow: auto;
     width: 100%;
+    min-height: 140px;
     margin-left: 12px;
 
     .functions {
@@ -317,78 +318,77 @@ export default {
 
   /* iphone 5 landscape */
   @media only screen and (max-width : 568px) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 43px;
+    $functions-height: 60px;
+    $methods-margin-left: -10px;
+    $functions-margin-right: 10px;
+    $open-staged-right: -15px;
+    $methods-margin-top: -4px;
+
     .commands {
-      padding-right: 7px;
-    }
-
-    .lambdas-container {
-    }
-
-    .lambdas-container > * {
-      /*height: 35px;*/
+      width: 100%;
     }
 
     .methods {
-      height: 37px;
-      margin-right: 7px;
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
     }
 
-    .functions {
-      padding-left: 13px;
-    }
-
-    .command-control-button-group {
-      height: 35px;
-      margin-right: 10px;
-    }
-
-    .command-control-button {
-      height: 15px;
-      width: 15px;
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
     }
 
     #open-staged {
-      right: -20px;
+      right: $open-staged-right;
     }
   }
 
   /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 43px;
+    $functions-height: 69px;
+    $methods-margin-left: -10px;
+    $functions-margin-right: 10px;
+    $open-staged-right: -15px;
+    $methods-margin-top: -4px;
+
     .commands {
-      padding-right: 8px;
-    }
-
-    .lambdas-container {
-    }
-
-    .lambdas-container > * {
-      /*height: 35px;*/
+      width: 100%;
     }
 
     .methods {
-      height: 37px;
-      margin-right: 9px;
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
     }
 
-    .functions {
-      padding-left: 15px;
-    }
-
-    .command-control-button-group {
-      height: 35px;
-      margin-right: 10px;
-    }
-
-    .command-control-button {
-      height: 15px;
-      width: 15px;
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
     }
 
     #open-staged {
-      right: -20px;
+      right: $open-staged-right;
     }
   }
-
   /* iPad */
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
   }

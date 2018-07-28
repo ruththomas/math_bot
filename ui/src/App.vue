@@ -13,11 +13,6 @@ export default {
   mounted () {
     window.scrollTo(0, 1)
     this.auth.isAuthenticated()
-    // utils.watcher(() => !this.auth.authenticated, () => {
-    //   api.videoHintSocket.requestHintsTaken(res => {
-    //     this.$store.dispatch('startExistingTimers', res.remainingTimes)
-    //   })
-    // })
   },
   computed: {
     auth () {
@@ -141,9 +136,15 @@ export default {
 
   }
 
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 320px) {
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
 
+  /* iphone 5 portrait */
+  @media only screen and (max-width : 320px) {
   }
 
   /* iPad */
@@ -167,11 +168,13 @@ export default {
   }
   ::-webkit-scrollbar-track {
     visibility: hidden;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 10px 10px rgba(216, 216, 216, 0.5);
     border: solid 8px transparent;
     border-radius: 10px;
+    background: transparent;
   }
 </style>
 

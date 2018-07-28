@@ -332,7 +332,7 @@ export default {
     .piece {
       height: $piece-size;
       width: $piece-size;
-      margin: 0 $piece-margin 0 $piece-margin;
+      margin: $piece-margin;
       z-index: 1000;
     }
 
