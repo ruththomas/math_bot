@@ -148,7 +148,7 @@ export default {
 
   @media only screen and (max-width: 569px) {
     .instructions-filler-left {
-      width: 125px;
+      width: 75px;
     }
   }
 
@@ -163,7 +163,7 @@ export default {
     }
 
     .instructions-filler-left {
-      width: 40px;
+      width: 10px;
     }
   }
 

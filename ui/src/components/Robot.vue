@@ -186,6 +186,7 @@ export default {
     position: relative;
     align-items: center;
     justify-content: center;
+    margin-bottom: 20px;
     /*border: 1px solid yellowgreen;*/
   }
 
@@ -199,7 +200,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex: 1;
+    flex: 1.8;
     /*border: 1px solid firebrick;*/
   }
 
@@ -244,7 +245,6 @@ export default {
     }
 
     #commands-box {
-      /*max-height: 95px;*/
     }
 
     #robot {

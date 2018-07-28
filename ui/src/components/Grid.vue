@@ -147,6 +147,7 @@ export default {
 
 <style scoped lang="scss">
   $click-color: #B8E986;
+  $grid-space-font-size: 22px;
 
   img {
     height: auto;
@@ -180,6 +181,7 @@ export default {
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     text-align: center;
+    font-size: $grid-space-font-size;
     vertical-align: middle;
     background: rgba(0, 0, 0, 0.7);
   }
@@ -210,7 +212,6 @@ export default {
 
   .problem {
     z-index: 120;
-    font-size: 22px;
   }
 
   .grid-space > img {
@@ -263,9 +264,16 @@ export default {
 
   /* Small Devices */
   @media only screen and (max-width : 667px) {
+    $grid-space-font-size: 14px;
+    $portal-size: 100%;
     .grid-space {
       height: 30px;
       width: 30px;
+      font-size: $grid-space-font-size;
+      .portal {
+        height: $portal-size;
+        width: $portal-size;
+      }
     }
   }
 
@@ -275,7 +283,6 @@ export default {
 
   /* Custom, iPhone 5 Retina */
   @media only screen and (max-width : 320px) {
-
   }
 
   /* iPad */

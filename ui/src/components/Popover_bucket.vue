@@ -58,13 +58,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $popover-bucket-top: -115%;
+
   .popover-bucket {
     height: 190px;
     left: 0;
     right: 0;
     z-index: 1010;
     position: absolute;
-    top: -135%;
+    top: $popover-bucket-top;
   }
 
   .staged-popover-bucket {
