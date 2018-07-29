@@ -23,7 +23,7 @@ const router = new Router({
   routes: [
     {
       path: '/robot',
-      name: 'Robot Counter',
+      name: 'Robot',
       secure: true,
       component: Robot
     },

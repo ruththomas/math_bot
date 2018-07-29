@@ -186,21 +186,20 @@ export default {
     position: relative;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
     /*border: 1px solid yellowgreen;*/
   }
 
   #edit-main-box {
     display: flex;
-    /*border: 1px solid mediumvioletred;*/
     flex: 1;
+    /*border: 1px solid mediumvioletred;*/
   }
 
   #commands-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex: 1.8;
+    flex: 1;
     /*border: 1px solid firebrick;*/
   }
 
@@ -221,17 +220,57 @@ export default {
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-  }
-
-  @media only screen and (max-width: 568px) {
+  @media only screen and (max-width : 667px) and (orientation: landscape) {
   }
 
   /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) {
+  @media only screen and (max-width : 568px) and (orientation: landscape) {
+
+    #control-panel-box {
+    }
+
+    #grid-box {
+      justify-content: flex-start;
+    }
+
+    #edit-main-box {
+    }
+
+    #commands-box {
+      flex: 1.1;
+    }
+
     #robot {
-      padding: 1vh 60px 0 60px;
+      width: 100vw;
+    }
+  }
+
+  /* iphone 6/7/8 plus*/
+  @media only screen and (max-width: 414px) {
+    #robot {
+      padding: 1vh 20px 0 20px;
+    }
+
+    #control-panel-box {
+      flex: 1;
+    }
+
+    #grid-box {
+      justify-content: flex-start;
+    }
+
+    #edit-main-box {
+    }
+
+    #commands-box {
+      /*max-height: 95px;*/
+    }
+  }
+
+  /* iphone 6/7 portrait */
+  @media only screen and (max-width : 375px) {
+    #robot {
+      padding: 1vh 20px 0 20px;
     }
 
     #control-panel-box {
@@ -245,10 +284,7 @@ export default {
     }
 
     #commands-box {
-    }
-
-    #robot {
-      width: 100vw;
+      /*max-height: 95px;*/
     }
   }
 
@@ -264,7 +300,6 @@ export default {
 
     #grid-box {
       justify-content: flex-start;
-      flex: 2;
     }
 
     #edit-main-box {
