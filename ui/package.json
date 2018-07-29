@@ -21,6 +21,7 @@
     "bcrypt": "^1.0.2",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
+    "bootstrap-vue": "^2.0.0-rc.11",
     "circular-json": "^0.4.0",
     "cloudinary": "^1.8.0",
     "cloudinary-core": "^2.3.0",

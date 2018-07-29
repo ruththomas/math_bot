@@ -5,6 +5,7 @@
 
       <div id="control-panel-box">
         <control-panel></control-panel>
+        <robot-carrying></robot-carrying>
       </div>
 
       <div id="grid-box">
@@ -14,8 +15,7 @@
 
       <messages></messages>
 
-      <div
-        id="edit-main-box">
+      <div id="edit-main-box">
         <trash></trash>
         <editmain></editmain>
       </div>
@@ -44,6 +44,7 @@ import SplashScreen from './Splash_screen'
 import api from '../services/api'
 import utils from '../services/utils'
 import Robot from '../services/RobotState'
+import RobotCarrying from './Robot_carrying'
 
 export default {
   mounted () {
@@ -149,7 +150,8 @@ export default {
     Editmain,
     Messages,
     ControlPanel,
-    SplashScreen
+    SplashScreen,
+    RobotCarrying
   }
 }
 </script>
@@ -176,8 +178,6 @@ export default {
 
   #control-panel-box {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
   }
 
   #grid-box {

@@ -144,6 +144,7 @@ module.exports = {
     robotDown: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522437155/robotDirections/PlayerDown_pjawwx.png',
     robotLeft: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522437164/robotDirections/RobotLeft_uf8xym.png'
   },
+  refresh: 'http://res.cloudinary.com/doohickey/image/upload/c_scale,w_20/v1532890707/noun_reload_1746931_000000_tghsmr.svg',
   floor: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522346538/misc/window.png',
   wall: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522346541/misc/windowPane.png',
   gridSpace: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg',
