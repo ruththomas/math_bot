@@ -242,10 +242,6 @@ export default {
     animation-iteration-count: infinite;
   }
 
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
-  }
-
   /* 13" screen */
   @media only screen and (max-width : 1280px) {
     .grid-space {
@@ -254,35 +250,68 @@ export default {
     }
   }
 
-  /* Large Phones, landscape*/
-  @media only screen and (max-width : 992px) {
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $grid-space-size: 38px;
+
     .grid-space {
-      height: 35px;
-      width: 35px;
+      height: $grid-space-size;
+      width: $grid-space-size;
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    $grid-space-font-size: 14px;
-    $portal-size: 100%;
+  @media only screen and (max-width : 736px) {
+    $grid-space-size: 38px;
+
     .grid-space {
-      height: 30px;
-      width: 30px;
-      font-size: $grid-space-font-size;
-      .portal {
-        height: $portal-size;
-        width: $portal-size;
-      }
+      height: $grid-space-size;
+      width: $grid-space-size;
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    $grid-space-size: 35px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+  }
+
+  @media only screen and (max-width: 568px) and (orientation: landscape) {
+    $grid-space-size: 26px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $grid-space-size: 32px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    $grid-space-size: 26px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
   }
 
   /* Custom, iPhone 5 Retina */
   @media only screen and (max-width : 320px) {
+    $grid-space-size: 26px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
   }
 
   /* iPad */

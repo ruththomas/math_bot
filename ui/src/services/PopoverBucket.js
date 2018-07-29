@@ -19,6 +19,7 @@ class PopoverBucket {
   }
 
   killBucket () {
+    this.context.$store.dispatch('updateFunctionAreaShowing', 'editMain')
     this.watcherRunning = false
   }
 
@@ -72,8 +73,12 @@ class PopoverBucket {
   }
 
   _handlePosition () {
-    this._updatePointerPosition()
-    if (this.watcherRunning) setTimeout(this._handlePosition, 50)
+    if (this.context.$route.name === 'Robot' && this.watcherRunning) {
+      this._updatePointerPosition()
+      setTimeout(this._handlePosition, 50)
+    } else {
+      this.killBucket()
+    }
   }
 }
 

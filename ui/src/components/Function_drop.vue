@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     placeHolders () {
-      if (this.sizeLimit < 100) {
+      if (this.sizeLimit < 100 && this.sizeLimit > 0) {
         return this.createPlaceHolders(this.sizeLimit).slice(this.list.length)
       } else {
         return []
@@ -108,16 +108,16 @@ export default {
     border-radius: 3px;
     background: repeating-linear-gradient(
         45deg,
-        rgba(0, 0, 0, 0.1),
-        rgba(0, 0, 0, 0.1) 5px,
-        rgba(74, 74, 74, 0.3) 7px,
-        rgba(74, 74, 74, 0.3) 9px
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 5px,
+        rgba(74, 74, 74, 0.4) 7px,
+        rgba(74, 74, 74, 0.4) 9px
     ), repeating-linear-gradient(
         -45deg,
-        rgba(0, 0, 0, 0.1),
-        rgba(0, 0, 0, 0.1) 5px,
-        rgba(74, 74, 74, 0.3) 7px,
-        rgba(74, 74, 74, 0.3) 9px
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 5px,
+        rgba(74, 74, 74, 0.4) 7px,
+        rgba(74, 74, 74, 0.4) 9px
     );
   }
 
