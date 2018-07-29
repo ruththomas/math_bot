@@ -113,7 +113,9 @@ export default {
 
   /* Small Devices */
   @media only screen and (max-width : 667px) {
-
+    .message-container {
+      display: none;
+    }
   }
 
   /* Extra Small Devices, Phones */

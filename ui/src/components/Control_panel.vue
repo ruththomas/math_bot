@@ -120,14 +120,13 @@ export default {
     }
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
     .instructions-robot-container {
-      height: 75px;
+      height: 55px;
     }
 
     .return-to-profile {
-      height: 65px;
+      height: 95px;
     }
 
     .instructions-filler-left {
@@ -135,66 +134,99 @@ export default {
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
     .instructions-robot-container {
-      height: 50px;
+      height: 55px;
     }
 
-    .instructions-filler-left {
-      width: 170px;
-    }
-  }
-
-  @media only screen and (max-width: 569px) {
-    .instructions-filler-left {
-      width: 75px;
-    }
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
     .return-to-profile {
-      height: 60px;
+      height: 95px;
+    }
+
+    .instructions-filler-left {
+      width: 110px;
+    }
+  }
+
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    .instructions-filler-left {
+      width: 80px;
+    }
+
+    .return-to-profile {
+      height: 95px;
+    }
+
+    .instructions-robot-container {
+      height: 55px;
+    }
+  }
+
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    .instructions-filler-left {
+      width: 80px;
+    }
+
+    .instructions-robot-container {
+      height: 75px;
+    }
+
+    .instructions-robot-container {
+      height: 55px;
+    }
+  }
+
+  /* iphone 5 landscape*/
+  @media only screen and (max-width: 568px) and (orientation: landscape){
+    .instructions-filler-left {
+      width: 140px;
+    }
+
+    .instructions-robot-container {
+      height: 45px;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    .instructions-filler-left {
+      width: 40px;
+    }
+
+    .return-to-profile {
+      height: 90px;
+    }
+
+    .instructions-robot-container {
+      height: 55px;
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    .instructions-filler-left {
+      width: 20px;
+    }
+
+    .return-to-profile {
+      height: 80px;
     }
 
     .instructions-robot-container {
       height: 50px;
-    }
-
-    .instructions-filler-left {
-      width: 10px;
     }
   }
 
   /* Custom, iPhone 5 Retina */
   @media only screen and (max-width : 320px) {
+    .instructions-filler-left {
+      width: 10px;
+    }
 
-  }
+    .return-to-profile {
+      height: 60px;
+    }
 
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     .instructions-robot-container {
-      height: 150px;
-    }
-
-    .return-to-profile {
-      height: 100px;
-    }
-
-    .instructions-filler-left {
-      width: 75px;
+      height: 45px;
     }
   }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .return-to-profile {
-      height: 150px;
-    }
-
-    .instructions-filler-left {
-      width: 180px;
-    }
-  }
-
 </style>

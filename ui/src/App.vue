@@ -133,18 +133,18 @@ export default {
 
   /* Extra Small Devices, Phones */
   @media only screen and (max-width : 480px) {
-
   }
 
   /* iphone 5 landscape */
   @media only screen and (max-width : 568px) {
-    ::-webkit-scrollbar {
-      display: none;
-    }
   }
 
   /* iphone 5 portrait */
-  @media only screen and (max-width : 320px) {
+  @media only screen and (max-width : 414px) {
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
   }
 
   /* iPad */

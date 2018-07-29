@@ -307,22 +307,157 @@ export default {
     transform:rotate(0);
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 48px;
+    $functions-height: 65px;
+    $methods-margin-left: 10px;
+    $functions-margin-right: 50px;
+    $open-staged-right: 15px;
+    $methods-margin-top: -4px;
+
+    .commands {
+      width: 100%;
+    }
+
+    .methods {
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
+    }
+
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
+    }
+
+    #open-staged {
+      right: $open-staged-right;
+    }
+  }
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 48px;
+    $functions-height: 65px;
+    $methods-margin-left: 10px;
+    $functions-margin-right: 50px;
+    $open-staged-right: 15px;
+    $methods-margin-top: -4px;
+
+    .commands {
+      width: 100%;
+    }
+
+    .methods {
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
+    }
+
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
+    }
+
+    #open-staged {
+      right: $open-staged-right;
+    }
   }
 
   /* Small Devices */
-  @media only screen and (max-width : 667px) {
-
-  }
-
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) {
+  @media only screen and (max-width : 667px) and (orientation: landscape) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
     $methods-height: 43px;
     $functions-height: 60px;
-    $methods-margin-left: -10px;
+    $methods-margin-left: 10px;
+    $functions-margin-right: 50px;
+    $open-staged-right: 15px;
+    $methods-margin-top: -4px;
+
+    .commands {
+      width: 100%;
+    }
+
+    .methods {
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
+    }
+
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
+    }
+
+    #open-staged {
+      right: $open-staged-right;
+    }
+  }
+
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) and (orientation: landscape){
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 43px;
+    $functions-height: 60px;
+    $methods-margin-left: 10px;
+    $functions-margin-right: 50px;
+    $open-staged-right: 15px;
+    $methods-margin-top: -4px;
+
+    .commands {
+      width: 100%;
+    }
+
+    .methods {
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
+    }
+
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
+    }
+
+    #open-staged {
+      right: $open-staged-right;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 43px;
+    $functions-height: 69px;
+    $methods-margin-left: -15px;
     $functions-margin-right: 10px;
     $open-staged-right: -15px;
     $methods-margin-top: -4px;
@@ -353,6 +488,42 @@ export default {
     }
   }
 
+  /* iphone 6/7 portrait */
+  @media only screen and (max-width: 375px) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 43px;
+    $functions-height: 69px;
+    $methods-margin-left: -15px;
+    $functions-margin-right: 10px;
+    $open-staged-right: -15px;
+    $methods-margin-top: -4px;
+
+    .commands {
+      width: 100%;
+    }
+
+    .methods {
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
+    }
+
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
+    }
+
+    #open-staged {
+      right: $open-staged-right;
+    }
+  }
   /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
     $functions-padding-left: 0;
@@ -388,11 +559,5 @@ export default {
     #open-staged {
       right: $open-staged-right;
     }
-  }
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
   }
 </style>

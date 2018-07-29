@@ -271,59 +271,14 @@ export default {
 
   /* 13" screen */
   @media only screen and (max-width : 1280px) {
-
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    .command-name {
-      display: none;
-    }
-
-    .command-name {
-      display: none;
-    }
-
-    .piece {
-      height: 32px;
-      width: 32px;
-      margin-left: 4px;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: 27px;
-    }
-
-    .tab-insert {
-      width: 5px;
-      left: 26px;
-      height: 32px;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: -5px;
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: -5px;
-    }
-
-    .left-tab::before {
-      content: "";
-      width: 5px;
-      height: 10px;
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    $piece-size: 31px;
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $piece-size: 36px;
     $piece-margin: 2px;
+    $tab-insert-left: 26px;
+    $tab-insert-width: 5px;
+    $tab-size: 5px;
 
     .command-name {
       display: none;
@@ -341,34 +296,224 @@ export default {
     }
 
     .tab-insert {
-      width: 5px;
-      left: 26px;
+      width: $tab-insert-width;
+      left: $tab-insert-left;
       height: $piece-size;
     }
 
     .notch {
       width: 10px;
       height: 10px;
-      left: -5px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
       background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
     }
 
     .left-tab {
-      left: -5px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
     }
 
     .left-tab::before {
       content: "";
-      width: 5px;
-      height: 10px;
+      width: $tab-size;
+      height: calc(#{$tab-size} * 2);
       border-bottom-right-radius: 10px;
       border-top-right-radius: 10px;
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
+    $piece-size: 36px;
+    $piece-margin: 2px;
+    $tab-insert-left: 26px;
+    $tab-insert-width: 5px;
+    $tab-size: 5px;
 
+    .command-name {
+      display: none;
+    }
+
+    .piece {
+      height: $piece-size;
+      width: $piece-size;
+      margin: $piece-margin;
+      z-index: 1000;
+    }
+
+    .puzzle-start, .puzzle-middle {
+      width: 27px;
+    }
+
+    .tab-insert {
+      width: $tab-insert-width;
+      left: $tab-insert-left;
+      height: $piece-size;
+    }
+
+    .notch {
+      width: 10px;
+      height: 10px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
+    }
+
+    .left-tab {
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+    }
+
+    .left-tab::before {
+      content: "";
+      width: $tab-size;
+      height: calc(#{$tab-size} * 2);
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    $piece-size: 31px;
+    $piece-margin: 2px;
+    $tab-insert-left: 26px;
+    $tab-insert-width: 5px;
+    $tab-size: 5px;
+
+    .command-name {
+      display: none;
+    }
+
+    .piece {
+      height: $piece-size;
+      width: $piece-size;
+      margin: $piece-margin;
+      z-index: 1000;
+    }
+
+    .puzzle-start, .puzzle-middle {
+      width: 27px;
+    }
+
+    .tab-insert {
+      width: $tab-insert-width;
+      left: $tab-insert-left;
+      height: $piece-size;
+    }
+
+    .notch {
+      width: 10px;
+      height: 10px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
+    }
+
+    .left-tab {
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+    }
+
+    .left-tab::before {
+      content: "";
+      width: $tab-size;
+      height: calc(#{$tab-size} * 2);
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 568px) and (orientation: landscape){
+    $piece-size: 31px;
+    $piece-margin: 2px;
+    $tab-insert-left: 26px;
+    $tab-insert-width: 5px;
+    $tab-size: 5px;
+
+    .command-name {
+      display: none;
+    }
+
+    .piece {
+      height: $piece-size;
+      width: $piece-size;
+      margin: $piece-margin;
+      z-index: 1000;
+    }
+
+    .puzzle-start, .puzzle-middle {
+      width: 27px;
+    }
+
+    .tab-insert {
+      width: $tab-insert-width;
+      left: $tab-insert-left;
+      height: $piece-size;
+    }
+
+    .notch {
+      width: 10px;
+      height: 10px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
+    }
+
+    .left-tab {
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+    }
+
+    .left-tab::before {
+      content: "";
+      width: $tab-size;
+      height: calc(#{$tab-size} * 2);
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $piece-size: 31px;
+    $piece-margin: 2px;
+    $tab-insert-left: 26px;
+    $tab-insert-width: 5px;
+    $tab-size: 5px;
+
+    .command-name {
+      display: none;
+    }
+
+    .piece {
+      height: $piece-size;
+      width: $piece-size;
+      margin: $piece-margin;
+      z-index: 1000;
+    }
+
+    .puzzle-start, .puzzle-middle {
+      width: 27px;
+    }
+
+    .tab-insert {
+      width: $tab-insert-width;
+      left: $tab-insert-left;
+      height: $piece-size;
+    }
+
+    .notch {
+      width: 10px;
+      height: 10px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
+    }
+
+    .left-tab {
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+    }
+
+    .left-tab::before {
+      content: "";
+      width: $tab-size;
+      height: calc(#{$tab-size} * 2);
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
   }
 
   /* Custom, iPhone Retina */
