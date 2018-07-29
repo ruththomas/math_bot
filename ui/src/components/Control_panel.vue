@@ -77,16 +77,14 @@ export default {
     height: 150px;
     display: flex;
     align-items: flex-end;
-    margin-right: 20px;
   }
 
   .instructions-robot {
     height: 100%;
-    cursor: pointer;
   }
 
   .instructions-filler-left {
-    width: 100px;
+    width: 120px;
   }
 
   .return-to-profile {
@@ -130,7 +128,7 @@ export default {
     }
 
     .instructions-filler-left {
-      width: 120px;
+      width: 150px;
     }
   }
 
@@ -150,21 +148,7 @@ export default {
 
   @media only screen and (max-width: 667px) and (orientation: landscape) {
     .instructions-filler-left {
-      width: 80px;
-    }
-
-    .return-to-profile {
-      height: 95px;
-    }
-
-    .instructions-robot-container {
-      height: 55px;
-    }
-  }
-
-  @media only screen and (max-width: 667px) and (orientation: landscape) {
-    .instructions-filler-left {
-      width: 80px;
+      width: 92px;
     }
 
     .instructions-robot-container {
@@ -172,7 +156,7 @@ export default {
     }
 
     .instructions-robot-container {
-      height: 55px;
+      height: 50px;
     }
   }
 
@@ -218,7 +202,7 @@ export default {
   /* Custom, iPhone 5 Retina */
   @media only screen and (max-width : 320px) {
     .instructions-filler-left {
-      width: 10px;
+      width: 35px;
     }
 
     .return-to-profile {
