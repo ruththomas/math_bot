@@ -15,7 +15,7 @@
           @click="applyColorConditional"
         >
         </div>
-        <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="27" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
+        <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="57" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
 
         <div
           class='function-control trash'

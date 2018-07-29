@@ -58,6 +58,7 @@ $star-margin: 5px 0 5px 0;
 $star-timer-right: 100%;
 $star-timer-bottom: -10px;
 $star-timer-font-size: 16px;
+$star-timer-margin-right: 5px;
 .stars {
   position: relative;
   display: flex;
@@ -75,6 +76,7 @@ $star-timer-font-size: 16px;
   right: $star-timer-right;
   bottom: $star-timer-bottom;
   font-size: $star-timer-font-size;
+  margin-right: $star-timer-margin-right;
 }
 
 .star-cluster {

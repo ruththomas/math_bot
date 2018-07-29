@@ -148,11 +148,9 @@ export default {
 <style scoped lang="scss">
   $click-color: #B8E986;
   $grid-space-font-size: 22px;
-
-  img {
-    height: auto;
-    width: auto;
-  }
+  $grid-space-size: 96px;
+  $grid-border-radius: 4px;
+  $grid-background: rgba(0, 0, 0, 0.6);
 
   .total-grid {
     width: 100%;
@@ -162,28 +160,60 @@ export default {
 
   .grid {
     border: 1px solid $click-color;
-    border-radius: 3px;
-    display: table;
+    border-radius: $grid-border-radius;
+    flex-wrap: wrap;
     margin: 0 auto;
     z-index: 100;
+    background: $grid-background;
   }
 
   .grid-row {
-    display: table-row;
+    display: flex;
+    &:first-child .grid-space:first-child {
+      border-top-left-radius: $grid-border-radius;
+    }
+
+    &:first-child .grid-space:last-child {
+      border-top-right-radius: $grid-border-radius;
+    }
+
+    &:last-child .grid-space:first-child {
+      border-bottom-left-radius: $grid-border-radius;
+    }
+
+    &:last-child .grid-space:last-child {
+      border-bottom-right-radius: $grid-border-radius;
+    }
   }
 
   .grid-space {
     position: relative;
-    display: table-cell;
-    height: 100px;
-    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: $grid-space-size;
+    width: $grid-space-size;
     padding: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
-    text-align: center;
     font-size: $grid-space-font-size;
-    vertical-align: middle;
-    background: rgba(0, 0, 0, 0.7);
+
+    img:not(.robot) {
+      height: 75%;
+      width: 75%;
+    }
+
+    .robot {
+      width: 150%;
+      height: 150%;
+      position: absolute;
+      top: -35%;
+    }
+
+    .problem {
+      z-index: 120;
+      position: absolute;
+    }
   }
 
   .grid-space-empty-space {
@@ -210,31 +240,10 @@ export default {
     border-left: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .problem {
-    z-index: 120;
-  }
-
-  .grid-space > img {
-    position: absolute;
-    margin: auto;
-    height: 75%;
-    width: 75%;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    z-index: 100;
-  }
-
-  .robot {
+  .grid-space > .robot {
     z-index: 1010;
-    height: 160% !important;
-    width: 180% !important;
-    margin: 0 !important;
-    top: -42% !important;
-    bottom: 0 !important;
-    left: -38% !important;
-    right: 0 !important;
+    /*height: 175%;*/
+    /*width: 175%;*/
   }
 
   .robot-shake {
@@ -251,7 +260,7 @@ export default {
   }
 
   @media only screen and (max-width: 823px) and (orientation: landscape) {
-    $grid-space-size: 38px;
+    $grid-space-size: 32px;
 
     .grid-space {
       height: $grid-space-size;
@@ -269,7 +278,7 @@ export default {
   }
 
   @media only screen and (max-width: 667px) and (orientation: landscape) {
-    $grid-space-size: 35px;
+    $grid-space-size: 30px;
 
     .grid-space {
       height: $grid-space-size;
