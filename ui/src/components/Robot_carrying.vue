@@ -1,59 +1,39 @@
 <template>
-  <div v-if="robotCarrying" class="robot-carrying" :style="robotCarrying.length ? {'background-color': 'rgba(0, 0, 0, 0.5)'} : ''">
-    <!--<p v-if="totalValueCarried">sum: {{totalValueCarried}}</p>-->
-    <img
-        class="animated zoomIn"
-        v-for="(image, ind) in robotCarrying"
-        :key="'robot-carrying' + ind"
-        :src="toolImages[image]"
-      >
+  <div v-if="robotCarrying.length" class="robot-carrying">
+    <span
+      v-for="(tool, ind) in organizeCarrying"
+      :key="'carrying-' + ind"
+    >
+      <b-img :src="toolImages[tool[0]]" /> <span>x</span> <span>{{tool[1]}}</span>
+    </span>
   </div>
 </template>
 
 <script>
 import uid from 'uid'
 import assets from '../assets/assets'
+import _ from 'underscore'
 
 export default {
   computed: {
-    totalValueCarried () {
-      return this.robotCarrying.reduce((acc, tool) => {
-        switch (tool) {
-          case 'kitty':
-            acc += 1
-            break
-          case 'ten':
-            acc += 10
-            break
-          case 'oneHundred':
-            acc += 100
-            break
-          case 'oneThousand':
-            acc += 1000
-            break
-          case 'tenHundred':
-            acc += 10000
-            break
-          default:
-            acc += 0
-        }
-        return acc
-      }, 0)
+    organizeCarrying () {
+      return _.chain(this.robotCarrying)
+        .reduce((organized, tool) => {
+          organized[tool] = organized[tool] + 1 || 1
+          return organized
+        }, {})
+        .pairs()
+        .sortBy((tup) => {
+          const values = {kitty: 1, ten: 10, oneHundred: 100, oneThousand: 1000, tenThousand: 10000}
+          return values[tup[0]]
+        })
+        .value()
     },
     toolImages () {
       return assets.tools
     },
     robotCarrying () {
       return this.$store.getters.getRobotCarrying
-    },
-    game () {
-      return this.$store.getters.getGame
-    },
-    level () {
-      return this.$store.getters.getLevel
-    },
-    equation () {
-      return this.$store.getters.getCurrentEquation
     }
   },
   methods: {
@@ -66,25 +46,31 @@ export default {
 
 <style scoped lang="scss">
   .robot-carrying {
-    min-height: 20px;
-    display: inline-block;
-    position: absolute;
-    left: 20%;
-    right: 20%;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    margin: 0 auto;
     flex-wrap: wrap;
     z-index: 10000;
-  }
+    margin-left: 40px;
 
-  .robot-carrying img {
-    height: 20px;
-    width: 20px;
-  }
+    span {
+      display: flex;
+      align-items: center;
 
-  .robot-carrying p {
-    height: 20px;
-    font-size: 20px;
+      * {
+        margin: 0 5px;
+      }
+
+      img {
+        height: 20px;
+        width: 20px;
+      }
+
+      p {
+        height: 20px;
+        font-size: 20px;
+      }
+    }
   }
 
   /* Large Phones, landscape*/
