@@ -199,7 +199,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex: 1;
+    flex: 1.2;
     /*border: 1px solid firebrick;*/
   }
 
@@ -248,7 +248,7 @@ export default {
   /* iphone 6/7/8 plus*/
   @media only screen and (max-width: 414px) {
     #robot {
-      padding: 1vh 20px 0 20px;
+      padding: 1vh 0;
     }
 
     #control-panel-box {
@@ -270,7 +270,7 @@ export default {
   /* iphone 6/7 portrait */
   @media only screen and (max-width : 375px) {
     #robot {
-      padding: 1vh 20px 0 20px;
+      padding: 1vh 0;
     }
 
     #control-panel-box {
@@ -291,7 +291,7 @@ export default {
   /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
     #robot {
-      padding: 1vh 20px 0 20px;
+      padding: 1vh 0;
     }
 
     #control-panel-box {

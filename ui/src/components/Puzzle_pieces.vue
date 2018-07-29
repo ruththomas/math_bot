@@ -250,6 +250,8 @@ export default {
     position: absolute;
     top: 93%;
     width: 90%;
+    max-height: 50px;
+    overflow: auto;
     left: 1px;
     right: 0;
     margin-left: auto;
