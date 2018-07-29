@@ -1,5 +1,5 @@
 <template>
-  <div class="speech-bubble" :class="!showing ? 'hide-speech-bubble' : ''">
+  <div class="speech-bubble">
     <div class="bubble-text" v-html="html"></div>
     <div class="bubble-stars" @click="videoHint.getHint()" v-if="videoHint !== null" data-toggle="tooltip" title="Get a hint">
       <stars

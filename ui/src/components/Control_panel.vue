@@ -1,20 +1,20 @@
 <template>
   <div class="control-panel">
+      <img @click="goToProfile()"
+           class="return-to-profile"
+           :src="permanentImages.returnToProfile"
+           data-toggle="tooltip" title="Return to profile"
+      />
 
-    <img @click="goToProfile()"
-         class="return-to-profile"
-         :src="permanentImages.returnToProfile"
-         data-toggle="tooltip" title="Return to profile"
-    />
-
-    <div class="instructions" :style="congratsShowing || tryAgainShowing ? {opacity: 0} : {}">
-      <div class="instructions-filler-left"></div>
-      <div class="instructions-robot-container">
-        <img :src="permanentImages.instructionsRobot" class="instructions-robot" data-toggle="tooltip" title="Toggle speech bubble">
+      <div class="instructions">
+        <div class="instructions-filler-left"></div>
+        <div class="instructions-robot-container">
+          <img :src="permanentImages.instructionsRobot" class="instructions-robot">
+        </div>
+        <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
       </div>
       <speech-bubble :html="description" :showing="speechBubbleShowing" :step="step"></speech-bubble>
     </div>
-  </div>
 </template>
 
 <script>
