@@ -1,9 +1,10 @@
 <template>
   <div class="total-grid">
     <transition
+      mode="out-in"
       name="custom-classes-transition"
       enter-active-class="animated zoomIn"
-      leave-active-class="hidden"
+      leave-active-class="animated fadeOut"
     >
       <congrats v-if="congratsShowing"></congrats>
       <tryagain v-else-if="tryAgainShowing"></tryagain>
@@ -17,32 +18,51 @@
           <div
             class="grid-space animated"
             v-for="(space, sInd) in row"
+            :id="`grid-cell-${rInd}-${sInd}`"
             :class="'grid-space-' + space.name.replace(/ /g, '-')"
             :key="'space:' + rInd + ':' + sInd"
           >
             <span v-if="space.name === 'final answer'"
                   class="problem single-digit-problem">{{singleDigitProblem(problem)}}</span>
-            <img
+            <b-img
               v-if="space.name === 'final answer'"
               class="portal glyphicon"
-              :src="permanentImages.blackHole" />
-            <img
+              :src="permanentImages.blackHole"></b-img>
+            <b-img
               v-if="space.tools.length"
               class="tool animated zoomIn"
               v-for="(tool, tInd) in space.tools"
               :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
-              :src="toolImages[tool.image]" />
-            <img
+              :src="toolImages[tool.image]"></b-img>
+            <b-img
               class="robot animated"
               v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
               :key="'ROBOT'"
-              :src="robot._robotDirections[robotOrientation]" />
+              :src="robot._robotDirections[robotOrientation]"></b-img>
+
+            <b-popover
+              v-if="space.tools.length"
+              :target="`grid-cell-${rInd}-${sInd}`"
+              triggers="click hover"
+            >
+              <div class="display-tools">
+                <div
+                  v-for="(tool, iInd) in space.tools"
+                  :key="`d-image-${iInd}`"
+                  :class="tool.original ? 'replenish-tool' : ''"
+                >
+                  <b-img
+                    :src="permanentImages.tools[tool.image]"
+                    fluid
+                  ></b-img>
+                </div>
+              </div>
+            </b-popover>
           </div>
         </div>
       </div>
       <splash-screen v-else></splash-screen>
     </transition>
-    <robotcarrying></robotcarrying>
   </div>
 </template>
 
@@ -50,11 +70,12 @@
 import assets from '../assets/assets'
 import Congrats from './Congrats'
 import Tryagain from './Try_again'
-import Robotcarrying from './Robot_carrying'
 import VideoHint from './Video_hint'
 import SplashScreen from './Splash_screen'
 
 export default {
+  mounted () {
+  },
   computed: {
     problem () {
       return this.currentStepData.problem.problem
@@ -138,7 +159,6 @@ export default {
   components: {
     Congrats,
     Tryagain,
-    Robotcarrying,
     VideoHint,
     SplashScreen
   }
@@ -193,26 +213,47 @@ export default {
     align-items: center;
     height: $grid-space-size;
     width: $grid-space-size;
-    padding: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     font-size: $grid-space-font-size;
 
-    img:not(.robot) {
+    img {
+      position: absolute;
+    }
+
+    img.tool {
+      cursor: pointer;
       height: 75%;
       width: 75%;
     }
 
-    .robot {
-      width: 150%;
+    img.robot {
       height: 150%;
-      position: absolute;
+      width: 150%;
       top: -35%;
     }
+  }
 
-    .problem {
-      z-index: 120;
+  .display-tools {
+    display: flex;
+    max-width: 300px;
+    flex-wrap: wrap;
+    position: relative;
+
+    img {
+      height: 30px;
+    }
+
+    .replenish-tool::before {
+      background-size: 100%;
+      background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+      display: inline-block;
+      border-radius: 50%;
       position: absolute;
+      bottom: 0;
+      content: "";
+      height: 15px;
+      width: 15px;
     }
   }
 
@@ -238,12 +279,6 @@ export default {
 
   .grid-space:nth-child(1) {
     border-left: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .grid-space > .robot {
-    z-index: 1010;
-    /*height: 175%;*/
-    /*width: 175%;*/
   }
 
   .robot-shake {
@@ -313,22 +348,28 @@ export default {
     }
   }
 
-  /* Custom, iPhone 5 Retina */
   @media only screen and (max-width : 320px) {
     $grid-space-size: 26px;
+    $grid-space-font-size: 18px;
 
     .grid-space {
       height: $grid-space-size;
       width: $grid-space-size;
+
+      .problem {
+        font-size: $grid-space-font-size;
+        transform: translateY(-50%);
+      }
     }
   }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .grid-space {
-      height: 70px;
-      width: 70px;
-    }
+</style>
+<style lang="scss">
+  $popover-background-color: #D3D3D3;
+  $popover-border: #f0f0f0;
+  // for popover
+  .popover {
+    background-color: $popover-background-color;
+    border: 1px solid $popover-border;
+    box-shadow: 0 0 100px 0 rgba(0, 0, 0, 1);
   }
-
 </style>
