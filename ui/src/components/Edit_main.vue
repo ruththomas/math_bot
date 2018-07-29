@@ -184,6 +184,7 @@ export default {
 <style scoped lang="scss">
   $edit-main-side-padding: 12%;
   $edit-main-top-bottom-padding: 0;
+  $bar-height: 2px;
 
   .edit-main {
     position: relative;
@@ -202,8 +203,8 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-    top: 50%;
-    height: 2px;
+    top: calc(50% + #{$bar-height});
+    height: $bar-height;
     background-color: #B8E986;
     display: flex;
     align-items: center;
@@ -257,23 +258,193 @@ export default {
     float: left;
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $edit-main-padding-left: 12%;
+    $edit-main-padding-right: 12%;
+    $bar-height: 1px;
+
+    .bar {
+      right: 10px;
+      left: 10px;
+      top: calc(50% + #{$bar-height});
+      height: $bar-height;
+    }
+
+    .dialog-button {
+      top: -9px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      right: 24px;
+    }
+
+    .speed {
+      left: 24px;
+      font-size: 12px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  /* Medium Devices, Desktops */
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
+    $edit-main-padding-left: 12%;
+    $edit-main-padding-right: 12%;
+    $bar-height: 1px;
 
+    .bar {
+      right: 10px;
+      left: 10px;
+      top: calc(50% + #{$bar-height});
+      height: $bar-height;
+    }
+
+    .dialog-button {
+      top: -9px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      right: 24px;
+    }
+
+    .speed {
+      left: 24px;
+      font-size: 12px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  @media only screen and (max-width : 667px) and (orientation: landscape) {
+    $edit-main-padding-left: 12%;
+    $edit-main-padding-right: 12%;
+    $bar-height: 1px;
+
+    .bar {
+      right: 10px;
+      left: 10px;
+      top: calc(50% + #{$bar-height});
+      height: $bar-height;
+    }
+
+    .dialog-button {
+      top: -9px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      right: 24px;
+    }
+
+    .speed {
+      left: 24px;
+      font-size: 12px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
   }
 
   /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) {
+  @media only screen and (max-width : 568px) and (orientation: landscape) {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
+    $bar-height: 1px;
 
     .bar {
-      right: -10px;
-      left: -10px;
+      right: 10px;
+      left: 10px;
+      top: calc(50% + #{$bar-height});
+      height: $bar-height;
+    }
+
+    .dialog-button {
+      top: -9px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      right: 24px;
+    }
+
+    .speed {
+      left: 24px;
+      font-size: 12px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $edit-main-padding-left: 12%;
+    $edit-main-padding-right: 12%;
+    $bar-height: 1px;
+
+    .bar {
+      right: -15px;
+      left: -15px;
+      top: calc(50% + #{$bar-height});
+      height: $bar-height;
+    }
+
+    .dialog-button {
+      top: -9px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      right: 24px;
+    }
+
+    .speed {
+      left: 24px;
+      font-size: 12px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  /* iphone 6/7 portrait */
+  @media only screen and (max-width : 375px) {
+    $edit-main-padding-left: 12%;
+    $edit-main-padding-right: 12%;
+    $bar-height: 1px;
+
+    .bar {
+      right: -15px;
+      left: -15px;
+      height: 1px;
     }
 
     .dialog-button {

@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $popover-bucket-top: -115%;
+  $popover-bucket-top: -200px;
 
   .popover-bucket {
     height: 190px;
@@ -122,19 +122,6 @@ export default {
 
   /* Medium Devices, Desktops */
   @media only screen and (max-width : 992px) {
-    .popover-bucket {
-      height: 100px;
-      top: -105px;
-    }
-
-    .pointer {
-      height: 10px;
-      width: 20px;
-    }
-
-    .pointer-size {
-      border-width: 10px 9px 0 9px;
-    }
   }
 
   /* Small Devices */
@@ -144,27 +131,47 @@ export default {
 
   /* iphone 5 landscape */
   @media only screen and (max-width : 568px) {
-    .popover-bucket {
-      left: 4px;
-      right: 0;
-    }
+    $popover-bucket-top: -165%;
 
-    .staged-popover-bucket {
-      left: -12px;
-      right: -18px;
-    }
-  }
-
-  /* iphone 5 portrait */
-  @media only screen and (max-width : 320px) {
     .popover-bucket {
-      left: 4px;
-      right: 0;
+      top: $popover-bucket-top;
+      height: 90px;
     }
 
     .staged-popover-bucket {
       left: 16px;
       right: -17px;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $popover-bucket-top: -100px;
+    $popover-bucket-height: 90px;
+
+    .popover-bucket {
+      top: $popover-bucket-top;
+      height: $popover-bucket-height;
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    $popover-bucket-top: -100px;
+    $popover-bucket-height: 90px;
+
+    .popover-bucket {
+      top: $popover-bucket-top;
+      height: $popover-bucket-height;
+    }
+  }
+
+  /* iphone 5 portrait */
+  @media only screen and (max-width : 320px) {
+    $popover-bucket-top: -100px;
+    $popover-bucket-height: 90px;
+
+    .popover-bucket {
+      top: $popover-bucket-top;
+      height: $popover-bucket-height;
     }
   }
 
