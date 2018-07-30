@@ -530,9 +530,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 43px;
     $functions-height: 69px;
-    $methods-margin-left: -10px;
-    $functions-margin-right: 10px;
-    $open-staged-right: -15px;
+    $methods-margin-left: 5px;
+    $functions-margin-right: 30px;
+    $open-staged-right: 5px;
     $methods-margin-top: -4px;
 
     .commands {

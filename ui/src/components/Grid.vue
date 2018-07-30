@@ -9,7 +9,7 @@
       <congrats v-if="congratsShowing"></congrats>
       <tryagain v-else-if="tryAgainShowing"></tryagain>
       <video-hint v-else-if="hintShowing.showing"></video-hint>
-      <div v-else-if="gridMap" class="grid">
+      <div v-else-if="gridMap" class="grid" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''">
         <div
           class="grid-row animated"
           v-for="(row, rInd) in gridMap"
@@ -43,7 +43,7 @@
             <b-popover
               v-if="space.tools.length"
               :target="`grid-cell-${rInd}-${sInd}`"
-              triggers="click hover"
+              triggers="hover click"
             >
               <div class="display-tools">
                 <div
@@ -60,6 +60,7 @@
             </b-popover>
           </div>
         </div>
+        <RobotCarrying></RobotCarrying>
       </div>
       <splash-screen v-else></splash-screen>
     </transition>
@@ -72,6 +73,7 @@ import Congrats from './Congrats'
 import Tryagain from './Try_again'
 import VideoHint from './Video_hint'
 import SplashScreen from './Splash_screen'
+import RobotCarrying from './Robot_carrying'
 
 export default {
   mounted () {
@@ -129,6 +131,9 @@ export default {
     },
     stepData () {
       return this.$store.getters.getStepData
+    },
+    robotCarrying () {
+      return this.$store.getters.getRobotCarrying
     }
   },
   data () {
@@ -160,7 +165,8 @@ export default {
     Congrats,
     Tryagain,
     VideoHint,
-    SplashScreen
+    SplashScreen,
+    RobotCarrying
   }
 }
 </script>
@@ -179,6 +185,7 @@ export default {
   }
 
   .grid {
+    position: relative;
     border: 1px solid $click-color;
     border-radius: $grid-border-radius;
     flex-wrap: wrap;
@@ -203,6 +210,14 @@ export default {
 
     &:last-child .grid-space:last-child {
       border-bottom-right-radius: $grid-border-radius;
+    }
+  }
+
+  .no-radius-bottom-right {
+    border-bottom-right-radius: 0;
+
+    &:last-child .grid-space:last-child {
+      border-bottom-right-radius: 0;
     }
   }
 
@@ -244,16 +259,19 @@ export default {
       height: 30px;
     }
 
-    .replenish-tool::before {
-      background-size: 100%;
-      background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
-      display: inline-block;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 0;
-      content: "";
-      height: 15px;
-      width: 15px;
+    .replenish-tool {
+      position: relative;
+      &::before {
+        background-size: 100%;
+        background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+        display: inline-block;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 0;
+        content: "";
+        height: 15px;
+        width: 15px;
+      }
     }
   }
 

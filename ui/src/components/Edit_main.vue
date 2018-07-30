@@ -182,7 +182,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $edit-main-side-padding: 12%;
+  $edit-main-side-padding: 16%;
   $edit-main-top-bottom-padding: 0;
   $bar-height: 2px;
 
@@ -476,8 +476,8 @@ export default {
     $edit-main-padding-right: 12%;
 
     .bar {
-      right: -15px;
-      left: -15px;
+      right: 5px;
+      left: 5px;
     }
 
     .dialog-button {
@@ -502,53 +502,4 @@ export default {
       height: 40px;
     }
   }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .edit-main {
-      height: 105px;
-    }
-
-    .dialog-button {
-      top: -15px;
-    }
-
-    .stop {
-      display: none;
-    }
-
-    .speed {
-      right: 35px;
-      font-size: 12px;
-    }
-  }
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .edit-main {
-      padding: 0;
-    }
-
-    .function-drop {
-      height: 60px;
-      width: 75%;
-    }
-
-    .dialog-button {
-      top: -15px;
-    }
-
-    .stop {
-      display: none;
-    }
-
-    .speed {
-      right: 35px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
 </style>
