@@ -141,7 +141,6 @@ object Compiler {
     firstPass
   }
 
-//  @tailrec
   def convertToOps(
                     token      : FuncToken,
                     funcTokens : Map[String, FuncToken],
