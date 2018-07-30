@@ -7,7 +7,6 @@
         :level="level"
         :step="step"
         :step-stats="stepStats"></stars>
-      <span>Need a hint?</span>
     </div>
   </div>
 </template>
@@ -146,8 +145,9 @@ export default {
     $arrow-length: 20px;
     $arrow-border-height: 5px;
     $arrow-height: 4px;
-    $bubble-margin-bottom: 8px;$hint-font-size: 8px;
-    $hint-line-height: 10px;
+    $bubble-margin-bottom: 8px;
+    $hint-font-size: 22px;
+    $hint-line-height: 24px;
 
     .speech-bubble {
       position: relative;
@@ -176,9 +176,11 @@ export default {
         justify-content: center;
         flex-direction: column;
         padding: 1%;
+        position: relative;
 
         span {
           color: #4a90e2;
+          position: absolute;
           margin: 0;
           font-size: $hint-font-size;
           line-height: $hint-line-height;

@@ -43,11 +43,11 @@
             <b-popover
               v-if="space.tools.length"
               :target="`grid-cell-${rInd}-${sInd}`"
-              triggers="hover click"
+              triggers="click"
             >
               <div class="display-tools">
                 <div
-                  v-for="(tool, iInd) in space.tools"
+                  v-for="(tool, iInd) in space.tools.slice(0, 100)"
                   :key="`d-image-${iInd}`"
                   :class="tool.original ? 'replenish-tool' : ''"
                 >
@@ -176,7 +176,7 @@ export default {
   $grid-space-font-size: 22px;
   $grid-space-size: 96px;
   $grid-border-radius: 4px;
-  $grid-background: rgba(0, 0, 0, 0.6);
+  $grid-background: rgba(0, 0, 0, 0.5);
   $display-tool-size: 30px;
 
   .total-grid {
@@ -192,7 +192,6 @@ export default {
     flex-wrap: wrap;
     margin: 0 auto;
     z-index: 100;
-    background: $grid-background;
   }
 
   .grid-row {
@@ -232,6 +231,7 @@ export default {
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     font-size: $grid-space-font-size;
+    background: $grid-background;
 
     img {
       position: absolute;
@@ -280,15 +280,13 @@ export default {
   }
 
   .grid-space-wall {
-    height: 100px;
-    width: 100px;
     box-shadow: 0 0 30px 0 rgba(0,0,0,0.5);
     background: repeating-linear-gradient(
         45deg,
-        rgba(0, 0, 0, 0.3),
-        rgba(0, 0, 0, 0.3) 21px,
-        rgba(74, 74, 74, 0.5) 21px,
-        rgba(74, 74, 74, 0.5) 24px
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 21px,
+        rgba(74, 74, 74, 0.6) 21px,
+        rgba(74, 74, 74, 0.6) 24px
     )
   }
 
