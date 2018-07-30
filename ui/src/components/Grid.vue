@@ -177,6 +177,7 @@ export default {
   $grid-space-size: 96px;
   $grid-border-radius: 4px;
   $grid-background: rgba(0, 0, 0, 0.6);
+  $display-tool-size: 30px;
 
   .total-grid {
     width: 100%;
@@ -256,7 +257,7 @@ export default {
     position: relative;
 
     img {
-      height: 30px;
+      height: $display-tool-size;
     }
 
     .replenish-tool {
@@ -269,8 +270,8 @@ export default {
         position: absolute;
         bottom: 0;
         content: "";
-        height: 15px;
-        width: 15px;
+        height: calc(#{$display-tool-size} / 2);
+        width: calc(#{$display-tool-size} / 2);
       }
     }
   }
@@ -304,90 +305,287 @@ export default {
     animation-iteration-count: infinite;
   }
 
-  /* 13" screen */
-  @media only screen and (max-width : 1280px) {
-    .grid-space {
-      height: 70px;
-      width: 70px;
-    }
-  }
-
   @media only screen and (max-width: 823px) and (orientation: landscape) {
     $grid-space-size: 32px;
+    $display-tool-size: 16px;
+    $grid-space-font-size: 14px;
 
     .grid-space {
       height: $grid-space-size;
       width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 150%;
+        width: 150%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
   @media only screen and (max-width : 736px) {
     $grid-space-size: 38px;
+    $display-tool-size: 16px;
 
     .grid-space {
       height: $grid-space-size;
       width: $grid-space-size;
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
   @media only screen and (max-width: 667px) and (orientation: landscape) {
     $grid-space-size: 30px;
+    $display-tool-size: 16px;
 
     .grid-space {
       height: $grid-space-size;
       width: $grid-space-size;
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
   @media only screen and (max-width: 568px) and (orientation: landscape) {
     $grid-space-size: 26px;
+    $display-tool-size: 16px;
 
     .grid-space {
       height: $grid-space-size;
       width: $grid-space-size;
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
   @media only screen and (max-width: 414px) {
     $grid-space-size: 32px;
+    $display-tool-size: 18px;
+    $grid-space-font-size: 14px;
 
     .grid-space {
       height: $grid-space-size;
       width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 180%;
+        width: 180%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
   @media only screen and (max-width: 375px) {
     $grid-space-size: 26px;
+    $display-tool-size: 16px;
 
-    .grid-space {
-      height: $grid-space-size;
-      width: $grid-space-size;
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
   @media only screen and (max-width : 320px) {
     $grid-space-size: 26px;
-    $grid-space-font-size: 18px;
+    $display-tool-size: 16px;
 
     .grid-space {
       height: $grid-space-size;
       width: $grid-space-size;
+    }
 
-      .problem {
-        font-size: $grid-space-font-size;
-        transform: translateY(-50%);
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
       }
     }
   }
 </style>
 <style lang="scss">
-  $popover-background-color: #D3D3D3;
-  $popover-border: #f0f0f0;
+  $popover-background-color: rgba(0, 0, 0, 0.6);
+  $popover-border: #B8E986;
   // for popover
-  .popover {
+  .popover.bs-popover-right, .popover.bs-popover-left {
     background-color: $popover-background-color;
     border: 1px solid $popover-border;
     box-shadow: 0 0 100px 0 rgba(0, 0, 0, 1);
+
+    .arrow::after {
+      border-right-color: $popover-border;
+      border-left-color: $popover-border;
+    }
   }
 </style>

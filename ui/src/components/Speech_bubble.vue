@@ -80,8 +80,7 @@ export default {
     }
 
     .bubble-stars {
-      display: none;
-      /*display: flex;*/
+      display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
@@ -147,7 +146,8 @@ export default {
     $arrow-length: 20px;
     $arrow-border-height: 5px;
     $arrow-height: 4px;
-    $bubble-margin-bottom: 8px;
+    $bubble-margin-bottom: 8px;$hint-font-size: 8px;
+    $hint-line-height: 10px;
 
     .speech-bubble {
       position: relative;
@@ -171,7 +171,7 @@ export default {
       }
 
       .bubble-stars {
-        display: /*flex*/ none;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
@@ -180,7 +180,8 @@ export default {
         span {
           color: #4a90e2;
           margin: 0;
-          font-size: 16px;
+          font-size: $hint-font-size;
+          line-height: $hint-line-height;
           bottom: -10px;
         }
 
@@ -239,6 +240,8 @@ export default {
     $arrow-border-height: 5px;
     $arrow-height: 4px;
     $bubble-margin-bottom: 8px;
+    $hint-font-size: 8px;
+    $hint-line-height: 10px;
 
     .speech-bubble {
       position: relative;
@@ -262,7 +265,7 @@ export default {
       }
 
       .bubble-stars {
-        display: /*flex*/ none;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
@@ -271,7 +274,8 @@ export default {
         span {
           color: #4a90e2;
           margin: 0;
-          font-size: 16px;
+          font-size: $hint-font-size;
+          line-height: $hint-line-height;
           bottom: -10px;
         }
 
@@ -330,6 +334,8 @@ export default {
     $arrow-border-height: 5px;
     $arrow-height: 4px;
     $bubble-margin-bottom: 8px;
+    $hint-font-size: 8px;
+    $hint-line-height: 10px;
 
     .speech-bubble {
       position: relative;
@@ -353,7 +359,7 @@ export default {
       }
 
       .bubble-stars {
-        display: /*flex*/ none;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
@@ -362,7 +368,8 @@ export default {
         span {
           color: #4a90e2;
           margin: 0;
-          font-size: 16px;
+          font-size: $hint-font-size;
+          line-height: $hint-line-height;
           bottom: -10px;
         }
 
@@ -422,6 +429,8 @@ export default {
     $arrow-border-height: 5px;
     $arrow-height: 4px;
     $bubble-margin-bottom: 8px;
+    $hint-font-size: 8px;
+    $hint-line-height: 10px;
 
     .speech-bubble {
       position: relative;
@@ -445,7 +454,7 @@ export default {
       }
 
       .bubble-stars {
-        display: /*flex*/ none;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
@@ -454,7 +463,8 @@ export default {
         span {
           color: #4a90e2;
           margin: 0;
-          font-size: 16px;
+          font-size: $hint-font-size;
+          line-height: $hint-line-height;
           bottom: -10px;
         }
 
@@ -513,6 +523,8 @@ export default {
     $arrow-border-height: 5px;
     $arrow-height: 4px;
     $bubble-margin-bottom: 8px;
+    $hint-font-size: 8px;
+    $hint-line-height: 8px;
 
     .speech-bubble {
       position: relative;
@@ -536,7 +548,7 @@ export default {
       }
 
       .bubble-stars {
-        display: /*flex*/ none;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
@@ -545,7 +557,8 @@ export default {
         span {
           color: #4a90e2;
           margin: 0;
-          font-size: 16px;
+          font-size: $hint-font-size;
+          line-height: $hint-line-height;
           bottom: -10px;
         }
 
@@ -604,6 +617,8 @@ export default {
     $arrow-border-height: 5px;
     $arrow-height: 4px;
     $bubble-margin-bottom: 8px;
+    $hint-font-size: 8px;
+    $hint-line-height: 8px;
 
     .speech-bubble {
       position: relative;
@@ -627,7 +642,7 @@ export default {
       }
 
       .bubble-stars {
-        display: /*flex*/ none;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
@@ -636,8 +651,9 @@ export default {
         span {
           color: #4a90e2;
           margin: 0;
-          font-size: 16px;
           bottom: -10px;
+          font-size: $hint-font-size;
+          line-height: $hint-line-height;
         }
 
         span:hover {
@@ -695,6 +711,8 @@ export default {
     $arrow-border-height: 5px;
     $arrow-height: 4px;
     $bubble-margin-bottom: 8px;
+    $hint-font-size: 8px;
+    $hint-line-height: 8px;
 
     .speech-bubble {
       position: relative;
@@ -718,7 +736,7 @@ export default {
       }
 
       .bubble-stars {
-        display: /*flex*/ none;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
@@ -727,7 +745,8 @@ export default {
         span {
           color: #4a90e2;
           margin: 0;
-          font-size: 16px;
+          font-size: $hint-font-size;
+          line-height: $hint-line-height;
           bottom: -10px;
         }
 
@@ -775,14 +794,16 @@ export default {
 </style>
 <style lang="scss">
   /* Global styles needed to handle v-html */
+  $bubble-font-size: 24px;
+  $bubble-line-height: 29px;
+  $bubble-text-padding: 13px 13px 13px 20px;
   .speech-bubble {
     .bubble-text {
-      display: none;
       color: #000000;
-      font-size: 24px;
-      line-height: 29px;
+      font-size: $bubble-font-size;
+      line-height: $bubble-line-height;
       text-align: left;
-      padding: 13px 13px 13px 20px;
+      padding: $bubble-text-padding;
       p {
         margin: 0!important;
       }
@@ -795,25 +816,88 @@ export default {
   }
 
   @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $bubble-font-size: 12px;
+    $bubble-line-height: 14px;
+    $bubble-text-padding: 0px 0px 0px 10px;
+    .speech-bubble {
+      .bubble-text {
+        font-size: $bubble-font-size;
+        line-height: $bubble-line-height;
+        padding: $bubble-text-padding;
+      }
+    }
   }
 
   @media only screen and (max-width : 736px) and (orientation: landscape) {
+    $bubble-font-size: 12px;
+    $bubble-line-height: 14px;
+    $bubble-text-padding: 0px 0px 0px 10px;
+    .speech-bubble {
+      .bubble-text {
+        font-size: $bubble-font-size;
+        line-height: $bubble-line-height;
+        padding: $bubble-text-padding;
+      }
+    }
   }
 
   @media only screen and (max-width: 667px) and (orientation: landscape) {
+    $bubble-font-size: 12px;
+    $bubble-line-height: 14px;
+    $bubble-text-padding: 0px 0px 0px 10px;
+    .speech-bubble {
+      .bubble-text {
+        font-size: $bubble-font-size;
+        line-height: $bubble-line-height;
+        padding: $bubble-text-padding;
+      }
+    }
   }
 
   /* iphone 5 landscape*/
   @media only screen and (max-width: 568px) and (orientation: landscape){
+    $bubble-font-size: 12px;
+    $bubble-line-height: 14px;
+    $bubble-text-padding: 0px 0px 0px 10px;
+    .speech-bubble {
+      .bubble-text {
+        font-size: $bubble-font-size;
+        line-height: $bubble-line-height;
+        padding: $bubble-text-padding;
+      }
+    }
   }
 
   @media only screen and (max-width: 414px) {
+    $bubble-font-size: 12px;
+    $bubble-line-height: 14px;
+    .speech-bubble {
+      .bubble-text {
+        font-size: $bubble-font-size;
+        line-height: $bubble-line-height;
+      }
+    }
   }
 
   @media only screen and (max-width: 375px) {
+    $bubble-font-size: 12px;
+    $bubble-line-height: 14px;
+    .speech-bubble {
+      .bubble-text {
+        font-size: $bubble-font-size;
+        line-height: $bubble-line-height;
+      }
+    }
   }
 
   @media only screen and (max-width : 320px) {
-    .speech-bubble {}
+    $bubble-font-size: 12px;
+    $bubble-line-height: 14px;
+    .speech-bubble {
+      .bubble-text {
+        font-size: $bubble-font-size;
+        line-height: $bubble-line-height;
+      }
+    }
   }
 </style>
