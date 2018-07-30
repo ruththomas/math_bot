@@ -511,6 +511,11 @@ export default {
     $grid-space-size: 26px;
     $display-tool-size: 16px;
 
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+
     .display-tools {
       display: flex;
       max-width: 300px;
@@ -539,7 +544,7 @@ export default {
   }
 
   @media only screen and (max-width : 320px) {
-    $grid-space-size: 26px;
+    $grid-space-size: 24px;
     $display-tool-size: 16px;
 
     .grid-space {

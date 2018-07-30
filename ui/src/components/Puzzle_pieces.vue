@@ -85,68 +85,85 @@ export default {
 <style scoped lang="scss">
   $puzzle-piece-border-color: #FFFFFF;
   $piece-margin: 4px;
+  $piece-default: #FFFFFF;
+  $piece-grey: #696969;
+  $piece-green: #50E3C2;
+  $piece-blue: #4A90E2;
+  $piece-pink: #FF98B1;
+  $piece-red: #F25C5C;
+  $piece-purple: #CA7AFF;
 
   .puzzle-piece {
     display: flex;
   }
 
   .piece-default {
-    border-color: #FFFFFF!important;
+    border-color: $piece-default!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: #FFFFFF!important;
+      border-color: $piece-default!important;
     }
     .command-name {
-      background-color: #FFFFFF!important;
+      background-color: $piece-default!important;
+    }
+  }
+
+  .piece-grey {
+    border-color: $piece-grey!important;
+    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
+      border-color: $piece-grey!important;
+    }
+    .command-name {
+      background-color: $piece-grey!important;
     }
   }
 
   .piece-green {
-    border-color: #50E3C2!important;
+    border-color: $piece-green!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: #50E3C2!important;
+      border-color: $piece-green!important;
     }
     .command-name {
-      background-color: #50E3C2!important;
+      background-color: $piece-green!important;
     }
   }
 
   .piece-blue {
-    border-color: #4A90E2!important;
+    border-color: $piece-blue!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: #4A90E2!important;
+      border-color: $piece-blue!important;
     }
     .command-name {
-      background-color: #4A90E2!important;
+      background-color: $piece-blue!important;
     }
   }
 
   .piece-pink {
-    border-color: #FF98B1!important;
+    border-color: $piece-pink!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: #FF98B1!important;
+      border-color: $piece-pink!important;
     }
     .command-name {
-      background-color: #FF98B1!important;
+      background-color: $piece-pink!important;
     }
   }
 
   .piece-red {
-    border-color: #F25C5C!important;
+    border-color: $piece-red!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: #F25C5C!important;
+      border-color: $piece-red!important;
     }
     .command-name {
-      background-color: #F25C5C!important;
+      background-color: $piece-red!important;
     }
   }
 
   .piece-purple {
-    border-color: #CA7AFF!important;
+    border-color: $piece-purple!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: #CA7AFF!important;
+      border-color: $piece-purple!important;
     }
     .command-name {
-      background-color: #CA7AFF!important;
+      background-color: $piece-purple!important;
     }
   }
 
