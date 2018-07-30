@@ -9,7 +9,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.google.inject.name.Named
 import configuration.{ ActorConfig, GoogleApiConfig }
-import daos.SessionDAO
+import daos.{ MutableMapCache, SessionDAO }
 import dataentry.actors.messages.{ RequestTokensFromCode, TokensFromCodeFailure, TokensFromCodeSuccess }
 import dataentry.caches.KeyValueCache
 import javax.inject.Inject
@@ -24,7 +24,7 @@ import scala.util.Try
 
 class AuthController @Inject()(
     val sessionDAO: SessionDAO,
-    val sessionCache: KeyValueCache[SecureIdentifier, Option[JwtToken]],
+    val sessionCache : MutableMapCache,
     @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
     val jwtParser: JwtTokenParser,
     val googleConfig: GoogleApiConfig,

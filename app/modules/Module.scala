@@ -1,9 +1,17 @@
 package modules
 import actors.{ ActorTags, GoogleOAuth }
+import akka.actor.ActorSystem
 import com.google.inject.{ AbstractModule, Provides }
 import configuration.{ ActorConfig, ConfigFactory, GoogleApiConfig }
+import loggers.{ AkkaSemanticLog, SemanticLog }
+import models.JwtToken
+import org.bson.codecs.Codec
+import org.bson.codecs.configuration.CodecProvider
+import org.mongodb.scala.bson.codecs.Macros
 import org.mongodb.scala.{ MongoClient, MongoDatabase }
 import play.api.libs.concurrent.AkkaGuiceSupport
+import utils.SecureIdentifier
+import utils.SecureIdentifier.SecureIdentifierCodec
 
 class Module extends AbstractModule with AkkaGuiceSupport {
   override def configure() = {
@@ -16,7 +24,7 @@ class Module extends AbstractModule with AkkaGuiceSupport {
     val name = configFactory.mongoConfig.name
     val url = configFactory.mongoConfig.url
     // To directly connect to the default server localhost on port 27017
-    val mongoClient: MongoClient = MongoClient(url.toString())
+    val mongoClient: MongoClient = MongoClient(url)
     mongoClient.getDatabase(name)
   }
 
@@ -30,4 +38,12 @@ class Module extends AbstractModule with AkkaGuiceSupport {
     configFactory.actorConfig()
   }
 
+  @Provides
+  def provideSemanticLog(system : ActorSystem) : SemanticLog = new AkkaSemanticLog[String](system, "global")
+
+  @Provides
+  def mongoCodecs(secureIdentifierCodec: SecureIdentifierCodec) : Seq[Codec[_]] = Seq(secureIdentifierCodec)
+
+  @Provides
+  def mongoCodecProviders : Seq[CodecProvider] = Seq(Macros.createCodecProvider[JwtToken])
 }

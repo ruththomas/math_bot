@@ -20,6 +20,6 @@ case class ActorConfig(
 
 case class MongoConfig(
                       name : String,
-                      url : Uri
+                      url : String
                       )
 
