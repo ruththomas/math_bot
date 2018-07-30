@@ -85,7 +85,7 @@ export default {
   }
 
   .staged-functions-header {
-    display: flex;
+    display: /* flex */ none;
     height: 20%;
     justify-content: flex-start;
     align-items: center;
@@ -106,7 +106,7 @@ export default {
       display: flex;
       height: 100%;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       margin: 0 auto;
     }
   }

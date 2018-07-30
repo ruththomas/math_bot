@@ -47,6 +47,7 @@ module.exports = {
     pickupN: 'http://res.cloudinary.com/doohickey/image/upload/v1530634721/up_arrows_l6jxg7.svg',
     cleanup: 'http://res.cloudinary.com/doohickey/image/upload/v1530633638/noun_broom_1272609_cccccc_behbt3.svg',
     cleanComb: 'http://res.cloudinary.com/doohickey/image/upload/v1530642713/noun_Comb_266891_cccccc_iecc0s.svg',
+    cleanupMore: 'http://res.cloudinary.com/doohickey/image/upload/v1532976417/noun_Mop_1683982_cccccc_uroyao.svg',
     '1': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234339/functionIcons/football_b1uiqd.svg',
     '2': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234600/functionIcons/baseball_lqjqyo.svg',
     '3': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1524234702/functionIcons/soccerBall_cdx3da.svg',

@@ -16,6 +16,7 @@
             </g>
           </g>
         </g>
+        <!--<text x="50%" y="50%" class="heavy">?</text>-->
       </svg>
   </div>
 </template>
@@ -28,4 +29,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .heavy { font: bold 30px sans-serif; }
 </style>
