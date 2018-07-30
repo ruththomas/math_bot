@@ -9,14 +9,14 @@ import akka.util.Timeout
 import compiler.operations.NoOperation
 import compiler.processor.{ Frame, Processor, Register }
 import compiler.{ Compiler, GridAndProgram, Point }
+import configuration.CompilerConfiguration
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models.{ FuncToken, GridMap, Problem, Stats }
+import daos.PlayerTokenDAO
+import models.{ FuncToken, GridMap, Problem, Stats }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
-import utils.CompilerConfiguration
 
 import scala.concurrent.duration._
 

@@ -1,8 +1,8 @@
 package compiler
 
 import compiler.operations._
-import model.CommandIds
-import model.models.{ FuncToken, GridMap, GridPart, Problem }
+import daos.CommandIds
+import models.{ FuncToken, GridMap, GridPart, Problem }
 import play.api.libs.json._
 
 object Compiler {
