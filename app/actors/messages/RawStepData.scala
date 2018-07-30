@@ -14,15 +14,15 @@ case class RawStepData(
     stagedEnabled: Boolean,
     activeEnabled: Boolean,
     stagedQty: Int,
-    assignedStaged: Map[String, String],
-    activeQty: Int,
-    preBuiltActive: Map[String, List[String]],
+    assignedStaged: List[AssignedFunctionModel],
+    preBuiltActive: List[AssignedFunctionModel],
+    allowedActives: Option[List[String]],
     cmdsAvailable: List[String],
     specialParameters: List[String],
     problem: String,
     clearMain: Boolean,
     initFocus: List[String],
-    evalEachFrame: Option[Boolean],
+    evalEachFrame: Option[Boolean] = None,
     videoHints: List[String],
     prevStep: String,
     nextStep: String
@@ -39,9 +39,9 @@ object RawStepData {
     (JsPath \ "stagedEnabled").read[Boolean] and
     (JsPath \ "activeEnabled").read[Boolean] and
     (JsPath \ "stagedQty").read[Int] and
-    (JsPath \ "assignedStaged").read[Map[String, String]] and
-    (JsPath \ "activeQty").read[Int] and
-    (JsPath \ "preBuiltActive").read[Map[String, List[String]]] and
+    (JsPath \ "assignedStaged").read[List[AssignedFunctionModel]] and
+    (JsPath \ "preBuiltActive").read[List[AssignedFunctionModel]] and
+    (JsPath \ "allowedActives").readNullable[List[String]] and
     (JsPath \ "cmdsAvailable").read[List[String]] and
     (JsPath \ "specialParameters").read[List[String]] and
     (JsPath \ "problem").read[String] and
@@ -63,9 +63,9 @@ object RawStepData {
     (JsPath \ "stagedEnabled").write[Boolean] and
     (JsPath \ "activeEnabled").write[Boolean] and
     (JsPath \ "stagedQty").write[Int] and
-    (JsPath \ "assignedStaged").write[Map[String, String]] and
-    (JsPath \ "activeQty").write[Int] and
-    (JsPath \ "preBuiltActive").write[Map[String, List[String]]] and
+    (JsPath \ "assignedStaged").write[List[AssignedFunctionModel]] and
+    (JsPath \ "preBuiltActive").write[List[AssignedFunctionModel]] and
+    (JsPath \ "allowedActives").writeNullable[List[String]] and
     (JsPath \ "cmdsAvailable").write[List[String]] and
     (JsPath \ "specialParameters").write[List[String]] and
     (JsPath \ "problem").write[String] and

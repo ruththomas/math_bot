@@ -1,5 +1,6 @@
 # Load index page
-GET         /                                                                      controllers.Assets.at(path="/public", file="index.html")
+GET         /                                                                     controllers.Assets.at(path="/public", file="index.html")
+GET         /callback                                                             controllers.Assets.at(path="/public", file="index.html")
 
 # Levels
 GET         /api/levels/getStep/:level/:step                                      controllers.LevelController.getStep(level, step, tokenId: Option[String])
@@ -15,6 +16,7 @@ PUT         /api/token/editLambdas                                              
 POST        /api/token                                                             controllers.PlayerController.addToken
 GET         /api/token/activateFunction/:tokenId/:stagedIndex/:activeIndex         controllers.PlayerController.activateFunction(tokenId, stagedIndex, activeIndex)
 POST        /api/token/test                                                        controllers.PlayerController.test
+PUT         /api/token/updateActives                                               controllers.PlayerController.updateActives
 
 # Stats
 GET         /api/stats/update/:tokenId                                             controllers.StatsController.advanceStats(tokenId, success: Option[String])

@@ -34,6 +34,14 @@ class PlayerController @Inject()(system: ActorSystem,
   val playerActor =
     system.actorOf(PlayerActor.props(system, playerTokenDAO, polyfillActor, logger, environment), "player-actor")
 
+  def updateActives(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    (playerActor ? UpdateActives(request.body)).mapTo[Either[UpdatedActives, ActorFailed]].map {
+      case Left(UpdatedActives(actives)) =>
+        Ok(Json.toJson(actives))
+      case Right(actorFailed) => BadRequest(actorFailed.msg)
+    }
+  }
+
   def addToken(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
     (playerActor ? AddToken(request.body)).mapTo[Either[ResponsePlayerToken, ActorFailed]].map {
       case Left(responsePlayerToken) =>

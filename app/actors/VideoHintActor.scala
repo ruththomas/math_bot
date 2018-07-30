@@ -2,7 +2,7 @@ package actors
 
 import java.time.Instant
 
-import actors.messages.ActorFailed
+import actors.messages.{ActorFailed, RawStepData}
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
 import models._
@@ -45,6 +45,8 @@ object VideoHintActor {
 
   final case class ResetStars(tokenId: TokenId, hintsTaken: HintsTaken, level: LevelName, step: StepName)
 
+  final case class NoVideos(tokenId: TokenId, level: LevelName, step: StepName)
+
   def generateTimestamp: Long = Instant.now.getEpochSecond
 
   def calculateStars(stars: Int, videoCount: Int) = {
@@ -52,7 +54,7 @@ object VideoHintActor {
     Math.max(0, stars - starRatio)
   }
 
-  private val starExpiration = 300 // bump up to 3600
+  private val starExpiration = 3600 // bump up to 3600
 
   def calculateRemainingTime(timeStamp: Long): Long = {
     val expiredTime = timeStamp + starExpiration
@@ -123,22 +125,26 @@ class VideoHintActor @Inject()(out: ActorRef,
     case GetVideoHint(playerToken, stats) =>
       for {
         videoHintOpt <- videoHintDAO.getHints(playerToken.token_id)
-        videoIds = levelGenerator.getRawStepData(stats.level, stats.step) match {
-          case Some(rawStepData) => rawStepData.videoHints
-          case None => List.empty[String]
-        }
       } yield
-        videoHintOpt match {
-          // If videoHint field exists in VideoHint table
-          case Some(hintsTaken) =>
-            // Test if level/step exist in videos watched
-            hintsTaken.videosWatched.find(v => v.level == stats.level && v.step == stats.step) match {
-              case Some(hintTaken) =>
-                self ! UpdateExistingVideo(playerToken, hintsTaken, hintTaken, stats, videoIds)
-              case None => self ! InsertNewVideo(playerToken, hintsTaken, stats, videoIds)
+        levelGenerator.getRawStepData(stats.level, stats.step) match {
+          case Some(rawStepData) =>
+            rawStepData.videoHints match {
+              case videoIds if videoIds.nonEmpty =>
+                videoHintOpt match {
+                  // If videoHint field exists in VideoHintControls table
+                  case Some(hintsTaken) =>
+                    // Test if level/step exist in videos watched
+                    hintsTaken.videosWatched.find(v => v.level == stats.level && v.step == stats.step) match {
+                      case Some(hintTaken) =>
+                        self ! UpdateExistingVideo(playerToken, hintsTaken, hintTaken, stats, videoIds)
+                      case None => self ! InsertNewVideo(playerToken, hintsTaken, stats, videoIds)
+                    }
+                  // if not in database insert new record into database
+                  case None => self ! InsertNewVideoRecord(playerToken, stats, videoIds)
+                }
+              case _ => out ! NoVideos(playerToken.token_id, stats.level, stats.step)
             }
-          // if not in database insert new record into database
-          case None => self ! InsertNewVideoRecord(playerToken, stats, videoIds)
+          case None => out ! NoVideos(playerToken.token_id, stats.level, stats.step)
         }
     /*
      * UpdateExistingVideo - if video has already been viewed for this level/step
@@ -212,6 +218,7 @@ class VideoHintActor @Inject()(out: ActorRef,
                          RemainingTime(stars, level, step, calculateRemainingTime(timeStamp)))
     /*
      * GetHintsTaken - returns a list of hints taken with a remaining time in minutes
+     * also filters out expired videos.
      * */
     case GetHintsTaken(tokenId) =>
       videoHintDAO.getHints(tokenId) map {

@@ -37,6 +37,7 @@ export default {
     * send function to server to update lambdas
     * */
     api.putFunc({tokenId: token.token_id, funcToken: currentFunction, override}, (lambdas) => {
+      // console.log('edit', 'responded')
       context.$store.dispatch('updateLambdas', lambdas)
     })
   }

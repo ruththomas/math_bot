@@ -5,19 +5,19 @@
 </template>
 
 <script>
-import api from './services/api'
-import utils from './services/utils'
+// import api from './services/api'
+// import utils from './services/utils'
 
 export default {
   name: 'app',
   mounted () {
     window.scrollTo(0, 1)
     this.auth.isAuthenticated()
-    utils.watcher(() => !this.auth.authenticated, () => {
-      api.videoHintSocket.requestHintsTaken(res => {
-        this.$store.dispatch('startExistingTimers', res.remainingTimes)
-      })
-    })
+    // utils.watcher(() => !this.auth.authenticated, () => {
+    //   api.videoHintSocket.requestHintsTaken(res => {
+    //     this.$store.dispatch('startExistingTimers', res.remainingTimes)
+    //   })
+    // })
   },
   computed: {
     auth () {
@@ -73,7 +73,6 @@ export default {
 
   .dragging, .ghost, .chosen {
     height: 75px;
-    width: 75px;
   }
 
   .dragging {
@@ -82,7 +81,7 @@ export default {
 
   .function-drop {
     .ghost, .chosen {
-      margin: 0 20px 0 20px;
+      margin: 0 12px 0 12px;
     }
 
     .ghost {
@@ -106,27 +105,6 @@ export default {
     100% {
       box-shadow: 0 0 0 0 rgba(184, 233, 134, 0);
     }
-  }
-
-  @-webkit-keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-  @-moz-keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-  @-o-keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-  @-ms-keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
-  }
-  @keyframes spin1 {
-    0% { -webkit-transform: rotate(360deg);}
-    100% { -webkit-transform: rotate(0deg);}
   }
 
   @keyframes shake {

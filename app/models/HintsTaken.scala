@@ -9,7 +9,7 @@ object HintsTaken {
   implicit val videoHintFormat = Json.format[HintsTaken]
 }
 /*
- * VideoHint
+ * VideoHintControls
  * Keeps a list of all the videos a user has watched to be iterated over once per hour in order
  * to give the user their stars back.
  * */

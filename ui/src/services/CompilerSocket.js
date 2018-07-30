@@ -6,6 +6,8 @@ class CompilerSocket extends Ws {
     super()
     this.tokenId = tokenId
     this._compilerTake = 4
+
+    this._openCompilerWs()
   }
 
   /*

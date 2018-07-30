@@ -13,7 +13,7 @@
         :key="step + ':' + value"
       >
         <div class="step-info-text-container">
-          <div class="step-info-text">{{ parseCamelCase(step.name) }}</div>
+          <div class="step-info-text">{{ value + 1 }}:{{ parseCamelCase(step.name) }}</div>
         </div>
         <div class="step-info-image-container">
           <stars :level="level" :step="step.name" :step-stats="step" :star-group="'star-cluster'"></stars>
@@ -178,7 +178,7 @@ export default {
     font-family: Roboto, serif;
     font-size: 26px;
     font-weight: 600;
-    line-height: 30px;
+    line-height: normal;
     text-align: left;
   }
 
@@ -188,6 +188,7 @@ export default {
   }
 
   .step-info-image-container {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -399,6 +400,7 @@ export default {
       width: 240px;
     }
   }
+
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
     $steps-height: 700px;
     $steps-width: 20px;

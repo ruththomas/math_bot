@@ -3,19 +3,20 @@ package actors
 import actors.LevelGenerationActor.{ GetGridMap, GetStep }
 import actors.StatsActor.{ StatsDoneUpdating, UpdateStats }
 import actors.messages._
-import akka.actor.{ Actor, ActorRef, Props, UnhandledMessage }
+import akka.actor.{ Actor, ActorRef, Props }
 import akka.pattern.ask
 import akka.util.Timeout
-import compiler.processor.{ Frame, Processor }
-import compiler.{ Compiler, GridAndProgram }
-import configuration.CompilerConfiguration
+import compiler.operations.NoOperation
+import compiler.processor.{ Frame, Processor, Register }
+import compiler.{ Compiler, GridAndProgram, Point }
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
-import daos.PlayerTokenDAO
-import models.{ GridMap, Stats }
+import model.PlayerTokenDAO
+import model.models.{ FuncToken, GridMap, Problem, Stats }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
+import utils.CompilerConfiguration
 
 import scala.concurrent.duration._
 
@@ -35,14 +36,14 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
                           program: GridAndProgram,
                           clientFrames: List[ClientFrame] = List.empty[ClientFrame],
                           stepCount: Int = 0,
-                          leftoverFrame: Option[Frame] = None,
+                          leftover: Option[Frame] = None,
                           exitOnSuccess: Boolean = false) {
     def addSteps(steps: Int): ProgramState = this.copy(stepCount = this.stepCount + steps)
+    def withLeftover(l: Frame): ProgramState = this.copy(leftover = Some(l))
   }
-
   implicit val timeout: Timeout = 5000.minutes
 
-  private val className = "CompilerActor"
+  private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
 
   private def createFrames(leadingFrames: List[Frame]) = {
 
@@ -74,6 +75,34 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     }
   }
 
+  private def createLastFromFromNothing() = {
+    for {
+      // Update stats, and get the updated stats
+      stats <- (statsActor ? UpdateStats(success = false, tokenId = tokenId))
+        .mapTo[Either[Stats, ActorFailed]]
+        .map(_.left.get)
+      // Gather the prepared step data
+      stepData <- (levelActor ? GetStep(stats.level, stats.step, Some(tokenId)))
+        .mapTo[Either[PreparedStepData, ActorFailed]]
+        .map(_.left.get)
+    } yield {
+      MathBotCompiler.ClientFrame(ClientRobotState(Point(0, 0), "0", List.empty[String]),
+                                  "failure",
+                                  Some(stats),
+                                  Some(stepData))
+    }
+  }
+
+  private def clientFramePrint(frame: ClientFrame) = {
+    s"location: ${frame.robotState.location}\n" +
+    s"register: ${frame.robotState.holding.mkString(", ")}\n" +
+    "grid: \n" +
+    frame.robotState.grid
+      .map(cel => cel.cells.map(c => s"  (${c.location.x}, ${c.location.y} -> ${c.items.mkString(", ")}"))
+      .map(_.mkString("\n"))
+      .getOrElse(" No Grid")
+  }
+
   private def sendFrames(programState: ProgramState, clientFrames: List[ClientFrame]): Unit = {
     out ! CompilerOutput(clientFrames, programState.grid.problem)
   }
@@ -94,7 +123,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
         for {
           token <- tokenList
           main = token.lambdas.head.main
-          funcs = token.lambdas.head.activeFuncs
+          funcs = token.lambdas.head.activeFuncs ++ token.lambdas.head.inactiveActives.getOrElse(List.empty[FuncToken])
           commands = token.lambdas.head.cmds
           program <- Compiler.compile(main, funcs, commands, grid, problem)
         } yield {
@@ -112,7 +141,13 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           self ! CompilerContinue(steps)
         }
       }
-
+    case CompilerContinue(_) =>
+      // We see this in production and don't know why the client is still sending continues after the actor
+      // has signaled end of program.  So we try to create a fake last frame.
+      logger.LogDebug("CompilerActor", "Continue received during create state.")
+      for {
+        lastFrame <- createLastFromFromNothing()
+      } yield out ! CompilerOutput(List(lastFrame), Problem(""))
   }
 
   def compileContinue(currentCompiler: ProgramState): Receive = {
@@ -121,49 +156,72 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       self ! CompilerContinue(steps)
 
     case CompilerContinue(steps) =>
-      logger.LogInfo(className, s"Stepping compiler for $steps steps")
+      logger.LogInfo(className,
+                     s"Stepping compiler for $steps steps with actor ${context.self.path.toSerializationFormat}")
       // filter out non-robot frames (eg function calls and program start)
       val maxStepsReached = config.maxProgramSteps < currentCompiler.stepCount + steps
-      val takeSteps = if (maxStepsReached) config.maxProgramSteps - currentCompiler.stepCount else steps
-      val robotFrames = currentCompiler.iterator.filter(f => f.robotLocation.isDefined).take(takeSteps).toList
+      val takeSteps =
+        if (maxStepsReached)
+          config.maxProgramSteps - currentCompiler.stepCount
+        else
+          steps + (if (currentCompiler.leftover.isEmpty) 1 else 0) // Add an additional step for a leftover
+      val robotFrames = currentCompiler.iterator
+        .filter(f => {
+          f.robotLocation.isDefined
+        })
+        .take(takeSteps)
+        .toList
 
-      val executeSomeFrames = (if (currentCompiler.exitOnSuccess) {
-                                 if (currentCompiler.leftoverFrame.exists(lf => checkForSuccess(currentCompiler, lf))) {
-                                   Seq.empty[Frame] // When the leftover is the success frame, don't return addtional frames
-                                 } else {
-                                   // Generate a temporary index for the program frames and search for a success frame.
-                                   // Truncate the frames to the first successful frame
-                                   val frames = robotFrames.zipWithIndex
-                                   frames
-                                     .find(frame => checkForSuccess(currentCompiler, frame._1))
-                                     .map(successFrame => frames.take(successFrame._2 + 1))
-                                     .getOrElse(frames)
-                                     .map(f => f._1)
-                                 }
-                               } else {
-                                 robotFrames
-                               }).toList
+      // The reason for a leftover frame.  Since the processor can run in a forever loop, we are left to
+      // deciding when the last requested frame (say the 4th frame in a request for 4 steps) is the end
+      // of program or not.  By asking for an additional frame (a 5th in the example) we can determine if the
+      // program is still running.  If we get less than the requested amount, we know the program exited.
+      // However, we have to keep that extra frame around fro when the client requests another 4 frames.
+      //
+      // If you are curious about this topic in general, google "the halting problem" :-)
 
-      // if the compiler generated less frames than requested we assume the program completed
-      val programCompleted = executeSomeFrames.length < takeSteps || maxStepsReached
+      val frames = currentCompiler.leftover match {
+        case Some(leftover) => leftover +: robotFrames
+        case None => robotFrames
+      }
 
-      // This logic is done this way for now because the client has to query to get group of frames and will hang
-      // if a query never responds with a frame. Eventually this gets replaced with an async stream of frames coming
-      // from the compiler that will be controlled with back pressure message coming from the client.
-      (currentCompiler.leftoverFrame, executeSomeFrames) match {
-        case (None, List(frame)) =>
+      val (executeSomeFrames, programCompleted) = if (currentCompiler.exitOnSuccess) {
+        // Generate a temporary index for the program frames and search for a success frame.
+        // Truncate the frames to the first successful frame
+        val checkedFrames = frames.zipWithIndex
+          .map(frame => (frame._1, checkForSuccess(currentCompiler, frame._1), frame._2))
+
+        checkedFrames.find(f => f._2).map(_._3) match {
+          case Some(index) => (
+            checkedFrames.takeWhile(_._3 <= index).map(_._1), // Just the frames up until success
+            true // program completion
+            )
+          case _ => (
+            frames, // All the frames
+            robotFrames.length < takeSteps || maxStepsReached // If the program stopped early or hit max frame count
+          )
+        }
+      } else {
+        (
+          frames, // All the frames
+          robotFrames.length < takeSteps || maxStepsReached // If the program stopped early or hit max frame count
+        )
+      }
+
+      executeSomeFrames match {
+        case List(frame) =>
           // When the compiler generates a single frame, assume its the last frame.
           for {
             lastFrame <- createLastFrame(currentCompiler, frame)
           } yield sendFrames(currentCompiler, lastFrame)
           context.become(createCompile())
-        case (None, leadingFrames :+ last) if !programCompleted =>
+        case leadingFrames :+ leftover if !programCompleted =>
           // More than one frame, send the leading frames and save the last frame for the next request
           sendFrames(currentCompiler, createFrames(leadingFrames))
           context.become(
-            compileContinue(currentCompiler.copy(leftoverFrame = Some(last)).addSteps(takeSteps))
+            compileContinue(currentCompiler.withLeftover(leftover).addSteps(leadingFrames.length))
           )
-        case (None, leadingFrames :+ last) if programCompleted =>
+        case leadingFrames :+ last if programCompleted =>
           // When short the requested frames, assume the program has finished and compute the last frame too **
           for {
             lastFrame <- createLastFrame(currentCompiler, last)
@@ -171,52 +229,33 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           context.become(
             createCompile()
           )
-        case (Some(leftover), leadingFrames :+ last) if !programCompleted =>
-          // With a leftover, and last, this is executing somewhere in the middle of the program.
-          sendFrames(currentCompiler, createFrames(leftover +: leadingFrames))
-          context.become(
-            compileContinue(currentCompiler.copy(leftoverFrame = Some(last)).addSteps(takeSteps))
-          )
-        case (Some(leftover), leadingFrames :+ last) if programCompleted =>
-          // With the program completed, we send all the remaining frames
-          for {
-            lastFrame <- createLastFrame(currentCompiler, last)
-          } yield sendFrames(currentCompiler, createFrames(leftover +: leadingFrames) ++ lastFrame)
           context.become(createCompile())
-        case (Some(leftover), Nil) =>
-          // The compiler generates no more frames, so the leftover is now the last.
+        case Nil =>
+          // It's an empty program, or one that consists of only empty functions
           for {
-            lastFrame <- createLastFrame(currentCompiler, leftover)
+            lastFrame <- createLastFrame(currentCompiler,
+                                         Frame(NoOperation, Register(), currentCompiler.program.grid, None, None))
           } yield sendFrames(currentCompiler, lastFrame)
           context.become(createCompile())
-        case (Some(leftover), List(last)) =>
-          // The compiler generated one more frame, and there was one leftover, send both frames
-          for {
-            lastFrame <- createLastFrame(currentCompiler, last)
-          } yield sendFrames(currentCompiler, createFrames(List(leftover)) ++ lastFrame)
-          context.become(createCompile())
-        case (None, Nil) =>
-        // This case does nothing, should never happen
       }
+
+    case _: CompilerHalt =>
+      logger.LogInfo(className, "Compiler halted")
+      context.become(createCompile())
+      out ! CompilerHalted()
+
+    case Left(_: StatsDoneUpdating) =>
+      logger.LogInfo(className, s"Stats updated successfully. token_id:$tokenId")
+
+    case Right(invalidJson: ActorFailed) =>
+      logger.LogFailure(className, invalidJson.msg)
+      self ! invalidJson.msg
+
+    case _ => out ! ActorFailed("Unknown command submitted to compiler")
   }
 
-  override def unhandled(message : Any) : Unit = {
-    message match {
-      case _: CompilerHalt =>
-        logger.LogInfo(className, "Compiler halted")
-        context.become(createCompile())
-        out ! CompilerHalted()
-
-      case Left(_: StatsDoneUpdating) =>
-        logger.LogInfo(className, s"Stats updated successfully. token_id:$tokenId")
-
-      case Right(invalidJson: ActorFailed) =>
-        logger.LogFailure(className, invalidJson.msg)
-        self ! invalidJson.msg
-
-      case _ => out ! ActorFailed("Unknown command submitted to compiler")
-
-    }
+  override def postStop() : Unit = {
+    logger.LogInfo(className, "Actor Stopped")
   }
 }
 
