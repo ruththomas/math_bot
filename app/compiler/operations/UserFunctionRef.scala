@@ -1,4 +1,5 @@
 package compiler.operations
 
-class UserFunctionRef(val created_id: String, color: String) extends UserFunction(Seq.empty[Operation], color) {
+case class UserFunctionRef(val created_id: String) extends UserFunction(Seq.empty[Operation]) {
+  override def toString = s"UserFunctionRef($created_id)"
 }

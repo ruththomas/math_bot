@@ -1,3 +1,3 @@
 package compiler.operations
 
-case class ChangeRobotDirection(color: String) extends OperationWithColor
+case object ChangeRobotDirection extends OperationWithColor
