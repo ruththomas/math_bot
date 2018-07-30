@@ -45,63 +45,194 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $carrying-size: 20px;
+  $click-color: #B8E986;
+
   .robot-carrying {
+    position: absolute;
+    bottom: -1px;
+    left: calc(100% - 0.5px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
     z-index: 10000;
-    margin-left: 40px;
+    font-size: $carrying-size;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 3px;
+    border: 1px solid $click-color;
+    border-left: 1.5px solid rgba(0, 0, 0, 0.6);
 
     span {
       display: flex;
       align-items: center;
-
-      * {
-        margin: 0 5px;
-      }
+      margin-left: 3px;
 
       img {
-        height: 20px;
-        width: 20px;
-      }
-
-      p {
-        height: 20px;
-        font-size: 20px;
+        height: $carrying-size;
+        width: $carrying-size;
       }
     }
   }
 
-  /* Large Phones, landscape*/
-  @media only screen and (max-width : 992px) {
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $carrying-size: 12px;
 
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
     .robot-carrying {
-      min-height: 20px;
-    }
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
 
-    .robot-carrying img {
-      height: 10px;
-      width: 10px;
-    }
+      span {
+        display: flex;
+        align-items: center;
 
-    .robot-carrying p {
-      height: 10px;
-      font-size: 10px;
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  @media only screen and (max-width: 736px) and (orientation: landscape) {
+    $carrying-size: 12px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
   }
 
-  /* Custom, iPhone 5 Retina */
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    $carrying-size: 8px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 568px) and (orientation: landscape) {
+    $carrying-size: 8px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $carrying-size: 12px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width : 375px) {
+    $carrying-size: 8px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+  }
+
   @media only screen and (max-width : 320px) {
+    $carrying-size: 8px;
 
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
   }
-
 </style>

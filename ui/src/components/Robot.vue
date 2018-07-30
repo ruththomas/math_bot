@@ -5,7 +5,6 @@
 
       <div id="control-panel-box">
         <control-panel></control-panel>
-        <robot-carrying></robot-carrying>
       </div>
 
       <div id="grid-box">
@@ -178,6 +177,8 @@ export default {
 
   #control-panel-box {
     display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
   #grid-box {

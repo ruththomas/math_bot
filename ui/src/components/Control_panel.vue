@@ -18,6 +18,7 @@
 
 <script>
 import SpeechBubble from './Speech_bubble'
+import RobotCarrying from './Robot_carrying'
 
 export default {
   name: 'control-panel',
@@ -51,7 +52,8 @@ export default {
     }
   },
   components: {
-    SpeechBubble
+    SpeechBubble,
+    RobotCarrying
   }
 }
 </script>
@@ -62,6 +64,7 @@ export default {
 
   .instructions {
     display: flex;
+    align-items: flex-end;
     width: 100%;
   }
 
@@ -84,16 +87,6 @@ export default {
     left: 0;
     top: 0;
     cursor: pointer;
-  }
-
-  .fade-in-speech {
-    opacity: 1;
-    transition: all 0.4s ease-out;
-  }
-
-  .fade-out-speech {
-    opacity: 0;
-    transition: all 0.4s ease-in;
   }
 
   @media only screen and (max-width : 1280px) {
@@ -165,7 +158,7 @@ export default {
 
   @media only screen and (max-width: 414px) {
     .instructions-filler-left {
-      width: 40px;
+      width: 15px;
     }
 
     .return-to-profile {
