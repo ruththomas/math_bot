@@ -18,3 +18,8 @@ case class ActorConfig(
                       timeout : Timeout
                       )
 
+case class MongoConfig(
+                      name : String,
+                      url : Uri
+                      )
+

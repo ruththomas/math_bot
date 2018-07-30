@@ -220,7 +220,7 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         // Move actives to inactive commands
         val commandsAndInactiveCommands: Map[String, List[FuncToken]] = {
           val allowed = rawStepData.cmdsAvailable
-          val commands = model.DefaultCommands.cmds
+          val commands = DefaultCommands.cmds
           val allowedCommands = commands.filter(cmd => allowed.contains(cmd.commandId.getOrElse("")))
           val inActives = commands.filterNot(cmd => allowed.contains(cmd.commandId.getOrElse("")))
           Map("newCommands" -> allowedCommands, "newInActives" -> inActives)

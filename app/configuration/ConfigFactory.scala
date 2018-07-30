@@ -1,4 +1,4 @@
-package configuration
+ package configuration
 
 import akka.http.scaladsl.model.Uri
 import akka.util.Timeout
@@ -22,6 +22,11 @@ object ConfigFactory {
     }
     object actor {
       final val timeout: String = "mathbot.actor.timeout"
+    }
+
+    object mongodb {
+      val url : String = "mathbot.mongodb.name"
+      val name : String = "mathbot.mongodb.name"
     }
   }
 }
@@ -51,6 +56,13 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
     ActorConfig(
       timeout =
         exWrap(mathbot.actor.timeout, path => playConfig.getString(path).map(s => Timeout(Duration(s).asInstanceOf[FiniteDuration])))
+    )
+  }
+
+  def mongoConfig(): MongoConfig = {
+    MongoConfig(
+      name = exWrap(mathbot.mongodb.name, name => playConfig.getString(name)),
+      url = exWrap(mathbot.mongodb.url, url => playConfig.getString(url).map(Uri(_)))
     )
   }
 
