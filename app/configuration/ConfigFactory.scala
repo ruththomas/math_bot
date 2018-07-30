@@ -20,13 +20,13 @@ object ConfigFactory {
         final val oauthPemUri: String = "mathbot.oauth.google.oauthPemUri"
       }
     }
-    object actor {
-      final val timeout: String = "mathbot.actor.timeout"
+    object actors {
+      final val timeout: String = "mathbot.actors.timeout"
     }
 
     object mongodb {
-      val url : String = "mathbot.mongodb.name"
       val name : String = "mathbot.mongodb.name"
+      val url : String = "mathbot.mongodb.url"
     }
   }
 }
@@ -55,14 +55,14 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
   def actorConfig(): ActorConfig = {
     ActorConfig(
       timeout =
-        exWrap(mathbot.actor.timeout, path => playConfig.getString(path).map(s => Timeout(Duration(s).asInstanceOf[FiniteDuration])))
+        exWrap(mathbot.actors.timeout, path => playConfig.getString(path).map(s => Timeout(Duration(s).asInstanceOf[FiniteDuration])))
     )
   }
 
   def mongoConfig(): MongoConfig = {
     MongoConfig(
       name = exWrap(mathbot.mongodb.name, name => playConfig.getString(name)),
-      url = exWrap(mathbot.mongodb.url, url => playConfig.getString(url).map(Uri(_)))
+      url = exWrap(mathbot.mongodb.url, url => playConfig.getString(url))
     )
   }
 
