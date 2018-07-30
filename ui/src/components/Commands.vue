@@ -275,7 +275,8 @@ export default {
   .functions-container {
     overflow: auto;
     width: 100%;
-    min-height: 140px;
+    height: 100%;
+    max-height: 140px;
     margin-left: 12px;
 
     .functions {

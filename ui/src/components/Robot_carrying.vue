@@ -9,7 +9,7 @@
     <b-popover
       v-if="robotCarrying.length"
       target="robot-carrying-id"
-      triggers="hover click"
+      triggers="click"
       placement="left"
     >
       <b-img
@@ -58,7 +58,7 @@ export default {
   },
   data () {
     return {
-      amountToShow: 10
+      amountToShow: 48
     }
   },
   methods: {
@@ -66,7 +66,7 @@ export default {
       return uid(7)
     },
     adjustShowAmount () {
-      this.amountToShow = this.amountToShow === 1000 ? 10 : 1000
+      this.amountToShow = this.amountToShow === 1000 ? 48 : 1000
     }
   }
 }
