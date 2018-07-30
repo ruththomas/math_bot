@@ -1,11 +1,24 @@
 <template>
-  <div v-if="robotCarrying.length" class="robot-carrying">
+  <div id="robot-carrying-id" v-if="robotCarrying.length" class="robot-carrying">
     <span
       v-for="(tool, ind) in organizeCarrying"
       :key="'carrying-' + ind"
     >
-      <b-img :src="toolImages[tool[0]]" /> <span>x</span> <span>{{tool[1]}}</span>
+      <b-img class="tool-display-image" :src="toolImages[tool[0]]" /> <span>x</span> <span>{{tool[1]}}</span>
     </span>
+    <b-popover
+      v-if="robotCarrying.length"
+      target="robot-carrying-id"
+      triggers="hover click"
+      placement="left"
+    >
+      <b-img
+        v-for="(imageName, iInd) in robotCarrying"
+        :key="'carrying-popover-image/' + iInd"
+        class="tool-display-image"
+        :src="toolImages[imageName]"
+      ></b-img>
+    </b-popover>
   </div>
 </template>
 
@@ -62,17 +75,18 @@ export default {
     border-radius: 3px;
     border: 1px solid $click-color;
     border-left: 1.5px solid rgba(0, 0, 0, 0.6);
+    cursor: pointer;
 
     span {
       display: flex;
       align-items: center;
       margin-left: 3px;
-
-      img {
-        height: $carrying-size;
-        width: $carrying-size;
-      }
     }
+  }
+
+  .tool-display-image {
+    height: $carrying-size;
+    width: $carrying-size;
   }
 
   @media only screen and (max-width: 823px) and (orientation: landscape) {
@@ -95,6 +109,11 @@ export default {
           width: $carrying-size;
         }
       }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
     }
   }
 
@@ -119,6 +138,11 @@ export default {
         }
       }
     }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
   }
 
   @media only screen and (max-width: 667px) and (orientation: landscape) {
@@ -141,6 +165,11 @@ export default {
           width: $carrying-size;
         }
       }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
     }
   }
 
@@ -165,6 +194,11 @@ export default {
         }
       }
     }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
   }
 
   @media only screen and (max-width: 414px) {
@@ -187,6 +221,11 @@ export default {
           width: $carrying-size;
         }
       }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
     }
   }
 
@@ -211,6 +250,11 @@ export default {
         }
       }
     }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
   }
 
   @media only screen and (max-width : 320px) {
@@ -233,6 +277,11 @@ export default {
           width: $carrying-size;
         }
       }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
     }
   }
 </style>
