@@ -1,6 +1,7 @@
 import api from './api'
 import Robot from './RobotState'
 import GridAnimator from './GridAnimator'
+import _ from 'underscore'
 
 class RunCompiled extends GridAnimator {
   constructor (context) {
@@ -15,7 +16,6 @@ class RunCompiled extends GridAnimator {
       this.robot = this.$store.getters.getRobot
       this.stepData = this.$store.getters.getStepData
       this.toolList = this.stepData.toolList
-
       this.programCreate = true
 
       this._askCompiler = this._askCompiler.bind(this)
@@ -26,14 +26,33 @@ class RunCompiled extends GridAnimator {
       this.pause = this.pause.bind(this)
       this.stop = this.stop.bind(this)
       this._resetStep = this._resetStep.bind(this)
+      this._waitForFrames = this._waitForFrames.bind(this)
     }
   }
 
-  start () {
+  _testForEmptyFunctions () {
     const mainFunction = this.$store.getters.getMainFunction.func
+    const activeFuncs = this.$store.getters.getActiveFunctions
+
+    if (!mainFunction.length) return [{name: 'Main'}]
+
+    return _.chain(mainFunction)
+      .map(f => {
+        const funcToken = activeFuncs.find(af => af.created_id === f.created_id)
+        if (funcToken) return funcToken
+        else return null
+      })
+      .filter(func => func !== null)
+      .filter(func => !func.func.length)
+      .value()
+  }
+
+  start () {
     // console.log('start ~ ', this.robotFrames.slice())
-    if (!mainFunction.length) {
-      this._mainEmptyMessage()
+    const emptyFuncs = this._testForEmptyFunctions()
+
+    if (emptyFuncs.length) {
+      this._mainEmptyMessage(emptyFuncs)
     } else if (this.robot.state !== 'paused') {
       this.robotFrames = []
       this.robot.setState('running')
@@ -72,10 +91,12 @@ class RunCompiled extends GridAnimator {
     this._addMessage(messageBuilder)
   }
 
-  _mainEmptyMessage () {
+  _mainEmptyMessage (emptyFuncs) {
+    const emptyCount = emptyFuncs.length
+
     const messageBuilder = {
       type: 'warn',
-      msg: 'Main is empty',
+      msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : `${emptyFuncs.length} of your functions ${emptyCount > 1 ? 'are' : 'is'} empty`,
       handlers () {
         const $bar = $('.bar')
 
@@ -139,8 +160,9 @@ class RunCompiled extends GridAnimator {
   }
 
   _success (frame) {
-    // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
+      // console.log('[last frame grid]', JSON.parse(JSON.stringify(frame.robotState.grid)))
+      // console.log('[grid]', JSON.parse(JSON.stringify(this.grid)))
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
     })
@@ -154,10 +176,23 @@ class RunCompiled extends GridAnimator {
     })
   }
 
+  /*
+  * In case program state is still running but server has not responded yet
+  * */
+  _waitForFrames (waitTime) {
+    if (this.robotFrames.length) return this._processFrames()
+    else if (waitTime === 0) return this._stopRobot()
+    setTimeout(() => this._waitForFrames(waitTime - 1), 50)
+  }
+
   _running (frame) {
     return this.initializeAnimation(this.$store, frame, () => {
       if (this.robot.state === 'running') {
-        this._processFrames()
+        if (this.robotFrames.length) {
+          this._processFrames()
+        } else {
+          this._waitForFrames(50)
+        }
       } else if (this.robot.state === 'stopped') {
         this._stopRobot()
       }
@@ -167,7 +202,6 @@ class RunCompiled extends GridAnimator {
   async _processFrames (_) {
     // console.log('frames ~ ', this.robotFrames.slice())
     const current = this.robotFrames.shift()
-    this.programCreate = false
     this._controlAsk()
     const run = await this[`_${current.programState}`](current)
     run(current)
@@ -183,7 +217,6 @@ class RunCompiled extends GridAnimator {
   }
 
   _askCompiler (startRunning) {
-    this._stopIfNoResponse()
     api.compilerWebSocket.compileWs({problem: this.stepData.problem.encryptedProblem}, (compiled) => {
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()

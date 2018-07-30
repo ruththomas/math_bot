@@ -34,12 +34,13 @@
         :list="activeFunctions"
         :options="functionOptions"
         @start="start"
+        @change="moveFunction"
         @end="end"
         @add="addToActiveFunc"
       >
         <function-box
           v-for="(func, ind) in activeFunctions"
-          :key="func.created_id"
+          :key="ind + '/' + func.created_id"
           :func="func"
           :ind="ind"
           :collection="activeFunctions"
@@ -66,6 +67,7 @@ import draggable from 'vuedraggable'
 import api from '../services/api'
 import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
+import uId from 'uid'
 
 export default {
   name: 'FunctionDrop',
@@ -142,7 +144,8 @@ export default {
         },
         filter: '.command-name',
         dragClass: 'dragging',
-        ghostClass: 'ghost'
+        ghostClass: 'ghost',
+        sort: false
       },
       functionOptions: {
         group: {
@@ -158,6 +161,7 @@ export default {
     }
   },
   methods: {
+    uid: int => uId(int),
     notEditableMessage (evt) {
       const messageBuilder = {
         type: 'warn',
@@ -216,15 +220,22 @@ export default {
     end () {
       this.$store.dispatch('toggleShowMesh', false)
     },
+    moveFunction (evt) {
+      if (evt.moved) {
+        api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
+          this.$store.dispatch('updateActives', actives)
+        })
+      }
+    },
     addToActiveFunc (evt) {
       const index = evt.item.getAttribute('data-function-index')
-
-      // console.log('INDEX IN ~ ', index);
-
-      api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
-        // console.log('NEW LAMBDAS ~ ', lambdas)
-        this.$store.dispatch('updateLambdas', lambdas)
-      })
+      // console.log('INDEX IN ~ ', index)
+      if (evt.type === 'add') {
+        api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
+          // console.log('NEW LAMBDAS ~ ', lambdas)
+          this.$store.dispatch('updateLambdas', lambdas)
+        })
+      }
     },
     moveSwiper (direction) {
       const $functions = $('.functions')

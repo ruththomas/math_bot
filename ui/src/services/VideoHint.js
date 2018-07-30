@@ -1,6 +1,6 @@
 import api from './api'
 /*
-* VideoHint - controls video hints
+* VideoHintControls - controls video hints
 * */
 class VideoHint {
   constructor (context) {
@@ -15,8 +15,16 @@ class VideoHint {
 
   getHint () {
     this.socket.getHint(res => {
-      this.$store.dispatch('addVideoTimer', res.remainingTime)
-      this._startVideo(res.videoURL)
+      if (res.status !== 'no-videos') {
+        this.$store.dispatch('addVideoTimer', res.remainingTime)
+        this._startVideo(res.videoURL)
+      } else {
+        const messageBuilder = {
+          type: 'warn',
+          msg: 'No hints available'
+        }
+        this.$store.dispatch('addMessage', messageBuilder)
+      }
     })
   }
 }

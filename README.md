@@ -314,9 +314,8 @@ The project has been built thus far with Intellij
       "stagedEnabled": <{boolean}INDICATES IF THE USER IS ABLE TO OPEN THE STAGED FUNCTION POPOVER>,
       "activeEnabled": <{boolean}INDICATES IF THE USER CAN ADD ANYTHING TO ACTIVE FUNCTIONS (almost always true)>,
       "stagedQty": <{int}QTY OF STAGED FUNCTIONS AVAILABLE (if infinite -1)>,
-      "assignedStaged": <{object[string, string]}SEE `Adding Assigned Staged` SECTION>,
-      "activeQty": <{int}INDICATES HOW MANY STAGED FUNCTIONS CAN BE MOVED TO ACTIVE FUNCTIONS (if infinite -1)>,
-      "preBuiltActive": <{object[string, array[string]}SEE `Adding Pre-Built Actives` SECTION>,
+      "assignedStaged": <{list[object]}SEE `Adding Assigned Staged` SECTION>,
+      "preBuiltActive": <{list[object]}SEE `Adding Pre-Built Actives` SECTION>,
       "cmdsAvailable": <{array[string]}ARRAY OF COMMAND NAMES, SEE `Command Names` SECTION FOR COMMAND NAMES>,
       "specialParameters": <{array[string]}LIST OF SPECIAL PARAMETERS, SEE `Special Parameters` SECTION FOR CURRENT SPECIAL PARAMETERS>,
       "problem": <{string}SEE `Building a Problem` SECTION FOR PROPER PROBLEM SYNTAX,
@@ -378,11 +377,16 @@ The project has been built thus far with Intellij
 * Adds specified staged functions to staged functions
 1) Add image resource url in `ui/src/assets/assets.js` to `funcImages`
     
-2) Create assigned staged object in json
+2) Add assigned staged object to JSON scala case class located ar `app/actors/messages/AssignedFunctionModel.scala`
 ```$xslt
-{
-    "<NAME OF ASSIGNED STAGED (Must start with a capital letter and be camel cased>": <{string}IMAGE NAME IN ASSESTS>
-}
+[
+    {
+        "name": <{string}DISPLAY NAME>,
+        "image": <{string}NAME OF IMAGE IN ASSETS>,
+        "sizeLimit": <{int}MAX SIZE FUNCTION CAN BE>,
+        "func": <{list[string]}MUST BE AN EMPTY ARRAY>,
+    }
+]
 ```
 
 #### Special Parameters 
@@ -391,6 +395,7 @@ The project has been built thus far with Intellij
 Current Special Parameters
 ```$xslt
     "functionRequired" - user must use a built function
+    "recursionRequired" - user must use recursion (currently only checks top level)
 ```
 
 #### Building a Problem
@@ -403,20 +408,14 @@ Current Special Parameters
 #### Adding Pre-built Actives;
 * Active functions already built for the user
 ```$xslt
-{
-    <{string}NAME OF FUNCTION>: [
-        <{string}COMMAND NAME (see COMMAND NAMES section),          
-        "moveRobotForwardOneSpot",
-        "moveRobotForwardOneSpot",
-        "moveRobotForwardOneSpot"
-    ],
-    "rocket": [
-        "moveRobotForwardOneSpot",
-        "moveRobotForwardOneSpot",
-        "moveRobotForwardOneSpot",
-        "moveRobotForwardOneSpot"
-    ]
-}
+[
+    {
+        "name": <{string}DISPLAY NAME>,
+        "image": <{string}NAME OF IMAGE IN ASSETS>,
+        "sizeLimit": <{int}MAX SIZE FUNCTION CAN BE>,
+        "func": <{list[string]}LIST OF COMMANDS (see 'command names' section}>,
+    }
+]
 ```
 
 #### Init Focus

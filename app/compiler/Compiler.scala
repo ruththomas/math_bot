@@ -1,17 +1,13 @@
 package compiler
 
 import compiler.operations._
-import compiler.tokens._
-import daos.CommandIds
-import models.{FuncToken, GridMap, GridPart, Problem}
+import model.CommandIds
+import model.models.{ FuncToken, GridMap, GridPart, Problem }
 import play.api.libs.json._
 
-import scala.collection.mutable
-
 object Compiler {
-  def compile() = ???
 
-  def cellTypeFromName(name: String) = name match {
+  private def cellTypeFromName(name: String) = name match {
     case "empty space floor" => CellType.EmptySpace
     case "empty space" => CellType.EmptySpace
     case "final answer" => CellType.FinalAnswer
@@ -81,7 +77,7 @@ object Compiler {
     } zip Stream.from(0) flatMap (v => v._1.map(u => (v._2, u._2) -> u._1))
 
     def isNonEmptyCell(cell: ((Int, Int), (Boolean, Option[Seq[Element]], String))): Boolean = cell match {
-      case ((_, _), (_, Some(head :: tails), _)) => true
+      case ((_, _), (_, Some(_ :: _), _)) => true
       case ((_, _), (true, _, _)) => true
       case ((_, _), (_, _, "final answer")) => true
       case _ => false
@@ -104,67 +100,159 @@ object Compiler {
               commands: List[FuncToken],
               grid: GridMap,
               problem: Problem): Option[GridAndProgram] = {
-    val tokenToOps = funcs.map(token => (token.created_id, (token, Option.empty[UserFunction]))).toMap
-    val firstPass = fixReferences(convertToOps(main, tokenToOps, commands))
-    processBoard(grid).map(g => GridAndProgram(g, new Program(firstPass._1.operations), problem))
+    val funcTokens = funcs.map(token => token.created_id -> token).toMap + (main.created_id -> main)
+    val firstPass = fixReferences(convertToOps(main, funcTokens, Map.empty[String, UserFunction], commands))
+    processBoard(grid).map(g => GridAndProgram(g, new Program(firstPass._1.asInstanceOf[UserFunction].operations), problem))
   }
 
-  def fixReferences(firstPass: (UserFunction, Map[String, (FuncToken, Option[UserFunction])])) = {
+  // To avoid an infinite loop will processing user functions, user functions are sometimes placeholdered with refs.
+  // Before running the code, replace the refs with the functions
+  private def fixReferences(firstPass: (Operation, Map[String, UserFunction])) = {
+
+    val program = firstPass._1.asInstanceOf[UserFunction]
 
     for {
-      f <- firstPass._2.values.flatMap(o => o._2)
+      f <- firstPass._2.values
     } yield {
       f.operations = f.operations.map {
-        case funcRef: UserFunctionRef => firstPass._2(funcRef.created_id)._2.get
+        case funcRef: UserFunctionRef => firstPass._2(funcRef.created_id)
+        case ifColor : IfColor =>
+          ifColor.operation match {
+            case funcRef : UserFunctionRef =>
+              ifColor.copy(operation = firstPass._2(funcRef.created_id))
+            case _ =>
+              ifColor
+          }
         case other => other
       }
     }
 
-    firstPass._1.operations = firstPass._1.operations.map {
-      case funcRef: UserFunctionRef => firstPass._2(funcRef.created_id)._2.get
+    program.operations = program.operations.map {
+      case funcRef: UserFunctionRef => firstPass._2(funcRef.created_id)
+      case ifColor : IfColor =>
+        ifColor.operation match {
+          case funcRef : UserFunctionRef =>
+            ifColor.copy(operation = firstPass._2(funcRef.created_id))
+          case _ =>
+            ifColor
+        }
       case other => other
     }
     firstPass
   }
 
-  def convertToOps(main: FuncToken,
+//  @tailrec
+  def convertToOps(
+                    token      : FuncToken,
+                    funcTokens : Map[String, FuncToken],
+                    userFuncs  : Map[String, UserFunction],
+                    commands   : List[FuncToken]) : (Operation, Map[String, UserFunction]) = {
+    token.created_id match {
+      case id if commands.map(t => t.created_id).contains(id) =>
+        val command = commands.find(c => c.created_id == id).map(c => c.commandId).getOrElse("unknown") match {
+          case Some(CommandIds.changeRobotDirection) => ChangeRobotDirection
+          case Some(CommandIds.moveRobotForwardOneSpot) => MoveRobotForwardOneSpot
+          case Some(CommandIds.setItemDown) => SetItemDown
+          case Some(CommandIds.pickUpItem) => PickUpItem
+          case _ => NoOperation
+        }
+        (command, userFuncs)
+      case id if funcTokens.contains(id) =>
+        token.color match {
+          case "default" =>
+            userFuncs.get(id) match {
+              case Some(uf) =>
+                (uf, userFuncs)
+              case None =>
+                val converted = convertFunction(token, funcTokens, userFuncs + (id -> UserFunctionRef(id)), commands)
+                val uf = new UserFunction(converted.operations)
+                (uf, converted.userFuncs.updated(token.created_id, uf))
+            }
+          case color =>
+            userFuncs.get(id) match {
+              case Some(uf) =>
+                (IfColor(color, uf), userFuncs)
+              case None =>
+                val converted = convertFunction(token.copy(color = "default"), funcTokens, userFuncs  + (id -> UserFunctionRef(id)), commands)
+                val uf = new UserFunction(converted.operations)
+                (IfColor(color, uf), converted.userFuncs.updated(token.created_id, uf))
+            }
+        }
+    }
+  }
+
+  case class Converted(operations : Seq[Operation], userFuncs : Map[String, UserFunction])
+
+  def convertFunction(
+                       funcToken : FuncToken,
+                       funcTokens: Map[String, FuncToken],
+                       userFuncs  : Map[String, UserFunction],
+                       commands   : List[FuncToken]
+                     ) : Converted = {
+    val operations = funcTokens(funcToken.created_id).func.get
+    operations.foldLeft[Converted](Converted(Seq.empty[Operation], userFuncs)) {
+      (converted, token) =>
+        val (op, funcs) = convertToOps(token, funcTokens, converted.userFuncs, commands)
+        Converted(converted.operations :+ op, funcs)
+    }
+  }
+
+
+  /*def convertToOps1(main: FuncToken,
                    funcs: Map[String, (FuncToken, Option[UserFunction])],
-                   commands: List[FuncToken]): (UserFunction, Map[String, (FuncToken, Option[UserFunction])]) = {
+                   commands: List[FuncToken]
+                  ): (UserFunction, Map[String, (FuncToken, Option[UserFunction])]) =
+  {
     var newFuncs = funcs
     (
       new UserFunction(
         (for {
           token <- main.func.getOrElse(List.empty[FuncToken])
         } yield {
-          token.created_id match {
-            case id if commands.map(t => t.created_id).contains(id) =>
-              commands.find(c => c.created_id == id).map(c => c.commandId).getOrElse("unknown") match {
-                case Some(CommandIds.changeRobotDirection) => ChangeRobotDirection(token.color)
-                case Some(CommandIds.moveRobotForwardOneSpot) => MoveRobotForwardOneSpot(token.color)
-                case Some(CommandIds.setItemDown) => SetItemDown(token.color)
-                case Some(CommandIds.pickUpItem) => PickUpItem(token.color)
-                case _ => NoOperation()
+          token.color match {
+            case "default" =>
+              token.created_id match {
+                case id if commands.map(t => t.created_id).contains(id) =>
+                  commands.find(c => c.created_id == id).map(c => c.commandId).getOrElse("unknown") match {
+                    case Some(CommandIds.changeRobotDirection) => ChangeRobotDirection
+                    case Some(CommandIds.moveRobotForwardOneSpot) => MoveRobotForwardOneSpot
+                    case Some(CommandIds.setItemDown) => SetItemDown
+                    case Some(CommandIds.pickUpItem) => PickUpItem
+                    case _ => NoOperation
+                  }
+                case id if funcs.contains(id) => {
+                  val (ft, ufOpt) = funcs(id)
+                  ufOpt match {
+                    case None =>
+                      newFuncs = newFuncs.updated(id, (ft, Some(new UserFunctionRef(id))))
+                      val (userFunction, convertedfuncs) = convertToOps(ft, newFuncs, commands)
+                      newFuncs = convertedfuncs.updated(id, (ft, Some(userFunction)))
+                      userFunction
+                    case Some(op) =>
+                      op
+                  }
+                }
+                case _ => NoOperation
               }
-            case id if funcs.contains(id) => {
-              val f = funcs(id)
-              // updating color to user selected color for this instance
-              val colorUpdatedF = (f._1.copy(color = token.color), f._2)
-              colorUpdatedF._2 match {
-                case None =>
-                  newFuncs =
-                    newFuncs.updated(id, (colorUpdatedF._1, Some(new UserFunctionRef(id, colorUpdatedF._1.color))))
-                  val funcOperation = convertToOps(colorUpdatedF._1, newFuncs, commands)
-                  newFuncs = funcOperation._2.updated(id, (colorUpdatedF._1, Some(funcOperation._1)))
-                  funcOperation._1
-                case Some(op) => op
-              }
-            }
-            case _ => NoOperation()
+            case color =>
+              val id = token.created_id
+              val (ft, ufOpt) = funcs(id)
+              IfColor(
+                color,
+                ufOpt match {
+                  case None =>
+                    newFuncs = newFuncs.updated(id, (ft, Some(new UserFunctionRef(id))))
+                    val (userFunction, convertedfuncs) = convertToOps(ft, newFuncs, commands)
+                    newFuncs = convertedfuncs.updated(id, (ft, Some(userFunction)))
+                    userFunction
+                  case Some(op) =>
+                    op
+                }
+              )
           }
-        }).toSeq,
-        main.color
+        }).toSeq
       ),
       newFuncs
     )
-  }
+  }*/
 }

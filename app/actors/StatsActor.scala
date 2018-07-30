@@ -182,7 +182,7 @@ class StatsActor @Inject()(val system: ActorSystem, playerTokenDAO: PlayerTokenD
                 val unlockedLevels = stats.levels
                   .map { level =>
                     (level._1, level._2.map { step =>
-                      (step._1, step._2.copy(active = true))
+                      (step._1, step._2.copy(active = true, wins = Some(1)))
                     })
                   }
                 UpdatePlayerToken(token.copy(stats = Some(stats.copy(levels = unlockedLevels))))

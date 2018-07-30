@@ -11,7 +11,7 @@ import daos.PlayerTokenDAO
 import models._
 import play.api.Environment
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, JsValue, Json, Reads}
+import play.api.libs.json._
 import types.TokenId
 
 import scala.concurrent.Future
@@ -163,6 +163,16 @@ object PlayerActor {
 
   case class PreparedPlayerToken(playerToken: PlayerToken)
 
+  case class UpdateActives(body: JsValue)
+
+  object ChangeActives {
+    implicit val changeActivesFormat: OFormat[ChangeActives] = Json.format[ChangeActives]
+  }
+
+  case class ChangeActives(tokenId: TokenId, actives: List[FuncToken])
+
+  case class UpdatedActives(actives: List[FuncToken])
+
   object PrepareLambdas {
     implicit val prepareLambdasReads: Reads[PrepareLambdas] = (
       (JsPath \ "tokenId").read[String] and
@@ -211,6 +221,24 @@ class PlayerActor()(system: ActorSystem,
             )
         }
         .pipeTo(self)(sender)
+    case UpdateActives(jsValue) =>
+      jsValue.validate[ChangeActives].asOpt match {
+        case Some(changeActives) =>
+          playerTokenDAO
+            .getToken(changeActives.tokenId)
+            .map {
+              case Some(playerToken) =>
+                val updatedPlayerToken =
+                  playerToken.copy(
+                    lambdas = Some(playerToken.lambdas.get.copy(activeFuncs = indexFunctions(changeActives.actives)))
+                  )
+                playerTokenDAO.updateToken(updatedPlayerToken)
+                UpdatedActives(updatedPlayerToken.lambdas.get.activeFuncs)
+              case None => ActorFailed("No player token")
+            }
+            .pipeTo(self)(sender)
+        case None => Future { "Invalid json" }.map { ActorFailed.apply }.pipeTo(self)(sender)
+      }
     case getPlayerToken: GetPlayerToken =>
       playerTokenDAO
         .getToken(getPlayerToken.playerToken.token_id)
@@ -219,8 +247,7 @@ class PlayerActor()(system: ActorSystem,
            * If user is in db continue
            * */
           case Some(playerToken) =>
-            val t = GatherLevel(playerToken)
-            t
+            GatherLevel(playerToken)
           /*
            * else create user token and continue
            * */
@@ -282,15 +309,19 @@ class PlayerActor()(system: ActorSystem,
         stats <- playerToken.stats
         lambdas <- playerToken.lambdas
         rsd <- levelGenerator.getRawStepData(stats.level, stats.step)
-        rawStepData = rsd.copy(stagedQty = makeQtyUnlimited(rsd.stagedQty),
-                               activeQty = makeQtyUnlimited(rsd.activeQty),
-                               mainMax = makeQtyUnlimited(rsd.mainMax))
+        rawStepData = rsd.copy(stagedQty = makeQtyUnlimited(rsd.stagedQty), mainMax = makeQtyUnlimited(rsd.mainMax))
       } yield {
         val funcType = funcToken.`type`.getOrElse("Nothing")
         val mainFunc = lambdas.main.func.getOrElse(List.empty[FuncToken])
 
-        val updatedPlayerToken =
-          if (funcType == "function" || (funcType == "main-function" && mainFunc.length < rawStepData.mainMax) || overrideBool) {
+        val updatedPlayerToken = {
+
+          val funcTokenLengthInBounds = funcType == "function" && funcToken.func.get.length <= makeQtyUnlimited(
+            funcToken.sizeLimit.getOrElse(-1)
+          )
+          val mainFuncLengthInBounds = funcType == "main-function" && mainFunc.length < rawStepData.mainMax
+
+          if (funcTokenLengthInBounds || mainFuncLengthInBounds || overrideBool) {
             playerToken.copy(lambdas = Some(if (funcType == "function") {
               lambdas.copy(
                 activeFuncs = indexFunctions(
@@ -305,16 +336,13 @@ class PlayerActor()(system: ActorSystem,
           } else {
             playerToken
           }
+        }
 
         playerTokenDAO
           .updateToken(updatedPlayerToken)
           .map {
             case Some(_) =>
-              PreparedLambdasToken(
-                PreparedStepData
-                  .prepareLambdas(updatedPlayerToken, rawStepData)
-                  .copy(activeFuncs = updatedPlayerToken.lambdas.get.activeFuncs)
-              )
+              PreparedLambdasToken(updatedPlayerToken.lambdas.getOrElse(Lambdas()))
             case None => ActorFailed("Failed to update player token")
           }
           .pipeTo(self)(sender)
@@ -330,44 +358,44 @@ class PlayerActor()(system: ActorSystem,
     case MoveFunc(playerToken, stagedIndex, activeIndex) =>
       for {
         stats <- playerToken.stats
-        rsd <- levelGenerator.getRawStepData(stats.level, stats.step)
+        rawStepData <- levelGenerator.getRawStepData(stats.level, stats.step)
         lambdas <- playerToken.lambdas
-        rawStepData = rsd.copy(stagedQty = makeQtyUnlimited(rsd.stagedQty),
-                               activeQty = makeQtyUnlimited(rsd.activeQty),
-                               mainMax = makeQtyUnlimited(rsd.mainMax))
       } yield
-        if (rawStepData.activeEnabled && lambdas.activeFuncs.lengthCompare(
-              makeQtyUnlimited(rawStepData.activeQty)
-            ) <= 0) {
+        if (rawStepData.activeEnabled) {
           for {
             lambdas <- playerToken.lambdas
             funcToMove <- lambdas.stagedFuncs.lift(stagedIndex.toInt)
+
             updatedStagedFuncs = lambdas.stagedFuncs
               .filterNot(_.index.contains(stagedIndex.toInt))
 
             updatedActiveFuncs = lambdas.activeFuncs
               .take(activeIndex.toInt) ++ List(funcToMove) ++ lambdas.activeFuncs
               .drop(activeIndex.toInt)
+
+            updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
+                                          activeFuncs = indexFunctions(updatedActiveFuncs))
+
             updatedToken = playerToken.copy(
-              lambdas = Some(
-                lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
-                             activeFuncs = indexFunctions(updatedActiveFuncs))
-              )
+              lambdas = Some(updatedLambdas)
             )
-          } for {
-            _ <- playerTokenDAO.updateToken(updatedToken)
-          } yield
-            Future { updatedToken }
-              .map { pToken =>
-                PreparedLambdasToken(PreparedStepData.prepareLambdas(pToken, rawStepData))
+          } yield {
+            playerTokenDAO
+              .updateToken(updatedToken)
+              .map { _ =>
+                PreparedLambdasToken(updatedLambdas)
               }
               .pipeTo(self)(sender)
+          }
         } else {
-          Future { PreparedStepData.prepareLambdas(playerToken, rawStepData) }
+          Future { lambdas }
             .map { PreparedLambdasToken.apply }
             .pipeTo(self)(sender)
         }
 
+    case updatedActives: UpdatedActives =>
+      logger.LogDebug(className, "Actives updated.")
+      sender ! Left(updatedActives)
     case updatedLambdasToken: PreparedLambdasToken =>
       logger.LogDebug(className, "PreparedLambdasToken generated.")
       sender ! Left(updatedLambdasToken)

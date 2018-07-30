@@ -1,16 +1,45 @@
 <template>
   <div class="speech-bubble" :class="!showing ? 'hide-speech-bubble' : ''">
     <div class="bubble-text" v-html="html"></div>
-    <video-hint></video-hint>
+    <div class="bubble-stars" @click="videoHint.getHint()" v-if="videoHint !== null" data-toggle="tooltip" title="Get a hint">
+      <stars
+        :star-group="'star-spread'"
+        :level="level"
+        :step="step"
+        :step-stats="stepStats"></stars>
+      <span>Need a hint?</span>
+    </div>
   </div>
 </template>
 
 <script>
-import VideoHint from './Video_hint_controls'
+import VideoHint from '../services/VideoHint'
+import Stars from './Stars'
 export default {
   name: 'speech_bubble',
-  components: {VideoHint},
-  props: ['html', 'showing', 'step']
+  computed: {
+    level () {
+      return this.$store.getters.getLevel
+    },
+    step () {
+      return this.$store.getters.getStep
+    },
+    steps () {
+      return this.$store.getters.getSteps
+    },
+    stepStats () {
+      const stepName = this.step
+      return this.steps.find(s => s.name === stepName)
+    }
+  },
+  data () {
+    return {
+      getTime: false,
+      videoHint: new VideoHint(this)
+    }
+  },
+  components: {Stars},
+  props: ['html', 'showing']
 }
 </script>
 
@@ -28,11 +57,29 @@ export default {
     z-index: 100;
     visibility: visible;
     transition: opacity 1s linear;
+    display: flex;
   }
 
   .bubble-text {
-    height: 100%;
     width: 100%;
+  }
+
+  .bubble-stars {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    span {
+      color: #4a90e2;
+      margin: 0;
+      font-size: 16px;
+      bottom: -10px;
+    }
+
+    span:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 
   .hide-speech-bubble {
@@ -88,7 +135,7 @@ export default {
     }
 
     .speech-bubble:before {
-      border-top: 20px solid #FFFF;
+      border-top: 20px solid $speech-bubble-color;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
 
@@ -99,7 +146,7 @@ export default {
     }
 
     .speech-bubble:after {
-      border-top: 20px solid #E8E8E8;
+      border-top: 20px solid $speech-bubble-color;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
 
@@ -113,14 +160,20 @@ export default {
   /* Medium Devices, Desktops */
   @media only screen and (max-width : 992px) {
     .speech-bubble {
-      top: 15px;
-      height: 55px;
+      top: 10px;
+      height: 45px;
       width: 240px;
       margin-left: -2px;
     }
 
+    .bubble-stars {
+      span {
+        font-size: 8px;
+      }
+    }
+
     .speech-bubble:before {
-      border-top: 20px solid #FFFF;
+      border-top: 20px solid $speech-bubble-color;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
 
@@ -131,7 +184,7 @@ export default {
     }
 
     .speech-bubble:after {
-      border-top: 20px solid #E8E8E8;
+      border-top: 20px solid $speech-bubble-color;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
 
@@ -145,14 +198,14 @@ export default {
   /* Small Devices */
   @media only screen and (max-width : 667px) {
     .speech-bubble {
-      height: 45px;
+      height: 40px;
       width: 200px;
       margin-left: -2px;
       top: 5px;
     }
 
     .speech-bubble:before {
-      border-top: 20px solid #FFFF;
+      border-top: 20px solid $speech-bubble-color;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
 
@@ -163,7 +216,7 @@ export default {
     }
 
     .speech-bubble:after {
-      border-top: 20px solid #E8E8E8;
+      border-top: 20px solid $speech-bubble-color;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
 
@@ -204,7 +257,7 @@ export default {
     }
 
     .speech-bubble:before {
-      border-top: 40px solid #FFFF;
+      border-top: 40px solid $speech-bubble-color;
 
       transform: rotate(50deg);
 
@@ -216,7 +269,7 @@ export default {
     }
 
     .speech-bubble:after {
-      border-top: 40px solid #E8E8E8;
+      border-top: 40px solid $speech-bubble-color;
 
       border-left: 9px solid transparent;
       border-right: 9px solid transparent;
