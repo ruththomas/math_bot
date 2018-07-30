@@ -13,11 +13,12 @@
       placement="left"
     >
       <b-img
-        v-for="(imageName, iInd) in robotCarrying"
+        v-for="(imageName, iInd) in displayCarrying"
         :key="'carrying-popover-image/' + iInd"
         class="tool-display-image"
         :src="toolImages[imageName]"
       ></b-img>
+      <span class="tool-display-text" @click="adjustShowAmount"><strong>. . .</strong></span>
     </b-popover>
   </div>
 </template>
@@ -45,13 +46,27 @@ export default {
     toolImages () {
       return assets.tools
     },
+    displayAmt () {
+      return this.amountToShow
+    },
+    displayCarrying () {
+      return this.robotCarrying.slice(0, this.displayAmt)
+    },
     robotCarrying () {
       return this.$store.getters.getRobotCarrying
+    }
+  },
+  data () {
+    return {
+      amountToShow: 10
     }
   },
   methods: {
     uID () {
       return uid(7)
+    },
+    adjustShowAmount () {
+      this.amountToShow = this.amountToShow === 1000 ? 10 : 1000
     }
   }
 }
@@ -87,6 +102,12 @@ export default {
   .tool-display-image {
     height: $carrying-size;
     width: $carrying-size;
+  }
+
+  .tool-display-text {
+    color: #ffffff;
+    cursor: pointer;
+    display: block;
   }
 
   @media only screen and (max-width: 823px) and (orientation: landscape) {

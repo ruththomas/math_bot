@@ -100,6 +100,10 @@ export default {
       colors: {
         default: {
           hex: '#FFFFFF',
+          next: 'grey'
+        },
+        grey: {
+          hex: '#696969',
           next: 'blue'
         },
         blue: {
