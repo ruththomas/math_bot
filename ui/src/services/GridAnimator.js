@@ -31,7 +31,16 @@ class GridAnimator {
       if (cell.location.x === 2) {
         // console.log(`[x: ${cell.location.x}, y: ${cell.location.y}]`, this.grid[cell.location.x][cell.location.y].tools)
       }
-      this.grid[cell.location.x][cell.location.y].tools = cell.items.map(name => this.toolList[name])
+      this.grid[cell.location.x][cell.location.y].tools = cell.items.map((name, tInd) => {
+        const originalTool = this.grid[cell.location.x][cell.location.y].tools[tInd]
+        if (!originalTool || (originalTool && !originalTool.original)) {
+          const newTool = JSON.parse(JSON.stringify(this.toolList[name]))
+          newTool.original = false
+          return newTool
+        } else {
+          return originalTool
+        }
+      })
     })
   }
 
