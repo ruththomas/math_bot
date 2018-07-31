@@ -2,6 +2,9 @@ import elementResizeEvent from 'element-resize-event'
 import _ from 'underscore'
 
 const utils = {
+  closePopover (targetId) {
+    this.$root.$emit('bv::hide::popover', targetId)
+  },
   assembleLevels (levels) {
     const assembleLevels = _.chain(levels)
       .map((l, k) => {
