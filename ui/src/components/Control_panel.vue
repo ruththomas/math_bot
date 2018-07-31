@@ -89,7 +89,11 @@ export default {
     cursor: pointer;
   }
 
-  @media only screen and (max-width : 1280px) {
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
     .instructions-robot-container {
       height: 90px;
     }
@@ -99,7 +103,44 @@ export default {
     }
 
     .instructions-filler-left {
-      width: 250px;
+      width: 220px;
+    }
+  }
+
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    .instructions-robot-container {
+      height: 90px;
+    }
+
+    .return-to-profile {
+      height: 120px;
+    }
+
+    .instructions-filler-left {
+      width: 100px;
+    }
+  }
+
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    .instructions-robot-container {
+      height: 90px;
+    }
+
+    .return-to-profile {
+      height: 120px;
+    }
+
+    .instructions-filler-left {
+      width: 220px;
     }
   }
 
@@ -113,7 +154,7 @@ export default {
     }
 
     .instructions-filler-left {
-      width: 150px;
+      width: 230px;
     }
   }
 
@@ -127,13 +168,13 @@ export default {
     }
 
     .instructions-filler-left {
-      width: 110px;
+      width: 170px;
     }
   }
 
   @media only screen and (max-width: 667px) and (orientation: landscape) {
     .instructions-filler-left {
-      width: 92px;
+      width: 170px;
     }
 
     .instructions-robot-container {
@@ -158,21 +199,21 @@ export default {
 
   @media only screen and (max-width: 414px) {
     .instructions-filler-left {
-      width: 15px;
+      width: 50px;
     }
 
     .return-to-profile {
-      height: 90px;
+      height: 80px;
     }
 
     .instructions-robot-container {
-      height: 55px;
+      height: 50px;
     }
   }
 
   @media only screen and (max-width: 375px) {
     .instructions-filler-left {
-      width: 20px;
+      width: 60px;
     }
 
     .return-to-profile {

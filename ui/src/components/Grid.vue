@@ -320,6 +320,160 @@ export default {
     right: -9px;
   }
 
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $grid-space-size: 56px;
+    $display-tool-size: 16px;
+    $grid-space-font-size: 14px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 150%;
+        width: 150%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
+  }
+
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    $grid-space-size: 56px;
+    $display-tool-size: 16px;
+    $grid-space-font-size: 14px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 150%;
+        width: 150%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
+  }
+
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait)  {
+    $grid-space-size: 56px;
+    $display-tool-size: 16px;
+    $grid-space-font-size: 14px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 150%;
+        width: 150%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
+  }
+
   @media only screen and (max-width: 823px) and (orientation: landscape) {
     $grid-space-size: 32px;
     $display-tool-size: 16px;
@@ -367,7 +521,7 @@ export default {
     }
   }
 
-  @media only screen and (max-width : 736px) {
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
     $grid-space-size: 38px;
     $display-tool-size: 16px;
 
@@ -559,7 +713,7 @@ export default {
 
   @media only screen and (max-width : 320px) {
     $grid-space-size: 24px;
-    $display-tool-size: 16px;
+    $display-tool-size: 12px;
 
     .grid-space {
       height: $grid-space-size;
@@ -592,19 +746,4 @@ export default {
       }
     }
   }
-</style>
-<style lang="scss">
-  /* $popover-background-color: rgba(0, 0, 0, 0.8);
-  $popover-border: #B8E986;
-  // for popover
-  .popover, .popover.bs-popover-right, .popover.bs-popover-left {
-    background-color: $popover-background-color;
-    border: 1px solid $popover-border;
-    box-shadow: 0 0 100px 0 #000000;
-  }
-
-  .bs-popover-top .arrow::after, .bs-popover-auto[x-placement^="top"] .arrow::after {
-    border-right-color: $popover-border;
-    border-left-color: $popover-border;
-  } */
 </style>

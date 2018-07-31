@@ -258,10 +258,66 @@ export default {
     float: left;
   }
 
-  @media only screen and (max-width: 823px) and (orientation: landscape) {
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $edit-main-side-padding: 16%;
+    $edit-main-top-bottom-padding: 0;
+    $bar-height: 2px;
+    $edit-main-per-margin: 0;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
+
+    .bar {
+      right: 0;
+      left: 0;
+      top: calc(50% + #{$bar-height});
+      height: $bar-height;
+    }
+
+    .dialog-button {
+      top: -15px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      right: -40px;
+    }
+
+    .speed {
+      right: 40px;
+      font-size: 16px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
+    $edit-main-per-margin: 150px;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
 
     .bar {
       right: 10px;
@@ -271,7 +327,7 @@ export default {
     }
 
     .dialog-button {
-      top: -9px;
+      top: -15px;
     }
 
     .play {
@@ -279,11 +335,11 @@ export default {
     }
 
     .stop {
-      right: 24px;
+      right: -58px;
     }
 
     .speed {
-      left: 24px;
+      right: 60px;
       font-size: 12px;
     }
 
@@ -293,11 +349,103 @@ export default {
     }
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 736px) and (orientation: landscape) {
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    $edit-main-side-padding: 16%;
+    $edit-main-top-bottom-padding: 0;
+    $bar-height: 2px;
+    $edit-main-per-margin: 0;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
+
+    .bar {
+      right: 0;
+      left: 0;
+      top: calc(50% + #{$bar-height});
+      height: $bar-height;
+    }
+
+    .dialog-button {
+      top: -15px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      right: -40px;
+    }
+
+    .speed {
+      right: 40px;
+      font-size: 16px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $edit-main-side-padding: 16%;
+    $edit-main-top-bottom-padding: 0;
+    $bar-height: 2px;
+    $bar-height: 1px;
+    $edit-main-per-margin: 140px;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
+
+    .bar {
+      right: 0;
+      left: 0;
+      top: calc(50% + #{$bar-height});
+      height: $bar-height;
+    }
+
+    .dialog-button {
+      top: -15px;
+    }
+
+    .play {
+      right: 0;
+    }
+
+    .stop {
+      right: -40px;
+    }
+
+    .speed {
+      right: 40px;
+      font-size: 16px;
+    }
+
+    .ghost, .sortable-chosen, .dragging {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  @media only screen and (max-width: 736px) and (orientation: landscape) {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
+    $edit-main-per-margin: 100px;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
 
     .bar {
       right: 10px;
@@ -333,6 +481,12 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
+    $edit-main-per-margin: 100px;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
 
     .bar {
       right: 10px;
@@ -369,6 +523,12 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
+    $edit-main-per-margin: 80px;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
 
     .bar {
       right: 10px;
@@ -404,6 +564,12 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
+    $edit-main-per-margin: 50px;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
 
     .bar {
       right: -15px;
@@ -440,6 +606,12 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
+    $edit-main-per-margin: 40px;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
 
     .bar {
       right: -15px;
@@ -474,6 +646,12 @@ export default {
   @media only screen and (max-width : 320px) {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
+    $edit-main-per-margin: 0;
+
+    .edit-main {
+      margin-right: $edit-main-per-margin;
+      margin-left: $edit-main-per-margin;
+    }
 
     .bar {
       right: 5px;

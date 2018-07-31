@@ -179,6 +179,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    flex: 1;
   }
 
   #grid-box {
@@ -214,11 +215,21 @@ export default {
     transition: height 1s;
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    #robot {
-      width: 80vw;
-    }
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+  }
+
+  /* ipad pro Landscape */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: landscape)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+
   }
 
   @media only screen and (max-width : 667px) and (orientation: landscape) {
@@ -249,7 +260,7 @@ export default {
   /* iphone 6/7/8 plus*/
   @media only screen and (max-width: 414px) {
     #robot {
-      padding: 1vh 0;
+      padding: 0;
     }
 
     #control-panel-box {
@@ -271,7 +282,6 @@ export default {
   /* iphone 6/7 portrait */
   @media only screen and (max-width : 375px) {
     #robot {
-      padding: 1vh 0;
     }
 
     #control-panel-box {
@@ -292,7 +302,6 @@ export default {
   /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
     #robot {
-      padding: 1vh 0;
     }
 
     #control-panel-box {

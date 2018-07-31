@@ -308,14 +308,133 @@ export default {
     transform:rotate(0);
   }
 
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 61px;
+    $functions-height: 150px;
+    $methods-margin-left: 0;
+    $functions-margin-right: 35px;
+    $open-staged-right: 0;
+    $methods-margin-top: -3px;
+
+    .commands {
+      width: 100%;
+    }
+
+    .methods {
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
+    }
+
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
+    }
+
+    #open-staged {
+      right: $open-staged-right;
+    }
+  }
+
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 61px;
+    $functions-height: 150px;
+    $methods-margin-left: 150px;
+    $functions-margin-right: 190px;
+    $open-staged-right: 150px;
+    $methods-margin-top: -4px;
+
+    .commands {
+      width: 100%;
+    }
+
+    .methods {
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
+    }
+
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
+    }
+
+    #open-staged {
+      right: $open-staged-right;
+    }
+  }
+
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    $functions-padding-left: 0;
+    $functions-padding-right: 0;
+    $methods-height: 61px;
+    $functions-height: 150px;
+    $methods-margin-left: 0;
+    $functions-margin-right: 35px;
+    $open-staged-right: 0;
+    $methods-margin-top: -3px;
+
+    .commands {
+      width: 100%;
+    }
+
+    .methods {
+      margin-top: $methods-margin-top;
+      margin-left: $methods-margin-left;
+      padding: 3px;
+      height: $methods-height;
+    }
+
+    .functions-container {
+      min-height: $functions-height;
+      height: $functions-height;
+      margin-left: 5px;
+      margin-right: $functions-margin-right;
+      .functions {
+        padding: 0 $functions-padding-right 0 $functions-padding-left;
+      }
+    }
+
+    #open-staged {
+      right: $open-staged-right;
+    }
+  }
+
   @media only screen and (max-width: 823px) and (orientation: landscape) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
     $methods-height: 48px;
     $functions-height: 65px;
-    $methods-margin-left: 10px;
-    $functions-margin-right: 50px;
-    $open-staged-right: 15px;
+    $methods-margin-left: 140px;
+    $functions-margin-right: 180px;
+    $open-staged-right: 140px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -348,9 +467,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 48px;
     $functions-height: 65px;
-    $methods-margin-left: 10px;
-    $functions-margin-right: 50px;
-    $open-staged-right: 15px;
+    $methods-margin-left: 100px;
+    $functions-margin-right: 140px;
+    $open-staged-right: 110px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -422,9 +541,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 43px;
     $functions-height: 60px;
-    $methods-margin-left: 10px;
-    $functions-margin-right: 50px;
-    $open-staged-right: 15px;
+    $methods-margin-left: 80px;
+    $functions-margin-right: 120px;
+    $open-staged-right: 80px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -458,9 +577,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 43px;
     $functions-height: 69px;
-    $methods-margin-left: -15px;
-    $functions-margin-right: 10px;
-    $open-staged-right: -15px;
+    $methods-margin-left: 30px;
+    $functions-margin-right: 70px;
+    $open-staged-right: 30px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -495,9 +614,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 43px;
     $functions-height: 69px;
-    $methods-margin-left: -15px;
-    $functions-margin-right: 10px;
-    $open-staged-right: -15px;
+    $methods-margin-left: 20px;
+    $functions-margin-right: 45px;
+    $open-staged-right: 20px;
     $methods-margin-top: -4px;
 
     .commands {

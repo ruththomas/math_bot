@@ -288,8 +288,149 @@ export default {
     color: transparent;
   }
 
-  /* 13" screen */
-  @media only screen and (max-width : 1280px) {
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $piece-size: 50px;
+    $piece-margin: 2px;
+    $tab-insert-left: 26px;
+    $tab-insert-width: 5px;
+    $tab-size: 5px;
+
+    .piece {
+      height: $piece-size;
+      width: $piece-size;
+      margin: $piece-margin;
+      z-index: 1000;
+    }
+
+    .puzzle-start, .puzzle-middle {
+      width: 27px;
+    }
+
+    .tab-insert {
+      width: $tab-insert-width;
+      left: $tab-insert-left;
+      height: $piece-size;
+    }
+
+    .notch {
+      width: 10px;
+      height: 10px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
+    }
+
+    .left-tab {
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+    }
+
+    .left-tab::before {
+      content: "";
+      width: $tab-size;
+      height: calc(#{$tab-size} * 2);
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+  }
+
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    $piece-size: 50px;
+    $piece-margin: 2px;
+    $tab-insert-left: 26px;
+    $tab-insert-width: 5px;
+    $tab-size: 5px;
+
+    .piece {
+      height: $piece-size;
+      width: $piece-size;
+      margin: $piece-margin;
+      z-index: 1000;
+    }
+
+    .puzzle-start, .puzzle-middle {
+      width: 27px;
+    }
+
+    .tab-insert {
+      width: $tab-insert-width;
+      left: $tab-insert-left;
+      height: $piece-size;
+    }
+
+    .notch {
+      width: 10px;
+      height: 10px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
+    }
+
+    .left-tab {
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+    }
+
+    .left-tab::before {
+      content: "";
+      width: $tab-size;
+      height: calc(#{$tab-size} * 2);
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+  }
+
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    $piece-size: 50px;
+    $piece-margin: 2px;
+    $tab-insert-left: 26px;
+    $tab-insert-width: 5px;
+    $tab-size: 5px;
+
+    .piece {
+      height: $piece-size;
+      width: $piece-size;
+      margin: $piece-margin;
+      z-index: 1000;
+    }
+
+    .puzzle-start, .puzzle-middle {
+      width: 27px;
+    }
+
+    .tab-insert {
+      width: $tab-insert-width;
+      left: $tab-insert-left;
+      height: $piece-size;
+    }
+
+    .notch {
+      width: 10px;
+      height: 10px;
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
+    }
+
+    .left-tab {
+      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+    }
+
+    .left-tab::before {
+      content: "";
+      width: $tab-size;
+      height: calc(#{$tab-size} * 2);
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+    }
   }
 
   @media only screen and (max-width: 823px) and (orientation: landscape) {
@@ -537,53 +678,6 @@ export default {
 
   /* Custom, iPhone Retina */
   @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .command-name {
-      display: block;
-    }
-
-    .piece {
-      height: 75px;
-      width: 75px;
-      margin-left: 9px;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: 65px;
-    }
-
-    .tab-insert {
-      top: -1px;
-      left: 64px;
-      width: 10px;
-      height: 75px;
-    }
-
-    .notch {
-      left: -10px;
-      width: 20px;
-      height: 20px;
-      background: radial-gradient(transparent 10px, rgba(0, 0, 0, 1) 10px) no-repeat 10px;
-    }
-
-    .left-tab {
-      left: -10px;
-    }
-
-    .left-tab::before {
-      content: "";
-      width: 10px;
-      height: 20px;
-      border-bottom-right-radius: 20px;
-      border-top-right-radius: 20px;
-    }
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
 
   }
 </style>
