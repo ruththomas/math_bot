@@ -145,6 +145,10 @@ module.exports = {
     robotDown: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522437155/robotDirections/PlayerDown_pjawwx.png',
     robotLeft: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522437164/robotDirections/RobotLeft_uf8xym.png'
   },
+  openTrashCan: 'http://res.cloudinary.com/doohickey/image/upload/v1533054189/noun_open_trash_can_1064108_000000_lokvu5.svg',
+  trashCan: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png',
+  questionMark: 'http://res.cloudinary.com/doohickey/image/upload/v1533051790/noun_ask_1736315_000000_h0hrlp.svg',
+  ask: 'http://res.cloudinary.com/doohickey/image/upload/v1533051126/noun_ask_1221801_000000_akekdn.svg',
   refresh: 'http://res.cloudinary.com/doohickey/image/upload/c_scale,w_20/v1532890707/noun_reload_1746931_000000_tghsmr.svg',
   floor: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522346538/misc/window.png',
   wall: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522346541/misc/windowPane.png',

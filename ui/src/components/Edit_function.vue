@@ -17,11 +17,25 @@
         </div>
         <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="57" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
 
-        <div
+        <img
+          v-if="editingFunction.func.length"
+          id="delete-function"
           class='function-control trash'
-          @click="deleteFuncContents"
+          :src="permanentImages.trashCan"
+          @click="animateVulnerable"
+        />
+
+        <b-popover
+          v-if="editingFunction.func.length"
+          target="delete-function"
+          placement="top"
+          triggers="click"
         >
-        </div>
+          <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="[closePopover('delete-function'), animateVulnerable()]" />
+          <div class="button-effect trash-confirm" variant="danger"  @click="deleteFuncContents">
+            <img class="dialog-button" :src="permanentImages.openTrashCan" />
+          </div>
+        </b-popover>
       </div>
 
       <img class="close-edit-function dialog-button" @click="closeEditFunction" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
@@ -52,6 +66,7 @@ import buildUtils from '../services/BuildFunction'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
+import utils from '../services/utils'
 
 export default {
   mounted () {
@@ -158,7 +173,20 @@ export default {
       this.color = 'default'
     },
     deleteFuncContents () {
+      this.closePopover('delete-function')
       buildUtils.deleteFunction({context: this})
+    },
+    animateVulnerable () {
+      const $functions = $('.editFunction-drop-zone > .piece:not(.placeholder-piece)')
+      const animationClass = 'piece-shake'
+      $functions.each(function () {
+        const $ele = $(this)
+        if ($ele.hasClass(animationClass)) {
+          $ele.removeClass(animationClass)
+        } else {
+          $ele.addClass(animationClass)
+        }
+      })
     },
     fullMessage () {
       const messageBuilder = {
@@ -198,7 +226,8 @@ export default {
     },
     end (evt) {
       this.$store.dispatch('updateTrashVisible', false)
-    }
+    },
+    closePopover: utils.closePopover
   },
   components: {
     draggable,
@@ -210,6 +239,8 @@ export default {
 
 <style scoped lang="scss">
   $form-left: 34px;
+  $click-color: #B8E986;
+  $danger-color: #F25C5C;
 
   .edit-function {
     position: relative;
@@ -281,10 +312,11 @@ export default {
     cursor: pointer;
   }
 
-  .function-control.trash {
-    background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png");
-    background-size: cover;
-    float: right;
+  .trash-confirm {
+    background-color: $danger-color;
+    box-shadow: 0 2px 10px 0 $danger-color;
+    animation: shake 0.8s;
+    animation-iteration-count: infinite;
   }
 
   .func-name {
@@ -306,6 +338,14 @@ export default {
   .function-drop-drop-zone {
     justify-content: flex-start!important;
     margin: 0;
+  }
+
+  .close-popover {
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    top: -9px;
+    right: -9px;
   }
 
   /* Medium Devices, Desktops */

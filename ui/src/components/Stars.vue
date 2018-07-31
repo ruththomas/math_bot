@@ -3,7 +3,7 @@
     <star class="star-two" :active="stepStats.active" :success="success(2)"></star>
     <star class="star-one" :active="stepStats.active" :success="success(1)"></star>
     <star class="star-three" :active="stepStats.active" :success="success(3)"></star>
-    <span v-if="timer.stars < 3" class="star-timer">{{ convertTime(remainingTime) }}</span>
+    <span v-if="timer.stars < 3" class="star-timer" :class="'star-timer-' + starGroup">{{ convertTime(remainingTime) }}</span>
   </div>
 </template>
 
@@ -22,6 +22,9 @@ export default {
     },
     videoTimers () {
       return this.$store.getters.getVideoTimers
+    },
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
   },
   methods: {
@@ -51,8 +54,8 @@ export default {
 <style scoped lang="scss">
 $star-cluster-star-one-size: 50px;
 $star-cluster-star-two-three-size: 30px;
-$star-spread-star-size: 50px;
-$stars-shadow: inset 0 0 100px #D3D3D3;
+$star-spread-star-size: 40px;
+$stars-shadow: inset 0 0 100px #778899;
 $star-congrats-star-size: 70px;
 $star-margin: 5px 0 5px 0;
 $star-timer-right: 100%;
@@ -63,7 +66,7 @@ $star-timer-margin-right: 5px;
   position: relative;
   display: flex;
   justify-content: space-around;
-  box-shadow: $stars-shadow;
+  // box-shadow: $stars-shadow;
   border-radius: 5px;
   cursor: pointer;
   * {
@@ -77,6 +80,10 @@ $star-timer-margin-right: 5px;
   bottom: $star-timer-bottom;
   font-size: $star-timer-font-size;
   margin-right: $star-timer-margin-right;
+}
+
+.star-timer.star-timer-star-spread {
+  color: #000000;
 }
 
 .star-cluster {
@@ -100,6 +107,12 @@ $star-timer-margin-right: 5px;
     align-self: center;
   }
 
+  .question-mark {
+    position: absolute;
+    height: 40%;
+    top: 50%;
+    transform: translateY(-62%);
+  }
 }
 @media only screen and (max-width : 1280px) and (max-height: 900px) {
 }

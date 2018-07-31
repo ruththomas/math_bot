@@ -16,7 +16,6 @@
             </g>
           </g>
         </g>
-        <!--<text x="50%" y="50%" class="heavy">?</text>-->
       </svg>
   </div>
 </template>

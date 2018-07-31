@@ -19,6 +19,11 @@
         :collection="list.concat(placeHolders)"
         :origin="origin"
       ></function-box>
+
+      <div
+        v-if="list.length === this.sizeLimit"
+        class="function-full-bar noDrag"
+      ></div>
     </draggable>
   </div>
 </template>
@@ -81,6 +86,7 @@ export default {
 <style scoped lang="scss">
   $drop-zone-padding-left: 30px;
   $drop-zone-padding-right: 30px;
+  $danger-color: #F25C5C;
 
   .function-drop {
     overflow: auto;
@@ -98,6 +104,12 @@ export default {
       z-index: 999;
       padding-left: $drop-zone-padding-left;
       padding-right: $drop-zone-padding-right;
+
+      .function-full-bar {
+        height: 75px;
+        width: 2px;
+        background-color: $danger-color;
+      }
     }
     .editFunction-drop-zone {
       justify-content: flex-start;
@@ -131,6 +143,12 @@ export default {
   .center-function-drop {
     justify-content: center!important;
     padding: 0!important;
+  }
+
+  .piece-shake {
+    animation: shake 0.8s;
+    animation-iteration-count: infinite;
+    box-shadow: 0 0 0 2px rgba(242, 92, 92, 0.9);
   }
 
   /* Medium Devices, Desktops */

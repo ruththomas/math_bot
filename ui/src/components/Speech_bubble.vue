@@ -1,12 +1,18 @@
 <template>
   <div class="speech-bubble">
     <div class="bubble-text" v-html="html"></div>
-    <div class="bubble-stars" @click="videoHint.getHint()" v-if="videoHint !== null" data-toggle="tooltip" title="Get a hint">
-      <stars
-        :star-group="'star-spread'"
-        :level="level"
-        :step="step"
-        :step-stats="stepStats"></stars>
+    <div class="bubble-stars" @click="videoHint.getHint()" v-if="videoHint !== null" data-toggle="tooltip" title="???">
+      <div
+        class="button-effect help-button"
+        size="sm"
+      >
+        <stars
+          :star-group="'star-spread'"
+          :level="level"
+          :step="step"
+          :step-stats="stepStats"></stars>
+        <img :src="permanentImages.questionMark" />
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +35,9 @@ export default {
     stepStats () {
       const stepName = this.step
       return this.steps.find(s => s.name === stepName)
+    },
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
   },
   data () {
@@ -56,6 +65,8 @@ export default {
   $arrow-border-height: 10px;
   $arrow-height: 9px;
   $bubble-margin-bottom: 30px;
+  $click-color: #B8E986;
+  $click-color-faded: rgba(0, 0, 0, 0.6);
 
   .speech-bubble {
     position: relative;
@@ -79,22 +90,20 @@ export default {
     }
 
     .bubble-stars {
+      position: relative;
+      width: 40%;
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      padding: 1%;
 
-      span {
-        color: #4a90e2;
-        margin: 0;
-        font-size: 16px;
-        bottom: -10px;
-      }
-
-      span:hover {
-        cursor: pointer;
-        text-decoration: underline;
+      .help-button {
+        position: relative;
+        img {
+          position: absolute;
+          height: 25%;
+          top: 40%;
+          left: 50%;
+          transform: translate(-50%, 0);
+        }
       }
     }
 
