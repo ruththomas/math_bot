@@ -38,13 +38,14 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
               // Insert the function into the operations stream
               execute(state, operations.headOption, operations.tail ++: post)
           case IfColor(color, conditionalOperation) =>
-            state.currentRegister.peek().exists(_.color == color) match {
-              case true =>
+            state.currentRegister.peek() match {
+              case Some(element) if element.color == color =>
                 execute(state, Some(conditionalOperation), post )
-              case false =>
+              case Some(_) if color == "grey" =>
+                execute(state, Some(conditionalOperation), post )
+              case _ =>
                 execute(state, post.headOption, post.drop(1)) // Skip the operation inside the if
             }
-
           case _ =>
             // Execute the operation
             executeHelp(state, process(state, operation), post.headOption, post.drop(1))
