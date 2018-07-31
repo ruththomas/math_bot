@@ -264,6 +264,7 @@ export default {
     height: 100%;
     display: flex;
     align-items: flex-end;
+    padding-top: 5%;
   }
 
   .edit-function-drop > * {
@@ -348,13 +349,239 @@ export default {
     right: -9px;
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  /* ipad pro Landscape */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: landscape)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
 
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
+  }
+
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
+  }
+
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
+  }
+
+  @media only screen and (max-width : 823px) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 736px) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
+  }
+
+  @media only screen and (max-width : 667px) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
   }
 
   /* iphone 5 landscape */
@@ -377,10 +604,7 @@ export default {
 
         .func-name {
           font-size: 12px;
-        }
-
-        .trash {
-          display: none;
+          width: 100px;
         }
       }
 
@@ -391,7 +615,6 @@ export default {
     }
   }
 
-  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
     .edit-function-data {
       top: -85px;
@@ -412,10 +635,6 @@ export default {
         .func-name {
           font-size: 12px;
         }
-
-        .trash {
-          display: none;
-        }
       }
 
       .close-edit-function {
@@ -424,12 +643,4 @@ export default {
       }
     }
   }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-  }
-
 </style>

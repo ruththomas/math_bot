@@ -170,15 +170,22 @@ export default {
     }
   }
 
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
     .dialog-button {
       height: 30px;
       width: 30px;
     }
   }
 
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+  /* ipad landscape */
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
     .dialog-button {
       height: 30px;
       width: 30px;
