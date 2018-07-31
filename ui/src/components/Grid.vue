@@ -176,7 +176,7 @@ export default {
   $grid-space-font-size: 22px;
   $grid-space-size: 96px;
   $grid-border-radius: 4px;
-  $grid-background: rgba(0, 0, 0, 0.5);
+  $grid-background: rgba(0, 0, 0, 0.6);
   $display-tool-size: 30px;
 
   .total-grid {
@@ -245,9 +245,10 @@ export default {
 
     img.robot {
       height: 150%;
-      width: 150%;
       top: -35%;
+      z-index: 100;
     }
+
   }
 
   .display-tools {
@@ -274,9 +275,6 @@ export default {
         width: calc(#{$display-tool-size} / 2);
       }
     }
-  }
-
-  .grid-space-empty-space {
   }
 
   .grid-space-wall {
