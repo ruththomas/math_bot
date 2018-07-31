@@ -106,7 +106,7 @@ export default {
       padding-right: $drop-zone-padding-right;
 
       .function-full-bar {
-        height: 75px;
+        height: 90%;
         width: 2px;
         background-color: $danger-color;
       }
@@ -151,30 +151,70 @@ export default {
     box-shadow: 0 0 0 2px rgba(242, 92, 92, 0.9);
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+  }
+
+  /* ipad pro Landscape */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: landscape)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
 
   }
 
-  /* Small Devices */
+  @media only screen and (max-width: 823px) {
+    $drop-zone-padding-left: 10px;
+    .function-drop {
+      .function-drop-drop-zone {
+        padding-left: $drop-zone-padding-left;
+        padding-right: $drop-zone-padding-left;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 736px) {
+    $drop-zone-padding-left: 10px;
+    .function-drop {
+      .function-drop-drop-zone {
+        padding-left: $drop-zone-padding-left;
+        padding-right: $drop-zone-padding-left;
+      }
+    }
+  }
+
   @media only screen and (max-width : 667px) {
-
+    $drop-zone-padding-left: 10px;
+    .function-drop {
+      .function-drop-drop-zone {
+        padding-left: $drop-zone-padding-left;
+        padding-right: $drop-zone-padding-left;
+      }
+    }
   }
 
-  /* iphone 5 landscape */
   @media only screen and (max-width : 568px) {
+    $drop-zone-padding-left: 10px;
+    .function-drop {
+      .function-drop-drop-zone {
+        padding-left: $drop-zone-padding-left;
+        padding-right: $drop-zone-padding-left;
+      }
+    }
   }
 
-  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    $drop-zone-padding-left: 10px;
+    .function-drop {
+      .function-drop-drop-zone {
+        padding-left: $drop-zone-padding-left;
+        padding-right: $drop-zone-padding-left;
+      }
+    }
   }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-
-  }
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
-  }
-
 </style>
