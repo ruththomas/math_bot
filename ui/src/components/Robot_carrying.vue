@@ -12,6 +12,7 @@
       triggers="click"
       placement="left"
     >
+      <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover('robot-carrying-id')" />
       <b-img
         v-for="(imageName, iInd) in displayCarrying"
         :key="'carrying-popover-image/' + iInd"
@@ -25,8 +26,8 @@
 
 <script>
 import uid from 'uid'
-import assets from '../assets/assets'
 import _ from 'underscore'
+import utils from '../services/utils'
 
 export default {
   computed: {
@@ -44,7 +45,7 @@ export default {
         .value()
     },
     toolImages () {
-      return assets.tools
+      return this.permanentImages.tools
     },
     displayAmt () {
       return this.amountToShow
@@ -54,6 +55,9 @@ export default {
     },
     robotCarrying () {
       return this.$store.getters.getRobotCarrying
+    },
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
   },
   data () {
@@ -67,7 +71,8 @@ export default {
     },
     adjustShowAmount () {
       this.amountToShow = this.amountToShow === 1000 ? 48 : 1000
-    }
+    },
+    closePopover: utils.closePopover
   }
 }
 </script>
@@ -108,6 +113,14 @@ export default {
     color: #ffffff;
     cursor: pointer;
     display: block;
+  }
+
+  .close-popover {
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    top: -9px;
+    right: -9px;
   }
 
   @media only screen and (max-width: 823px) and (orientation: landscape) {

@@ -4,7 +4,7 @@
       mode="out-in"
       name="custom-classes-transition"
       enter-active-class="animated zoomIn"
-      leave-active-class="animated fadeOut"
+      leave-active-class="animated zoomOut"
     >
       <congrats v-if="congratsShowing"></congrats>
       <tryagain v-else-if="tryAgainShowing"></tryagain>
@@ -43,8 +43,10 @@
             <b-popover
               v-if="space.tools.length"
               :target="`grid-cell-${rInd}-${sInd}`"
+              placement="auto"
               triggers="click"
             >
+              <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover(`grid-cell-${rInd}-${sInd}`)" />
               <div class="display-tools">
                 <div
                   v-for="(tool, iInd) in space.tools.slice(0, 100)"
@@ -74,9 +76,16 @@ import Tryagain from './Try_again'
 import VideoHint from './Video_hint'
 import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
+import _ from 'underscore'
+import utils from '../services/utils'
 
 export default {
   mounted () {
+    this.popoverSyncs = _.chain(this.gridMap)
+      .map((row) => {
+        return row.map(() => false)
+      })
+      .value()
   },
   computed: {
     problem () {
@@ -139,7 +148,8 @@ export default {
   data () {
     return {
       runCompiled: {},
-      showSpeech: true
+      showSpeech: true,
+      popoverSyncs: null
     }
   },
   methods: {
@@ -159,7 +169,8 @@ export default {
         default:
           return 'floor'
       }
-    }
+    },
+    closePopover: utils.closePopover
   },
   components: {
     Congrats,
@@ -177,7 +188,7 @@ export default {
   $grid-space-size: 96px;
   $grid-border-radius: 4px;
   $grid-background: rgba(0, 0, 0, 0.6);
-  $display-tool-size: 30px;
+  $display-tool-size: 18px;
 
   .total-grid {
     width: 100%;
@@ -265,7 +276,7 @@ export default {
       position: relative;
       &::before {
         background-size: 100%;
-        background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+        background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
         display: inline-block;
         border-radius: 50%;
         position: absolute;
@@ -299,6 +310,14 @@ export default {
   .robot-shake {
     animation: shake 0.5s;
     animation-iteration-count: infinite;
+  }
+
+  .close-popover {
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    top: -9px;
+    right: -9px;
   }
 
   @media only screen and (max-width: 823px) and (orientation: landscape) {
@@ -335,7 +354,7 @@ export default {
         position: relative;
         &::before {
           background-size: 100%;
-          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
           display: inline-block;
           border-radius: 50%;
           position: absolute;
@@ -371,7 +390,7 @@ export default {
         position: relative;
         &::before {
           background-size: 100%;
-          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
           display: inline-block;
           border-radius: 50%;
           position: absolute;
@@ -407,7 +426,7 @@ export default {
         position: relative;
         &::before {
           background-size: 100%;
-          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
           display: inline-block;
           border-radius: 50%;
           position: absolute;
@@ -443,7 +462,7 @@ export default {
         position: relative;
         &::before {
           background-size: 100%;
-          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
           display: inline-block;
           border-radius: 50%;
           position: absolute;
@@ -490,7 +509,7 @@ export default {
         position: relative;
         &::before {
           background-size: 100%;
-          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
           display: inline-block;
           border-radius: 50%;
           position: absolute;
@@ -526,7 +545,6 @@ export default {
         position: relative;
         &::before {
           background-size: 100%;
-          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
           display: inline-block;
           border-radius: 50%;
           position: absolute;
@@ -562,7 +580,7 @@ export default {
         position: relative;
         &::before {
           background-size: 100%;
-          background: rgba(255, 255, 255, 1) url("http://res.cloudinary.com/doohickey/image/upload/v1532891868/noun_Refresh_680199_000000_izzqi4.svg");
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
           display: inline-block;
           border-radius: 50%;
           position: absolute;
@@ -576,17 +594,17 @@ export default {
   }
 </style>
 <style lang="scss">
-  $popover-background-color: rgba(0, 0, 0, 0.6);
+  /* $popover-background-color: rgba(0, 0, 0, 0.8);
   $popover-border: #B8E986;
   // for popover
-  .popover.bs-popover-right, .popover.bs-popover-left {
+  .popover, .popover.bs-popover-right, .popover.bs-popover-left {
     background-color: $popover-background-color;
     border: 1px solid $popover-border;
-    box-shadow: 0 0 100px 0 rgba(0, 0, 0, 1);
-
-    .arrow::after {
-      border-right-color: $popover-border;
-      border-left-color: $popover-border;
-    }
+    box-shadow: 0 0 100px 0 #000000;
   }
+
+  .bs-popover-top .arrow::after, .bs-popover-auto[x-placement^="top"] .arrow::after {
+    border-right-color: $popover-border;
+    border-left-color: $popover-border;
+  } */
 </style>
