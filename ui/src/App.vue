@@ -23,6 +23,8 @@ export default {
 </script>
 
 <style lang="scss">
+  $click-color: #B8E986;
+
   body {
     font-family: "Proba Pro Regular", serif;
     -webkit-font-smoothing: antialiased;
@@ -58,6 +60,27 @@ export default {
     height: 40px;
     width: 40px;
     cursor: pointer;
+  }
+
+  .button-effect {
+    color: #000000;
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 3px;
+    background-color: $click-color;
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,0.5);
+    cursor: pointer;
+    padding: 3px;
+    &:hover {
+      background-color: $click-color;
+    }
+  }
+
+  .popover {
+    background-color: rgba(0, 0, 0, 0.8);
   }
 
   /*This is where v-html styles must go*/
