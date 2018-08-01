@@ -1206,7 +1206,7 @@ export default {
 
   /* iphone 5 landscape*/
   @media only screen and (max-width: 568px) and (orientation: landscape){
-    $bubble-font-size: 12px;
+    $bubble-font-size: 10px;
     $bubble-line-height: 14px;
     $bubble-text-padding: 0px 0px 0px 10px;
     .speech-bubble {
