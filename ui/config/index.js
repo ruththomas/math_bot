@@ -50,7 +50,7 @@ module.exports = {
   },
 
   build: {
-    version: '0.02-alpha',
+    version: '0.03-pre-prod',
     // Template for index.html
     index: path.resolve(__dirname, '../../public/index.html'),
 

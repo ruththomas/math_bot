@@ -13,8 +13,8 @@ class VideoTimer {
     this._startTimer = this._startTimer.bind(this)
     this._setTime = this._setTime.bind(this)
 
-    this._timerSpeed = 60000
-    this.remainingTime = remainingTime
+    this._timerSpeed = 1000
+    this.remainingTime = remainingTime * 60 // converted to seconds
 
     this._startTimer()
   }

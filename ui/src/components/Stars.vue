@@ -9,9 +9,13 @@
 
 <script>
 import Star from './Star'
+import _ from 'underscore'
 
 export default {
   name: 'Timer',
+  mounted () {
+    // console.log(this.timer)
+  },
   computed: {
     timer () {
       return this.videoTimers[`${this.level}/${this.step}`] || {stars: 3}
@@ -28,11 +32,16 @@ export default {
     }
   },
   methods: {
-    convertTime (minutes) {
-      let h = Math.floor(minutes / 60)
-      let m = minutes % 60
-      m = m < 10 ? '0' + m : m
-      return h + ':' + m
+    convertTime (totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60)
+      const seconds = Math.floor(totalSeconds - minutes * 60)
+      return _.chain([minutes, seconds])
+        .map(t => {
+          if (t === 0) return '00'
+          else return t
+        })
+        .value()
+        .join(':')
     },
     success (starNumber) {
       if (starNumber === 1) {
@@ -84,10 +93,17 @@ $star-timer-margin-right: 5px;
 .star-cluster {
   .star-one {
     align-self: flex-start;
+    margin-top: 10%;
   }
 
   .star-two, .star-three {
     align-self: flex-end;
+    margin-bottom: 10%;
+  }
+
+  .star-timer {
+    left: 40%;
+    top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
   }
 }
 
@@ -104,29 +120,90 @@ $star-timer-margin-right: 5px;
   }
 }
 
-@media only screen and (max-width: 375px) {
-   $star-timer-right: 100%;
-  $star-timer-bottom: -10px;
+@media only screen and (max-width: 823px) {
   $star-timer-font-size: 8px;
-  $star-timer-margin-right: 5px;
   .star-timer {
-    right: $star-timer-right;
-    bottom: $star-timer-bottom;
     font-size: $star-timer-font-size;
-    margin-right: $star-timer-margin-right;
+  }
+
+  .star-cluster {
+    .star-timer {
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
+    }
+  }
+}
+
+@media only screen and (max-width: 736px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
+  }
+
+  .star-cluster {
+    .star-timer {
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
+    }
+  }
+}
+
+@media only screen and (max-width: 667px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
+  }
+
+  .star-cluster {
+    .star-timer {
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
+    }
+  }
+}
+
+@media only screen and (max-width: 568px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
+  }
+
+  .star-cluster {
+    .star-timer {
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
+    }
+  }
+}
+
+@media only screen and (max-width: 414px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
+  }
+
+  .star-cluster {
+    .star-timer {
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
+    }
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
+  }
+
+  .star-cluster {
+    .star-timer {
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
+    }
   }
 }
 
 @media only screen and (max-width: 320px) {
-  $star-timer-right: 100%;
-  $star-timer-bottom: -10px;
-  $star-timer-font-size: 8px;
-  $star-timer-margin-right: 5px;
-  .star-timer {
-    right: $star-timer-right;
-    bottom: $star-timer-bottom;
-    font-size: $star-timer-font-size;
-    margin-right: $star-timer-margin-right;
-  }
 }
 </style>
