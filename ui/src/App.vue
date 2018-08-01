@@ -33,7 +33,7 @@ export default {
     color: #FFFFFF;
     height: 100vh;
     width: 100vw;
-    background-color: #000000;
+    background-color: #000000!important;
     position: relative;
     display: flex;
     z-index: 200;

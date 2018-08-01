@@ -64,11 +64,11 @@ router.beforeEach((to, from, next) => {
   router.options.routes.forEach((route) => {
     // If this is the current route and it's secure
     if (to.matched[0].path === route.path && route.secure && !$store.state.auth.authenticated) {
-      next('/about')
+      return next('/about')
     }
   })
   // Proceed as normal
-  next()
+  return next()
 })
 
 export default router
