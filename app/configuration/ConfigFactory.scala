@@ -1,4 +1,4 @@
- package configuration
+package configuration
 
 import akka.http.scaladsl.model.Uri
 import akka.util.Timeout
@@ -15,9 +15,11 @@ object ConfigFactory {
         final val scopes: String = "mathbot.oauth.google.scopes"
         final val clientSecret: String = "mathbot.oauth.google.clientSecret"
         final val clientId: String = "mathbot.oauth.google.clientId"
-        final val authRedirectUrl: String = "mathbot.oauth.google.authRedirectUrl"
-        final val oauthUrl: String = "mathbot.oauth.google.oauthUrl"
-        final val oauthPemUri: String = "mathbot.oauth.google.oauthPemUri"
+        final val redirectUrl: String = "mathbot.oauth.google.redirectUrl"
+        final val authUrl: String = "mathbot.oauth.google.authUrl"
+        final val tokenUrl : String = "mathbot.oauth.google.tokenUrl"
+        // Location of the PEM format certificates used to verify JWT tokens
+        final val pemUrl: String = "mathbot.oauth.google.pemUrl"
       }
     }
     object actors {
@@ -41,14 +43,18 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
     }
   }
 
+  private def envGet(path : String) =
+    sys.env.get(path.replace(".", "_"))
+
   def googleApiConfig(): GoogleApiConfig = {
     GoogleApiConfig(
-      oauthTokenUri = exWrap(mathbot.oauth.google.oauthUrl, path => playConfig.getString(path).map(Uri(_))),
-      authRedirectUri = exWrap(mathbot.oauth.google.authRedirectUrl, path => playConfig.getString(path).map(Uri(_))),
-      clientId = exWrap(mathbot.oauth.google.clientId, playConfig.getString(_), sys.env.get(_)),
-      clientSecret = exWrap(mathbot.oauth.google.clientSecret, playConfig.getString(_), sys.env.get(_)),
+      oauthUrl = exWrap(mathbot.oauth.google.authUrl, path => playConfig.getString(path).map(Uri(_))),
+      authRedirectUri = exWrap(mathbot.oauth.google.redirectUrl, path => playConfig.getString(path).map(Uri(_))),
+      authTokenUrl = exWrap(mathbot.oauth.google.tokenUrl, path => playConfig.getString(path).map(Uri(_))),
+      clientId = exWrap(mathbot.oauth.google.clientId, envGet(_), playConfig.getString(_)),
+      clientSecret = exWrap(mathbot.oauth.google.clientSecret, envGet(_), playConfig.getString(_)),
       scopes = exWrap(mathbot.oauth.google.scopes, playConfig.getStringList(_).map(s => s.asScala)),
-      oauthPemUri = exWrap(mathbot.oauth.google.oauthPemUri, path => playConfig.getString(path).map(Uri(_)))
+      oauthPemUri = exWrap(mathbot.oauth.google.pemUrl, path => playConfig.getString(path).map(Uri(_)))
     )
   }
 
