@@ -14,9 +14,10 @@ import models.JwtToken
 import org.joda.time.{ Duration, Instant }
 import pdi.jwt.JwtAlgorithm.RS256
 import pdi.jwt.JwtJson
-import play.api.libs.json.{ Json, OFormat }
+import play.api.libs.json.{ JsString, Json, OFormat }
 
 import scala.concurrent.{ Await, ExecutionContext, duration }
+import scala.util.{ Failure, Success }
 
 
 class JwtTokenParser @Inject() (
@@ -51,7 +52,7 @@ class JwtTokenParser @Inject() (
             val cf = CertificateFactory.getInstance("X.509")
 
             certs.fields
-              .map(_._2.asInstanceOf[String].getBytes)
+              .map(_._2.asInstanceOf[JsString].value.getBytes)
               .map(new ByteArrayInputStream(_))
               .map {
                 stream =>
@@ -84,17 +85,22 @@ class JwtTokenParser @Inject() (
 
     pemCertificates = LoadCertificates()
 
-    val tokens = pemCertificates.map(_.getPublicKey).map(k => JwtJson.decodeJson(encodedToken, k, Seq(RS256)))
-      .map(t => t.map(claim => claim.asOpt[JwtToken]))
-
-    val token = tokens.flatMap(_.toOption).flatten.headOption
-    if (token.isEmpty) { // Log the reason the token couldn't be extracted and validated
-      if (tokens.exists(_.isSuccess))
-        logger.info(SemanticLog.tags.oauth("google", "Unable to extract id token json"))
-      else {
-        logger.info(SemanticLog.tags.oauth("google", "Unable to verify id token") ++ tokens.map(t => SemanticLog.tags.cause(t.failed.get)))
-      }
+    val publicKeys = pemCertificates.map(_.getPublicKey)
+    val decoded = publicKeys.map(k => JwtJson.decodeJson(encodedToken, k, Seq(RS256)))
+    val tokens = decoded.map {
+      case Success(jwtJson) =>
+        Left(jwtJson.as[JwtToken])
+      case Failure(t) =>
+        Right(t)
     }
-    token
+    val token = tokens.find(_.isLeft).getOrElse(tokens.head) // Get the first successful or first error
+
+    token match {
+      case Left(jwt) =>
+        Some(jwt)
+      case Right(t) =>
+        logger.info(SemanticLog.tags.oauth("google", "Unable to verify id token") :+ SemanticLog.tags.cause(t))
+        None
+    }
   }
 }

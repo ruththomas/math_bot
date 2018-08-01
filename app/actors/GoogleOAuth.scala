@@ -40,7 +40,7 @@ class GoogleOAuth @Inject()(
       response <- http.singleRequest(
         HttpRequest(
           method = POST,
-          uri = config.oauthTokenUri,
+          uri = config.authTokenUrl,
           entity = FormData(
             "code" -> code,
             "client_id" -> config.clientId,
@@ -77,10 +77,10 @@ class GoogleOAuth @Inject()(
         case Left(tokens) =>
           TokensFromCodeSuccess(sessionId, tokens)
         case Right(reason) =>
-          TokensFromCodeFailure(sessionId, config.oauthTokenUri, reason)
+          TokensFromCodeFailure(sessionId, config.oauthUrl, reason)
       } pipeTo sender() onComplete {
         // In practice this is usually a connectivity error. Revisit in production to see if there is a triage.
-        case Failure(e) => sender() ! TokensFromCodeFailure(sessionId, config.oauthTokenUri, e.toString)
+        case Failure(e) => sender() ! TokensFromCodeFailure(sessionId, config.oauthUrl, e.toString)
         case _ => // Success handled by the pipeTo
       }
   }

@@ -21,7 +21,8 @@ trait SocketAction {
 
 case class RequestSession(action: Symbol = 'requestSession) extends SocketAction
 case class ResumeSession(sessionId: SecureIdentifier, action: Symbol = 'resumeSession) extends SocketAction
-case class NeedsAuthorization(sessionId: SecureIdentifier, action: Symbol = 'needsAuthorization) extends SocketAction
+case class AuthUrl(provider : String, url : String)
+case class NeedsAuthorization(sessionId : SecureIdentifier, authUrls : Seq[AuthUrl], action : Symbol = 'needsAuthorization) extends SocketAction
 
 object AuthFormatters {
 
@@ -34,6 +35,7 @@ object AuthFormatters {
     }
   }
 
+  implicit val authUrlFormat : Format[AuthUrl] = Json.format[AuthUrl]
   implicit val requestSessionFormat : Format[RequestSession] = Json.format[RequestSession]
   implicit val resumeSessionFormat : Format[ResumeSession] = Json.format[ResumeSession]
   implicit val needsAuthorizationFormat : Format[NeedsAuthorization] = Json.format[NeedsAuthorization]

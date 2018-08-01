@@ -17,7 +17,8 @@ class MutableMapCache @Inject() extends KeyValueCache[SecureIdentifier, Option[J
 
   override def createOrUpdateAsync(key : SecureIdentifier, updater : Option[Option[JwtToken]] => Option[JwtToken]) : Future[Option[JwtToken]] = ???
 
-  override def get(key : SecureIdentifier) : Option[Option[JwtToken]] = if(synchronizedMap.contains(key)) Some(synchronizedMap.get(key)) else None
+  override def get(key : SecureIdentifier) : Option[Option[JwtToken]] =
+    if(synchronizedMap.containsKey(key)) Some(synchronizedMap.get(key)) else None
 
   override def put(key : SecureIdentifier, value : Option[JwtToken]) : Option[JwtToken] = {
     synchronizedMap.put(key, value)

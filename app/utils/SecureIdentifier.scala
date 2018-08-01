@@ -49,7 +49,6 @@ object SecureIdentifier {
     }
   }
 
-
   def apply(aId : String) : SecureIdentifier = new SecureIdentifier(decoder.decode(aId).toSeq)
 
   def apply(size : Int) : SecureIdentifier = {

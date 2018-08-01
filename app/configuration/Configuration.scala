@@ -6,12 +6,13 @@ import akka.util.Timeout
 case class CompilerConfiguration(maxProgramSteps : Int)
 
 case class GoogleApiConfig(
-                            oauthTokenUri : Uri,
+                            oauthUrl        : Uri,
                             authRedirectUri : Uri,
-                            clientId : String,
-                            clientSecret : String,
-                            scopes : Seq[String],
-                            oauthPemUri : Uri
+                            authTokenUrl    : Uri,
+                            clientId        : String,
+                            clientSecret    : String,
+                            scopes          : Seq[String],
+                            oauthPemUri     : Uri
                           )
 
 case class ActorConfig(
