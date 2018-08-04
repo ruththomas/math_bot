@@ -7,7 +7,7 @@
     <div class="steps-navigator-container">
       <div
         v-for="(step, value) in steps"
-        class="steps-navigator-item"
+        class="button-effect steps-navigator-item"
         :class="step.active ? 'step-active' : 'step-disabled'"
         @click="step.active ? goToRobot(level, step.name) : ''"
         :key="step + ':' + value"
@@ -21,7 +21,7 @@
       </div>
       <div
         v-if="steps[steps.length - 1].wins > 0 && nextLevel !== 'None'"
-        class="steps-navigator-item step-active"
+        class="button-effect steps-navigator-item step-active"
         @click="goToRobot(nextLevel.name, nextLevel.firstStep)">
         <div class="step-info-text-container">
           <div class="step-info-text">
@@ -194,6 +194,7 @@ export default {
     justify-content: space-around;
     height: 100%;
     width: 133px;
+    box-shadow: inset 0 0 40px #ffffff;
   }
 
   .step-image-planet {
@@ -241,14 +242,6 @@ export default {
 
   .step-disables {
     opacity: 0.8;
-  }
-
-  @media only screen and (max-width : 1280px) and (max-height: 900px) {
-    $steps-height: 90vh;
-
-    .steps {
-      height: $steps-height;
-    }
   }
 
   /* Medium Devices, Desktops */
@@ -386,7 +379,7 @@ export default {
   }
 
   /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+  @media all and (max-device-width: 768px) and (max-device-height: 1024px) and (orientation:portrait) {
     $steps-height: 700px;
     $steps-width: 270px;
 
@@ -396,19 +389,28 @@ export default {
       margin-top: 80px;
     }
 
+    .step-info-text {
+      font-size: 18px;
+    }
+
     .steps-navigator-item {
       width: 240px;
+      height: 80px;
     }
   }
 
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    $steps-height: 700px;
-    $steps-width: 20px;
+    $steps-height: 500px;
+    $steps-width: 300px;
 
     .steps {
       width: $steps-width;
       height: $steps-height;
       margin-top: 80px;
+    }
+
+    .step-info-text {
+      font-size: 18px;
     }
 
     .steps-navigator-item {

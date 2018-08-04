@@ -6,8 +6,8 @@
       enter-active-class="animated zoomIn"
       leave-active-class="animated zoomOut"
     >
-      <congrats v-if="congratsShowing"></congrats>
-      <tryagain v-else-if="tryAgainShowing"></tryagain>
+      <congrats v-if="congratsShowing" :congrats="true"></congrats>
+      <congrats v-else-if="tryAgainShowing" :congrats="false"></congrats>
       <video-hint v-else-if="hintShowing.showing"></video-hint>
       <div v-else-if="gridMap" class="grid" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''">
         <div
@@ -72,7 +72,6 @@
 <script>
 import assets from '../assets/assets'
 import Congrats from './Congrats'
-import Tryagain from './Try_again'
 import VideoHint from './Video_hint'
 import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
@@ -174,7 +173,6 @@ export default {
   },
   components: {
     Congrats,
-    Tryagain,
     VideoHint,
     SplashScreen,
     RobotCarrying
@@ -323,7 +321,7 @@ export default {
   /* ipad pro Portrait */
   @media only screen
   and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
+  and (max-device-height: 1366px)
   and (orientation: portrait)
   and (-webkit-min-device-pixel-ratio: 1.5) {
     $grid-space-size: 56px;
@@ -336,8 +334,8 @@ export default {
       overflow: hidden;
 
       .portal {
-        height: 150%;
-        width: 150%;
+        height: 100%;
+        width: 100%;
       }
 
       .problem {
@@ -387,8 +385,8 @@ export default {
       overflow: hidden;
 
       .portal {
-        height: 150%;
-        width: 150%;
+        height: 100%;
+        width: 100%;
       }
 
       .problem {
@@ -438,8 +436,8 @@ export default {
       overflow: hidden;
 
       .portal {
-        height: 150%;
-        width: 150%;
+        height: 100%;
+        width: 100%;
       }
 
       .problem {
@@ -477,7 +475,7 @@ export default {
   @media only screen and (max-width: 823px) and (orientation: landscape) {
     $grid-space-size: 32px;
     $display-tool-size: 16px;
-    $grid-space-font-size: 14px;
+    $grid-space-font-size: 12px;
 
     .grid-space {
       height: $grid-space-size;
@@ -485,8 +483,8 @@ export default {
       overflow: hidden;
 
       .portal {
-        height: 150%;
-        width: 150%;
+        height: 100%;
+        width: 100%;
       }
 
       .problem {
@@ -632,7 +630,7 @@ export default {
   @media only screen and (max-width: 414px) {
     $grid-space-size: 32px;
     $display-tool-size: 18px;
-    $grid-space-font-size: 14px;
+    $grid-space-font-size: 10px;
 
     .grid-space {
       height: $grid-space-size;
@@ -640,8 +638,8 @@ export default {
       overflow: hidden;
 
       .portal {
-        height: 180%;
-        width: 180%;
+        height: 100%;
+        width: 100%;
       }
 
       .problem {
