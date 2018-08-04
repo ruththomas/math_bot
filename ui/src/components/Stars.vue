@@ -1,8 +1,8 @@
 <template>
   <div class="stars" :class="starGroup">
-    <star class="star-two" :active="stepStats.active" :success="success(2)"></star>
-    <star class="star-one" :active="stepStats.active" :success="success(1)"></star>
-    <star class="star-three" :active="stepStats.active" :success="success(3)"></star>
+    <star class="star-two" :star-group="starGroup" :active="stepStats.active" :success="success(2)"></star>
+    <star class="star-one" :star-group="starGroup" :active="stepStats.active" :success="success(1)"></star>
+    <star class="star-three" :star-group="starGroup" :active="stepStats.active" :success="success(3)"></star>
     <span v-if="timer.stars < 3" class="star-timer" :class="'star-timer-' + starGroup">{{ convertTime(remainingTime) }}</span>
   </div>
 </template>
@@ -73,6 +73,8 @@ $star-timer-margin-right: 5px;
 .stars {
   position: relative;
   display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 5px;
   cursor: pointer;
   height: 100%;
@@ -91,18 +93,18 @@ $star-timer-margin-right: 5px;
 }
 
 .star-cluster {
+  color: #ffffff;
   .star-one {
     align-self: flex-start;
-    margin-top: 10%;
+    margin-top: -10px;
   }
 
   .star-two, .star-three {
     align-self: flex-end;
-    margin-bottom: 10%;
+    margin-bottom: -10px;
   }
 
   .star-timer {
-    left: 40%;
     top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
   }
 }
