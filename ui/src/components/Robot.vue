@@ -239,6 +239,7 @@ export default {
   @media only screen and (max-width : 568px) and (orientation: landscape) {
 
     #control-panel-box {
+      flex: 0.8;
     }
 
     #grid-box {

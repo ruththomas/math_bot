@@ -145,6 +145,8 @@ module.exports = {
     robotDown: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522437155/robotDirections/PlayerDown_pjawwx.png',
     robotLeft: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522437164/robotDirections/RobotLeft_uf8xym.png'
   },
+  smileyFace: 'http://res.cloudinary.com/doohickey/image/upload/v1533412203/noun_Smile_898983_FFFFFF_zzh4b0.svg',
+  thinkingFace: 'http://res.cloudinary.com/doohickey/image/upload/v1533411940/noun_Thinking_Face_1058268_FFFFFF_u7yn0g.svg',
   openTrashCan: 'http://res.cloudinary.com/doohickey/image/upload/v1533054189/noun_open_trash_can_1064108_000000_lokvu5.svg',
   trashCan: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png',
   questionMark: 'http://res.cloudinary.com/doohickey/image/upload/v1533051790/noun_ask_1736315_000000_h0hrlp.svg',
@@ -159,7 +161,6 @@ module.exports = {
   instructionsRobot: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522347656/misc/instructionsRobot_bg7561.svg',
   speechBubble: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522347745/misc/speechBubble.png',
   gridMesh: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522345998/misc/grid-mesh_auu3wh.svg',
-  robotLogo: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522347839/misc/mathbotlogo.png',
   lock: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522347906/misc/lock.png',
   spaceShip: 'https://res.cloudinary.com/doohickey/image/upload/v1521989176/noun_1018446_cc_zvq5px.svg'
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
+  <div v-if="!congratsShowing && !tryAgainShowing" class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
     <function-drop
       :id="'edit-main'"
       :class="'edit-main-drop'"
@@ -61,6 +61,12 @@ export default {
     mainFunctionFunc () {
       const mainToken = this.$store.getters.getMainFunction
       return mainToken === null ? [] : mainToken.func
+    },
+    congratsShowing () {
+      return this.$store.getters.getCongratsShowing
+    },
+    tryAgainShowing () {
+      return this.$store.getters.getTryAgainShowing
     },
     showMesh () {
       return this.$store.getters.getShowMesh
@@ -312,12 +318,6 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
-    $edit-main-per-margin: 150px;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
 
     .bar {
       right: 10px;
@@ -357,12 +357,6 @@ export default {
     $edit-main-side-padding: 16%;
     $edit-main-top-bottom-padding: 0;
     $bar-height: 2px;
-    $edit-main-per-margin: 0;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
 
     .bar {
       right: 0;
@@ -399,22 +393,16 @@ export default {
     $edit-main-top-bottom-padding: 0;
     $bar-height: 2px;
     $bar-height: 1px;
-    $edit-main-per-margin: 140px;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
 
     .bar {
-      right: 0;
-      left: 0;
+      right: 10px;
+      left: 10px;
       top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 
     .dialog-button {
-      top: -15px;
+      top: -9px;
     }
 
     .play {
@@ -440,12 +428,6 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
-    $edit-main-per-margin: 100px;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
 
     .bar {
       right: 10px;
@@ -481,12 +463,6 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
-    $edit-main-per-margin: 100px;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
 
     .bar {
       right: 10px;
@@ -523,12 +499,6 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
-    $edit-main-per-margin: 80px;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
 
     .bar {
       right: 10px;
@@ -564,16 +534,10 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
-    $edit-main-per-margin: 50px;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
 
     .bar {
-      right: -15px;
-      left: -15px;
+      right: 5px;
+      left: 5px;
       top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
@@ -606,16 +570,10 @@ export default {
     $edit-main-padding-left: 12%;
     $edit-main-padding-right: 12%;
     $bar-height: 1px;
-    $edit-main-per-margin: 40px;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
 
     .bar {
-      right: -15px;
-      left: -15px;
+      right: 5px;
+      left: 5px;
       height: 1px;
     }
 
@@ -644,15 +602,6 @@ export default {
 
   /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
-    $edit-main-padding-left: 12%;
-    $edit-main-padding-right: 12%;
-    $edit-main-per-margin: 0;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
-
     .bar {
       right: 5px;
       left: 5px;

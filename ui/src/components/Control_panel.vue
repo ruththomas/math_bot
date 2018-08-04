@@ -1,5 +1,5 @@
 <template>
-  <div class="control-panel">
+  <div v-if="!congratsShowing && !tryAgainShowing" class="control-panel">
       <img @click="goToProfile()"
            class="return-to-profile"
            :src="permanentImages.returnToProfile"

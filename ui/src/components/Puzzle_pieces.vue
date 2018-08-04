@@ -267,8 +267,7 @@ export default {
     position: absolute;
     top: 93%;
     width: 90%;
-    max-height: 50px;
-    overflow: auto;
+    overflow: hidden;
     left: 1px;
     right: 0;
     margin-left: auto;
@@ -278,7 +277,7 @@ export default {
     line-height: 14px;
     font-weight: bold;
     text-align: center;
-    word-wrap: break-word;
+    /*word-wrap: break-word;*/
     white-space: normal;
     border-radius: 3px;
     background-color: $puzzle-piece-border-color;
@@ -296,7 +295,6 @@ export default {
   and (-webkit-min-device-pixel-ratio: 1.5) {
     $piece-size: 50px;
     $piece-margin: 2px;
-    $tab-insert-left: 26px;
     $tab-insert-width: 5px;
     $tab-size: 5px;
 
@@ -308,19 +306,19 @@ export default {
     }
 
     .puzzle-start, .puzzle-middle {
-      width: 27px;
+      width: calc(#{$piece-size} - #{$tab-insert-width});
     }
 
     .tab-insert {
       width: $tab-insert-width;
-      left: $tab-insert-left;
+      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
       height: $piece-size;
     }
 
     .notch {
       width: 10px;
       height: 10px;
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
+      left: 100px;
       background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
     }
 
@@ -344,7 +342,6 @@ export default {
   and (orientation : landscape) {
     $piece-size: 50px;
     $piece-margin: 2px;
-    $tab-insert-left: 26px;
     $tab-insert-width: 5px;
     $tab-size: 5px;
 
@@ -356,12 +353,12 @@ export default {
     }
 
     .puzzle-start, .puzzle-middle {
-      width: 27px;
+      width: calc(#{$piece-size} - #{$tab-insert-width});
     }
 
     .tab-insert {
       width: $tab-insert-width;
-      left: $tab-insert-left;
+      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
       height: $piece-size;
     }
 
@@ -404,12 +401,12 @@ export default {
     }
 
     .puzzle-start, .puzzle-middle {
-      width: 27px;
+      width: calc(#{$piece-size} - #{$tab-insert-width});
     }
 
     .tab-insert {
       width: $tab-insert-width;
-      left: $tab-insert-left;
+      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
       height: $piece-size;
     }
 
@@ -436,7 +433,6 @@ export default {
   @media only screen and (max-width: 823px) and (orientation: landscape) {
     $piece-size: 36px;
     $piece-margin: 2px;
-    $tab-insert-left: 26px;
     $tab-insert-width: 5px;
     $tab-size: 5px;
 
@@ -452,12 +448,12 @@ export default {
     }
 
     .puzzle-start, .puzzle-middle {
-      width: 27px;
+      width: calc(#{$piece-size} - #{$tab-insert-width});
     }
 
     .tab-insert {
       width: $tab-insert-width;
-      left: $tab-insert-left;
+      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
       height: $piece-size;
     }
 
@@ -484,7 +480,6 @@ export default {
   @media only screen and (max-width : 736px) and (orientation: landscape) {
     $piece-size: 36px;
     $piece-margin: 2px;
-    $tab-insert-left: 26px;
     $tab-insert-width: 5px;
     $tab-size: 5px;
 
@@ -500,12 +495,12 @@ export default {
     }
 
     .puzzle-start, .puzzle-middle {
-      width: 27px;
+      width: calc(#{$piece-size} - #{$tab-insert-width});
     }
 
     .tab-insert {
       width: $tab-insert-width;
-      left: $tab-insert-left;
+      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
       height: $piece-size;
     }
 
@@ -532,7 +527,6 @@ export default {
   @media only screen and (max-width: 667px) and (orientation: landscape) {
     $piece-size: 31px;
     $piece-margin: 2px;
-    $tab-insert-left: 26px;
     $tab-insert-width: 5px;
     $tab-size: 5px;
 
@@ -548,12 +542,12 @@ export default {
     }
 
     .puzzle-start, .puzzle-middle {
-      width: 27px;
+      width: calc(#{$piece-size} - #{$tab-insert-width});
     }
 
     .tab-insert {
       width: $tab-insert-width;
-      left: $tab-insert-left;
+      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
       height: $piece-size;
     }
 
@@ -580,7 +574,6 @@ export default {
   @media only screen and (max-width: 568px) and (orientation: landscape){
     $piece-size: 31px;
     $piece-margin: 2px;
-    $tab-insert-left: 26px;
     $tab-insert-width: 5px;
     $tab-size: 5px;
 
@@ -596,12 +589,12 @@ export default {
     }
 
     .puzzle-start, .puzzle-middle {
-      width: 27px;
+      width: calc(#{$piece-size} - #{$tab-insert-width});
     }
 
     .tab-insert {
       width: $tab-insert-width;
-      left: $tab-insert-left;
+      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
       height: $piece-size;
     }
 
@@ -628,7 +621,6 @@ export default {
   @media only screen and (max-width: 414px) {
     $piece-size: 31px;
     $piece-margin: 2px;
-    $tab-insert-left: 26px;
     $tab-insert-width: 5px;
     $tab-size: 5px;
 
@@ -644,12 +636,12 @@ export default {
     }
 
     .puzzle-start, .puzzle-middle {
-      width: 27px;
+      width: calc(#{$piece-size} - #{$tab-insert-width});
     }
 
     .tab-insert {
       width: $tab-insert-width;
-      left: $tab-insert-left;
+      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
       height: $piece-size;
     }
 
