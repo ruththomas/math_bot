@@ -4,7 +4,7 @@
   >
     <div v-if="congrats" class="won">
       <img class="congrats-icon won-icon" :src="permanentImages.smileyFace" />
-      <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'star-spread'"></stars>
+      <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
       <div class="text-minor">You won!</div>
     </div>
     <div v-else class="lost">

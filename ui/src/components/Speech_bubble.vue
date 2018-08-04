@@ -11,7 +11,6 @@
           :level="level"
           :step="step"
           :step-stats="stepStats"></stars>
-        <img :src="permanentImages.questionMark" />
       </div>
     </div>
   </div>
@@ -100,15 +99,9 @@ export default {
         height: 50%;
         display: flex;
         align-items: center;
+        justify-content: center;
         min-height: 25px;
         margin: 5%;
-        img {
-          position: absolute;
-          height: 25%;
-          top: 40%;
-          left: 50%;
-          transform: translate(-50%, 0);
-        }
       }
     }
 
