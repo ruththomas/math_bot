@@ -1,5 +1,5 @@
 <template>
-  <div class="commands" v-if="commands !== null && activeFunctions !== null">
+  <div class="commands" v-if="commands !== null && activeFunctions !== null && !congratsShowing && !tryAgainShowing">
     <popover-bucket
       v-if="commandEvt !== null"
       :evt="evt"
@@ -71,6 +71,12 @@ export default {
   mounted () {
   },
   computed: {
+    congratsShowing () {
+      return this.$store.getters.getCongratsShowing
+    },
+    tryAgainShowing () {
+      return this.$store.getters.getTryAgainShowing
+    },
     evt () {
       return this.commandEvt
     },
@@ -432,9 +438,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 48px;
     $functions-height: 65px;
-    $methods-margin-left: 140px;
-    $functions-margin-right: 180px;
-    $open-staged-right: 140px;
+    $methods-margin-left: 10px;
+    $functions-margin-right: 40px;
+    $open-staged-right: 10px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -467,9 +473,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 48px;
     $functions-height: 65px;
-    $methods-margin-left: 100px;
-    $functions-margin-right: 140px;
-    $open-staged-right: 110px;
+    $methods-margin-left: 10px;
+    $functions-margin-right: 40px;
+    $open-staged-right: 10px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -505,8 +511,8 @@ export default {
     $methods-height: 43px;
     $functions-height: 60px;
     $methods-margin-left: 10px;
-    $functions-margin-right: 50px;
-    $open-staged-right: 15px;
+    $functions-margin-right: 40px;
+    $open-staged-right: 10px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -541,9 +547,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 43px;
     $functions-height: 60px;
-    $methods-margin-left: 80px;
-    $functions-margin-right: 120px;
-    $open-staged-right: 80px;
+    $methods-margin-left: 10px;
+    $functions-margin-right: 40px;
+    $open-staged-right: 10px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -577,9 +583,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 43px;
     $functions-height: 69px;
-    $methods-margin-left: 30px;
-    $functions-margin-right: 70px;
-    $open-staged-right: 30px;
+    $methods-margin-left: 5px;
+    $functions-margin-right: 30px;
+    $open-staged-right: 5px;
     $methods-margin-top: -4px;
 
     .commands {
@@ -614,9 +620,9 @@ export default {
     $functions-padding-right: 0;
     $methods-height: 43px;
     $functions-height: 69px;
-    $methods-margin-left: 20px;
-    $functions-margin-right: 45px;
-    $open-staged-right: 20px;
+    $methods-margin-left: 5px;
+    $functions-margin-right: 30px;
+    $open-staged-right: 5px;
     $methods-margin-top: -4px;
 
     .commands {

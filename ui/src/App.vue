@@ -138,19 +138,32 @@ export default {
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  /* ipad landscape */
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    .dialog-button {
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 823px) {
     .dialog-button {
       height: 20px;
       width: 20px;
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
     .dialog-button {
-      height: 20px;
-      width: 20px;
+      height: 30px;
+      width: 30px;
     }
   }
 
@@ -167,28 +180,6 @@ export default {
     ::-webkit-scrollbar {
       width: 12px;
       height: 12px;
-    }
-  }
-
-  // ipad portrait
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : portrait) {
-    .dialog-button {
-      height: 30px;
-      width: 30px;
-    }
-  }
-
-  /* ipad landscape */
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : landscape) {
-    .dialog-button {
-      height: 30px;
-      width: 30px;
     }
   }
 

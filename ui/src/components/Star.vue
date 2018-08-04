@@ -28,5 +28,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .star { height: 100% }
   .heavy { font: bold 30px sans-serif; }
 </style>
