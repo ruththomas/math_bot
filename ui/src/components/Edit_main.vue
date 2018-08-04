@@ -53,10 +53,6 @@ import FunctionDrop from './Function_drop'
 import MainPlaceholder from './Main_placeholder'
 
 export default {
-  mounted () {
-    buildUtils._positionBar()
-    $(window).on('resize', buildUtils._positionBar.bind(buildUtils))
-  },
   computed: {
     mainFunctionFunc () {
       const mainToken = this.$store.getters.getMainFunction
@@ -241,7 +237,7 @@ export default {
   }
 
   .stop {
-    right: -58px;
+    right: 100px;
   }
 
   .trash {
@@ -249,7 +245,7 @@ export default {
   }
 
   .speed {
-    right: 60px;
+    right: 50px;
     background-color: #B8E986;
     border-radius: 50%;
     display: flex;
@@ -335,11 +331,11 @@ export default {
     }
 
     .stop {
-      right: -58px;
+      right: 80px;
     }
 
     .speed {
-      right: 60px;
+      right: 40px;
       font-size: 12px;
     }
 
@@ -374,7 +370,7 @@ export default {
     }
 
     .stop {
-      right: -40px;
+      right: 80px;
     }
 
     .speed {
@@ -410,11 +406,11 @@ export default {
     }
 
     .stop {
-      right: -40px;
+      right: 50px;
     }
 
     .speed {
-      right: 40px;
+      right: 25px;
       font-size: 16px;
     }
 

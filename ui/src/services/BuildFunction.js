@@ -51,14 +51,16 @@ class BuildFunction {
     return $(`.${targetClass}`)
   }
 
-  _positionBar (reset) {
+  _positionBar () {
     const $mainDropZone = this._$dropZone()
-    const $bar = $('.bar')
-    const mainDropZoneHalf = $mainDropZone.height() / 2
-    const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
-    const barOffsetTop = $bar.offset().top
-    const barPosTop = $bar.position().top
-    $bar.animate({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'}, 100)
+    if ($mainDropZone.length) {
+      const $bar = $('.bar')
+      const mainDropZoneHalf = $mainDropZone.height() / 2
+      const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
+      const barOffsetTop = $bar.offset().top
+      const barPosTop = $bar.position().top
+      $bar.animate({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'}, 100)
+    }
   }
 
   updateName () {
@@ -99,4 +101,6 @@ class BuildFunction {
   }
 }
 
-export default new BuildFunction()
+const buildUtils = new BuildFunction()
+$(window).on('resize', buildUtils._positionBar.bind(buildUtils))
+export default buildUtils
