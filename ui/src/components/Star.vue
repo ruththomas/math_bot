@@ -16,6 +16,7 @@
             </g>
           </g>
         </g>
+        <image v-if="starGroup === 'star-spread' && success && active" :xlink:href="permanentImages.questionMark" height="50%" width="50%" x="25%" y="28%" />
       </svg>
   </div>
 </template>
@@ -23,11 +24,19 @@
 <script>
 export default {
   name: 'Star',
-  props: ['active', 'success']
+  computed: {
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
+    }
+  },
+  props: ['starGroup', 'active', 'success']
 }
 </script>
 
 <style scoped lang="scss">
-  .star { height: 100% }
+  .star {
+    height: 100%;
+    display: flex;
+  }
   .heavy { font: bold 30px sans-serif; }
 </style>
