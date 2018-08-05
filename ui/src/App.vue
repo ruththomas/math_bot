@@ -92,6 +92,10 @@ export default {
   .dragging, .ghost, .chosen {
     height: 70px;
     width: 70px;
+
+    .pointer {
+      display: none;
+    }
   }
 
   .dragging {
@@ -110,6 +114,38 @@ export default {
     box-shadow: 0 0 0 rgb(184, 233, 134);
     animation: pulse 1s;
     animation-iteration-count: 2;
+  }
+
+  .pointer {
+    position: absolute;
+    width: 40px;
+    height: 20px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1011;
+  }
+
+  .pointer-hidden {
+    opacity: 0;
+  }
+
+  .pointer-size {
+    position: absolute;
+    border-style: solid;
+    border-width: 20px 18px 0 18px;
+  }
+
+  .pointer-body {
+    top: -1px;
+    z-index: 1001;
+    border-color: #000000 transparent transparent transparent;
+  }
+
+  .pointer-border {
+    top: 1px;
+    z-index: 0;
+    border-color: #737373 transparent transparent transparent;
   }
 
   @keyframes pulse {

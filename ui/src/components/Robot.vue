@@ -16,7 +16,8 @@
 
       <div id="edit-main-box">
         <trash></trash>
-        <editmain></editmain>
+        <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+        <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
       </div>
 
       <div id="commands-box">
@@ -44,6 +45,7 @@ import api from '../services/api'
 import utils from '../services/utils'
 import Robot from '../services/RobotState'
 import RobotCarrying from './Robot_carrying'
+import PopoverBucket from './Popover_bucket'
 
 export default {
   mounted () {
@@ -150,7 +152,8 @@ export default {
     Messages,
     ControlPanel,
     SplashScreen,
-    RobotCarrying
+    RobotCarrying,
+    PopoverBucket
   }
 }
 </script>
@@ -194,6 +197,7 @@ export default {
   #edit-main-box {
     display: flex;
     flex: 1;
+    z-index: 100;
     /*border: 1px solid mediumvioletred;*/
   }
 

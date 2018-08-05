@@ -61,6 +61,7 @@ export default {
     justify-content: center;
     align-items: center;
     margin: 0 auto;
+    color: #ffffff;
 
     .text-minor {
       font-size: $text-minor-font-size;

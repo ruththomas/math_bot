@@ -1,10 +1,4 @@
-# Load index page
-GET         /                                                                     controllers.Assets.at(path="/public", file="index.html")
-GET         /callback                                                             controllers.Assets.at(path="/public", file="index.html")
-GET         /about                                                                controllers.Assets.at(path="/public", file="index.html")
-GET         /robot                                                                controllers.Assets.at(path="/public", file="index.html")
-GET         /profile                                                              controllers.Assets.at(path="/public", file="index.html")
-
+GET         /                                                                     controllers.SpaController.index
 # Levels
 GET         /api/levels/getStep/:level/:step                                      controllers.LevelController.getStep(level, step, tokenId: Option[String])
 GET         /api/levels/getLevel/:level                                           controllers.LevelController.getLevel(level, tokenId: Option[String])
@@ -36,4 +30,4 @@ GET         /api/gameStats/getTokenCount                                        
 
 # !! This must be last - and may show an error until prod build !!
 # Map static resources from the /public folder to the file resource path
-GET         /*file                                                                controllers.Assets.at(path="/public", file)
+GET         /*file                                                                 controllers.SpaController.assetOrDefault(file)
