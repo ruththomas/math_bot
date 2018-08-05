@@ -97,6 +97,25 @@ export default {
     display: flex;
   }
 
+  .piece {
+    position: relative;
+    height: 75px;
+    width: 75px;
+    margin: $piece-margin;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+    color: white;
+    border: 1px solid;
+    background-color: #000000;
+    border-right: none;
+    background-size: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+  }
+
   .piece-default {
     border-color: $piece-default!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
@@ -167,23 +186,8 @@ export default {
     }
   }
 
-  .piece {
-    position: relative;
-    height: 75px;
-    width: 75px;
-    margin: $piece-margin;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
-    color: white;
-    background-color: #000000;
-    border: 1px solid $puzzle-piece-border-color;
-    border-right: none;
-    background-size: 70%;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
+  .full-indicator {
+    border-right: 4px solid $piece-red!important;
   }
 
   .piece:active {
