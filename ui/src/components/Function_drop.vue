@@ -5,14 +5,15 @@
       :class="[showMesh ? 'mesh-background' : '', origin + '-drop-zone']"
       :list="list"
       :options="options"
-      @add="add"
-      @change="change"
+      @add="add($event)"
+      @change="change($event)"
       @start="start"
       @end="end"
+      @remove="removed"
     >
       <function-box
         v-for="(func, ind) in list.concat(placeHolders)"
-        :class="func.placeholder ? 'placeholder-piece noDrag' : ''"
+        :class="func.placeholder ? 'placeholder-piece noDrag' : 'actual-piece'"
         :key="origin + '-drop/' + ind"
         :func="func"
         :ind="ind"
@@ -36,6 +37,7 @@ import _ from 'underscore'
 export default {
   name: 'function_drop',
   mounted () {
+    document.querySelector(`.${this.origin}-drop-zone`).addEventListener('dragover', this.hideFirstPlaceholder)
   },
   computed: {
     placeHolders () {
@@ -68,11 +70,25 @@ export default {
         })
         .value()
     },
-    enter () {
-      console.log('enter')
+    removed () {
+      const $dropZone = $(`.${this.origin}-drop-zone`)
+      const $placeholders = $dropZone.children('.placeholder-piece')
+      $placeholders.each((index, piece) => {
+        const $ele = $(piece)
+        $ele.removeClass('hide-piece')
+      })
     },
-    leave () {
-      console.log('leave')
+    hideFirstPlaceholder () {
+      const $dropZone = $(`.${this.origin}-drop-zone`)
+      const $placeholders = $dropZone.children('.placeholder-piece')
+      $placeholders.each((index, piece) => {
+        const $ele = $(piece)
+        if (index === 0) {
+          $ele.addClass('hide-piece')
+        } else {
+          $ele.removeClass('hide-piece')
+        }
+      })
     }
   },
   components: {
@@ -114,6 +130,10 @@ export default {
     .editFunction-drop-zone {
       justify-content: flex-start;
     }
+  }
+
+  .hide-piece {
+    opacity: 0!important;
   }
 
   .mesh-background {
