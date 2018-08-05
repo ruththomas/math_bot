@@ -1,7 +1,7 @@
 <template>
   <div class="staged-functions-container">
     <div class="staged-functions-header">
-      <span>Staged functions</span>
+      <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
     </div>
 
     <div class="staged-functions-content">
@@ -28,6 +28,7 @@
 import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
 import PuzzlePieces from './Puzzle_pieces'
+import utils from '../services/utils'
 
 export default {
   mounted () {
@@ -63,6 +64,12 @@ export default {
       }
     }
   },
+  methods: {
+    closeStagedFunctions () {
+      this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
+      this.$store.dispatch('updateEditingIndex', null)
+    },
+  },
   components: {
     draggable,
     FunctionBox,
@@ -85,7 +92,8 @@ export default {
   }
 
   .staged-functions-header {
-    display: /* flex */ none;
+    display: flex;
+    position: relative;
     height: 20%;
     justify-content: flex-start;
     align-items: center;
@@ -109,6 +117,12 @@ export default {
       justify-content: flex-start;
       margin: 0 auto;
     }
+  }
+
+  .close-popover {
+    position: absolute;
+    right: -20px;
+    top: -20px;
   }
 
   /* Medium Devices, Desktops */
