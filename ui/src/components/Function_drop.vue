@@ -6,25 +6,23 @@
       :list="list"
       :options="options"
       @add="add($event)"
-      @change="change($event)"
+      @change="[change($event), showIndicator = true]"
       @start="start"
       @end="end"
       @remove="removed"
     >
       <function-box
-        v-for="(func, ind) in list.concat(placeHolders)"
-        :class="func.placeholder ? 'placeholder-piece noDrag' : 'actual-piece'"
+        v-for="(func, ind) in list.concat(placeholders)"
+        :class="[
+          func.placeholder ? 'placeholder-piece noDrag' : 'actual-piece',
+          ind === sizeLimit - 1 && sizeLimit < 100 && !placeholders.length ? 'full-indicator' : ''
+        ]"
         :key="origin + '-drop/' + ind"
         :func="func"
         :ind="ind"
-        :collection="list.concat(placeHolders)"
+        :collection="list.concat(placeholders)"
         :origin="origin"
       ></function-box>
-
-      <div
-        v-if="list.length === this.sizeLimit"
-        class="function-full-bar noDrag"
-      ></div>
     </draggable>
   </div>
 </template>
@@ -40,7 +38,7 @@ export default {
     document.querySelector(`.${this.origin}-drop-zone`).addEventListener('dragover', this.hideFirstPlaceholder)
   },
   computed: {
-    placeHolders () {
+    placeholders () {
       if (this.sizeLimit < 100 && this.sizeLimit > 0) {
         return this.createPlaceHolders(this.sizeLimit).slice(this.list.length)
       } else {
@@ -59,6 +57,7 @@ export default {
   },
   data () {
     return {
+      showIndicator: true
     }
   },
   methods: {
@@ -79,16 +78,19 @@ export default {
       })
     },
     hideFirstPlaceholder () {
-      const $dropZone = $(`.${this.origin}-drop-zone`)
-      const $placeholders = $dropZone.children('.placeholder-piece')
-      $placeholders.each((index, piece) => {
-        const $ele = $(piece)
-        if (index === 0) {
-          $ele.addClass('hide-piece')
-        } else {
-          $ele.removeClass('hide-piece')
-        }
-      })
+      if (this.origin === this.functionAreaShowing) {
+        const $dropZone = $(`.${this.origin}-drop-zone`)
+        const $placeholders = $dropZone.children('.placeholder-piece')
+        this.showIndicator = false
+        $placeholders.each((index, piece) => {
+          const $ele = $(piece)
+          if (index === 0) {
+            $ele.addClass('hide-piece')
+          } else {
+            $ele.removeClass('hide-piece')
+          }
+        })
+      }
     }
   },
   components: {
@@ -120,12 +122,6 @@ export default {
       z-index: 999;
       padding-left: $drop-zone-padding-left;
       padding-right: $drop-zone-padding-right;
-
-      .function-full-bar {
-        height: 90%;
-        width: 2px;
-        background-color: $danger-color;
-      }
     }
     .editFunction-drop-zone {
       justify-content: flex-start;
@@ -155,9 +151,6 @@ export default {
 
   .placeholder-piece {
     opacity: 0.4;
-  }
-
-  .placeholder-piece:first-child {
   }
 
   .center-function-drop {
