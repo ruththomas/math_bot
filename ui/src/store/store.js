@@ -81,9 +81,13 @@ export default new Vuex.Store({
       showing: false,
       videoURL: ''
     },
-    videoTimers: {}
+    videoTimers: {},
+    editFunctionEvent: {}
   },
   mutations: {
+    UPDATE_EDIT_FUNCTION_EVENT (state, evt) {
+      state.editFunctionEvent = evt
+    },
     UPDATE_ACTIVES (state, actives) {
       state.auth.userToken.lambdas.activeFuncs = actives
     },
@@ -199,6 +203,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateEditFunctionEvent ({commit}, evt) {
+      commit('UPDATE_EDIT_FUNCTION_EVENT', evt)
+    },
     updateActives ({commit}, actives) {
       commit('UPDATE_ACTIVES', actives)
     },
@@ -312,6 +319,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getEditFunctionEvent: state => state.editFunctionEvent,
     getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,
     getCurrentUser: state => state.currentUser,

@@ -1,9 +1,9 @@
 <template>
   <div class="commands" v-if="commands !== null && activeFunctions !== null && !congratsShowing && !tryAgainShowing">
-    <popover-bucket
-      v-if="commandEvt !== null"
-      :evt="evt"
-    ></popover-bucket>
+    <!--<popover-bucket-->
+      <!--v-if="commandEvt !== null"-->
+      <!--:evt="evt"-->
+    <!--&gt;</popover-bucket>-->
 
     <div class="lambdas-container">
       <draggable
@@ -47,14 +47,12 @@
       </div>
     </div>
 
-    <img
+    <div
       id="open-staged"
       class="dialog-button"
-      v-if="this.stepData.stagedEnabled"
-      :class="functionAreaShowing === 'addFunction' ? 'rotate-to-x' : 'rotate-to-plus'"
       @click="toggleFunctionAdd"
-      :src="permanentImages.buttons.plusButton"
-      data-toggle="tooltip" :title="functionAreaShowing === 'addFunction' ? 'Close' : 'Open'" />
+      v-if="this.stepData.stagedEnabled">
+    </div>
   </div>
 </template>
 
@@ -153,7 +151,8 @@ export default {
         ghostClass: 'ghost',
         sort: false
       },
-      currentColor: this.colorSelected
+      currentColor: this.colorSelected,
+      editFunctionOpen: false
     }
   },
   methods: {
@@ -184,13 +183,16 @@ export default {
       this.$store.dispatch('updateEditingIndex', ind)
       this.$store.dispatch('updateFunctionAreaShowing', ind === null ? 'editMain' : 'editFunction')
     },
+    handleEditFunctionEvent (evt) {
+      this.$store.dispatch('updateEditFunctionEvent', evt.target)
+    },
     toggleFunctionAdd (evt) {
-      this.commandEvt = evt
+      this.handleEditFunctionEvent(evt)
       this.$store.dispatch('updateEditingIndex', null)
       this.$store.dispatch('updateFunctionAreaShowing', this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction')
     },
     editFunction (evt, func, ind) {
-      this.commandEvt = evt
+      this.handleEditFunctionEvent(evt)
       const i = ind === this.editingIndex ? null : ind
       if (i !== null) this.editingFunctionMessage(func)
       this.toggleEditFunction(i)
@@ -244,7 +246,7 @@ export default {
     height: 100%;
     margin: 0 auto;
     position: relative;
-    padding: 10px 0;
+    z-index: 1001;
   }
 
   .lambdas-container {
@@ -272,6 +274,7 @@ export default {
     height: 94px;
     border-radius: 3px;
     margin-left: -50px;
+    margin-top: 15px;
   }
 
   .methods > * {
@@ -284,6 +287,10 @@ export default {
     height: 100%;
     max-height: 140px;
     margin-left: 12px;
+
+    .piece {
+      margin-top: 20px;
+    }
 
     .functions {
       display: flex;
@@ -300,8 +307,10 @@ export default {
   #open-staged {
     position: absolute;
     right: -50px;
-    top: 10px;
+    top: 20px;
     z-index: 1000;
+    background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+    background-size: contain;
   }
 
   .rotate-to-x {
