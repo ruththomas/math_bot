@@ -1,16 +1,8 @@
 <template>
-  <div v-if="functionAreaShowing !== 'editMain'">
-    <div class="popover-bucket">
-      <div class="popover-bucket-content">
-        <staged-functions v-if="functionAreaShowing === 'addFunction'"></staged-functions>
-        <edit-function v-else></edit-function>
-      </div>
-      <div class="pointer-slider">
-        <div class="pointer">
-          <div class="pointer-size pointer-border"></div>
-          <div class="pointer-size pointer-body"></div>
-        </div>
-      </div>
+  <div class="popover-bucket">
+    <div class="popover-bucket-content">
+      <staged-functions v-if="functionAreaShowing === 'addFunction'"></staged-functions>
+      <edit-function v-else></edit-function>
     </div>
   </div>
 </template>
@@ -22,26 +14,25 @@ import PopoverBucket from '../services/PopoverBucket'
 
 export default {
   mounted () {
-    this.popoverBucket = new PopoverBucket(this, this.target)
+    this.popoverBucket = new PopoverBucket(this, this.editFunctionEvent)
+  },
+  beforeDestroy () {
+    this.popoverBucket.removePointer()
   },
   computed: {
+    editFunctionEvent () {
+      return this.$store.getters.getEditFunctionEvent
+    },
     editingIndex () {
       return this.$store.getters.getEditingIndex
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    },
-    target () {
-      return this.evt.target
     }
   },
-  updated () {
-    if (this.functionAreaShowing === 'editFunction' || this.functionAreaShowing === 'addFunction') this.popoverBucket.updateTarget(this, this.target)
-    else this.popoverBucket.killBucket()
-  },
   watch: {
-    target (target) {
-      this.popoverBucket.updateTarget(this, target)
+    editFunctionEvent (evt) {
+      this.popoverBucket = new PopoverBucket(this, evt)
     }
   },
   data () {
@@ -52,21 +43,16 @@ export default {
   components: {
     StagedFunctions,
     EditFunction
-  },
-  props: ['evt']
+  }
 }
 </script>
 
 <style scoped lang="scss">
-  $popover-bucket-top: -200px;
-
   .popover-bucket {
-    height: 190px;
-    left: 0;
-    right: 0;
     z-index: 1010;
-    position: absolute;
-    top: $popover-bucket-top;
+    height: calc(100% + 60px);
+    margin-top: -58px;
+    width: 100%;
   }
 
   .staged-popover-bucket {
@@ -83,41 +69,6 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-  }
-
-  .pointer-slider {
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  .pointer {
-    position: absolute;
-    width: 40px;
-    height: 20px;
-    margin-top: -1px;
-  }
-
-  .pointer-hidden {
-    opacity: 0;
-  }
-
-  .pointer-size {
-    position: absolute;
-    border-style: solid;
-    border-width: 20px 18px 0 18px;
-  }
-
-  .pointer-body {
-    top: -1px;
-    z-index: 1001;
-    border-color: #000000 transparent transparent transparent;
-  }
-
-  .pointer-border {
-    top: 1px;
-    z-index: 0;
-    border-color: #737373 transparent transparent transparent;
   }
 
   @media only screen and (max-width : 823px) and (orientation: landscape) {
