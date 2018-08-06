@@ -125,12 +125,29 @@ export default {
   }
 
   /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  @media only screen and (max-width : 812px) {
+    .close-popover {
+      position: absolute;
+      right: -10px;
+      top: -10px;
+    }
+  }
+
+  @media only screen and (max-width: 736px) {
+    .close-popover {
+      position: absolute;
+      right: -10px;
+      top: -10px;
+    }
   }
 
   /* Small Devices */
   @media only screen and (max-width : 667px) {
-
+    .close-popover {
+      position: absolute;
+      right: -10px;
+      top: -10px;
+    }
   }
 
   /* iphone 5 landscape */
@@ -148,10 +165,16 @@ export default {
         font-size: 12px;
       }
     }
+
+    .close-popover {
+      position: absolute;
+      right: 5px;
+      top: -10px;
+    }
   }
 
   /* iphone 5 portrait */
-  @media only screen and (max-width : 320px) {
+  @media only screen and (max-width : 414px) {
     $staged-functions-padding-left: 15.5px;
 
     .staged-functions {
@@ -164,6 +187,12 @@ export default {
       span {
         font-size: 12px;
       }
+    }
+
+    .close-popover {
+      position: absolute;
+      right: 12px;
+      top: -10px;
     }
   }
 
