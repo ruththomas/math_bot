@@ -6,7 +6,7 @@
       :list="list"
       :options="options"
       @add="add($event)"
-      @change="[change($event), showIndicator = true]"
+      @change="[change($event), showIndicator = true, centerDropped($event, true)]"
       @start="start"
       @end="end"
       @remove="removed"
@@ -36,6 +36,7 @@ export default {
   name: 'function_drop',
   mounted () {
     document.querySelector(`.${this.origin}-drop-zone`).addEventListener('dragover', this.hideFirstPlaceholder)
+    this.centerDropped({added: {newIndex: this.list.length - 1}})
   },
   computed: {
     placeholders () {
@@ -91,6 +92,35 @@ export default {
           }
         })
       }
+    },
+    centerDropped (evt) {
+      const $dropZone = $(`.${this.origin}-drop-zone`)
+      const dropZoneWidth = $dropZone.innerWidth()
+      const $functionDrop = $dropZone.parent()
+      const dropWidth = $functionDrop.width()
+      const scrollTooIndex = evt.moved ? evt.moved.newIndex : evt.added ? evt.added.newIndex : evt.removed.oldIndex
+      const dropZoneChildren = $dropZone.children()
+      const $dropped = $(dropZoneChildren[scrollTooIndex])
+      const droppedWidth = $dropped.width()
+
+      dropZoneChildren.each(function () {
+        const $ele = $(this)
+        $ele.removeClass('dropped-indication')
+        $ele.find('.tab-insert').removeClass('dropped-indication')
+      })
+
+      $dropped.addClass('dropped-indication')
+      $dropped.find('.tab-insert').addClass('dropped-indication')
+
+      if (dropZoneWidth > dropWidth) {
+        $dropZone.css({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`})
+      } else {
+        $dropZone.css({'padding-right': 0})
+      }
+
+      $functionDrop.animate({
+        scrollLeft: $dropped.position().left - (dropWidth / 2) + (droppedWidth / 2)
+      }, 800)
     }
   },
   components: {
@@ -110,7 +140,7 @@ export default {
     overflow: auto;
     height: 100%;
     width: 100%;
-    z-index: 998;
+    z-index: 1010;
     .function-drop-drop-zone {
       position: relative;
       width: min-content;

@@ -192,6 +192,8 @@ export default {
     width: 100%;
     height: 100%;
     display: flex;
+    color: #ffffff;
+    z-index: 99;
   }
 
   .grid {
@@ -200,7 +202,6 @@ export default {
     border-radius: $grid-border-radius;
     flex-wrap: wrap;
     margin: 0 auto;
-    z-index: 100;
   }
 
   .grid-row {
