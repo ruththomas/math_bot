@@ -143,7 +143,6 @@ export default {
     overflow: auto;
     height: 100%;
     width: 100%;
-    z-index: 1010;
     .function-drop-drop-zone {
       position: relative;
       width: min-content;
