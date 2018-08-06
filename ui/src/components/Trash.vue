@@ -51,9 +51,9 @@ export default {
 <style scoped lang="scss">
   .fire {
     position: absolute;
-    z-index: 101;
+    z-index: 100;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.1);
   }
 </style>
