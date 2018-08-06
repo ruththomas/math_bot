@@ -98,7 +98,7 @@ export default {
       const dropZoneWidth = $dropZone.innerWidth()
       const $functionDrop = $dropZone.parent()
       const dropWidth = $functionDrop.width()
-      const scrollTooIndex = evt.moved ? evt.moved.newIndex : evt.added ? evt.added.newIndex : evt.removed.oldIndex
+      const scrollTooIndex = evt.moved ? evt.moved.newIndex : evt.added ? evt.added.newIndex : evt.removed.oldIndex - 1
       const dropZoneChildren = $dropZone.children()
       const $dropped = $(dropZoneChildren[scrollTooIndex])
       const droppedWidth = $dropped.width()

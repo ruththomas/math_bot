@@ -36,6 +36,7 @@ export default {
     z-index: 1001;
     display: flex;
     flex-direction: column;
+    color: #ffffff;
   }
 
   .message {
