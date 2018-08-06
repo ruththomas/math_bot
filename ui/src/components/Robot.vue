@@ -236,7 +236,22 @@ export default {
 
   }
 
+  @media only screen and (max-width: 823px) {
+    #commands-box {
+      flex: 1.8;
+    }
+  }
+
+  @media only screen and (max-width: 736px) {
+    #commands-box {
+      flex: 1.8;
+    }
+  }
+
   @media only screen and (max-width : 667px) and (orientation: landscape) {
+    #commands-box {
+      flex: 1.8;
+    }
   }
 
   /* iphone 5 landscape */
@@ -254,7 +269,7 @@ export default {
     }
 
     #commands-box {
-      flex: 1.1;
+      flex: 1.8;
     }
 
     #robot {
