@@ -351,7 +351,7 @@ export default {
 
   /* ipad pro Portrait */
   @media only screen
-  and (min-device-width: 1024px)
+  and (min-device-width: 1025px)
   and (max-device-width: 1366px)
   and (orientation: portrait)
   and (-webkit-min-device-pixel-ratio: 1.5) {
@@ -379,44 +379,8 @@ export default {
       }
 
       .close-edit-function {
-        bottom: 10px;
-        right: -10px;
-      }
-    }
-  }
-
-  /* ipad pro Landscape */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: landscape)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-    $piece-size: 36px;
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 12px;
-
-        .displayed-func {
-          height: $piece-size;
-          width: $piece-size;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-          width: 100px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 10px;
-        right: -10px;
+        bottom: 15px;
+        right: -15px;
       }
     }
   }
@@ -426,12 +390,13 @@ export default {
   and (min-device-width : 768px)
   and (max-device-width : 1024px)
   and (orientation : landscape) {
-    $piece-size: 36px;
+    $piece-size: 50px;
     .edit-function-data {
       top: -85px;
 
       .func-param-form {
-        left: 12px;
+        left: 30px;
+        bottom: -5px;
 
         .displayed-func {
           height: $piece-size;
@@ -451,7 +416,7 @@ export default {
 
       .close-edit-function {
         bottom: 10px;
-        right: -10px;
+        right: -15px;
       }
     }
   }
@@ -461,12 +426,13 @@ export default {
   and (min-device-width : 768px)
   and (max-device-width : 1024px)
   and (orientation : portrait) {
-    $piece-size: 36px;
+    $piece-size: 50px;
     .edit-function-data {
       top: -85px;
 
       .func-param-form {
         left: 12px;
+        bottom: -5px;
 
         .displayed-func {
           height: $piece-size;
@@ -486,12 +452,12 @@ export default {
 
       .close-edit-function {
         bottom: 10px;
-        right: -10px;
+        right: -15px;
       }
     }
   }
 
-  @media only screen and (max-width : 823px) {
+  @media only screen and (max-width : 823px) and (orientation: landscape) {
     $piece-size: 36px;
     .edit-function-data {
       top: -85px;
