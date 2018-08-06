@@ -95,17 +95,18 @@ export default {
     },
     centerDropped (evt) {
       const $dropZone = $(`.${this.origin}-drop-zone`)
-      const dropZoneWidth = $dropZone.innerWidth()
       const $functionDrop = $dropZone.parent()
       const dropWidth = $functionDrop.width()
       const scrollTooIndex = evt.moved ? evt.moved.newIndex : evt.added ? evt.added.newIndex : evt.removed.oldIndex - 1
       const dropZoneChildren = $dropZone.children()
       const $dropped = $(dropZoneChildren[scrollTooIndex])
       const droppedWidth = $dropped.width()
+      let childrenWidthSum = 0
 
       if (dropZoneChildren.length) {
         dropZoneChildren.each(function () {
           const $ele = $(this)
+          childrenWidthSum += $ele.outerWidth()
           $ele.removeClass('dropped-indication')
           $ele.find('.tab-insert').removeClass('dropped-indication')
         })
@@ -113,7 +114,7 @@ export default {
         $dropped.addClass('dropped-indication')
         $dropped.find('.tab-insert').addClass('dropped-indication')
 
-        if (dropZoneWidth > dropWidth) {
+        if ((childrenWidthSum * 2) > dropWidth) {
           $dropZone.css({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`})
         } else {
           $dropZone.css({'padding-right': 0})
