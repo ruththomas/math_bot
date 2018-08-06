@@ -249,7 +249,7 @@ export default {
     height: 100%;
     margin: 0 auto;
     position: relative;
-    z-index: 1001;
+    z-index: 99;
   }
 
   .lambdas-container {
@@ -292,7 +292,7 @@ export default {
       display: flex;
       height: 100%;
       width: min-content;
-      padding: 0 $functions-padding-right 0 $functions-padding-left;
+      padding: 0 0 0 $functions-padding-left;
     }
   }
 

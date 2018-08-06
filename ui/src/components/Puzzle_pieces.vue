@@ -92,6 +92,7 @@ export default {
   $piece-pink: #FF98B1;
   $piece-red: #F25C5C;
   $piece-purple: #CA7AFF;
+  $click-color: #B8E986;
 
   .puzzle-piece {
     display: flex;
@@ -114,6 +115,10 @@ export default {
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
+  }
+
+  .dropped-indication {
+    box-shadow: 0 -2px 0 0 $click-color;
   }
 
   .piece-default {

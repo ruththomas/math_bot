@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <draggable
-      v-if="trashVisible"
-      class="fire"
-      :list="trash"
-      :options="trashDraggableData"
-      @change="dumpTrash($event)"
-      @onDragOver="test($event)"
-    >
-    </draggable>
-  </div>
+  <draggable
+    v-if="trashVisible"
+    class="fire"
+    :list="trash"
+    :options="trashDraggableData"
+    @change="dumpTrash($event)"
+    @onDragOver="test($event)"
+  >
+  </draggable>
 </template>
 
 <script>
@@ -52,13 +50,10 @@ export default {
 
 <style scoped lang="scss">
   .fire {
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    bottom: 0;
-    right: 0;
-    z-index: 105;
-    height: 200vh;
-    width: 200vw;
+    position: absolute;
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
   }
 </style>

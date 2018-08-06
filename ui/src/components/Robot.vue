@@ -1,5 +1,6 @@
 <template>
   <div class="robot-container" data-aos="fade-in" v-if="auth.authenticated">
+    <trash></trash>
     <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
     <div  v-else id="robot" class="row animated">
 
@@ -9,20 +10,17 @@
 
       <div id="grid-box">
         <grid></grid>
-        <trash></trash>
       </div>
 
       <messages></messages>
 
       <div id="edit-main-box">
-        <trash></trash>
         <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
         <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
       </div>
 
       <div id="commands-box">
         <commands></commands>
-        <trash></trash>
       </div>
 
       <!--<div class="filler-box"></div>-->

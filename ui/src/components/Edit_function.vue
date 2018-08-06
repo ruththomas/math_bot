@@ -246,7 +246,7 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
-    z-index: 10001;
+    z-index: 99;
     overflow: visible;
   }
 
