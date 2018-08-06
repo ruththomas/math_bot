@@ -51,7 +51,7 @@ export default {
   $popover-margin-top: 60px;
 
   .popover-bucket {
-    z-index: 1010;
+    z-index: 100;
     height: calc(100% + #{$popover-margin-top} + 2px);
     width: 100%;
     margin: calc(-#{$popover-margin-top}) auto;

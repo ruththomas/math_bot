@@ -193,7 +193,7 @@ export default {
     width: 100%;
     margin: 0 auto;
     height: 100%;
-    z-index: 1000;
+    z-index: 99;
     padding: $edit-main-top-bottom-padding $edit-main-side-padding $edit-main-top-bottom-padding $edit-main-side-padding;
   }
 
@@ -205,7 +205,7 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(50% + #{$bar-height});
+    top: calc(50% + calc(#{$bar-height} / 2));
     height: $bar-height;
     background-color: #B8E986;
     display: flex;

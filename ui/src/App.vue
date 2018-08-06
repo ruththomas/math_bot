@@ -31,7 +31,7 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #FFFFFF;
+    color: #000000;
     height: 100vh;
     width: 100vw;
     background-color: #000000!important;
@@ -124,7 +124,7 @@ export default {
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1011;
+    z-index: 100;
   }
 
   .pointer-hidden {
@@ -147,6 +147,50 @@ export default {
     top: 1px;
     z-index: 0;
     border-color: #737373 transparent transparent transparent;
+  }
+
+  .arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 5px;
+  }
+
+  .right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+
+  .left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+
+  .up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+  }
+
+  .down {
+    transform: rotate(145deg);
+    -webkit-transform: rotate(45deg);
+  }
+
+  @keyframes bounce {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-5px);
+    }
+  }
+  @-webkit-keyframes bounce {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-5px);
+    }
   }
 
   @keyframes pulse {
