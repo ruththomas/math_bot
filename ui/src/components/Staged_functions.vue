@@ -28,7 +28,6 @@
 import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
 import PuzzlePieces from './Puzzle_pieces'
-import utils from '../services/utils'
 
 export default {
   mounted () {
@@ -68,7 +67,7 @@ export default {
     closeStagedFunctions () {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
       this.$store.dispatch('updateEditingIndex', null)
-    },
+    }
   },
   components: {
     draggable,
