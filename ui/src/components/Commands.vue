@@ -6,23 +6,25 @@
     <!--&gt;</popover-bucket>-->
 
     <div class="lambdas-container">
-      <draggable
-        class="methods"
-        :list="commands"
-        :options="commandOptions"
-        @start="start"
-        @end="end"
-      >
-        <function-box
-          v-for="(command, ind) in commands"
-          :key="command.id"
-          :func="command"
-          :ind="ind"
-          :collection="commands"
-          :origin="'functions'"
-          v-on:click.native="notEditableMessage"
-        ></function-box>
-      </draggable>
+      <div class="methods-container">
+        <draggable
+          class="methods"
+          :list="commands"
+          :options="commandOptions"
+          @start="start"
+          @end="end"
+        >
+          <function-box
+            v-for="(command, ind) in commands"
+            :key="command.id"
+            :func="command"
+            :ind="ind"
+            :collection="commands"
+            :origin="'functions'"
+            v-on:click.native="notEditableMessage"
+          ></function-box>
+        </draggable>
+      </div>
 
       <div class="functions-container">
         <draggable
@@ -233,6 +235,7 @@ export default {
   $click-color: #B8E986;
   $functions-padding-left: 30px;
   $functions-padding-right: 75%;
+  $functions-piece-margin-top: 20px;
 
   .invisible {
     visibility: hidden;
@@ -257,28 +260,21 @@ export default {
     justify-content: flex-start;
   }
 
-  .lambdas-container > * {
-    display: flex;
-    padding: 0 3px 0 0;
-    z-index: 100;
-    justify-content: flex-start;
-  }
-
   .command-border-info {
     border: 1px solid rgb(0, 0, 255)!important;
   }
 
-  .methods {
-    border: 1px solid $click-color;
-    background-color: rgba(0, 0, 0, 0.6);
-    height: 94px;
-    border-radius: 3px;
+  .methods-container {
+    display: table;
     margin-left: -50px;
-    margin-top: 15px;
-  }
+    margin-top: calc(#{$functions-piece-margin-top} - 5px);
 
-  .methods > * {
-    float: left;
+    .methods {
+      display: flex;
+      border: 1px solid $click-color;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 3px;
+    }
   }
 
   .functions-container {
@@ -289,7 +285,7 @@ export default {
     margin-left: 12px;
 
     .piece {
-      margin-top: 20px;
+      margin-top: $functions-piece-margin-top;
     }
 
     .functions {
@@ -331,22 +327,28 @@ export default {
   and (-webkit-min-device-pixel-ratio: 1.5) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 61px;
-    $functions-height: 150px;
-    $methods-margin-left: 0;
-    $functions-margin-right: 35px;
-    $open-staged-right: 0;
-    $methods-margin-top: -3px;
+    $functions-height: 90px;
+    $functions-margin-right: 30px;
+    $open-staged-right: 5px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 10px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -357,10 +359,19 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
 
@@ -370,22 +381,28 @@ export default {
   and (orientation : landscape) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 61px;
-    $functions-height: 150px;
-    $methods-margin-left: 150px;
-    $functions-margin-right: 190px;
-    $open-staged-right: 150px;
-    $methods-margin-top: -4px;
+    $functions-height: 140px;
+    $functions-margin-right: 40px;
+    $open-staged-right: 5px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 20px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -396,10 +413,19 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
 
@@ -409,22 +435,28 @@ export default {
   and (orientation : portrait) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 61px;
-    $functions-height: 150px;
-    $methods-margin-left: 0;
-    $functions-margin-right: 35px;
-    $open-staged-right: 0;
-    $methods-margin-top: -3px;
+    $functions-height: 140px;
+    $functions-margin-right: 40px;
+    $open-staged-right: 5px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 20px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -435,32 +467,47 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
 
   @media only screen and (max-width: 823px) and (orientation: landscape) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 48px;
-    $functions-height: 65px;
-    $methods-margin-left: 10px;
-    $functions-margin-right: 40px;
-    $open-staged-right: 10px;
-    $methods-margin-top: -4px;
+    $functions-height: 90px;
+    $functions-margin-right: 30px;
+    $open-staged-right: 5px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 10px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -471,31 +518,46 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
   @media only screen and (max-width : 736px) and (orientation: landscape) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 48px;
-    $functions-height: 65px;
-    $methods-margin-left: 10px;
-    $functions-margin-right: 40px;
-    $open-staged-right: 10px;
-    $methods-margin-top: -4px;
+    $functions-height: 90px;
+    $functions-margin-right: 30px;
+    $open-staged-right: 5px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 10px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -506,10 +568,19 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
 
@@ -517,22 +588,28 @@ export default {
   @media only screen and (max-width : 667px) and (orientation: landscape) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 43px;
-    $functions-height: 60px;
-    $methods-margin-left: 10px;
-    $functions-margin-right: 40px;
-    $open-staged-right: 10px;
-    $methods-margin-top: -4px;
+    $functions-height: 90px;
+    $functions-margin-right: 30px;
+    $open-staged-right: 5px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 10px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -543,10 +620,19 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
 
@@ -554,22 +640,28 @@ export default {
   @media only screen and (max-width : 568px) and (orientation: landscape){
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 43px;
-    $functions-height: 60px;
-    $methods-margin-left: 10px;
-    $functions-margin-right: 40px;
-    $open-staged-right: 10px;
-    $methods-margin-top: -4px;
+    $functions-height: 90px;
+    $functions-margin-right: 30px;
+    $open-staged-right: 5px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 10px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -580,32 +672,47 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
 
   @media only screen and (max-width: 414px) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 43px;
-    $functions-height: 69px;
-    $methods-margin-left: 5px;
+    $functions-height: 90px;
     $functions-margin-right: 30px;
     $open-staged-right: 5px;
-    $methods-margin-top: -4px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 10px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -616,10 +723,19 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
 
@@ -627,22 +743,28 @@ export default {
   @media only screen and (max-width: 375px) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 43px;
-    $functions-height: 69px;
-    $methods-margin-left: 5px;
+    $functions-height: 90px;
     $functions-margin-right: 30px;
     $open-staged-right: 5px;
-    $methods-margin-top: -4px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 10px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -653,32 +775,47 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
   /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
     $functions-padding-left: 0;
     $functions-padding-right: 0;
-    $methods-height: 43px;
-    $functions-height: 69px;
-    $methods-margin-left: 5px;
+    $functions-height: 90px;
     $functions-margin-right: 30px;
     $open-staged-right: 5px;
-    $methods-margin-top: -4px;
+    $methods-margin-left: 5px;
+    $functions-piece-margin-top: 10px;
+    $commands-margin-top-diff: 3px;
 
     .commands {
       width: 100%;
     }
 
-    .methods {
-      margin-top: $methods-margin-top;
+    .methods-container {
+      display: table;
       margin-left: $methods-margin-left;
-      padding: 3px;
-      height: $methods-height;
+      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
+
+      .methods {
+        display: flex;
+        border: 1px solid $click-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+      }
     }
 
     .functions-container {
@@ -689,10 +826,19 @@ export default {
       .functions {
         padding: 0 $functions-padding-right 0 $functions-padding-left;
       }
+
+      .piece {
+        margin-top: $functions-piece-margin-top;
+      }
     }
 
     #open-staged {
+      position: absolute;
       right: $open-staged-right;
+      top: $functions-piece-margin-top;
+      z-index: 1000;
+      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+      background-size: contain;
     }
   }
 </style>

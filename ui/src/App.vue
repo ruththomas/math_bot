@@ -24,6 +24,7 @@ export default {
 
 <style lang="scss">
   $click-color: #B8E986;
+  $pointer-size: 20px;
 
   body {
     font-family: "Proba Pro Regular", serif;
@@ -118,8 +119,8 @@ export default {
 
   .pointer {
     position: absolute;
-    width: 40px;
-    height: 20px;
+    width: calc(#{$pointer-size} * 2);
+    height: $pointer-size;
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
@@ -133,7 +134,7 @@ export default {
   .pointer-size {
     position: absolute;
     border-style: solid;
-    border-width: 20px 18px 0 18px;
+    border-width: $pointer-size $pointer-size 0 $pointer-size;
   }
 
   .pointer-body {
@@ -174,22 +175,36 @@ export default {
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
 
-  /* ipad landscape */
   @media only screen
   and (min-device-width : 768px)
   and (max-device-width : 1024px)
   and (orientation : landscape) {
-    .dialog-button {
-      height: 30px;
-      width: 30px;
-    }
-  }
+    $pointer-size: 20px;
+    $dialog-button-size: 30px;
 
-  /* Small Devices */
-  @media only screen and (max-width : 823px) {
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
+
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
     .dialog-button {
-      height: 20px;
-      width: 20px;
+      height: $dialog-button-size;
+      width: $dialog-button-size;
     }
   }
 
@@ -197,25 +212,237 @@ export default {
   and (min-device-width : 768px)
   and (max-device-width : 1024px)
   and (orientation : portrait) {
+    $pointer-size: 20px;
+    $dialog-button-size: 30px;
+
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
+
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
     .dialog-button {
-      height: 30px;
-      width: 30px;
+      height: $dialog-button-size;
+      width: $dialog-button-size;
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-  }
+  @media only screen and (max-width: 823px) and (orientation: landscape){
+    $pointer-size: 10px;
+    $dialog-button-size: 20px;
 
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) {
-  }
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
 
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
+    .dialog-button {
+      height: $dialog-button-size;
+      width: $dialog-button-size;
+    }
+  }
+  @media only screen and (max-width: 736px) {
+    $pointer-size: 10px;
+    $dialog-button-size: 20px;
+
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
+
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
+    .dialog-button {
+      height: $dialog-button-size;
+      width: $dialog-button-size;
+    }
+  }
+  @media only screen and (max-width: 667px) {
+    $pointer-size: 10px;
+    $dialog-button-size: 20px;
+
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
+
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
+    .dialog-button {
+      height: $dialog-button-size;
+      width: $dialog-button-size;
+    }
+  }
+  @media only screen and (max-width: 568px) {
+    $pointer-size: 10px;
+    $dialog-button-size: 20px;
+
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
+
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
+    .dialog-button {
+      height: $dialog-button-size;
+      width: $dialog-button-size;
+    }
+  }
+  @media only screen and (max-width: 414px) {
+    $pointer-size: 10px;
+    $dialog-button-size: 20px;
+
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
+
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
+    .dialog-button {
+      height: $dialog-button-size;
+      width: $dialog-button-size;
+    }
+  }
+  @media only screen and (max-width: 375px) {
+    $pointer-size: 10px;
+    $dialog-button-size: 20px;
+
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
+
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
+    .dialog-button {
+      height: $dialog-button-size;
+      width: $dialog-button-size;
+    }
+  }
   /* iphone 5 portrait */
-  @media only screen and (max-width : 414px) {
-    ::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
+  @media only screen and (max-width : 320px) {
+    $pointer-size: 10px;
+    $dialog-button-size: 20px;
+
+    .pointer {
+      position: absolute;
+      width: calc(#{$pointer-size} * 2);
+      height: $pointer-size;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1011;
+    }
+
+    .pointer-hidden {
+      opacity: 0;
+    }
+
+    .pointer-size {
+      position: absolute;
+      border-style: solid;
+      border-width: $pointer-size $pointer-size 0 $pointer-size;
+    }
+
+    .dialog-button {
+      height: $dialog-button-size;
+      width: $dialog-button-size;
     }
   }
 
@@ -232,219 +459,5 @@ export default {
     border: solid 8px transparent;
     border-radius: 10px;
     background: transparent;
-  }
-</style>
-
-<style lang="scss">
-  $pagination-active-color: #B8E986;
-  $pagination-inactive-color: rgba(255, 255, 255, 0.3);
-  $pagination-bullet-size: 14px;
-  $button-height: 100%;
-  $button-offset: -47px;
-  $edit-main-button-offset-left: -41px;
-  $edit-main-button-offset-right: -29px;
-
-  .swiper-container {
-    display: flex;
-    height: 100%;
-    width: 100%;
-  }
-
-  .swiper-wrapper {
-    width: 100%;
-  }
-
-  .swiper-slide {
-    width: 100%;
-  }
-
-  .swiper-slide:first-child {
-    .editMain-function-drop {
-      justify-content: flex-end;
-      padding-right: 49px;
-    }
-  }
-
-  .swiper-pagination.swiper-pagination-bullets {
-    bottom: -3px;
-  }
-
-  .swiper-pagination-bullet-custom {
-    width: $pagination-bullet-size;
-    height: $pagination-bullet-size;
-    text-align: center;
-    line-height: 20px;
-    font-size: 12px;
-    color: #000;
-    opacity: 1;
-    background: $pagination-inactive-color;
-  }
-
-  .swiper-pagination-bullet-custom.swiper-pagination-bullet-active {
-    color: #fff;
-    background: $pagination-active-color;
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .swiper-button-next, .swiper-button-prev {
-    height: 100%;
-    top: 0;
-    bottom: 0;
-    margin: 0;
-    width: auto;
-    display: flex;
-    align-items: center;
-    background: none;
-    cursor: pointer;
-    .piece {
-      cursor: pointer!important;
-    }
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .functions-swiper {
-    .swiper-button-next, .swiper-button-prev {
-      align-items: flex-start;
-    }
-  }
-
-  .swiper-button-prev {
-    left: $button-offset;
-  }
-
-  .swiper-button-next {
-    right: $button-offset;
-  }
-
-  .swiper-button-slide-right {
-    transition-duration: 300ms;
-    transform: translate3d(90px, 0px, 0px);
-  }
-
-  .swiper-button-slide-left {
-    transition-duration: 300ms;
-    transform: translate3d(-90px, 0px, 0px);
-  }
-
-  .editMain-function-drop-swiper {
-    .swiper-button-prev {
-      left: $edit-main-button-offset-left;
-    }
-
-    .swiper-button-next {
-      right: $edit-main-button-offset-right;
-    }
-  }
-
-  .swiper-button-disabled {
-    display: none
-  }
-
-  .hidden-swiper-pagination {
-    opacity: 0;
-  }
-
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-
-  }
-
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) {
-    $pagination-bullet-size: 8px;
-    $button-offset: -21px;
-    $button-height: 32px;
-    $edit-main-button-offset-right: -13px;
-    $edit-main-button-offset-left: -21px;
-
-    .swiper-button-prev {
-      left: $button-offset;
-    }
-
-    .swiper-button-next {
-      right: $button-offset;
-    }
-
-    .swiper-pagination-bullet-custom {
-      width: $pagination-bullet-size;
-      height: $pagination-bullet-size;
-    }
-
-    .functions-swiper {
-      .swiper-button-prev, .swiper-button-next {
-        height: $button-height;
-      }
-
-      .swiper-pagination.swiper-pagination-bullets {
-        top: $button-height;
-      }
-    }
-
-    .editMain-function-drop-swiper {
-      .swiper-button-prev {
-        left: $edit-main-button-offset-left;
-      }
-
-      .swiper-button-next {
-        right: $edit-main-button-offset-right;
-      }
-    }
-  }
-
-  /* iphone 5 portrait */
-  @media only screen and (max-width : 320px) {
-    $pagination-bullet-size: 8px;
-    $button-offset: -21px;
-    $button-height: 32px;
-    $edit-main-button-offset-right: -13px;
-    $edit-main-button-offset-left: -21px;
-
-    .swiper-button-prev {
-      left: $button-offset;
-    }
-
-    .swiper-button-next {
-      right: $button-offset;
-    }
-
-    .swiper-pagination-bullet-custom {
-      width: $pagination-bullet-size;
-      height: $pagination-bullet-size;
-    }
-
-    .functions-swiper {
-      .swiper-button-prev, .swiper-button-next {
-        height: $button-height;
-      }
-
-      .swiper-pagination.swiper-pagination-bullets {
-        top: $button-height;
-      }
-    }
-
-    .editMain-function-drop-swiper {
-      .swiper-button-prev {
-        left: $edit-main-button-offset-left;
-      }
-
-      .swiper-button-next {
-        right: $edit-main-button-offset-right;
-      }
-    }
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
   }
 </style>

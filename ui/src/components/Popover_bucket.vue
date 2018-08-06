@@ -48,11 +48,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $popover-margin-top: 60px;
+
   .popover-bucket {
     z-index: 1010;
-    height: calc(100% + 60px);
-    margin-top: -58px;
+    height: calc(100% + #{$popover-margin-top} + 2px);
     width: 100%;
+    margin: calc(-#{$popover-margin-top}) auto;
   }
 
   .staged-popover-bucket {
@@ -71,80 +73,104 @@ export default {
     align-items: center;
   }
 
-  @media only screen and (max-width : 823px) and (orientation: landscape) {
-    $popover-bucket-top: -100px;
-    $popover-bucket-height: 90px;
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    $popover-width: 100%;
+    $popover-margin-top: 50px;
 
     .popover-bucket {
-      top: $popover-bucket-top;
-      height: $popover-bucket-height;
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
     }
+  }
 
-    .staged-popover-bucket {
-      left: 16px;
-      right: -17px;
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    $popover-width: 100%;
+    $popover-margin-top: 70px;
+
+    .popover-bucket {
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
+    }
+  }
+
+  @media only screen and (max-width : 823px) and (orientation: landscape) {
+    $popover-width: 98%;
+    $popover-margin-top: 50px;
+
+    .popover-bucket {
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
     }
   }
 
   @media only screen and (max-width : 667px) and (orientation: landscape) {
-    $popover-bucket-top: -100px;
-    $popover-bucket-height: 90px;
+    $popover-width: 98%;
+    $popover-margin-top: 50px;
 
     .popover-bucket {
-      top: $popover-bucket-top;
-      height: $popover-bucket-height;
-    }
-
-    .staged-popover-bucket {
-      left: 16px;
-      right: -17px;
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
     }
   }
 
   /* iphone 5 landscape */
   @media only screen and (max-width : 568px) and (orientation: landscape) {
-    $popover-bucket-top: -100px;
-    $popover-bucket-height: 90px;
+    $popover-width: 98%;
+    $popover-margin-top: 50px;
 
     .popover-bucket {
-      top: $popover-bucket-top;
-      height: $popover-bucket-height;
-    }
-
-    .staged-popover-bucket {
-      left: 16px;
-      right: -17px;
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
     }
   }
 
   @media only screen and (max-width: 414px) {
-    $popover-bucket-top: -100px;
-    $popover-bucket-height: 90px;
+    $popover-width: 98%;
 
     .popover-bucket {
-      top: $popover-bucket-top;
-      height: $popover-bucket-height;
+      z-index: 1010;
+      height: 100%;
+      margin-top: 2px;
+      width: $popover-width;
     }
   }
 
   @media only screen and (max-width: 375px) {
-    $popover-bucket-top: -100px;
-    $popover-bucket-height: 90px;
+    $popover-width: 98%;
 
     .popover-bucket {
-      top: $popover-bucket-top;
-      height: $popover-bucket-height;
+      z-index: 1010;
+      height: 100%;
+      margin-top: 2px;
+      width: $popover-width;
     }
   }
 
   /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
-    $popover-bucket-top: -100px;
-    $popover-bucket-height: 90px;
+    $popover-width: 98%;
 
     .popover-bucket {
-      top: $popover-bucket-top;
-      height: $popover-bucket-height;
+      z-index: 1010;
+      height: 100%;
+      margin-top: 2px;
+      width: $popover-width;
     }
   }
 </style>
