@@ -57,6 +57,15 @@ class AuthController @Inject()(
     )
   }
 
+  private def generateSessionAuthorized(sessionId: SecureIdentifier, idToken: JwtToken) =
+    SessionAuthorized(sessionId,
+                      idToken.name,
+                      idToken.given_name,
+                      idToken.family_name,
+                      idToken.picture,
+                      s"${idToken.getIssuerShortName}|${idToken.sub}",
+                      idToken.email)
+
   private implicit val timeout: Timeout = actorConfig.timeout
 
   import actors.authFlow.AuthFormatters._
@@ -78,7 +87,7 @@ class AuthController @Inject()(
             case Some(idToken) =>
               Ok(
                 Json
-                  .toJson(SessionAuthorized(sessionId, s"${idToken.getIssuerShortName}|${idToken.sub}", idToken.email))
+                  .toJson(generateSessionAuthorized(sessionId, idToken))
               )
             case _ => Ok(Json.toJson(generateNeedsAuthorization(sessionId)))
           }
@@ -124,7 +133,11 @@ class AuthController @Inject()(
         }
       } yield
         storedResult match {
-          case Left(idToken) => Ok(JsString(s"${idToken.iss}|${idToken.sub}"))
+          case Left(idToken) =>
+            Ok(
+              Json
+                .toJson(generateSessionAuthorized(sessionId, idToken))
+            )
           case Right(reason) => Unauthorized(JsString(reason))
         }
     }).getOrElse(FastFuture.successful(BadRequest("One or more query parameters are missing")))

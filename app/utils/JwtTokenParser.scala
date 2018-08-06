@@ -17,7 +17,7 @@ import pdi.jwt.JwtJson
 import play.api.libs.json.{ JsString, Json, OFormat }
 
 import scala.concurrent.{ Await, ExecutionContext, duration }
-import scala.util.{ Failure, Success }
+import scala.util.{ Failure, Success, Try }
 
 
 class JwtTokenParser @Inject() (
@@ -86,18 +86,30 @@ class JwtTokenParser @Inject() (
     pemCertificates = LoadCertificates()
 
     val publicKeys = pemCertificates.map(_.getPublicKey)
-    val decoded = publicKeys.map(k => JwtJson.decodeJson(encodedToken, k, Seq(RS256)))
-    val tokens = decoded.map {
-      case Success(jwtJson) =>
-        Left(jwtJson.as[JwtToken])
-      case Failure(t) =>
-        Right(t)
+    val decoded = publicKeys
+      .map(
+        k => JwtJson.decodeJson(encodedToken, k, Seq(RS256))
+          .flatMap(js => Try(js.as[JwtToken]))
+      )
+
+    val tokens = publicKeys.map(k => JwtJson.decodeJson(encodedToken, k, Seq(RS256))) map {
+      case Success(jwtJson) => Left(jwtJson)
+      case Failure(t) => Right(t)
     }
+
     val token = tokens.find(_.isLeft).getOrElse(tokens.head) // Get the first successful or first error
 
+
     token match {
-      case Left(jwt) =>
-        Some(jwt)
+      case Left(jwtJson) =>
+        Try(jwtJson.as[JwtToken]) match {
+          case Success(jwt) =>
+            Some(jwt)
+          case Failure(t) =>
+            logger.info(SemanticLog.tags.oauth("google", "Unable to parse id token") :+ SemanticLog.tags.cause(t))
+            None
+        }
+
       case Right(t) =>
         logger.info(SemanticLog.tags.oauth("google", "Unable to verify id token") :+ SemanticLog.tags.cause(t))
         None
