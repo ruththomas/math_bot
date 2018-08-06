@@ -103,24 +103,26 @@ export default {
       const $dropped = $(dropZoneChildren[scrollTooIndex])
       const droppedWidth = $dropped.width()
 
-      dropZoneChildren.each(function () {
-        const $ele = $(this)
-        $ele.removeClass('dropped-indication')
-        $ele.find('.tab-insert').removeClass('dropped-indication')
-      })
+      if (dropZoneChildren.length) {
+        dropZoneChildren.each(function () {
+          const $ele = $(this)
+          $ele.removeClass('dropped-indication')
+          $ele.find('.tab-insert').removeClass('dropped-indication')
+        })
 
-      $dropped.addClass('dropped-indication')
-      $dropped.find('.tab-insert').addClass('dropped-indication')
+        $dropped.addClass('dropped-indication')
+        $dropped.find('.tab-insert').addClass('dropped-indication')
 
-      if (dropZoneWidth > dropWidth) {
-        $dropZone.css({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`})
-      } else {
-        $dropZone.css({'padding-right': 0})
+        if (dropZoneWidth > dropWidth) {
+          $dropZone.css({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`})
+        } else {
+          $dropZone.css({'padding-right': 0})
+        }
+
+        $functionDrop.animate({
+          scrollLeft: $dropped.position().left - (dropWidth / 2) + (droppedWidth / 2)
+        }, 800)
       }
-
-      $functionDrop.animate({
-        scrollLeft: $dropped.position().left - (dropWidth / 2) + (droppedWidth / 2)
-      }, 800)
     }
   },
   components: {
