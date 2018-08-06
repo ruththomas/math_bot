@@ -249,7 +249,7 @@ export default {
     height: 100%;
     margin: 0 auto;
     position: relative;
-    z-index: 99;
+    z-index: 100;
   }
 
   .lambdas-container {
