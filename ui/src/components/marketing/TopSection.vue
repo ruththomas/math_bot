@@ -208,14 +208,14 @@ export default {
   and (min-width: 1024px) and (max-width: 1024px)
   and (orientation: portrait)
   and (-webkit-min-device-pixel-ratio: 1.5) {
-    $planet-1-size: 141px;
-    $planet-2-size: 72px;
-    $planet-3-size: 104px;
-    $planet-4-size: 85px;
-    $planet-5-size: 80px;
-    $space-ship-size: 74px;
-    $robot-size: 135px;
-    $mathbot-header-size: 50px;
+    $planet-1-size: 262px;
+    $planet-2-size: 164px;
+    $planet-3-size: 187px;
+    $planet-4-size: 149px;
+    $planet-5-size: 100px;
+    $space-ship-size: 128px;
+    $robot-size: 250px;
+    $mathbot-header-size: 60px;
 
     .marketing-container {
       padding: 50px 0 50px 0;
@@ -238,19 +238,19 @@ export default {
       z-index: 4;
       display: flex;
       align-content: flex-end;
-      grid-column: c-two / span 6;
+      grid-column: c-two / span 4;
       grid-row: r-two / span 3;
     }
 
     .slogan {
-      font-size: 18px;
-      line-height: 24px;
+      font-size: 45px;
+      line-height: 72px;
       margin-bottom: 15px;
     }
 
     .minor-slogan {
-      font-size: 16px;
-      line-height: 20px;
+      font-size: 32px;
+      line-height: 38px;
       margin-bottom: 59px;
     }
 
@@ -320,8 +320,8 @@ export default {
 
   // ipad landscape
   @media only screen
-  and (min-device-width : 768px)
-  and (max-device-height : 1024px)
+  and (min-device-height : 768px)
+  and (max-device-width: 1024px)
   and (orientation : landscape) {
     $planet-1-size: 141px;
     $planet-2-size: 72px;
