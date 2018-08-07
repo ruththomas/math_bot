@@ -1,6 +1,6 @@
-package dataentry.actors.messages
+package actors.messages.auth
 
+import actors.GoogleApiHelpers.GoogleTokens
 import utils.SecureIdentifier
-import dataentry.actors.models.GoogleApiHelpers.GoogleTokens
 
 case class TokensFromCodeSuccess(sessionId : SecureIdentifier, tokens : GoogleTokens)

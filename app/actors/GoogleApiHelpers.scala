@@ -1,26 +1,18 @@
-package dataentry.actors.models
-
-import java.util.Optional
+package actors
 
 import akka.http.scaladsl._
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.http.scaladsl.util.FastFuture
 import configuration.GoogleApiConfig
 import models.JwtToken
 import org.joda.time.Instant
 import spray.json._
 
-import scala.compat.java8.OptionConverters._
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.Success
+import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
 
 object GoogleApiHelpers {
 
-  def instantFromNow(milliseconds : Long) = Instant.now.plus(milliseconds)
+  def instantFromNow(milliseconds : Long) : Instant = Instant.now.plus(milliseconds)
 
   case class GoogleTokens(
       access_token : String,
@@ -29,7 +21,7 @@ object GoogleApiHelpers {
       refresh_token : Option[String],
       id_token : JwtToken
   ) {
-    def withAccessToken(access_token : String) = this.copy(access_token = access_token)
+    def withAccessToken(access_token : String) : GoogleTokens = this.copy(access_token = access_token)
   }
   case class GoogleValueType(value : String, `type` : String)
   case class GoogleIcon(url : String, isDefault : Boolean)
@@ -38,91 +30,10 @@ object GoogleApiHelpers {
 
 trait GoogleApiHelpers extends SprayJsonSupport with DefaultJsonProtocol {
 
-  import GoogleApiHelpers._
-
   implicit val executionContext : ExecutionContext
   implicit val materializer : akka.stream.Materializer
   val http : HttpExt
   val config : GoogleApiConfig
 
-/*
-  implicit object InstantFormat extends RootJsonFormat[Instant] {
-    override def read(json : JsValue) = json match {
-      case JsNumber(millis) => new Instant(millis)
-      case _ => deserializationError("Milliseconds needed for joda time instant")
-    }
-
-    override def write(obj : Instant) = JsNumber(obj.getMillis)
-  }
-
-
-  implicit val googleValueTypeFormat = jsonFormat2(GoogleValueType)
-  implicit val googleTokensFormat = jsonFormat5(GoogleTokens)
-  implicit val googleImageFormat = jsonFormat2(GoogleIcon)
-  implicit val googleProfileFormat = jsonFormat6(GooglePerson)
-
-  def unmarshal[G](response : HttpResponse, jsonParser : RootJsonFormat[G]) : Future[Either[G, (StatusCode, String)]] =
-    response match {
-      case HttpResponse(StatusCodes.OK, _, entity, _) =>
-        for {
-          json <- Unmarshal(entity).to[String]
-        } yield {
-          Left(jsonParser.read(json.parseJson))
-        }
-
-      case HttpResponse(statusCode, _, entity, _) =>
-        Unmarshal(entity).to[String].map(s => Right((statusCode, s)))
-    }
-
-  class richDate(header : Optional[Date]) {
-    def optionInstant = header.asScala.map(_.date).map(d => new Instant(d.clicks))
-  }
-  implicit def akkaDateHeaderToInstant(header : Optional[Date]) = new richDate(header)
-
-  def renewTokens(tokens : GoogleTokens) : Future[Option[GoogleTokens]] = {
-    import HttpMethods._
-
-    if (tokens.refresh_token.isDefined) {
-      if (tokens.isPastHalfLife) {
-        for {
-          response <- http.singleRequest(
-            HttpRequest(
-              method = POST,
-              uri = config.oauthTokenUri,
-              entity = FormData(
-                "client_id" -> config.clientId,
-                "client_secret" -> config.clientSecret,
-                "refresh_token" -> tokens.refresh_token.get,
-                "grant_type" -> "refresh_token"
-              ).toEntity
-            )
-          )
-          tokensOrError <- unmarshal[GoogleTokens](response, googleTokensFormat)
-        } yield {
-          tokensOrError match {
-            case Left(newTokens) =>
-              Some(
-                tokens.copy(
-                  access_token = newTokens.access_token,
-                  expires_in = newTokens.expires_in
-                )
-              )
-
-            case Right(_) =>
-              // Something more elaborate could be done, but a None will trigger a user re-authorization which will
-              // reveal the real problem or fix it.
-              None
-          }
-        }
-      }
-      else {
-        FastFuture(Success(Some(tokens)))
-      }
-    }
-    else {
-      FastFuture(Success(Option.empty[GoogleTokens]))
-    }
-  }
-  */
 }
 

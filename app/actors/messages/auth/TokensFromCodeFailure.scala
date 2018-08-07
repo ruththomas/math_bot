@@ -1,6 +1,6 @@
-package dataentry.actors.messages
+package actors.messages.auth
 
-import akka.http.scaladsl.model.{ StatusCode, Uri }
+import akka.http.scaladsl.model.Uri
 import utils.SecureIdentifier
 
 case class TokensFromCodeFailure(sessionId : SecureIdentifier, uri : Uri, reason : String)

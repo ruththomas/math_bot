@@ -13,7 +13,7 @@ object AuthSources extends Enumeration {
   type AuthSource = Value
   val Google, Github, Local = Value
 
-  implicit val authSourcesFormat = new Format[AuthSources.AuthSource] {
+  implicit val authSourcesFormat : Format[AuthSource] = new Format[AuthSources.AuthSource] {
     override def writes(o : AuthSource) : JsValue = JsString(o.toString)
 
     override def reads(json : JsValue) : JsResult[AuthSource] = json match {
@@ -46,7 +46,7 @@ case class SessionAuth(sessionId : SecureIdentifier, authSource : AuthSources.Au
 
 object SessionAuth {
 
-  implicit val sessionAuthFormat = Json.format[SessionAuth]
+  implicit val sessionAuthFormat : OFormat[SessionAuth] = Json.format[SessionAuth]
 
 
 }
