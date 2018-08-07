@@ -125,14 +125,453 @@ export default {
     grid-row: r-nine / span 1;
   }
 
-  @media only screen and (max-width: 823px) {
-    $planet-cluster-size: 76px;
-    $ship-and-planet-size: 115px;
-    $left-arch-line-size: 190px;
-    $middle-arch-line-size: 120px;
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px) and (max-device-width: 1024px)
+  and (min-device-height: 1366px) and (max-device-height: 1366px)
+  and (min-width: 1024px) and (max-width: 1024px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $planet-cluster-size: 126px;
+    $ship-and-planet-size: 225px;
+    $left-arch-line-size: 770px;
+    $middle-arch-line-size: 350px;
+    $header-font-size: 26px;
+    $header-line-height: 32px;
+    $message-font-size: 18px;
+    $message-line-height: 22px;
+
+    #Marketing-middle-section {
+      background-color: #FFFFFF;
+      grid-area: middlesection;
+      color: #000000;
+    }
+
+    .middle-container {
+      padding: 50px 0 50px 0;
+    }
+
+    .message > p {
+      font-size: $message-font-size;
+      line-height: $message-line-height;
+      text-align: left;
+    }
+
+    .message .header {
+      font-size: $header-font-size;
+      line-height: $header-line-height;
+      text-align: left;
+    }
+
+    .top-message {
+      grid-column: c-two / span 3;
+      grid-row: r-two / span 2;
+
+    }
+
+    .middle-message {
+      grid-column: c-five / span 3;
+      grid-row: r-seven / span 2;
+      margin-bottom: 30px;
+    }
+
+    .bottom-message {
+      grid-column: c-two / span 3;
+      grid-row: r-ten / span 2;
+    }
+
+    .left-arch-line {
+      grid-column: c-one / span 6;
+      grid-row: r-four / span 2;
+      width: $left-arch-line-size;
+    }
+
+    .ship-and-planet {
+      grid-column: c-six / span 3;
+      grid-row: r-one / span 4;
+      align-self: end;
+      margin-bottom: -10px;
+      width: $ship-and-planet-size;
+    }
+
+    .middle-arch-line {
+      grid-column: c-three / span 3;
+      grid-row: r-nine / span 2;
+      margin-bottom: 40px;
+      margin-left: 30px;
+      width: $middle-arch-line-size;
+    }
+
+    .planet-cluster {
+      grid-column: c-two / span 3;
+      grid-row: r-six / span 3;
+      margin-left: 10px;
+      align-self: end;
+      width: $planet-cluster-size;
+    }
+
+    .play-now {
+      grid-column: c-six / span 2;
+      grid-row: r-ten / span 1;
+    }
+  }
+
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-height : 1024px)
+  and (orientation : landscape) {
+    $planet-cluster-size: 126px;
+    $ship-and-planet-size: 225px;
+    $left-arch-line-size: 620px;
+    $middle-arch-line-size: 350px;
+    $header-font-size: 26px;
+    $header-line-height: 32px;
+    $message-font-size: 18px;
+    $message-line-height: 22px;
+
+    #Marketing-middle-section {
+      background-color: #FFFFFF;
+      grid-area: middlesection;
+      color: #000000;
+    }
+
+    .middle-container {
+      padding: 50px 0 50px 0;
+    }
+
+    .message > p {
+      font-size: $message-font-size;
+      line-height: $message-line-height;
+      text-align: left;
+    }
+
+    .message .header {
+      font-size: $header-font-size;
+      line-height: $header-line-height;
+      text-align: left;
+    }
+
+    .top-message {
+      grid-column: c-two / span 3;
+      grid-row: r-two / span 2;
+
+    }
+
+    .middle-message {
+      grid-column: c-five / span 3;
+      grid-row: r-seven / span 2;
+      margin-bottom: 30px;
+    }
+
+    .bottom-message {
+      grid-column: c-two / span 3;
+      grid-row: r-ten / span 2;
+    }
+
+    .left-arch-line {
+      grid-column: c-one / span 6;
+      grid-row: r-four / span 2;
+      width: $left-arch-line-size;
+    }
+
+    .ship-and-planet {
+      grid-column: c-six / span 3;
+      grid-row: r-one / span 4;
+      align-self: end;
+      margin-bottom: -10px;
+      width: $ship-and-planet-size;
+    }
+
+    .middle-arch-line {
+      grid-column: c-three / span 3;
+      grid-row: r-nine / span 2;
+      margin-bottom: 40px;
+      margin-left: 30px;
+      width: $middle-arch-line-size;
+    }
+
+    .planet-cluster {
+      grid-column: c-two / span 3;
+      grid-row: r-six / span 3;
+      margin-left: 10px;
+      align-self: end;
+      width: $planet-cluster-size;
+    }
+
+    .play-now {
+      grid-column: c-six / span 2;
+      grid-row: r-ten / span 1;
+    }
+  }
+
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-height : 1024px)
+  and (orientation : portrait)  {
+    $planet-cluster-size: 126px;
+    $ship-and-planet-size: 225px;
+    $left-arch-line-size: 465px;
+    $middle-arch-line-size: 255px;
+    $header-font-size: 26px;
+    $header-line-height: 32px;
+    $message-font-size: 18px;
+    $message-line-height: 22px;
+
+    #Marketing-middle-section {
+      background-color: #FFFFFF;
+      grid-area: middlesection;
+      color: #000000;
+    }
+
+    .middle-container {
+      padding: 50px 0 50px 0;
+    }
+
+    .message > p {
+      font-size: $message-font-size;
+      line-height: $message-line-height;
+      text-align: left;
+    }
+
+    .message .header {
+      font-size: $header-font-size;
+      line-height: $header-line-height;
+      text-align: left;
+    }
+
+    .top-message {
+      grid-column: c-two / span 3;
+      grid-row: r-two / span 2;
+
+    }
+
+    .middle-message {
+      grid-column: c-five / span 3;
+      grid-row: r-seven / span 2;
+      margin-bottom: 30px;
+    }
+
+    .bottom-message {
+      grid-column: c-two / span 3;
+      grid-row: r-ten / span 2;
+    }
+
+    .left-arch-line {
+      grid-column: c-one / span 6;
+      grid-row: r-four / span 2;
+      width: $left-arch-line-size;
+    }
+
+    .ship-and-planet {
+      grid-column: c-six / span 3;
+      grid-row: r-one / span 4;
+      align-self: end;
+      margin-bottom: -10px;
+      width: $ship-and-planet-size;
+    }
+
+    .middle-arch-line {
+      grid-column: c-three / span 3;
+      grid-row: r-nine / span 2;
+      margin-bottom: 40px;
+      margin-left: 30px;
+      width: $middle-arch-line-size;
+    }
+
+    .planet-cluster {
+      grid-column: c-two / span 3;
+      grid-row: r-six / span 3;
+      margin-left: 10px;
+      align-self: end;
+      width: $planet-cluster-size;
+    }
+
+    .play-now {
+      grid-column: c-six / span 2;
+      grid-row: r-ten / span 1;
+    }
+  }
+
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $planet-cluster-size: 126px;
+    $ship-and-planet-size: 225px;
+    $left-arch-line-size: 495px;
+    $middle-arch-line-size: 270px;
+    $header-font-size: 26px;
+    $header-line-height: 32px;
+    $message-font-size: 18px;
+    $message-line-height: 22px;
+
+    #Marketing-middle-section {
+      background-color: #FFFFFF;
+      grid-area: middlesection;
+      color: #000000;
+    }
+
+    .middle-container {
+      padding: 50px 0 50px 0;
+    }
+
+    .message > p {
+      font-size: $message-font-size;
+      line-height: $message-line-height;
+      text-align: left;
+    }
+
+    .message .header {
+      font-size: $header-font-size;
+      line-height: $header-line-height;
+      text-align: left;
+    }
+
+    .top-message {
+      grid-column: c-two / span 3;
+      grid-row: r-two / span 2;
+
+    }
+
+    .middle-message {
+      grid-column: c-five / span 3;
+      grid-row: r-seven / span 2;
+      margin-bottom: 30px;
+    }
+
+    .bottom-message {
+      grid-column: c-two / span 3;
+      grid-row: r-ten / span 2;
+    }
+
+    .left-arch-line {
+      grid-column: c-one / span 6;
+      grid-row: r-four / span 2;
+      width: $left-arch-line-size;
+    }
+
+    .ship-and-planet {
+      grid-column: c-six / span 3;
+      grid-row: r-one / span 4;
+      align-self: end;
+      margin-bottom: -10px;
+      width: $ship-and-planet-size;
+    }
+
+    .middle-arch-line {
+      grid-column: c-three / span 3;
+      grid-row: r-nine / span 2;
+      margin-bottom: 40px;
+      margin-left: 30px;
+      width: $middle-arch-line-size;
+    }
+
+    .planet-cluster {
+      grid-column: c-two / span 3;
+      grid-row: r-six / span 3;
+      margin-left: 10px;
+      align-self: end;
+      width: $planet-cluster-size;
+    }
+
+    .play-now {
+      grid-column: c-six / span 2;
+      grid-row: r-ten / span 1;
+    }
+  }
+
+  @media only screen and (max-width: 736px) and (orientation: landscape) {
+    $planet-cluster-size: 106px;
+    $ship-and-planet-size: 175px;
+    $left-arch-line-size: 450px;
+    $middle-arch-line-size: 220px;
+    $header-font-size: 26px;
+    $header-line-height: 32px;
+    $message-font-size: 18px;
+    $message-line-height: 22px;
+
+    #Marketing-middle-section {
+      background-color: #FFFFFF;
+      grid-area: middlesection;
+      color: #000000;
+    }
+
+    .middle-container {
+      padding: 50px 0 50px 0;
+    }
+
+    .message > p {
+      font-size: $message-font-size;
+      line-height: $message-line-height;
+      text-align: left;
+    }
+
+    .message .header {
+      font-size: $header-font-size;
+      line-height: $header-line-height;
+      text-align: left;
+    }
+
+    .top-message {
+      grid-column: c-two / span 3;
+      grid-row: r-two / span 2;
+
+    }
+
+    .middle-message {
+      grid-column: c-five / span 3;
+      grid-row: r-seven / span 2;
+      margin-bottom: 30px;
+    }
+
+    .bottom-message {
+      grid-column: c-two / span 3;
+      grid-row: r-ten / span 2;
+    }
+
+    .left-arch-line {
+      grid-column: c-one / span 6;
+      grid-row: r-four / span 2;
+      width: $left-arch-line-size;
+    }
+
+    .ship-and-planet {
+      grid-column: c-six / span 3;
+      grid-row: r-one / span 4;
+      align-self: end;
+      margin-bottom: -10px;
+      width: $ship-and-planet-size;
+    }
+
+    .middle-arch-line {
+      grid-column: c-three / span 3;
+      grid-row: r-nine / span 2;
+      margin-bottom: 40px;
+      margin-left: 30px;
+      width: $middle-arch-line-size;
+    }
+
+    .planet-cluster {
+      grid-column: c-two / span 3;
+      grid-row: r-six / span 3;
+      margin-left: 10px;
+      align-self: end;
+      width: $planet-cluster-size;
+    }
+
+    .play-now {
+      grid-column: c-six / span 2;
+      grid-row: r-ten / span 1;
+    }
+  }
+
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    $planet-cluster-size: 106px;
+    $ship-and-planet-size: 175px;
+    $left-arch-line-size: 410px;
+    $middle-arch-line-size: 220px;
     $header-font-size: 22px;
-    $header-line-height: 26px;
-    $message-font-size: 12px;
+    $header-line-height: 32px;
+    $message-font-size: 16px;
     $message-line-height: 16px;
 
     #Marketing-middle-section {
@@ -164,14 +603,14 @@ export default {
     }
 
     .middle-message {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-seven / span 2;
       margin-bottom: 30px;
     }
 
     .bottom-message {
       grid-column: c-two / span 3;
-      grid-row: r-nine / span 2;
+      grid-row: r-ten / span 2;
     }
 
     .left-arch-line {
@@ -184,104 +623,21 @@ export default {
       grid-column: c-six / span 3;
       grid-row: r-one / span 4;
       align-self: end;
-      margin-bottom: 0;
+      margin-bottom: -10px;
       width: $ship-and-planet-size;
     }
 
     .middle-arch-line {
-      grid-column: c-four / span 3;
-      grid-row: r-seven / span 2;
-      align-self: end;
-      width: $middle-arch-line-size;
-    }
-
-    .planet-cluster {
-      grid-column: c-two / span 3;
-      grid-row: r-five / span 3;
-      margin-left: 10px;
-      align-self: end;
-      width: $planet-cluster-size;
-    }
-
-    .play-now {
-      grid-column: c-six / span 2;
-      grid-row: r-nine / span 1;
-    }
-  }
-
-  @media only screen and (max-width: 736px) {
-    $planet-cluster-size: 76px;
-    $ship-and-planet-size: 115px;
-    $left-arch-line-size: 190px;
-    $middle-arch-line-size: 120px;
-    $header-font-size: 22px;
-    $header-line-height: 26px;
-    $message-font-size: 12px;
-    $message-line-height: 16px;
-
-    #Marketing-middle-section {
-      background-color: #FFFFFF;
-      grid-area: middlesection;
-      color: #000000;
-    }
-
-    .middle-container {
-      padding: 50px 0 50px 0;
-    }
-
-    .message > p {
-      font-size: $message-font-size;
-      line-height: $message-line-height;
-      text-align: left;
-    }
-
-    .message .header {
-      font-size: $header-font-size;
-      line-height: $header-line-height;
-      text-align: left;
-    }
-
-    .top-message {
-      grid-column: c-two / span 3;
-      grid-row: r-two / span 2;
-
-    }
-
-    .middle-message {
-      grid-column: c-six / span 3;
-      grid-row: r-seven / span 2;
-      margin-bottom: 30px;
-    }
-
-    .bottom-message {
-      grid-column: c-two / span 3;
+      grid-column: c-three / span 3;
       grid-row: r-nine / span 2;
-    }
-
-    .left-arch-line {
-      grid-column: c-one / span 6;
-      grid-row: r-four / span 2;
-      width: $left-arch-line-size;
-    }
-
-    .ship-and-planet {
-      grid-column: c-six / span 3;
-      grid-row: r-one / span 4;
-      align-self: end;
-      margin-bottom: 0;
-      width: $ship-and-planet-size;
-    }
-
-    .middle-arch-line {
-      grid-column: c-four / span 3;
-      grid-row: r-seven / span 2;
-      align-self: end;
+      margin-bottom: 40px;
+      margin-left: 30px;
       width: $middle-arch-line-size;
     }
 
     .planet-cluster {
       grid-column: c-two / span 3;
-      grid-row: r-five / span 3;
+      grid-row: r-six / span 3;
       margin-left: 10px;
       align-self: end;
       width: $planet-cluster-size;
@@ -289,12 +645,12 @@ export default {
 
     .play-now {
       grid-column: c-six / span 2;
-      grid-row: r-nine / span 1;
+      grid-row: r-ten / span 1;
     }
   }
 
-  @media only screen and (max-width: 568px) {
-    $planet-cluster-size: 86px;
+  @media only screen and (max-width: 568px) and (orientation: landscape){
+    $planet-cluster-size: 100px;
     $ship-and-planet-size: 155px;
     $left-arch-line-size: 340px;
     $middle-arch-line-size: 170px;
@@ -332,14 +688,14 @@ export default {
     }
 
     .middle-message {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-seven / span 2;
       margin-bottom: 30px;
     }
 
     .bottom-message {
       grid-column: c-two / span 3;
-      grid-row: r-nine / span 2;
+      grid-row: r-ten / span 2;
     }
 
     .left-arch-line {
@@ -358,14 +714,14 @@ export default {
 
     .middle-arch-line {
       grid-column: c-four / span 3;
-      grid-row: r-eight / span 2;
-      align-self: end;
+      grid-row: r-nine / span 2;
+      margin-left: -30px;
       width: $middle-arch-line-size;
     }
 
     .planet-cluster {
       grid-column: c-two / span 3;
-      grid-row: r-five / span 3;
+      grid-row: r-six / span 3;
       margin-left: 10px;
       align-self: end;
       width: $planet-cluster-size;
@@ -373,14 +729,14 @@ export default {
 
     .play-now {
       grid-column: c-six / span 2;
-      grid-row: r-nine / span 1;
+      grid-row: r-ten / span 1;
     }
   }
 
   @media only screen and (max-width: 414px) {
-    $planet-cluster-size: 76px;
-    $ship-and-planet-size: 115px;
-    $left-arch-line-size: 190px;
+    $planet-cluster-size: 96px;
+    $ship-and-planet-size: 135px;
+    $left-arch-line-size: 200px;
     $middle-arch-line-size: 120px;
     $header-font-size: 22px;
     $header-line-height: 26px;
@@ -416,14 +772,14 @@ export default {
     }
 
     .middle-message {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-seven / span 2;
       margin-bottom: 30px;
     }
 
     .bottom-message {
       grid-column: c-two / span 3;
-      grid-row: r-nine / span 2;
+      grid-row: r-ten / span 2;
     }
 
     .left-arch-line {
@@ -433,38 +789,39 @@ export default {
     }
 
     .ship-and-planet {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-one / span 4;
       align-self: end;
-      margin-bottom: 0;
+      margin-bottom: -3px;
       width: $ship-and-planet-size;
     }
 
     .middle-arch-line {
       grid-column: c-four / span 3;
-      grid-row: r-seven / span 2;
-      align-self: end;
+      grid-row: r-nine / span 2;
+      align-self: start;
       width: $middle-arch-line-size;
     }
 
     .planet-cluster {
       grid-column: c-two / span 3;
-      grid-row: r-five / span 3;
+      grid-row: r-seven / span 3;
       margin-left: 10px;
       align-self: end;
+      margin-bottom: 60px;
       width: $planet-cluster-size;
     }
 
     .play-now {
       grid-column: c-six / span 2;
-      grid-row: r-nine / span 1;
+      grid-row: r-ten / span 1;
     }
   }
 
   @media only screen and (max-width: 375px) {
-    $planet-cluster-size: 76px;
-    $ship-and-planet-size: 115px;
-    $left-arch-line-size: 190px;
+    $planet-cluster-size: 86px;
+    $ship-and-planet-size: 125px;
+    $left-arch-line-size: 180px;
     $middle-arch-line-size: 120px;
     $header-font-size: 22px;
     $header-line-height: 26px;
@@ -500,14 +857,14 @@ export default {
     }
 
     .middle-message {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-seven / span 2;
       margin-bottom: 30px;
     }
 
     .bottom-message {
       grid-column: c-two / span 3;
-      grid-row: r-nine / span 2;
+      grid-row: r-ten / span 2;
     }
 
     .left-arch-line {
@@ -517,38 +874,39 @@ export default {
     }
 
     .ship-and-planet {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-one / span 4;
       align-self: end;
-      margin-bottom: 0;
+      margin-bottom: -3px;
       width: $ship-and-planet-size;
     }
 
     .middle-arch-line {
       grid-column: c-four / span 3;
-      grid-row: r-seven / span 2;
-      align-self: end;
+      grid-row: r-nine / span 2;
+      align-self: start;
       width: $middle-arch-line-size;
     }
 
     .planet-cluster {
       grid-column: c-two / span 3;
-      grid-row: r-five / span 3;
+      grid-row: r-seven / span 3;
       margin-left: 10px;
       align-self: end;
+      margin-bottom: 60px;
       width: $planet-cluster-size;
     }
 
     .play-now {
       grid-column: c-six / span 2;
-      grid-row: r-nine / span 1;
+      grid-row: r-ten / span 1;
     }
   }
 
   @media only screen and (max-width: 320px) {
     $planet-cluster-size: 76px;
     $ship-and-planet-size: 115px;
-    $left-arch-line-size: 190px;
+    $left-arch-line-size: 150px;
     $middle-arch-line-size: 120px;
     $header-font-size: 22px;
     $header-line-height: 26px;
@@ -584,14 +942,14 @@ export default {
     }
 
     .middle-message {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-seven / span 2;
       margin-bottom: 30px;
     }
 
     .bottom-message {
       grid-column: c-two / span 3;
-      grid-row: r-nine / span 2;
+      grid-row: r-ten / span 2;
     }
 
     .left-arch-line {
@@ -601,7 +959,7 @@ export default {
     }
 
     .ship-and-planet {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-one / span 4;
       align-self: end;
       margin-bottom: 0;
@@ -610,22 +968,23 @@ export default {
 
     .middle-arch-line {
       grid-column: c-four / span 3;
-      grid-row: r-seven / span 2;
-      align-self: end;
+      grid-row: r-nine / span 2;
+      align-self: start;
       width: $middle-arch-line-size;
     }
 
     .planet-cluster {
       grid-column: c-two / span 3;
-      grid-row: r-five / span 3;
+      grid-row: r-seven / span 3;
       margin-left: 10px;
       align-self: end;
+      margin-bottom: 60px;
       width: $planet-cluster-size;
     }
 
     .play-now {
       grid-column: c-six / span 2;
-      grid-row: r-nine / span 1;
+      grid-row: r-ten / span 1;
     }
   }
 </style>
