@@ -4,7 +4,7 @@ import actors.messages.ActorFailed
 import akka.actor.{Actor, Props}
 import akka.pattern.pipe
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
+import daos.PlayerTokenDAO
 import play.api.Environment
 
 object GameStatsActor {

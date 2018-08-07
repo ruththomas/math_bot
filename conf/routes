@@ -31,6 +31,12 @@ GET         /ws/videohint                                                       
 # Get game stats
 GET         /api/gameStats/getTokenCount                                           controllers.GameStatsController.getCount
 
+# Auth
+GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
+POST        /api/auth/resumeSession                                                controllers.AuthController.resumeSession
+GET         /api/auth/authorize                                                    controllers.AuthController.authorize()
+
+
 # !! This must be last - and may show an error until prod build !!
 # Map static resources from the /public folder to the file resource path
 GET         /*file                                                                controllers.Assets.at(path="/public", file)

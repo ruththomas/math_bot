@@ -3,7 +3,7 @@ import actors.VideoHintActor.{HintPrepared, NoVideos, RemainingTime, RemainingTi
 import actors.messages.ActorFailed
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import model.models.HintTaken
+import models.HintTaken
 import play.api.libs.json.{JsValue, Json, Writes}
 import types.URL
 
