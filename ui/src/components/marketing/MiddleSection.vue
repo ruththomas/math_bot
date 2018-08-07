@@ -132,14 +132,14 @@ export default {
   and (min-width: 1024px) and (max-width: 1024px)
   and (orientation: portrait)
   and (-webkit-min-device-pixel-ratio: 1.5) {
-    $planet-cluster-size: 126px;
-    $ship-and-planet-size: 225px;
-    $left-arch-line-size: 770px;
-    $middle-arch-line-size: 350px;
-    $header-font-size: 26px;
-    $header-line-height: 32px;
-    $message-font-size: 18px;
-    $message-line-height: 22px;
+    $planet-cluster-size: 234px;
+    $ship-and-planet-size: 385px;
+    $left-arch-line-size: 490px;
+    $middle-arch-line-size: 400px;
+    $header-font-size: 48px;
+    $header-line-height: 58px;
+    $message-font-size: 23px;
+    $message-line-height: 23px;
 
     #Marketing-middle-section {
       background-color: #FFFFFF;
@@ -187,7 +187,7 @@ export default {
     }
 
     .ship-and-planet {
-      grid-column: c-six / span 3;
+      grid-column: c-five / span 3;
       grid-row: r-one / span 4;
       align-self: end;
       margin-bottom: -10px;
@@ -218,8 +218,8 @@ export default {
 
   // ipad landscape
   @media only screen
-  and (min-device-width : 768px)
-  and (max-device-height : 1024px)
+  and (min-device-height : 768px)
+  and (max-device-width : 1024px)
   and (orientation : landscape) {
     $planet-cluster-size: 126px;
     $ship-and-planet-size: 225px;
