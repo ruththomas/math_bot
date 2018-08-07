@@ -5,7 +5,7 @@ import actors.VideoHintActor
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import com.google.inject.Inject
-import model.{PlayerTokenDAO, VideoHintDAO}
+import daos.{PlayerTokenDAO, VideoHintDAO}
 import play.api.Environment
 import play.api.libs.json.JsValue
 import play.api.libs.streams.ActorFlow

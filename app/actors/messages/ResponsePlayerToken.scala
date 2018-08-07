@@ -1,6 +1,6 @@
 package actors.messages
 
-import model.models.{PlayerToken, Stats}
+import models.{PlayerToken, Stats}
 import play.api.libs.json.Json
 
 object ResponsePlayerToken {

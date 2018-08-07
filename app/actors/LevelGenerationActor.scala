@@ -1,18 +1,16 @@
 package actors
 
-import java.io.File
-
-import actors.messages._
-import akka.actor.{Actor, Props}
-import akka.pattern.pipe
-import loggers.MathBotLogger
-import model.{models, DefaultCommands, PlayerTokenDAO}
-import model.models._
-import play.api.Environment
-import messages.PreparedStepData._
 import java.security.MessageDigest
 
-import types.{LevelName, StepName, TokenId}
+import actors.messages.PreparedStepData._
+import actors.messages._
+import akka.actor.{ Actor, Props }
+import akka.pattern.pipe
+import daos.{ DefaultCommands, PlayerTokenDAO }
+import loggers.MathBotLogger
+import models._
+import play.api.Environment
+import types.{ LevelName, StepName, TokenId }
 
 import scala.concurrent.Future
 
@@ -222,7 +220,7 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         // Move actives to inactive commands
         val commandsAndInactiveCommands: Map[String, List[FuncToken]] = {
           val allowed = rawStepData.cmdsAvailable
-          val commands = model.DefaultCommands.cmds
+          val commands = DefaultCommands.cmds
           val allowedCommands = commands.filter(cmd => allowed.contains(cmd.commandId.getOrElse("")))
           val inActives = commands.filterNot(cmd => allowed.contains(cmd.commandId.getOrElse("")))
           Map("newCommands" -> allowedCommands, "newInActives" -> inActives)

@@ -3,7 +3,7 @@ package actors.convert_flow
 import actors.messages._
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import model.models.Problem
+import models.Problem
 import play.api.libs.json._
 
 object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
