@@ -1,5 +1,7 @@
 package actors
 
+import actors.GoogleApiHelpers.GoogleTokens
+import actors.messages.auth.{ RequestTokensFromCode, TokensFromCodeFailure, TokensFromCodeSuccess }
 import akka.actor.Actor
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.{ Http, HttpExt }
@@ -7,8 +9,6 @@ import akka.pattern.pipe
 import akka.stream.ActorMaterializer
 import com.google.inject.{ Inject, Singleton }
 import configuration.GoogleApiConfig
-import dataentry.actors.messages._
-import dataentry.actors.models.GoogleApiHelpers.GoogleTokens
 import loggers.{ AkkaSemanticLog, SemanticLog }
 import utils.{ AkkaToPlayMarshaller, JwtTokenParser }
 

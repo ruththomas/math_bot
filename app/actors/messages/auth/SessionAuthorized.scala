@@ -1,6 +1,6 @@
-package actors.messages
+package actors.messages.auth
 
-import actors.authFlow.SocketAction
+import actors.messages.MessageAction
 import utils.SecureIdentifier
 
 case class SessionAuthorized(sessionId: SecureIdentifier,
@@ -12,4 +12,4 @@ case class SessionAuthorized(sessionId: SecureIdentifier,
                              email: String,
                              action: Symbol = 'sessionAuthorized
                             )
-    extends SocketAction
+    extends MessageAction

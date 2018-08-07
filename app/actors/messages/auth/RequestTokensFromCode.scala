@@ -1,4 +1,4 @@
-package dataentry.actors.messages
+package actors.messages.auth
 
 import utils.SecureIdentifier
 

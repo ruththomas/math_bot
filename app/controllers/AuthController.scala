@@ -1,37 +1,34 @@
 package controllers
 
 import actors.ActorTags
-import actors.authFlow.{AuthUrl, NeedsAuthorization, ResumeSession}
-import actors.messages.{SessionAuthorized, SessionNotAuthorized}
+import actors.messages._
+import actors.messages.auth._
 import akka.actor.ActorRef
-import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
 import com.google.inject.name.Named
-import configuration.{ActorConfig, GoogleApiConfig}
-import daos.{MutableMapCache, SessionDAO}
-import dataentry.actors.messages.{RequestTokensFromCode, TokensFromCodeFailure, TokensFromCodeSuccess}
-import dataentry.caches.KeyValueCache
+import configuration.{ ActorConfig, GoogleApiConfig }
+import daos.{ SessionCache, SessionDAO }
 import javax.inject.Inject
 import loggers.SemanticLog
 import models.JwtToken
-import play.api.libs.json.{JsString, Json}
-import play.api.mvc.{Action, AnyContent, Controller}
-import utils.{JwtTokenParser, SecureIdentifier}
+import play.api.libs.json.{ JsString, Json }
+import play.api.mvc.{ Action, AnyContent, Controller }
+import utils.{ JwtTokenParser, SecureIdentifier }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
 class AuthController @Inject()(
-    val sessionDAO: SessionDAO,
-    val sessionCache: MutableMapCache,
-    @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
-    val jwtParser: JwtTokenParser,
-    val googleConfig: GoogleApiConfig,
-    val actorConfig: ActorConfig,
-    val logger: SemanticLog
+                                val sessionDAO: SessionDAO,
+                                val sessionCache: SessionCache,
+                                @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
+                                val jwtParser: JwtTokenParser,
+                                val googleConfig: GoogleApiConfig,
+                                val actorConfig: ActorConfig,
+                                val logger: SemanticLog
 )(implicit ec: ExecutionContext)
     extends Controller {
 
@@ -68,7 +65,7 @@ class AuthController @Inject()(
 
   private implicit val timeout: Timeout = actorConfig.timeout
 
-  import actors.authFlow.AuthFormatters._
+  import actors.messages.auth.AuthFormatters._
 
   def requestSession(): Action[AnyContent] = Action.async { implicit request =>
     val sid = SecureIdentifier(32)
