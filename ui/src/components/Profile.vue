@@ -60,8 +60,7 @@ export default {
 
 <style scoped lang="scss">
   .profile-container {
-    background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522347137/misc/profileSpace.png");
-    background-size: cover;
+    background-image: radial-gradient(circle farthest-corner at 50% 50%, transparent, rgba(0, 0, 0, 0.1) 24%, rgba(0, 0, 0, 0.1));
     width: 100%;
     height: 100%;
   }

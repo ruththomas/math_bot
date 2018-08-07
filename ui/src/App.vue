@@ -38,6 +38,8 @@ export default {
     position: relative;
     display: flex;
     z-index: 200;
+    background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522347137/misc/profileSpace.png");
+    background-size: cover;
   }
 
   #app {

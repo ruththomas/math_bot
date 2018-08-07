@@ -97,13 +97,16 @@ export default {
       const $dropZone = $(`.${this.origin}-drop-zone`)
       const $functionDrop = $dropZone.parent()
       const dropWidth = $functionDrop.width()
-      const scrollTooIndex = evt.moved ? evt.moved.newIndex : evt.added ? evt.added.newIndex : evt.removed.oldIndex - 1
-      const dropZoneChildren = $dropZone.children()
+      let scrollTooIndex = evt.moved ? evt.moved.newIndex : evt.added ? evt.added.newIndex : evt.removed.oldIndex - 1
+      const dropZoneChildren = $dropZone.children('.actual-piece')
+      if (scrollTooIndex > dropZoneChildren.length - 1) {
+        scrollTooIndex = dropZoneChildren.length - 1
+      }
       const $dropped = $(dropZoneChildren[scrollTooIndex])
       const droppedWidth = $dropped.width()
       let childrenWidthSum = 0
 
-      if (dropZoneChildren.length) {
+      if ($dropZone.find('.actual-piece').length) {
         dropZoneChildren.each(function () {
           const $ele = $(this)
           childrenWidthSum += $ele.outerWidth()
