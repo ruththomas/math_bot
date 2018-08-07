@@ -84,9 +84,9 @@ export default {
   and (orientation: portrait)
   and (-webkit-min-device-pixel-ratio: 1.5) {
     .play-now {
-      height: 50px;
-      width: 220px;
-      font-size: 12px;
+      height: 65px;
+      width: 327px;
+      font-size: 22px;
     }
   }
 
