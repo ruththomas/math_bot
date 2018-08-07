@@ -1,5 +1,5 @@
 <template>
-  <div id="Marketing" data-aos="zoom-in">
+  <div id="Marketing" class="marketing" data-aos="zoom-in">
     <top-section :gotosite="goToSite"></top-section>
     <middle-section :gotosite="goToSite"></middle-section>
     <bottom-section></bottom-section>
@@ -47,21 +47,18 @@ export default {
   }
 
   #app {
-    overflow-y: auto;
   }
 
   #Marketing {
-    /*height: 2000px;*/
-    width: 100vw;
-    max-width: 1366px;
+    width: 100%;
+    height: 100vh;
     margin: 0 auto;
     font-family: "Proba Pro Regular", serif;
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-areas:
-      "topsection topsection topsection topsection"
-      "middlesection middlesection middlesection middlesection"
-      "bottomsection bottomsection bottomsection bottomsection";
+    overflow: auto;
+  }
+
+  #Marketing::-webkit-scrollbar {
+    display: none;
   }
 
   .play-now {
@@ -79,27 +76,51 @@ export default {
     cursor: pointer;
   }
 
-  @media (max-width: 1366px), (max-height: 1024px) {
-  }
-  @media (max-width: 1200px), (max-height: 900px) {
-  }
-  @media (max-width: 1100px), (max-height: 824px) {
-  }
-  @media (max-width: 1000px), (max-height: 750px) {
-  }
-  @media (max-width: 900px), (max-height: 675px) {
-  }
-  @media (max-width: 800px), (max-height: 600px) {
+  @media only screen and (max-width: 823px) {
     .play-now {
-      width: 250px;
-      height: 60px;
-      font-size: 117%;
+      height: 32px;
+      width: 93px;
+      font-size: 12px;
     }
   }
-  @media only screen and (min-device-width: 320px) and (max-device-height: 568px) and (-webkit-device-pixel-ratio: 2) {
+
+  @media only screen and (max-width: 736px) {
     .play-now {
-      width: 150px;
-      height: 40px;
+      height: 32px;
+      width: 93px;
+      font-size: 12px;
+    }
+  }
+
+  @media only screen and (max-width: 568px) {
+    .play-now {
+      height: 42px;
+      width: 153px;
+      font-size: 12px;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    .play-now {
+      height: 32px;
+      width: 93px;
+      font-size: 12px;
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    .play-now {
+      height: 32px;
+      width: 93px;
+      font-size: 12px;
+    }
+  }
+
+  @media only screen and (max-width: 320px){
+    .play-now {
+      height: 32px;
+      width: 93px;
+      font-size: 12px;
     }
   }
 </style>
