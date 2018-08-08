@@ -244,10 +244,106 @@ export default {
     opacity: 0.8;
   }
 
+  /* iPad */
+  @media all and (max-device-width: 768px) and (max-device-height: 1024px) and (orientation:portrait) {
+    $steps-height: 700px;
+    $steps-width: 270px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+  }
+
+    .steps {
+      width: $steps-width;
+      height: $steps-height;
+      margin-top: 80px;
+    }
+
+    .step-info-text {
+      font-size: 18px;
+    }
+
+    .steps-navigator-item {
+      width: 240px;
+      height: 80px;
+    }
+  }
+
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+    $steps-height: 500px;
+    $steps-width: 300px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+    }
+
+    .steps {
+      width: $steps-width;
+      height: $steps-height;
+      margin-top: 80px;
+    }
+
+    .step-info-text {
+      font-size: 18px;
+    }
+
+    .steps-navigator-item {
+      width: 240px;
+    }
+  }
+
   /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  @media only screen and (max-width : 823px) and (orientation: landscape) {
     $steps-height: 250px;
     $steps-width: 275px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+    }
+
+    .steps {
+      height: $steps-height;
+      width: $steps-width;
+      margin-top: 10px;
+    }
+
+    .steps-navigator-item {
+      width: 245px;
+      height: 50px;
+    }
+    .steps-header {
+      font-size: 18px;
+    }
+
+    .step-info-text {
+      font-size: 12px;
+    }
+
+    .step-image-lock {
+      height: 25px;
+      width: 21px;
+    }
+  }
+
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
+    $steps-height: 250px;
+    $steps-width: 275px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+    }
 
     .steps {
       height: $steps-height;
@@ -274,38 +370,16 @@ export default {
   }
 
   /* Small Devices */
-  @media only screen and (max-width : 736px) {
-    $steps-height: 250px;
-    $steps-width: 275px;
-
-    .steps {
-      height: $steps-height;
-      width: $steps-width;
-      margin-top: 10px;
-    }
-
-    .steps-navigator-item {
-      width: 245px;
-      height: 50px;
-    }
-    .steps-header {
-      font-size: 18px;
-    }
-
-    .step-info-text {
-      font-size: 12px;
-    }
-
-    .step-image-lock {
-      height: 25px;
-      width: 21px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  @media only screen and (max-width : 667px) and (orientation: landscape) {
     $steps-height: 250px;
     $steps-width: 230px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+    }
 
     .steps {
       height: $steps-height;
@@ -331,10 +405,55 @@ export default {
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  @media only screen and (max-width: 568px) and (orientation: landscape) {
+    $steps-height: 300px;
+    $steps-width: 150px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+    $step-info-text-font-size: 12px;
+    $step-width: 125px;
+    $step-image-width: 80px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+    }
+
+    .steps {
+      height: $steps-height;
+      width: $steps-width;
+      margin-top: 0;
+    }
+
+    .steps-navigator-item {
+      width: $step-width;
+      height: 50px;
+    }
+
+    .step-info-text {
+      font-size: $step-info-text-font-size;
+    }
+
+    .step-info-image-container {
+      width: $step-image-width;
+    }
+
+    .step-image-lock {}
+  }
+
+  @media only screen and (max-width: 414px) {
     $steps-height: 550px;
     $steps-width: 150px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+    $step-info-text-font-size: 12px;
+    $step-width: 125px;
+    $step-image-width: 80px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+    }
 
     .steps {
       height: $steps-height;
@@ -343,15 +462,69 @@ export default {
     }
 
     .steps-navigator-item {
-      width: 120px;
+      width: $step-width;
       height: 50px;
     }
+
+    .step-info-text {
+      font-size: $step-info-text-font-size;
+    }
+
+    .step-info-image-container {
+      width: $step-image-width;
+    }
+
+    .step-image-lock {}
+  }
+
+  @media only screen and (max-width : 375px) {
+    $steps-height: 550px;
+    $steps-width: 150px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+    $step-info-text-font-size: 12px;
+    $step-width: 125px;
+    $step-image-width: 80px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+    }
+
+    .steps {
+      height: $steps-height;
+      width: $steps-width;
+      margin-top: 10px;
+    }
+
+    .steps-navigator-item {
+      width: $step-width;
+      height: 50px;
+    }
+
+    .step-info-text {
+      font-size: $step-info-text-font-size;
+    }
+
+    .step-info-image-container {
+      width: $step-image-width;
+    }
+
+    .step-image-lock {}
   }
 
   /* Custom, iPhone Retina */
-  @media only screen and (max-width : 360px) {
+  @media only screen and (max-width : 320px) {
     $steps-height: 400px;
     $steps-width: 120px;
+    $steps-header-font-size: 18px;
+    $steps-header-line-height: 22px;
+    $step-info-text-font-size: 12px;
+
+    .steps-header {
+      font-size: $steps-header-font-size;
+      line-height: $steps-header-line-height;
+    }
 
     .steps {
       height: $steps-height;
@@ -363,12 +536,9 @@ export default {
       width: 90px;
       height: 50px;
     }
-    .steps-header {
-      font-size: 18px;
-    }
 
     .step-info-text {
-      font-size: 12px;
+      font-size: $step-info-text-font-size;
     }
 
     .step-info-image-container {
@@ -376,45 +546,5 @@ export default {
     }
 
     .step-image-lock {}
-  }
-
-  /* iPad */
-  @media all and (max-device-width: 768px) and (max-device-height: 1024px) and (orientation:portrait) {
-    $steps-height: 700px;
-    $steps-width: 270px;
-
-    .steps {
-      width: $steps-width;
-      height: $steps-height;
-      margin-top: 80px;
-    }
-
-    .step-info-text {
-      font-size: 18px;
-    }
-
-    .steps-navigator-item {
-      width: 240px;
-      height: 80px;
-    }
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    $steps-height: 500px;
-    $steps-width: 300px;
-
-    .steps {
-      width: $steps-width;
-      height: $steps-height;
-      margin-top: 80px;
-    }
-
-    .step-info-text {
-      font-size: 18px;
-    }
-
-    .steps-navigator-item {
-      width: 240px;
-    }
   }
 </style>

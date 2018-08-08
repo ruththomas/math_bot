@@ -197,354 +197,6 @@ export default {
     /*box-shadow: inset 0 0 120px #686868;*/
   }
 
-  @media only screen and (max-width : 1280px) and (max-height: 900px) {
-    $planet-1-size: 232px;
-    $planet-2-size: 134px;
-    $planet-3-size: 157px;
-    $planet-4-size: 119px;
-    $planet-5-size: 70px;
-    $space-height: 450px;
-    $space-width: 750px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  @media only screen and (max-width : 992px) {
-    $planet-1-size: 116px;
-    $planet-2-size: 67px;
-    $planet-3-size: 77px;
-    $planet-4-size: 70px;
-    $planet-5-size: 35px;
-    $space-height: 250px;
-    $space-width: 520px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-      top: -2%;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-      top: 45%;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-      left: 40%;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 736px) {
-    $planet-1-size: 116px;
-    $planet-2-size: 67px;
-    $planet-3-size: 77px;
-    $planet-4-size: 70px;
-    $planet-5-size: 35px;
-    $space-height: 250px;
-    $space-width: 450px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    $planet-1-size: 116px;
-    $planet-2-size: 67px;
-    $planet-3-size: 77px;
-    $planet-4-size: 70px;
-    $planet-5-size: 35px;
-    $space-height: 250px;
-    $space-width: 400px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-      top: 2%;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-      top: 50%;
-      left: 60%;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-      left: 25%;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  @media only screen and (max-width: 568px) {
-    $planet-1-size: 96px;
-    $planet-2-size: 47px;
-    $planet-3-size: 57px;
-    $planet-4-size: 40px;
-    $planet-5-size: 15px;
-    $space-height: 250px;
-    $space-width: 325px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-      top: 0%;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-      top: 50%;
-      left: 60%;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-      left: 25%;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-    $planet-1-size: 116px;
-    $planet-2-size: 67px;
-    $planet-3-size: 77px;
-    $planet-4-size: 70px;
-    $planet-5-size: 35px;
-    $space-height: 550px;
-    $space-width: 200px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-      left: 0;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-      top: 25%;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-      top: 50%;
-      left: 60%;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-      left: 25%;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 360px) {
-    $planet-1-size: 96px;
-    $planet-2-size: 47px;
-    $planet-3-size: 57px;
-    $planet-4-size: 40px;
-    $planet-5-size: 15px;
-    $space-height: 400px;
-    $space-width: 180px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-      top: 25%;
-      left: 70%;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-      top: 50%;
-      left: 60%;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-      left: 25%;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
   /* iPad */
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     $planet-1-size: 232px;
@@ -644,4 +296,401 @@ export default {
     }
   }
 
+  @media only screen and (max-width : 1280px) and (max-height: 900px) {
+    $planet-1-size: 232px;
+    $planet-2-size: 134px;
+    $planet-3-size: 157px;
+    $planet-4-size: 119px;
+    $planet-5-size: 70px;
+    $space-height: 450px;
+    $space-width: 750px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+      margin-top: 30px;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  @media only screen and (max-width : 823px) and (orientation: landscape) {
+    $planet-1-size: 116px;
+    $planet-2-size: 67px;
+    $planet-3-size: 77px;
+    $planet-4-size: 70px;
+    $planet-5-size: 35px;
+    $space-height: 250px;
+    $space-width: 520px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+      margin-top: 30px;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: -2%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+      top: 45%;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+      left: 40%;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
+    $planet-1-size: 116px;
+    $planet-2-size: 67px;
+    $planet-3-size: 77px;
+    $planet-4-size: 70px;
+    $planet-5-size: 35px;
+    $space-height: 250px;
+    $space-width: 450px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+      margin-top: 30px;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) and (orientation: landscape) {
+    $planet-1-size: 116px;
+    $planet-2-size: 67px;
+    $planet-3-size: 77px;
+    $planet-4-size: 70px;
+    $planet-5-size: 35px;
+    $space-height: 250px;
+    $space-width: 400px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+      margin-top: 30px;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 2%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+      top: 50%;
+      left: 60%;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+      left: 25%;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  @media only screen and (max-width: 568px) and (orientation: landscape) {
+    $planet-1-size: 96px;
+    $planet-2-size: 47px;
+    $planet-3-size: 57px;
+    $planet-4-size: 40px;
+    $planet-5-size: 15px;
+    $space-height: 250px;
+    $space-width: 325px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+      margin-top: 30px;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 0%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+      top: 50%;
+      left: 60%;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+      left: 25%;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+
+  }
+
+  @media only screen and (max-width: 414px) {
+    $planet-1-size: 116px;
+    $planet-2-size: 67px;
+    $planet-3-size: 77px;
+    $planet-4-size: 70px;
+    $planet-5-size: 35px;
+    $space-height: 550px;
+    $space-width: 200px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+      margin-top: 30px;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+      left: 5%;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 35%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+      top: 60%;
+      left: 60%;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+      left: 25%;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  @media only screen and (max-width : 375px) {
+    $planet-1-size: 116px;
+    $planet-2-size: 67px;
+    $planet-3-size: 77px;
+    $planet-4-size: 70px;
+    $planet-5-size: 35px;
+    $space-height: 550px;
+    $space-width: 200px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+      margin-top: 30px;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+      left: 5%;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 35%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+      top: 60%;
+      left: 60%;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+      left: 25%;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  @media only screen and (max-width : 320px) {
+    $planet-1-size: 96px;
+    $planet-2-size: 47px;
+    $planet-3-size: 57px;
+    $planet-4-size: 40px;
+    $planet-5-size: 15px;
+    $space-height: 400px;
+    $space-width: 180px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+      margin-top: 30px;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+      left: 5%;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 40%;
+      left: 70%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+      top: 65%;
+      left: 60%;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+      left: 25%;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
 </style>
