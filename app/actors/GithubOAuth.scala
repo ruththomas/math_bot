@@ -1,27 +1,30 @@
 package actors
 
 import actors.GoogleApiHelpers.GoogleTokens
-import actors.messages.auth.{ RequestTokensFromCode, TokensFromCodeFailure, GoogleTokensFromCodeSuccess }
+import actors.messages.auth.{ GithubTokensFromCodeSuccess, GoogleTokensFromCodeSuccess, RequestTokensFromCode, TokensFromCodeFailure }
 import akka.actor.Actor
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.{ Http, HttpExt }
 import akka.pattern.pipe
+import akka.http.scaladsl.{ Http, HttpExt }
+import akka.http.scaladsl.model.HttpMethods.POST
+import akka.http.scaladsl.model.headers
+import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
 import com.google.inject.{ Inject, Singleton }
-import configuration.GoogleApiConfig
+import configuration.{ GithubApiConfig, GoogleApiConfig }
 import loggers.{ AkkaSemanticLog, SemanticLog }
-import utils.{ AkkaToPlayMarshaller, JwtTokenParser }
+import models.GithubTokens
+import utils.{ AkkaToPlayMarshaller, JwtTokenParser, SecureIdentifier }
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Failure
 
 @Singleton
-class GoogleOAuth @Inject()(
-                 val jwtTokenParser: JwtTokenParser,
-                 val config : GoogleApiConfig
-) extends Actor  {
+class GithubOAuth @Inject()(
+                             val config : GithubApiConfig
+                           ) extends Actor  {
 
   import HttpMethods._
+  import GithubTokens._
 
   implicit val executionContext : ExecutionContext = context.dispatcher
   implicit val materializer : akka.stream.Materializer = ActorMaterializer()
@@ -35,18 +38,19 @@ class GoogleOAuth @Inject()(
     super.aroundReceive(receive, msg)
   }
 
-  def retrieveTokens(code : String) : Future[Either[GoogleTokens, String]] = {
+  def retrieveTokens(sessionId : SecureIdentifier, code : String) : Future[Either[GithubTokens, String]] = {
     for {
       response <- http.singleRequest(
         HttpRequest(
           method = POST,
           uri = config.authTokenUrl,
+          headers = List(headers.Accept(MediaRange(MediaTypes.`application/json`))),
           entity = FormData(
             "code" -> code,
             "client_id" -> config.clientId,
             "client_secret" -> config.clientSecret,
             "redirect_uri" -> config.authRedirectUri.toString(),
-            "grant_type" -> "authorization_code"
+            "state" -> sessionId.toString
           ).toEntity
         )
       )
@@ -54,16 +58,7 @@ class GoogleOAuth @Inject()(
     } yield {
       tokensOrError match {
         case Left(Some(tokens)) =>
-          jwtTokenParser.parseAndVerify(tokens("id_token").as[String]) match {
-            case Some(idToken) =>   Left(GoogleTokens(
-              access_token = tokens("access_token").as[String],
-              expires_in = tokens("expires_in").as[Long],
-              token_type = tokens("token_type").as[String],
-              refresh_token = tokens.value.get("refresh_token").map(_.as[String]),
-              id_token = idToken
-            ))
-            case _ => Right("Unable to verify jwt")
-          }
+            Left(tokens.as[GithubTokens])
         case Left(None) => Right("Unable to verity jwt")
         case Right(reason) => Right(s"Status: ${reason._1} reason: ${reason._2}")
       }
@@ -73,9 +68,9 @@ class GoogleOAuth @Inject()(
 
   override def receive : Receive = {
     case RequestTokensFromCode(sessionId, code) =>
-      retrieveTokens(code) map {
+      retrieveTokens(sessionId, code) map {
         case Left(tokens) =>
-          GoogleTokensFromCodeSuccess(sessionId, tokens)
+          GithubTokensFromCodeSuccess(sessionId, tokens)
         case Right(reason) =>
           TokensFromCodeFailure(sessionId, config.oauthUrl, reason)
       } pipeTo sender() onComplete {
