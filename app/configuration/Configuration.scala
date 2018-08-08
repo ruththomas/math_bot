@@ -24,3 +24,12 @@ case class MongoConfig(
                       url : String
                       )
 
+case class GithubApiConfig(
+                            oauthUrl        : Uri,
+                            authRedirectUri : Uri,
+                            authTokenUrl    : Uri,
+                            clientId        : String,
+                            clientSecret    : String,
+                            scopes          : Seq[String]
+                          )
+
