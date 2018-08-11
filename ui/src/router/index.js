@@ -16,7 +16,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'swiper/dist/css/swiper.css'
 
 Vue.use(BootstrapVue)
-Vue.use(VueAwesomeSwiper)
 Vue.use(Router)
 Vue.use(VueResource)
 Vue.use(Sortable)
