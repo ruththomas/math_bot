@@ -13,7 +13,6 @@
         </div>
         <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
       </div>
-      <speech-bubble :html="description" :showing="speechBubbleShowing" :step="step"></speech-bubble>
     </div>
 </template>
 
