@@ -28,7 +28,7 @@ GET         /ws/videohint                                                       
 # Get game stats
 GET         /api/gameStats/getTokenCount                                           controllers.GameStatsController.getCount
 
-# Auth
+# Auth !! Not being used yet !!
 GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
 POST        /api/auth/resumeSession                                                controllers.AuthController.resumeSession
 GET         /api/auth/authorize                                                    controllers.AuthController.authorize()
