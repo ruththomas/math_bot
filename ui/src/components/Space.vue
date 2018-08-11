@@ -90,7 +90,7 @@ export default {
   .space {
     position: relative;
     width: 670px;
-    height: 650px;
+    height: 800px;
     margin-top: 0;
     /*border: 1px solid teal;*/
   }
@@ -197,15 +197,20 @@ export default {
     /*box-shadow: inset 0 0 120px #686868;*/
   }
 
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    $planet-1-size: 232px;
-    $planet-2-size: 134px;
-    $planet-3-size: 157px;
-    $planet-4-size: 119px;
-    $planet-5-size: 70px;
-    $space-height: 700px;
-    $space-width: 425px;
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px) and (max-device-width: 1024px)
+  and (min-device-height: 1366px) and (max-device-height: 1366px)
+  and (min-width: 1024px) and (max-width: 1024px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $planet-1-size: 206px;
+    $planet-2-size: 177px;
+    $planet-3-size: 187px;
+    $planet-4-size: 180px;
+    $planet-5-size: 135px;
+    $space-height: 1200px;
+    $space-width: 600px;
 
     .space {
       width: $space-width;
@@ -213,7 +218,6 @@ export default {
     }
 
     .planet-1 {
-      top: 5%;
       height: $planet-1-size;
       width: $planet-1-size;
     }
@@ -221,104 +225,108 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
-      left: 70%;
+      top: 25%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-height: 768px)
+  and (max-device-height : 1024px)
+  and (orientation : landscape) {
+    $planet-1-size: 166px;
+    $planet-2-size: 127px;
+    $planet-3-size: 137px;
+    $planet-4-size: 130px;
+    $planet-5-size: 95px;
+    $space-height: 600px;
+    $space-width: 700px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 10%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-height : 1024px)
+  and (orientation : portrait)  {
+    $planet-1-size: 166px;
+    $planet-2-size: 127px;
+    $planet-3-size: 137px;
+    $planet-4-size: 130px;
+    $planet-5-size: 95px;
+    $space-height: 860px;
+    $space-width: 400px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
       top: 30%;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-      top: 55%;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .space {
-      width: 495px;
-      height: 700px;
-    }
-
-    $planet-1-size: 232px;
-    $planet-2-size: 134px;
-    $planet-3-size: 157px;
-    $planet-4-size: 119px;
-    $planet-5-size: 70px;
-
-    .space {
-      margin: 0;
-      width: 670px;
-      height: 420px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  @media only screen and (max-width : 1280px) and (max-height: 900px) {
-    $planet-1-size: 232px;
-    $planet-2-size: 134px;
-    $planet-3-size: 157px;
-    $planet-4-size: 119px;
-    $planet-5-size: 70px;
-    $space-height: 450px;
-    $space-width: 750px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
     }
 
     .planet-3 {
@@ -348,13 +356,12 @@ export default {
     $planet-3-size: 77px;
     $planet-4-size: 70px;
     $planet-5-size: 35px;
-    $space-height: 250px;
-    $space-width: 520px;
+    $space-height: 260px;
+    $space-width: 500px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -365,19 +372,17 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
-      top: -2%;
+      top: 10%;
     }
 
     .planet-3 {
       height: $planet-3-size;
       width: $planet-3-size;
-      top: 45%;
     }
 
     .planet-4 {
       height: $planet-4-size;
       width: $planet-4-size;
-      left: 40%;
     }
 
     .planet-5 {
@@ -398,13 +403,12 @@ export default {
     $planet-3-size: 77px;
     $planet-4-size: 70px;
     $planet-5-size: 35px;
-    $space-height: 250px;
-    $space-width: 450px;
+    $space-height: 300px;
+    $space-width: 400px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -415,6 +419,7 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
+      top: 10%;
     }
 
     .planet-3 {
@@ -446,12 +451,11 @@ export default {
     $planet-4-size: 70px;
     $planet-5-size: 35px;
     $space-height: 250px;
-    $space-width: 400px;
+    $space-width: 500px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -495,13 +499,12 @@ export default {
     $planet-3-size: 57px;
     $planet-4-size: 40px;
     $planet-5-size: 15px;
-    $space-height: 250px;
-    $space-width: 325px;
+    $space-height: 220px;
+    $space-width: 400px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -547,12 +550,11 @@ export default {
     $planet-4-size: 70px;
     $planet-5-size: 35px;
     $space-height: 550px;
-    $space-width: 200px;
+    $space-width: 250px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -603,7 +605,6 @@ export default {
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
