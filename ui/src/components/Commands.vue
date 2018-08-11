@@ -151,7 +151,7 @@ export default {
         filter: '.command-name',
         chosenClass: 'chosen',
         ghostClass: 'ghost',
-        sort: false
+        sort: true
       },
       currentColor: this.colorSelected,
       editFunctionOpen: false
