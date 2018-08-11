@@ -130,6 +130,7 @@ $star-timer-margin-right: 5px;
 
   .star-cluster {
     .star-timer {
+      display: none;
       left: 35%;
       top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
     }

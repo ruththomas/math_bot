@@ -1,12 +1,10 @@
 <template>
   <div class="profile-container">
-    <div class="profile" data-aos="fade-in">
-      <div v-if="auth.authenticated" class="profile-action">
-        <space :permanent-images="permanentImages"></space>
-        <steps :permanent-images="permanentImages"></steps>
-      </div>
-      <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
+    <div v-if="auth.authenticated" class="profile">
+      <space :permanent-images="permanentImages"></space>
+      <steps :permanent-images="permanentImages"></steps>
     </div>
+    <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
   </div>
 </template>
 
@@ -62,7 +60,9 @@ export default {
   .profile-container {
     background-image: radial-gradient(circle farthest-corner at 50% 50%, transparent, rgba(0, 0, 0, 0.1) 24%, rgba(0, 0, 0, 0.1));
     width: 100%;
-    height: 100%;
+    max-width: 1166px;
+    height: 100vh;
+    margin: 0 auto;
   }
 
   .profile-main {
@@ -71,19 +71,10 @@ export default {
 
   .profile {
     display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    max-width: 1200px;
     margin: 0 auto;
-  }
-
-  .profile-action {
-    display: flex;
-    flex-grow: 2;
     justify-content: space-between;
-    align-items: center;
   }
-
 </style>
