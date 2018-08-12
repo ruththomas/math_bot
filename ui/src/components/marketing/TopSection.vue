@@ -216,7 +216,12 @@ export default {
     $planet-5-size: 100px;
     $space-ship-size: 128px;
     $robot-size: 250px;
+    $slogan-font-size: 64px;
+    $slogan-line-height: 68px;
+    $minor-slogan-font-size: 32px;
+    $minor-slogan-line-height: 36px;
     $mathbot-header-size: 60px;
+
 
     .marketing-container {
       padding: 50px 0 50px 0;
@@ -244,14 +249,14 @@ export default {
     }
 
     .slogan {
-      font-size: 45px;
-      line-height: 72px;
+      font-size: $slogan-font-size;
+      line-height: $slogan-line-height;
       margin-bottom: 15px;
     }
 
     .minor-slogan {
-      font-size: 32px;
-      line-height: 38px;
+      font-size: $minor-slogan-font-size;
+      line-height: $minor-slogan-line-height;
       margin-bottom: 59px;
     }
 
@@ -331,7 +336,11 @@ export default {
     $planet-5-size: 80px;
     $space-ship-size: 74px;
     $robot-size: 135px;
-    $mathbot-header-size: 50px;
+    $slogan-font-size: 64px;
+    $slogan-line-height: 68px;
+    $minor-slogan-font-size: 32px;
+    $minor-slogan-line-height: 36px;
+    $mathbot-header-size: 60px;
 
     .marketing-container {
       padding: 50px 0 50px 0;
@@ -359,14 +368,14 @@ export default {
     }
 
     .slogan {
-      font-size: 18px;
-      line-height: 24px;
+      font-size: $slogan-font-size;
+      line-height: $slogan-line-height;
       margin-bottom: 15px;
     }
 
     .minor-slogan {
-      font-size: 16px;
-      line-height: 20px;
+      font-size: $minor-slogan-font-size;
+      line-height: $minor-slogan-line-height;
       margin-bottom: 59px;
     }
 
@@ -445,8 +454,12 @@ export default {
     $planet-4-size: 85px;
     $planet-5-size: 80px;
     $space-ship-size: 74px;
-    $robot-size: 135px;
-    $mathbot-header-size: 50px;
+    $robot-size: 185px;
+    $slogan-font-size: 64px;
+    $slogan-line-height: 68px;
+    $minor-slogan-font-size: 32px;
+    $minor-slogan-line-height: 36px;
+    $mathbot-header-size: 60px;
 
     .marketing-container {
       padding: 50px 0 50px 0;
@@ -474,14 +487,14 @@ export default {
     }
 
     .slogan {
-      font-size: 18px;
-      line-height: 24px;
+      font-size: $slogan-font-size;
+      line-height: $slogan-line-height;
       margin-bottom: 15px;
     }
 
     .minor-slogan {
-      font-size: 16px;
-      line-height: 20px;
+      font-size: $minor-slogan-font-size;
+      line-height: $minor-slogan-line-height;
       margin-bottom: 59px;
     }
 
