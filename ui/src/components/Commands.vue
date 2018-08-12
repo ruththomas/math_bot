@@ -53,7 +53,7 @@
       id="open-staged"
       class="dialog-button"
       @click="toggleFunctionAdd"
-      v-if="this.stepData.stagedEnabled">
+      v-if="stagedFunctions.length && stepData.stagedEnabled">
     </div>
   </div>
 </template>
@@ -71,6 +71,9 @@ export default {
   mounted () {
   },
   computed: {
+    stagedFunctions () {
+      return this.$store.getters.getStagedFunctions
+    },
     congratsShowing () {
       return this.$store.getters.getCongratsShowing
     },
@@ -281,7 +284,6 @@ export default {
     overflow: auto;
     width: 100%;
     height: 100%;
-    max-height: 140px;
     margin-left: 12px;
 
     .piece {

@@ -1,0 +1,294 @@
+{
+  "level": "Conditionals",
+  "prevLevel": "Recursion",
+  "nextLevel": "None",
+  "show": true,
+  "steps": {
+    "1": {
+      "level": "Conditionals",
+      "step": "1",
+      "gridMap": [
+        "|W| |W| |W| |W| |W| |W| |W| |W| ($) |W|",
+        "|W| |W| |W| |W| |W| |W| |W| |W| |E| |W|",
+        "|W| |W| |W| |W| |W| |W| |W| |W| |E| |W|",
+        "(R) |E| |E| |E| |E| |E| |E| |E| [TS(1)] |W|",
+        "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|"
+      ],
+      "description": "Walk to the portal.",
+      "mainMax": 1,
+      "robotOrientation": 90,
+      "stagedEnabled": true,
+      "activeEnabled": true,
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "name": "Turn Left On Kitty",
+          "image": "turnLeftKitty",
+          "sizeLimit": -1,
+          "func": []
+        },
+        {
+          "name": "On Kitty",
+          "image": "onKitty",
+          "sizeLimit": -1,
+          "func": []
+        }
+      ],
+      "preBuiltActive": [],
+      "allowedActives": [
+        "turnLeft",
+        "turnLeftKitty",
+        "onKitty"
+      ],
+      "cmdsAvailable": [
+        "moveRobotForwardOneSpot",
+        "changeRobotDirection",
+        "pickUpItem",
+        "setItemDown"
+      ],
+      "specialParameters": [],
+      "problem": "0",
+      "clearMain": false,
+      "initFocus": [],
+      "evalEachFrame": true,
+      "videoHints": [],
+      "prevStep": "None",
+      "nextStep": "2"
+    },
+    "2": {
+      "level": "Conditionals",
+      "step": "2",
+      "gridMap": [
+        "|W| |W| |W| |W| ($) |W| |W| |W| |W| |W|",
+        "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
+        "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
+        "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
+        "(R) |E| |E| |E| [TS(10)] |W| |W| |W| |W| |W|"
+      ],
+      "description": "Walk to the portal.",
+      "mainMax": 1,
+      "robotOrientation": 90,
+      "stagedEnabled": true,
+      "activeEnabled": true,
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "name": "On Ten",
+          "image": "onTen",
+          "sizeLimit": -1,
+          "func": []
+        }
+      ],
+      "preBuiltActive": [],
+      "allowedActives": [
+        "turnLeft",
+        "turnLeftKitty",
+        "onKitty",
+        "onHundred",
+        "onTen"
+      ],
+      "cmdsAvailable": [
+        "moveRobotForwardOneSpot",
+        "changeRobotDirection",
+        "pickUpItem",
+        "setItemDown"
+      ],
+      "specialParameters": [],
+      "problem": "0",
+      "clearMain": false,
+      "initFocus": [],
+      "evalEachFrame": true,
+      "videoHints": [],
+      "prevStep": "1",
+      "nextStep": "3"
+    },
+    "3": {
+      "level": "Conditionals",
+      "step": "3",
+      "gridMap": [
+        "($) |E| |E| |E| |E| |E| |E| |E| |E| [TS(1g)]",
+        "|W| |W| |W| |W| |W| |W| |W| |W| |W| |E|",
+        "[TS(1g)] |E| |E| |E| |E| (R) |W| |W| |W| |E|",
+        "|E| |W| |W| |W| |W| |W| |W| |W| |W| |E|",
+        "[TS(1g)] |E| |E| |E| |E| |E| |E| |E| |E| [TS(1g)]"
+      ],
+      "description": "Walk to the portal.",
+      "mainMax": 1,
+      "robotOrientation": 270,
+      "stagedEnabled": true,
+      "activeEnabled": true,
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "name": "On 1000",
+          "image": "onThousand",
+          "sizeLimit": -1,
+          "func": []
+        }
+      ],
+      "preBuiltActive": [],
+      "allowedActives": [
+        "turnLeft",
+        "turnLeftKitty",
+        "onKitty",
+        "onHundred",
+        "onThousand",
+        "onTen"
+      ],
+      "cmdsAvailable": [
+        "moveRobotForwardOneSpot",
+        "changeRobotDirection",
+        "pickUpItem",
+        "setItemDown"
+      ],
+      "specialParameters": [],
+      "problem": "0",
+      "clearMain": false,
+      "initFocus": [],
+      "evalEachFrame": true,
+      "videoHints": [],
+      "prevStep": "2",
+      "nextStep": "4"
+    },
+    "4": {
+      "level": "Conditionals",
+      "step": "4",
+      "gridMap": [
+        "|W| |W| |W| |W| (R) |W| |W| |W| |W| |W|",
+        "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
+        "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
+        "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
+        "($) |E| |E| |E| [TS(10g)] |W| |W| |W| |W| |W|"
+      ],
+      "description": "Walk to the portal.",
+      "mainMax": 1,
+      "robotOrientation": 180,
+      "stagedEnabled": true,
+      "activeEnabled": true,
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "name": "On 10000",
+          "image": "onTenThousand",
+          "sizeLimit": -1,
+          "func": []
+        }
+      ],
+      "preBuiltActive": [],
+      "allowedActives": [
+        "turnLeft",
+        "turnLeftKitty",
+        "onKitty",
+        "onHundred",
+        "onThousand",
+        "onTenThousand",
+        "onTen"
+      ],
+      "cmdsAvailable": [
+        "moveRobotForwardOneSpot",
+        "changeRobotDirection",
+        "pickUpItem",
+        "setItemDown"
+      ],
+      "specialParameters": [],
+      "problem": "0",
+      "clearMain": false,
+      "initFocus": [],
+      "evalEachFrame": true,
+      "videoHints": [],
+      "prevStep": "3",
+      "nextStep": "5"
+    },
+    "5": {
+      "level": "Conditionals",
+      "step": "5",
+      "gridMap": [
+        "(R) |E| |E| |E| |E| |E| |E| |E| |E| [TS(10)]",
+        "|W| |W| |W| |W| |W| |W| |W| |W| |W| |E|",
+        "[TS(10)] |E| |E| |E| |E| ($) |W| |W| |W| |E|",
+        "|E| |W| |W| |W| |W| |W| |W| |W| |W| |E|",
+        "[TS(10)] |E| |E| |E| |E| |E| |E| |E| |E| [TS(10]"
+      ],
+      "description": "Walk to the portal.",
+      "mainMax": 1,
+      "robotOrientation": 90,
+      "stagedEnabled": true,
+      "activeEnabled": true,
+      "stagedQty": 0,
+      "assignedStaged": [],
+      "preBuiltActive": [],
+      "allowedActives": [
+        "turnLeft",
+        "turnLeftKitty",
+        "onKitty",
+        "onHundred",
+        "onThousand",
+        "onTenThousand",
+        "onTen"
+      ],
+      "cmdsAvailable": [
+        "moveRobotForwardOneSpot",
+        "changeRobotDirection",
+        "pickUpItem",
+        "setItemDown"
+      ],
+      "specialParameters": [],
+      "problem": "0",
+      "clearMain": false,
+      "initFocus": [],
+      "evalEachFrame": true,
+      "videoHints": [],
+      "prevStep": "4",
+      "nextStep": "6"
+    },
+    "6": {
+      "level": "Conditionals",
+      "step": "6",
+      "gridMap": [
+        "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
+        "|W| |W| |W| |W| |W| [TS(100)] |E| |E| |E| ($)",
+        "|W| |W| |W| |W| |W| |E| |W| |W| |W| |W|",
+        "(R) |E| |E| |E| |E| [TS(1)] |W| |W| |W| |W|",
+        "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|"
+      ],
+      "description": "Walk to the portal.",
+      "mainMax": 1,
+      "robotOrientation": 90,
+      "stagedEnabled": true,
+      "activeEnabled": true,
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "name": "On Hundred",
+          "image": "onHundred",
+          "sizeLimit": -1,
+          "func": []
+        }
+      ],
+      "preBuiltActive": [],
+      "allowedActives": [
+        "turnLeft",
+        "turnLeftKitty",
+        "onKitty",
+        "onHundred",
+        "onThousand",
+        "onTenThousand",
+        "onTen"
+      ],
+      "cmdsAvailable": [
+        "moveRobotForwardOneSpot",
+        "changeRobotDirection",
+        "pickUpItem",
+        "setItemDown"
+      ],
+      "specialParameters": [],
+      "problem": "0",
+      "clearMain": false,
+      "initFocus": [],
+      "evalEachFrame": true,
+      "videoHints": [],
+      "prevStep": "5",
+      "nextStep": "None"
+    }
+  }
+}
