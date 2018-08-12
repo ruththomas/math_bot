@@ -115,7 +115,7 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-2-color, $planet-gradient);
     height: $planet-2-size;
     width: $planet-2-size;
-    top: 0;
+    top: 10%;
     left: 64%;
     /*box-shadow: inset 0 0 120px #F25C5C;*/
   }
@@ -124,7 +124,7 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-3-color, $planet-gradient);
     height: $planet-3-size;
     width: $planet-3-size;
-    top: 57%;
+    top: 40%;
     right: 0;
     /*box-shadow: inset 0 0 120px #4A90E2;*/
   }
@@ -133,8 +133,8 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-4-color, $planet-gradient);
     height: $planet-4-size;
     width: $planet-4-size;
-    bottom: 0;
-    left: 38%;
+    top: 65%;
+    left: 50%;
     /*box-shadow: inset 0 0 120px #FF98B1;*/
   }
 
@@ -142,8 +142,8 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, $planet-gradient);
     height: $planet-5-size;
     width: $planet-5-size;
-    top: 86%;
-    left: 15%;
+    top: 80%;
+    left: 25%;
     /*box-shadow: inset 0 0 120px #50E3C2;*/
   }
 
@@ -276,7 +276,8 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
-      top: 10%;
+      top: 5%;
+      left: 50%;
     }
 
     .planet-3 {
@@ -326,17 +327,20 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
-      top: 30%;
+      top: 0;
+      left: 80%;
     }
 
     .planet-3 {
       height: $planet-3-size;
       width: $planet-3-size;
+      top: 45%;
     }
 
     .planet-4 {
       height: $planet-4-size;
       width: $planet-4-size;
+      left: 10%;
     }
 
     .planet-5 {
@@ -629,7 +633,7 @@ export default {
     .planet-4 {
       height: $planet-4-size;
       width: $planet-4-size;
-      left: 25%;
+      left: 15%;
     }
 
     .planet-5 {

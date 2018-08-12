@@ -1,5 +1,5 @@
 <template>
-  <div class="stars" :class="starGroup">
+  <div class="stars star-spread">
     <star class="star-two" :star-group="starGroup" :active="stepStats.active" :success="success(2)"></star>
     <star class="star-one" :star-group="starGroup" :active="stepStats.active" :success="success(1)"></star>
     <star class="star-three" :star-group="starGroup" :active="stepStats.active" :success="success(3)"></star>
@@ -67,7 +67,7 @@ $star-spread-star-size: 40px;
 $stars-shadow: inset 0 0 100px #778899;
 $star-congrats-star-size: 70px;
 $star-timer-right: 100%;
-$star-timer-bottom: -10px;
+$star-timer-bottom: 0;
 $star-timer-font-size: 16px;
 $star-timer-margin-right: 5px;
 .stars {
@@ -82,14 +82,16 @@ $star-timer-margin-right: 5px;
 
 .star-timer {
   position: absolute;
-  right: $star-timer-right;
   bottom: $star-timer-bottom;
   font-size: $star-timer-font-size;
-  margin-right: $star-timer-margin-right;
+  color: #ffffff;
 }
 
-.star-timer.star-timer-star-spread {
-  color: #000000;
+.help-button {
+  .star-timer {
+    bottom: -30px;
+    color: #000000;
+  }
 }
 
 .star-cluster {

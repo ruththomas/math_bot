@@ -62,6 +62,14 @@ export default {
       .catch(console.error)
   },
 
+  changeFunctionColor ({tokenId, funcToken}, cb) {
+    Vue.http.put('/api/token/color', {tokenId, funcToken})
+      .then(res => {
+        cb(res.body)
+      })
+      .catch(console.error)
+  },
+
   updateActives ({tokenId, oldIndex, newIndex}, cb) {
     Vue.http.get(`/api/token/updateActives/${urlEncode(tokenId)}/${oldIndex}/${newIndex}`)
       .then(res => res.body)

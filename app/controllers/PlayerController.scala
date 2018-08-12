@@ -59,6 +59,13 @@ class PlayerController @Inject()(system: ActorSystem,
     }
   }
 
+  def changeFunctionColor(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    (playerActor ? ChangeFunctionColor(request.body)).mapTo[Either[PreparedLambdasToken, ActorFailed]].map {
+      case Left(preparedLambdasToken) => Ok(Json.toJson(preparedLambdasToken.lambdas))
+      case Right(invalidJson) => BadRequest(invalidJson.msg)
+    }
+  }
+
   def activateFunction(encodedTokenId: String, stagedIndex: String, activeIndex: String): Action[AnyContent] =
     Action.async { implicit request: Request[AnyContent] =>
       (playerActor ? ActivateFunc(URLDecoder.decode(encodedTokenId, "UTF-8"), stagedIndex, activeIndex))

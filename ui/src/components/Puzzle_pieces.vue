@@ -118,7 +118,7 @@ export default {
   }
 
   .dropped-indication {
-    box-shadow: 0 -2px 0 0 $click-color;
+    box-shadow: 0 -5px 0 0 $click-color;
   }
 
   .piece-default {
