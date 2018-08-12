@@ -38,11 +38,12 @@
 <style scoped lang="scss">
 
 #splash-screen {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: #000000;
 }
 
 #animatePortal {
