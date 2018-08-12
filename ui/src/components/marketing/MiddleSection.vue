@@ -225,10 +225,10 @@ export default {
     $ship-and-planet-size: 225px;
     $left-arch-line-size: 620px;
     $middle-arch-line-size: 350px;
-    $header-font-size: 26px;
-    $header-line-height: 32px;
-    $message-font-size: 18px;
-    $message-line-height: 22px;
+    $header-font-size: 48px;
+    $header-line-height: 58px;
+    $message-font-size: 23px;
+    $message-line-height: 23px;
 
     #Marketing-middle-section {
       background-color: #FFFFFF;
@@ -314,10 +314,10 @@ export default {
     $ship-and-planet-size: 225px;
     $left-arch-line-size: 465px;
     $middle-arch-line-size: 255px;
-    $header-font-size: 26px;
-    $header-line-height: 32px;
-    $message-font-size: 18px;
-    $message-line-height: 22px;
+    $header-font-size: 48px;
+    $header-line-height: 58px;
+    $message-font-size: 23px;
+    $message-line-height: 23px;
 
     #Marketing-middle-section {
       background-color: #FFFFFF;

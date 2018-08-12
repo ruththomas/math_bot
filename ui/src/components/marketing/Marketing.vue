@@ -96,9 +96,9 @@ export default {
   and (max-device-height : 1024px)
   and (orientation : landscape) {
     .play-now {
-      height: 50px;
-      width: 220px;
-      font-size: 12px;
+      height: 65px;
+      width: 327px;
+      font-size: 22px;
     }
   }
 
@@ -108,9 +108,9 @@ export default {
   and (max-device-height : 1024px)
   and (orientation : portrait)  {
     .play-now {
-      height: 50px;
-      width: 220px;
-      font-size: 12px;
+      height: 65px;
+      width: 275px;
+      font-size: 22px;
     }
   }
 
