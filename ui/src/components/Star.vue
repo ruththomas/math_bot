@@ -1,6 +1,6 @@
 <template>
   <div class="star">
-      <svg width="100%" height="100%" viewBox="0 0 92 87" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <svg width="70%" height="70%" viewBox="0 0 92 87" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
           <polygon id="path-1" points="58.9933172 61.5 34.8941218 74.1696968 39.4966586 47.3348484 20 28.3303032 46.9437195 24.4151516 58.9933172 0 71.0429148 24.4151516 97.9866343 28.3303032 78.4899758 47.3348484 83.0925125 74.1696968"></polygon>
         </defs>
@@ -16,7 +16,7 @@
             </g>
           </g>
         </g>
-        <image v-if="starGroup === 'star-spread' && success && active" :xlink:href="permanentImages.questionMark" height="50%" width="50%" x="25%" y="28%" />
+        <image v-if="starGroup === 'star-spread' && success && active" :xlink:href="permanentImages.questionMark" height="40%" width="40%" x="30%" y="30%" />
       </svg>
   </div>
 </template>
@@ -37,6 +37,8 @@ export default {
   .star {
     height: 100%;
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .heavy { font: bold 30px sans-serif; }
 </style>

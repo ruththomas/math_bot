@@ -57,7 +57,8 @@ export default {
         BasicProgramming: 'Planet 1',
         Counting: 'Planet 2',
         Numbers: 'Planet 3',
-        Recursion: 'Planet 4'
+        Recursion: 'Planet 4',
+        Conditionals: 'Planet 5'
       }
       return planets[this.level]
     },
@@ -205,11 +206,10 @@ export default {
     justify-content: space-around;
     height: 100%;
     width: 133px;
-    box-shadow: inset 0 0 40px #ffffff;
   }
 
   .step-image-planet {
-    height: 100%;
+    height: 70%;
     border-radius: 50%;
   }
 
@@ -598,7 +598,6 @@ export default {
     .steps {
       height: $steps-height;
       width: $steps-width;
-      margin-top: 10px;
     }
 
     .steps-navigator-item {
