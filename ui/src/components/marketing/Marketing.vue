@@ -54,7 +54,8 @@ export default {
     height: 100vh;
     margin: 0 auto;
     font-family: "Proba Pro Regular", serif;
-    overflow: auto;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
   }
 
   #Marketing::-webkit-scrollbar {
