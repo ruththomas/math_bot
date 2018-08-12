@@ -40,7 +40,7 @@ export default {
         planetThree: 'https://res.cloudinary.com/doohickey/image/upload/v1528476209/planet-3_ehflik.png',
         planetFour: 'https://res.cloudinary.com/doohickey/image/upload/v1528476786/planet-4_mgoqir.png',
         planetFive: 'https://res.cloudinary.com/doohickey/image/upload/v1528476931/planet-5_va9bvg.png',
-        'spaceShip': 'https://res.cloudinary.com/doohickey/image/upload/v1521989176/noun_1018446_cc_zvq5px.svg',
+        'spaceShip': 'https://res.cloudinary.com/doohickey/image/upload/v1534029884/black-space-ship_kihoqt.svg',
         'archedLine': 'https://res.cloudinary.com/doohickey/image/upload/v1521989179/Path_2_ggddw3.svg'
       },
       headerFont: 0
@@ -141,6 +141,7 @@ export default {
   .planet {
     z-index: 3;
     border-radius: 50%;
+    opacity: 0;
   }
 
   .planet-one {

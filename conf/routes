@@ -10,6 +10,7 @@ GET         /api/wsPath/:tokenId/:connection                                    
 
 # PLAYER
 PUT         /api/token/editLambdas                                                 controllers.PlayerController.editLambdas
+PUT         /api/token/color                                                       controllers.PlayerController.changeFunctionColor
 POST        /api/token                                                             controllers.PlayerController.addToken
 GET         /api/token/activateFunction/:tokenId/:stagedIndex/:activeIndex         controllers.PlayerController.activateFunction(tokenId, stagedIndex, activeIndex)
 POST        /api/token/test                                                        controllers.PlayerController.test

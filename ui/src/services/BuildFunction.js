@@ -35,6 +35,12 @@ class BuildFunction {
     })
   }
 
+  _changeFunctionColor ({funcToken}) {
+    api.changeFunctionColor({tokenId: this._tokenId(), funcToken: funcToken}, lambdas => {
+      this._updatedLambdas(lambdas)
+    })
+  }
+
   _activateFunc ({stagedIndex, activeIndex}) {
     api.activateFunction({tokenId: this._tokenId(), stagedIndex, activeIndex}, lambdas => this._updatedLambdas(lambdas))
   }
@@ -82,8 +88,7 @@ class BuildFunction {
   adjustColor ({color}) {
     const currentFunction = this._getCurrentFunction()
     currentFunction.color = color
-
-    this._putFunc({funcToken: currentFunction})
+    this._changeFunctionColor({funcToken: currentFunction})
   }
 
   addToFunction () {

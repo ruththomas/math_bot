@@ -15,13 +15,18 @@ class PopoverBucket {
   `)
 
   removePointer () {
+    this.$selected.show()
     $('.pointer').each(function () {
       $(this).remove()
     })
   }
 
   _setPointer () {
-    this.$selected.append(this._pointerTemplate)
+    if (this.$selected.attr('id') === 'open-staged') {
+      this.$selected.hide()
+    } else {
+      this.$selected.append(this._pointerTemplate)
+    }
   }
 }
 

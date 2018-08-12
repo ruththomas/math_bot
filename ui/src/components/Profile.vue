@@ -58,23 +58,23 @@ export default {
 
 <style scoped lang="scss">
   .profile-container {
-    background-image: radial-gradient(circle farthest-corner at 50% 50%, transparent, rgba(0, 0, 0, 0.1) 24%, rgba(0, 0, 0, 0.1));
     width: 100%;
     max-width: 1166px;
-    height: 100vh;
-    margin: 0 auto;
-  }
-
-  .profile-main {
     height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
   }
 
   .profile {
     display: flex;
     width: 100%;
     height: 100%;
+    max-height: 900px;
     overflow: hidden;
     margin: 0 auto;
     justify-content: space-between;
+    /*align-items: center;*/
+    align-self: center;
   }
 </style>
