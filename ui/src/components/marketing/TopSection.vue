@@ -222,7 +222,6 @@ export default {
     $minor-slogan-line-height: 36px;
     $mathbot-header-size: 60px;
 
-
     .marketing-container {
       padding: 50px 0 50px 0;
       grid-template-columns: [c-one]12.5% [c-two]12.5% [c-three]12.5% [c-four]12.5% [c-five]12.5% [c-six]12.5% [c-seven]12.5% [c-eight]12.5%;
