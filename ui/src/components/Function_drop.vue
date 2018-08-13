@@ -144,6 +144,7 @@ export default {
 
   .function-drop {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     height: 100%;
     width: 100%;
     .function-drop-drop-zone {

@@ -122,7 +122,9 @@ class RunCompiled extends GridAnimator {
     this.$store.dispatch('updateStepData', stepData)
     this.$store.dispatch('updateLambdas', stepData.lambdas)
     stepData.initialRobotState.context = this.context
-    this.$store.dispatch('updateRobot', new Robot(stepData.initialRobotState))
+    const robot = new Robot(stepData.initialRobotState)
+    robot.robotSpeed = this.robot.robotSpeed
+    this.$store.dispatch('updateRobot', robot)
     this.constructor(this.context)
   }
 

@@ -318,6 +318,7 @@ export default {
     box-shadow: 0 2px 10px 0 $danger-color;
     animation: shake 0.8s;
     animation-iteration-count: infinite;
+    margin: 40px;
   }
 
   .func-name {

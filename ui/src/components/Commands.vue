@@ -51,7 +51,7 @@
 
     <div
       id="open-staged"
-      class="dialog-button"
+      class="dialog-button pulse"
       @click="toggleFunctionAdd"
       v-if="stagedFunctions.length && stepData.stagedEnabled">
     </div>
@@ -282,6 +282,7 @@ export default {
 
   .functions-container {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     width: 100%;
     height: 100%;
     margin-left: 12px;
@@ -294,6 +295,7 @@ export default {
       display: flex;
       height: 100%;
       width: min-content;
+      min-width: 100%;
       padding: 0 0 0 $functions-padding-left;
     }
   }
