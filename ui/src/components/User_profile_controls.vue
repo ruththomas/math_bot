@@ -53,7 +53,7 @@ export default {
   .user-profile-controls {
     flex-grow: 1;
     display: flex;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
   }

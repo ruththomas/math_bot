@@ -105,6 +105,7 @@ export default {
 
   .staged-functions-content {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     height: 100%;
     width: 100%;
     .staged-functions {

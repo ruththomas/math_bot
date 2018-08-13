@@ -252,15 +252,15 @@ export default {
   // ipad landscape
   @media only screen
   and (min-device-width : 768px)
-  and (max-device-height: 768px)
   and (max-device-height : 1024px)
-  and (orientation : landscape) {
+  and (orientation : landscape)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
     $planet-1-size: 166px;
     $planet-2-size: 127px;
     $planet-3-size: 137px;
     $planet-4-size: 130px;
     $planet-5-size: 95px;
-    $space-height: 600px;
+    $space-height: 400px;
     $space-width: 700px;
 
     .space {
@@ -561,7 +561,6 @@ export default {
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -615,7 +614,6 @@ export default {
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -669,7 +667,6 @@ export default {
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {

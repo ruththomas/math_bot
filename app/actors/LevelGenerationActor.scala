@@ -4,13 +4,13 @@ import java.security.MessageDigest
 
 import actors.messages.PreparedStepData._
 import actors.messages._
-import akka.actor.{ Actor, Props }
+import akka.actor.{Actor, Props}
 import akka.pattern.pipe
-import daos.{ DefaultCommands, PlayerTokenDAO }
+import daos.{DefaultCommands, PlayerTokenDAO}
 import loggers.MathBotLogger
 import models._
 import play.api.Environment
-import types.{ LevelName, StepName, TokenId }
+import types.{LevelName, StepName, TokenId}
 
 import scala.concurrent.Future
 

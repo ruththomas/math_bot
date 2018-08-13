@@ -121,6 +121,10 @@ export default {
     box-shadow: 0 -5px 0 0 $click-color;
   }
 
+  .full-indicator {
+
+  }
+
   .piece-default {
     border-color: $piece-default!important;
     .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
@@ -628,7 +632,7 @@ export default {
   }
 
   @media only screen and (max-width: 414px) {
-    $piece-size: 31px;
+    $piece-size: 36px;
     $piece-margin: 2px;
     $tab-insert-width: 5px;
     $tab-size: 5px;
@@ -642,6 +646,10 @@ export default {
       width: $piece-size;
       margin: $piece-margin;
       z-index: 1000;
+    }
+
+    .dropped-indication {
+      box-shadow: 0 -2px 0 0 $click-color;
     }
 
     .puzzle-start, .puzzle-middle {
