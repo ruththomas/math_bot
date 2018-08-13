@@ -205,13 +205,13 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(50% + calc(#{$bar-height} / 2));
+    top: calc(50%);
     height: $bar-height;
     background-color: #B8E986;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 0;
+    z-index: -1;
   }
 
   .red-bar {
@@ -279,7 +279,6 @@ export default {
     .bar {
       right: 0;
       left: 0;
-      top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 
@@ -318,7 +317,6 @@ export default {
     .bar {
       right: 10px;
       left: 10px;
-      top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 
@@ -357,7 +355,6 @@ export default {
     .bar {
       right: 0;
       left: 0;
-      top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 
@@ -393,7 +390,6 @@ export default {
     .bar {
       right: 10px;
       left: 10px;
-      top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 
@@ -428,7 +424,6 @@ export default {
     .bar {
       right: 10px;
       left: 10px;
-      top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 
@@ -463,7 +458,6 @@ export default {
     .bar {
       right: 10px;
       left: 10px;
-      top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 
@@ -499,7 +493,6 @@ export default {
     .bar {
       right: 10px;
       left: 10px;
-      top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 
@@ -534,7 +527,6 @@ export default {
     .bar {
       right: 5px;
       left: 5px;
-      top: calc(50% + #{$bar-height});
       height: $bar-height;
     }
 

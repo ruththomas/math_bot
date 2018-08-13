@@ -338,7 +338,6 @@ export default {
   }
 
   .function-drop-drop-zone {
-    justify-content: flex-start!important;
     margin: 0;
   }
 

@@ -242,6 +242,7 @@ export default {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     font-size: $grid-space-font-size;
     background: $grid-background;
+    z-index: 1;
 
     img {
       position: absolute;
@@ -256,7 +257,7 @@ export default {
     img.robot {
       height: 150%;
       top: -35%;
-      z-index: 100;
+      z-index: 9;
     }
 
   }
@@ -711,7 +712,7 @@ export default {
   }
 
   @media only screen and (max-width : 320px) {
-    $grid-space-size: 24px;
+    $grid-space-size: 30px;
     $display-tool-size: 12px;
 
     .grid-space {

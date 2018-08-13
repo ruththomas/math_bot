@@ -311,6 +311,7 @@ export default {
     z-index: 1000;
     background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
     background-size: contain;
+    border-radius: 50%;
   }
 
   .rotate-to-x {

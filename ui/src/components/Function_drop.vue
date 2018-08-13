@@ -138,7 +138,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $drop-zone-padding-left: 30px;
   $drop-zone-padding-right: 30px;
   $danger-color: #F25C5C;
 
@@ -147,6 +146,7 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     width: 100%;
+    z-index: 999;
     .function-drop-drop-zone {
       position: relative;
       width: min-content;
@@ -155,12 +155,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 999;
-      padding-left: $drop-zone-padding-left;
       padding-right: $drop-zone-padding-right;
-    }
-    .editFunction-drop-zone {
-      justify-content: flex-start;
     }
   }
 

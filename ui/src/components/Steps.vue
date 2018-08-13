@@ -527,7 +527,6 @@ export default {
     .steps {
       height: $steps-height;
       width: $steps-width;
-      margin-top: 10px;
     }
 
     .steps-navigator-item {
@@ -563,7 +562,6 @@ export default {
     .steps {
       height: $steps-height;
       width: $steps-width;
-      margin-top: 10px;
     }
 
     .steps-navigator-item {
@@ -584,7 +582,7 @@ export default {
 
   /* Custom, iPhone Retina */
   @media only screen and (max-width : 320px) {
-    $steps-height: 450px;
+    $steps-height: 400px;
     $steps-width: 120px;
     $steps-header-font-size: 18px;
     $steps-header-line-height: 22px;
