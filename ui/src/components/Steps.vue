@@ -1,8 +1,7 @@
 <template>
   <div class="steps">
     <div class="steps-header-container">
-      <div class="steps-header planet-header">{{`${planetName}:`}}</div>
-      <div class="steps-header level-header"> {{ parseCamelCase(level) }}</div>
+      <div class="steps-header level-header">{{`${planetName}`}}. {{ parseCamelCase(level) }}</div>
     </div>
     <div class="steps-navigator-container">
       <div class="steps-navigator-items">
@@ -14,7 +13,7 @@
           :key="step + ':' + value"
         >
           <div class="step-info-text-container">
-            <div class="step-info-text">{{ value + 1 }}:{{ parseCamelCase(step.name) }}</div>
+            <div class="step-info-text">Level {{ value + 1 }}</div>
           </div>
           <div class="step-info-image-container">
             <stars :level="level" :step="step.name" :step-stats="step" :star-group="'star-cluster'"></stars>
@@ -54,11 +53,11 @@ export default {
   computed: {
     planetName () {
       const planets = {
-        BasicProgramming: 'Planet 1',
-        Counting: 'Planet 2',
-        Numbers: 'Planet 3',
-        Recursion: 'Planet 4',
-        Conditionals: 'Planet 5'
+        BasicProgramming: '1',
+        Counting: '2',
+        Numbers: '3',
+        Recursion: '4',
+        Conditionals: '5'
       }
       return planets[this.level]
     },
@@ -126,6 +125,7 @@ export default {
 
   .steps-navigator-container {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     width: 100%;
     height: 100%;
 
