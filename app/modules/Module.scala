@@ -1,8 +1,8 @@
 package modules
-import actors.{ ActorTags, GoogleOAuth }
+import actors.{ ActorTags, GithubOAuth, GoogleOAuth }
 import akka.actor.ActorSystem
 import com.google.inject.{ AbstractModule, Provides }
-import configuration.{ ActorConfig, ConfigFactory, GoogleApiConfig }
+import configuration.{ ActorConfig, ConfigFactory, GithubApiConfig, GoogleApiConfig }
 import loggers.{ AkkaSemanticLog, SemanticLog }
 import models.JwtToken
 import org.bson.codecs.Codec
@@ -16,6 +16,7 @@ import utils.SecureIdentifier.SecureIdentifierCodec
 class Module extends AbstractModule with AkkaGuiceSupport {
   override def configure() = {
     bindActor[GoogleOAuth](ActorTags.googleOAuth)
+    bindActor[GithubOAuth](ActorTags.githubOAuth)
 
   }
 
@@ -31,6 +32,11 @@ class Module extends AbstractModule with AkkaGuiceSupport {
   @Provides
   def provideGoogleApiConfig(configFactory: ConfigFactory) : GoogleApiConfig = {
     configFactory.googleApiConfig()
+  }
+
+  @Provides
+  def provideGithubApiConfig(configFactory: ConfigFactory) : GithubApiConfig = {
+    configFactory.githubApiConfig()
   }
 
   @Provides
