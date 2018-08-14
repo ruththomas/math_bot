@@ -39,10 +39,6 @@ object LevelGenerationActor {
 
   def makeQtyUnlimited(qty: Int): Int = if (qty < 0) 10000 else qty
 
-  def createdIdGen(name: String): String = {
-    MessageDigest.getInstance("MD5").digest(name.getBytes).mkString("")
-  }
-
   def props(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger, environment: Environment) =
     Props(new LevelGenerationActor()(playerTokenDAO, logger, environment))
 }
@@ -150,12 +146,11 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         // Create List[FuncToken] of assigned staged
         val assignedStaged = {
           rawStepData.assignedStaged.flatMap { as =>
-            val createdId = createdIdGen(as.image)
-            if (activesCombined.exists(_.created_id == createdId)) None
+            if (activesCombined.exists(_.created_id == as.createdId)) None
             else {
               Some(
                 FuncToken(
-                  created_id = createdIdGen(as.image),
+                  created_id = as.createdId,
                   func = Some(List.empty[FuncToken]),
                   set = Some(false),
                   name = Some(as.name),
@@ -173,12 +168,11 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         // Create List[FuncToken] of pre built active functions
         val preBuiltActive = {
           rawStepData.preBuiltActive.flatMap { pa =>
-            val createdId = createdIdGen(pa.image)
-            if (activesCombined.exists(_.created_id == createdId)) None
+            if (activesCombined.exists(_.created_id == pa.createdId)) None
             else {
               Some(
                 FuncToken(
-                  created_id = createdIdGen(pa.image),
+                  created_id = pa.createdId,
                   func = Some(pa.func.flatMap(fn => lambdas.cmds.find(_.commandId.contains(fn)))),
                   name = Some(pa.name),
                   image = Some(pa.image),
@@ -207,7 +201,7 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         val activesAndInactiveActives: Map[String, List[FuncToken]] = rawStepData.allowedActives match {
           case Some(allowed) if allowed.nonEmpty => // allowed is a non empty list
             val consolidatedFuncs = lambdas.activeFuncs ++ lambdas.inactiveActives.getOrElse(List.empty[FuncToken])
-            val allowedIds = (rawStepData.assignedStaged.map(_.image) ++ allowed).map(createdIdGen)
+            val allowedIds = rawStepData.assignedStaged.map(_.createdId) ++ allowed
             val allowedActives = consolidatedFuncs.filter(ft => allowedIds.contains(ft.created_id))
             val inActives = consolidatedFuncs.filterNot(ft => allowedIds.contains(ft.created_id))
             Map("newActives" -> (preBuiltActive ++ allowedActives), "newInActives" -> inActives)

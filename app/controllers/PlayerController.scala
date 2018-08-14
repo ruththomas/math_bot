@@ -4,7 +4,7 @@ import java.net.URLDecoder
 
 import javax.inject.Inject
 import actors.messages.ActorFailed
-import actors.{PlayerActor, PolyfillActor}
+import actors.{PlayerActor, UpdatePlayerTokenActor}
 import actors.PlayerActor._
 import actors.messages.ResponsePlayerToken
 import akka.actor.ActorSystem
@@ -29,7 +29,7 @@ class PlayerController @Inject()(system: ActorSystem,
 
   implicit val timeout: Timeout = 5000.minutes
 
-  val polyfillActor = system.actorOf(PolyfillActor.props(system, logger, environment), "polyfill-actor")
+  val polyfillActor = system.actorOf(UpdatePlayerTokenActor.props(system, logger, environment), "polyfill-actor")
 
   val playerActor =
     system.actorOf(PlayerActor.props(system, playerTokenDAO, polyfillActor, logger, environment), "player-actor")

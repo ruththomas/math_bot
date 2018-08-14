@@ -22,6 +22,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "54709789996",
           "name": "Walk Forever",
           "image": "walkForever",
           "sizeLimit": 2,
@@ -29,7 +30,7 @@
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["walkForever"],
+      "allowedActives": ["54709789996"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -63,6 +64,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "52128941453",
           "name": "Spiral",
           "image": "spiral",
           "sizeLimit": 11,
@@ -70,7 +72,7 @@
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["spiral"],
+      "allowedActives": ["52128941453"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -104,7 +106,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["spiral"],
+      "allowedActives": ["52128941453"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -138,7 +140,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["spiral"],
+      "allowedActives": ["52128941453"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -172,6 +174,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "51974949138",
           "name": "Stairs",
           "image": "stairs",
           "sizeLimit": 6,
@@ -179,7 +182,7 @@
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["stairs", "turnLeft"],
+      "allowedActives": ["51974949138", "53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -213,7 +216,7 @@
       "stagedQty": -1,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["stairs", "turnLeft"],
+      "allowedActives": ["51974949138", "53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -247,6 +250,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "57634311012",
           "name": "Snake",
           "image": "snake",
           "sizeLimit": 17,
@@ -254,7 +258,7 @@
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["snake", "turnLeft"],
+      "allowedActives": ["57634311012", "53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -288,7 +292,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["snake", "turnLeft"],
+      "allowedActives": ["57634311012", "53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -322,6 +326,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "50555483574",
           "name": "Cleanup",
           "image": "cleanup",
           "sizeLimit": 18,
@@ -329,7 +334,7 @@
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["cleanup"],
+      "allowedActives": ["50555483574"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -363,18 +368,21 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "53165523148",
           "name": "Cleanup More",
           "image": "cleanupMore",
           "sizeLimit": 4,
           "func": []
         },
         {
+          "createdId": "57688072155",
           "name": "PickupN",
           "image": "pickupN",
           "sizeLimit": 9,
           "func": []
         },
         {
+          "createdId": "54191328403",
           "name": "DropN",
           "image": "dropN",
           "sizeLimit": 9,
@@ -382,7 +390,7 @@
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["cleanupMore", "pickupN", "dropN"],
+      "allowedActives": ["53165523148", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -416,7 +424,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["cleanupMore", "pickupN", "dropN"],
+      "allowedActives": ["53165523148", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -450,6 +458,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "59033416266",
           "name": "Clean Comb",
           "image": "cleanComb",
           "sizeLimit": 28,
@@ -457,7 +466,7 @@
         }
       ],
       "preBuiltActive": [],
-      "allowedActives": ["cleanComb", "turnLeft", "uTurn", "pickupN", "dropN"],
+      "allowedActives": ["59033416266", "53367904610", "58071679485", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -491,7 +500,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["cleanComb", "turnLeft", "uTurn", "pickupN", "dropN"],
+      "allowedActives": ["59033416266", "53367904610", "58071679485", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -525,7 +534,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["cleanComb", "turnLeft", "uTurn", "pickupN", "dropN"],
+      "allowedActives": ["59033416266", "53367904610", "58071679485", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -559,7 +568,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["cleanComb", "turnLeft", "uTurn", "pickupN", "dropN"],
+      "allowedActives": ["59033416266", "53367904610", "58071679485", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",

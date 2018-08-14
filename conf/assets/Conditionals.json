@@ -22,12 +22,14 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "54771309360",
           "name": "Left If",
           "image": "leftIf",
           "sizeLimit": 2,
           "func": []
         },
         {
+          "createdId": "50425126605",
           "name": "Walk Turn",
           "image": "walkTurn",
           "sizeLimit": 8,
@@ -36,9 +38,9 @@
       ],
       "preBuiltActive": [],
       "allowedActives": [
-        "turnLeft",
-        "walkTurn",
-        "leftIf"
+        "53367904610",
+        "50425126605",
+        "54771309360"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -74,9 +76,9 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "turnLeft",
-        "leftIf",
-        "walkTurn"
+        "53367904610",
+        "50425126605",
+        "54771309360"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -112,9 +114,9 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "turnLeft",
-        "walkTurn",
-        "leftIf"
+        "53367904610",
+        "50425126605",
+        "54771309360"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -149,6 +151,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "52594280153",
           "name": "Right If",
           "image": "rightIf",
           "sizeLimit": 2,
@@ -157,8 +160,8 @@
       ],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkTurn",
-        "rightIf"
+        "50425126605",
+        "52594280153"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -194,8 +197,8 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkTurn",
-        "rightIf"
+        "50425126605",
+        "52594280153"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -231,8 +234,8 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkTurn",
-        "rightIf"
+        "50425126605",
+        "52594280153"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -268,8 +271,9 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkTurn",
-        "leftIf"
+        "53367904610",
+        "50425126605",
+        "54771309360"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -305,10 +309,10 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "turnLeft",
-        "walkTurn",
-        "leftIf",
-        "rightIf"
+        "53367904610",
+        "50425126605",
+        "54771309360",
+        "52594280153"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -344,10 +348,10 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "turnLeft",
-        "walkTurn",
-        "leftIf",
-        "rightIf"
+        "53367904610",
+        "50425126605",
+        "54771309360",
+        "52594280153"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -382,12 +386,14 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "50870843406",
           "name": "Right If 2",
           "image": "rightIf2",
           "sizeLimit": 2,
           "func": []
         },
         {
+          "createdId": "57442038480",
           "name": "Left If 2",
           "image": "leftIf2",
           "sizeLimit": 2,
@@ -396,12 +402,12 @@
       ],
       "preBuiltActive": [],
       "allowedActives": [
-        "turnLeft",
-        "walkTurn",
-        "rightIf2",
-        "leftIf2",
-        "leftIf",
-        "rightIf"
+        "53367904610",
+        "50425126605",
+        "54771309360",
+        "52594280153",
+        "50870843406",
+        "57442038480"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -436,6 +442,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "57049032471",
           "name": "Left If 3",
           "image": "leftIf3",
           "sizeLimit": 2,
@@ -444,13 +451,13 @@
       ],
       "preBuiltActive": [],
       "allowedActives": [
-        "turnLeft",
-        "walkTurn",
-        "rightIf2",
-        "leftIf2",
-        "leftIf3",
-        "leftIf",
-        "rightIf"
+        "53367904610",
+        "50425126605",
+        "54771309360",
+        "52594280153",
+        "50870843406",
+        "57442038480",
+        "57049032471"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -485,12 +492,14 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "56021486035",
           "name": "Walk Ahead",
           "image": "walkAhead",
           "sizeLimit": 7,
           "func": []
         },
         {
+          "createdId": "57492275363",
           "name": "Drop If",
           "image": "dropIf",
           "sizeLimit": 1,
@@ -499,10 +508,10 @@
       ],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkAhead",
-        "dropIf",
-        "dropN",
-        "pickupN"
+        "56021486035",
+        "57492275363",
+        "54191328403",
+        "57688072155"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -537,12 +546,14 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "56699295345",
           "name": "Drop If 2",
           "image": "dropIf2",
           "sizeLimit": 1,
           "func": []
         },
         {
+          "createdId": "58036514341",
           "name": "Drop If 3",
           "image": "dropIf3",
           "sizeLimit": 1,
@@ -551,12 +562,12 @@
       ],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkAhead",
-        "dropIf2",
-        "dropIf3",
-        "dropIf",
-        "dropN",
-        "pickupN"
+        "56021486035",
+        "56699295345",
+        "58036514341",
+        "57492275363",
+        "54191328403",
+        "57688072155"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -592,12 +603,12 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkAhead",
-        "dropIf",
-        "dropIf2",
-        "dropIf3",
-        "dropN",
-        "pickupN"
+        "56021486035",
+        "56699295345",
+        "58036514341",
+        "57492275363",
+        "54191328403",
+        "57688072155"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -633,12 +644,12 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkAhead",
-        "dropIf",
-        "dropIf2",
-        "dropIf3",
-        "dropN",
-        "pickupN"
+        "56021486035",
+        "56699295345",
+        "58036514341",
+        "57492275363",
+        "54191328403",
+        "57688072155"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
@@ -674,12 +685,12 @@
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": [
-        "walkAhead",
-        "dropIf",
-        "dropIf2",
-        "dropIf3",
-        "dropN",
-        "pickupN"
+        "56021486035",
+        "56699295345",
+        "58036514341",
+        "57492275363",
+        "54191328403",
+        "57688072155"
       ],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
