@@ -1,7 +1,7 @@
 package actors
 
 import actors.LevelGenerationActor.makeQtyUnlimited
-import actors.PolyfillActor.ApplyPolyfills
+import actors.UpdatePlayerTokenActor.ApplyPolyfills
 import actors.messages.{ActorFailed, PreparedStepData, RawLevelData, ResponsePlayerToken}
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.pattern.{ask, pipe}
@@ -296,12 +296,11 @@ class PlayerActor()(system: ActorSystem,
             .pipeTo(self)(sender)
       }
     case ChangeFunctionColor(jsValue: JsValue) =>
-      def changeAllInstancesColor(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] = {
-        funcList.map { ft =>
+      def changeAllInstancesColor(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] = funcList.map {
+        ft =>
           val func = ft.func.getOrElse(List.empty[FuncToken])
           ft.copy(color = if (ft.created_id == funcToken.created_id) funcToken.color else ft.color,
                   func = Some(changeAllInstancesColor(func, funcToken)))
-        }
       }
       jsValue.validate[PrepareLambdas].asOpt match {
         case Some(prepareLambdas) =>
