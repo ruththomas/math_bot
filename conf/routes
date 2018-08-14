@@ -34,7 +34,8 @@ GET         /api/gameStats/getTokenCount                                        
 # Auth
 GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
 POST        /api/auth/resumeSession                                                controllers.AuthController.resumeSession
-GET         /api/auth/authorize                                                    controllers.AuthController.authorize()
+GET         /api/auth/authorizeGoogle                                              controllers.AuthController.authorizeGoogle
+GET         /api/auth/authorizeGithub                                              controllers.AuthController.authorizeGithub
 
 
 # !! This must be last - and may show an error until prod build !!
