@@ -1,7 +1,6 @@
 package controllers
 
 import actors.ActorTags
-import actors.messages._
 import actors.messages.auth._
 import akka.actor.ActorRef
 import akka.http.scaladsl.model.Uri.Query
@@ -58,7 +57,7 @@ class AuthController @Inject()(
             .withQuery(
               Query(
                 "client_id" -> githubConfig.clientId,
-                "scope" -> githubConfig.scopes.mkString(" "),
+                "scope" -> githubConfig.scopes.mkString(":"),
                 "redirect_uri" -> githubConfig.authRedirectUri.toString(),
                 "state" -> sessionId.toString
               )
@@ -72,8 +71,6 @@ class AuthController @Inject()(
   private def generateSessionAuthorized(sessionId: SecureIdentifier, idToken: JwtToken) =
     SessionAuthorized(sessionId,
                       idToken.name,
-                      idToken.given_name,
-                      idToken.family_name,
                       idToken.picture,
                       s"${idToken.getIssuerShortName}|${idToken.sub}",
                       idToken.email)
@@ -172,22 +169,22 @@ class AuthController @Inject()(
           case false => FastFuture.successful(SessionNotAuthorized(sessionId, "Invalid sessionId in state/guard code"))
         }
         storedResult <- tokenResult match {
-          case GithubTokensFromCodeSuccess(aSessionId, tokens) =>
+          case GithubTokensFromCodeSuccess(_, tokens) =>
             FastFuture.successful(
-              Left[String, String](tokens.access_token)
+              Left[JwtToken, String](tokens.id_token)
             )
           case TokensFromCodeFailure(_, _, reason) =>
             FastFuture.successful(
-              Right[String, String](s"Could not verify authorization because of '$reason'")
+              Right[JwtToken, String](s"Could not verify authorization because of '$reason'")
             )
           case SessionNotAuthorized(_, reason, _) =>
             FastFuture.successful {
-              Right[String, String](s"Unable to authorize session $sessionId because of $reason")
+              Right[JwtToken, String](s"Unable to authorize session $sessionId because of $reason")
             }
           case msg: Any =>
             logger.error(SemanticLog.tags.message(msg))
             FastFuture.successful(
-              Right[String, String](s"Unexpected message from github oauth actor")
+              Right[JwtToken, String](s"Unexpected message from github oauth actor")
             )
         }
       } yield
@@ -195,7 +192,7 @@ class AuthController @Inject()(
           case Left(idToken) =>
             Ok(
               Json
-                .toJson("ok" /*generateSessionAuthorized(sessionId, idToken)*/)
+                .toJson(generateSessionAuthorized(sessionId, idToken))
             )
           case Right(reason) => Unauthorized(JsString(reason.toString))
         }

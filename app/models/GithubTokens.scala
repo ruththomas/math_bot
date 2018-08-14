@@ -1,13 +1,16 @@
 package models
 
-import play.api.libs.json.Json
-
 case class GithubTokens(
                        access_token : String,
                        scope: Seq[String],
-                       token_type : String
+                       token_type : String,
+                       id_token : JwtToken
                        )
 
 object GithubTokens {
-  implicit val githubTokenFormat = Json.format[GithubTokens]
+  import play.api.libs.json._
+
+  implicit val jwtTokenFormatter : OFormat[JwtToken] = Json.format[JwtToken]
+
+  implicit val githubTokenFormat : OFormat[GithubTokens] = Json.format[GithubTokens]
 }
