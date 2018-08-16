@@ -90,9 +90,9 @@ export default {
   .space {
     position: relative;
     width: 670px;
-    height: 721px;
-    margin-top: 13%;
-    //border: 1px solid teal;
+    height: 800px;
+    margin-top: 0;
+    /*border: 1px solid teal;*/
   }
 
   .planet {
@@ -106,7 +106,7 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-1-color, $planet-gradient);
     height: $planet-1-size;
     width: $planet-1-size;
-    top: 0;
+    top: 12%;
     left: 7%;
     /*box-shadow: inset 0 0 120px #CA7AFF*/
   }
@@ -115,7 +115,7 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-2-color, $planet-gradient);
     height: $planet-2-size;
     width: $planet-2-size;
-    top: -12%;
+    top: 10%;
     left: 64%;
     /*box-shadow: inset 0 0 120px #F25C5C;*/
   }
@@ -124,8 +124,8 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-3-color, $planet-gradient);
     height: $planet-3-size;
     width: $planet-3-size;
-    top: 35%;
-    left: 73%;
+    top: 40%;
+    right: 0;
     /*box-shadow: inset 0 0 120px #4A90E2;*/
   }
 
@@ -133,8 +133,8 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-4-color, $planet-gradient);
     height: $planet-4-size;
     width: $planet-4-size;
-    top: 72%;
-    left: 48%;
+    top: 65%;
+    left: 50%;
     /*box-shadow: inset 0 0 120px #FF98B1;*/
   }
 
@@ -142,8 +142,8 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, $planet-gradient);
     height: $planet-5-size;
     width: $planet-5-size;
-    top: 86%;
-    left: 15%;
+    top: 80%;
+    left: 25%;
     /*box-shadow: inset 0 0 120px #50E3C2;*/
   }
 
@@ -197,19 +197,24 @@ export default {
     /*box-shadow: inset 0 0 120px #686868;*/
   }
 
-  @media only screen and (max-width : 1280px) and (max-height: 900px) {
-    $planet-1-size: 232px;
-    $planet-2-size: 134px;
-    $planet-3-size: 157px;
-    $planet-4-size: 119px;
-    $planet-5-size: 70px;
-    $space-height: 450px;
-    $space-width: 750px;
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px) and (max-device-width: 1024px)
+  and (min-device-height: 1366px) and (max-device-height: 1366px)
+  and (min-width: 1024px) and (max-width: 1024px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $planet-1-size: 206px;
+    $planet-2-size: 177px;
+    $planet-3-size: 187px;
+    $planet-4-size: 180px;
+    $planet-5-size: 135px;
+    $space-height: 100%;
+    $space-width: 600px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -220,6 +225,7 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
+      top: 10%;
     }
 
     .planet-3 {
@@ -243,19 +249,23 @@ export default {
     }
   }
 
-  @media only screen and (max-width : 992px) {
-    $planet-1-size: 116px;
-    $planet-2-size: 67px;
-    $planet-3-size: 77px;
-    $planet-4-size: 70px;
-    $planet-5-size: 35px;
-    $space-height: 250px;
-    $space-width: 520px;
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-height : 1024px)
+  and (orientation : landscape)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $planet-1-size: 166px;
+    $planet-2-size: 127px;
+    $planet-3-size: 137px;
+    $planet-4-size: 130px;
+    $planet-5-size: 95px;
+    $space-height: 400px;
+    $space-width: 700px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -266,56 +276,8 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
-      top: -2%;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-      top: 45%;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-      left: 40%;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 736px) {
-    $planet-1-size: 116px;
-    $planet-2-size: 67px;
-    $planet-3-size: 77px;
-    $planet-4-size: 70px;
-    $planet-5-size: 35px;
-    $space-height: 250px;
-    $space-width: 450px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
+      top: 5%;
+      left: 50%;
     }
 
     .planet-3 {
@@ -339,20 +301,22 @@ export default {
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    $planet-1-size: 116px;
-    $planet-2-size: 67px;
-    $planet-3-size: 77px;
-    $planet-4-size: 70px;
-    $planet-5-size: 35px;
-    $space-height: 250px;
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-height : 1024px)
+  and (orientation : portrait)  {
+    $planet-1-size: 166px;
+    $planet-2-size: 127px;
+    $planet-3-size: 137px;
+    $planet-4-size: 130px;
+    $planet-5-size: 95px;
+    $space-height: 860px;
     $space-width: 400px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -363,20 +327,17 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
-      top: 2%;
+      top: 10%;
     }
 
     .planet-3 {
       height: $planet-3-size;
       width: $planet-3-size;
-      top: 50%;
-      left: 60%;
     }
 
     .planet-4 {
       height: $planet-4-size;
       width: $planet-4-size;
-      left: 25%;
     }
 
     .planet-5 {
@@ -390,19 +351,18 @@ export default {
     }
   }
 
-  @media only screen and (max-width: 568px) {
-    $planet-1-size: 96px;
-    $planet-2-size: 47px;
-    $planet-3-size: 57px;
-    $planet-4-size: 40px;
-    $planet-5-size: 15px;
-    $space-height: 250px;
-    $space-width: 325px;
+  @media only screen and (max-width : 823px) and (orientation: landscape) {
+    $planet-1-size: 116px;
+    $planet-2-size: 67px;
+    $planet-3-size: 77px;
+    $planet-4-size: 70px;
+    $planet-5-size: 35px;
+    $space-height: 260px;
+    $space-width: 500px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
@@ -413,20 +373,17 @@ export default {
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
-      top: 0%;
+      top: 10%;
     }
 
     .planet-3 {
       height: $planet-3-size;
       width: $planet-3-size;
-      top: 50%;
-      left: 60%;
     }
 
     .planet-4 {
       height: $planet-4-size;
       width: $planet-4-size;
-      left: 25%;
     }
 
     .planet-5 {
@@ -438,105 +395,205 @@ export default {
       height: 140px;
       width: 140px;
     }
-
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  /* Small Devices */
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
+    $planet-1-size: 116px;
+    $planet-2-size: 67px;
+    $planet-3-size: 77px;
+    $planet-4-size: 70px;
+    $planet-5-size: 35px;
+    $space-height: 300px;
+    $space-width: 400px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 10%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  /* Small Devices */
+  @media only screen and (max-width : 667px) and (orientation: landscape) {
+    $planet-1-size: 116px;
+    $planet-2-size: 67px;
+    $planet-3-size: 77px;
+    $planet-4-size: 70px;
+    $planet-5-size: 35px;
+    $space-height: 250px;
+    $space-width: 500px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 10%;
+      left: 40%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+      top: 30%;
+      left: 60%;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+      left: 65%;
+      top: 75%;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+      left: 50%;
+      top: 90%;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  @media only screen and (max-width: 568px) and (orientation: landscape) {
+    $planet-1-size: 96px;
+    $planet-2-size: 47px;
+    $planet-3-size: 57px;
+    $planet-4-size: 40px;
+    $planet-5-size: 30px;
+    $space-height: 220px;
+    $space-width: 400px;
+
+    .space {
+      width: $space-width;
+      height: $space-height;
+    }
+
+    .planet-1 {
+      height: $planet-1-size;
+      width: $planet-1-size;
+    }
+
+    .planet-2 {
+      height: $planet-2-size;
+      width: $planet-2-size;
+      top: 10%;
+      left: 40%;
+    }
+
+    .planet-3 {
+      height: $planet-3-size;
+      width: $planet-3-size;
+      top: 30%;
+      left: 60%;
+    }
+
+    .planet-4 {
+      height: $planet-4-size;
+      width: $planet-4-size;
+      left: 65%;
+    }
+
+    .planet-5 {
+      height: $planet-5-size;
+      width: $planet-5-size;
+      left: 50%;
+    }
+
+    .planet-6 {
+      height: 140px;
+      width: 140px;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
     $planet-1-size: 116px;
     $planet-2-size: 67px;
     $planet-3-size: 77px;
     $planet-4-size: 70px;
     $planet-5-size: 35px;
     $space-height: 550px;
-    $space-width: 200px;
+    $space-width: 250px;
 
     .space {
       width: $space-width;
       height: $space-height;
-      margin-top: 30px;
     }
 
     .planet-1 {
       height: $planet-1-size;
       width: $planet-1-size;
-      left: 0;
+      left: 5%;
     }
 
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
-      top: 25%;
-    }
-
-    .planet-3 {
-      height: $planet-3-size;
-      width: $planet-3-size;
-      top: 50%;
-      left: 60%;
-    }
-
-    .planet-4 {
-      height: $planet-4-size;
-      width: $planet-4-size;
-      left: 25%;
-    }
-
-    .planet-5 {
-      height: $planet-5-size;
-      width: $planet-5-size;
-    }
-
-    .planet-6 {
-      height: 140px;
-      width: 140px;
-    }
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 360px) {
-    $planet-1-size: 96px;
-    $planet-2-size: 47px;
-    $planet-3-size: 57px;
-    $planet-4-size: 40px;
-    $planet-5-size: 15px;
-    $space-height: 400px;
-    $space-width: 180px;
-
-    .space {
-      width: $space-width;
-      height: $space-height;
-      margin-top: 30px;
-    }
-
-    .planet-1 {
-      height: $planet-1-size;
-      width: $planet-1-size;
-    }
-
-    .planet-2 {
-      height: $planet-2-size;
-      width: $planet-2-size;
-      top: 25%;
+      top: 40%;
       left: 70%;
     }
 
     .planet-3 {
       height: $planet-3-size;
       width: $planet-3-size;
-      top: 50%;
+      top: 65%;
       left: 60%;
     }
 
     .planet-4 {
       height: $planet-4-size;
       width: $planet-4-size;
-      left: 25%;
+      left: 50%;
+      top: 85%;
     }
 
     .planet-5 {
       height: $planet-5-size;
       width: $planet-5-size;
+      top: 95%;
     }
 
     .planet-6 {
@@ -545,18 +602,16 @@ export default {
     }
   }
 
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    $planet-1-size: 232px;
-    $planet-2-size: 134px;
-    $planet-3-size: 157px;
-    $planet-4-size: 119px;
-    $planet-5-size: 70px;
-    $space-height: 700px;
-    $space-width: 425px;
+  @media only screen and (max-width : 375px) {
+    $planet-1-size: 101px;
+    $planet-2-size: 52px;
+    $planet-3-size: 62px;
+    $planet-4-size: 50px;
+    $planet-5-size: 40px;
+    $space-height: 400px;
+    $space-width: 180px;
 
     .space {
-      margin-top: 85px;
       width: $space-width;
       height: $space-height;
     }
@@ -564,26 +619,34 @@ export default {
     .planet-1 {
       height: $planet-1-size;
       width: $planet-1-size;
+      left: 5%;
     }
 
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
+      top: 40%;
+      left: 70%;
     }
 
     .planet-3 {
       height: $planet-3-size;
       width: $planet-3-size;
+      top: 65%;
+      left: 60%;
     }
 
     .planet-4 {
       height: $planet-4-size;
       width: $planet-4-size;
+      left: 50%;
+      top: 85%;
     }
 
     .planet-5 {
       height: $planet-5-size;
       width: $planet-5-size;
+      top: 95%;
     }
 
     .planet-6 {
@@ -592,47 +655,51 @@ export default {
     }
   }
 
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .space {
-      width: 495px;
-      height: 700px;
-    }
-
-    $planet-1-size: 232px;
-    $planet-2-size: 134px;
-    $planet-3-size: 157px;
-    $planet-4-size: 119px;
-    $planet-5-size: 70px;
+  @media only screen and (max-width : 320px) {
+    $planet-1-size: 96px;
+    $planet-2-size: 47px;
+    $planet-3-size: 57px;
+    $planet-4-size: 40px;
+    $planet-5-size: 30px;
+    $space-height: 400px;
+    $space-width: 180px;
 
     .space {
-      margin: 0;
-      width: 670px;
-      height: 420px;
+      width: $space-width;
+      height: $space-height;
     }
 
     .planet-1 {
       height: $planet-1-size;
       width: $planet-1-size;
+      left: 5%;
     }
 
     .planet-2 {
       height: $planet-2-size;
       width: $planet-2-size;
+      top: 40%;
+      left: 70%;
     }
 
     .planet-3 {
       height: $planet-3-size;
       width: $planet-3-size;
+      top: 65%;
+      left: 60%;
     }
 
     .planet-4 {
       height: $planet-4-size;
       width: $planet-4-size;
+      left: 50%;
+      top: 85%;
     }
 
     .planet-5 {
       height: $planet-5-size;
       width: $planet-5-size;
+      top: 95%;
     }
 
     .planet-6 {
@@ -640,5 +707,4 @@ export default {
       width: 140px;
     }
   }
-
 </style>

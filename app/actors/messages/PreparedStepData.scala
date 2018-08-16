@@ -1,6 +1,5 @@
 package actors.messages
 
-import actors.LevelGenerationActor.createdIdGen
 import actors.messages.PreparedStepData.InitialRobotState
 import models.{ToolList, _}
 import play.api.libs.functional.syntax._
@@ -72,8 +71,8 @@ object PreparedStepData {
       case Some(token) => token.created_id
       case None =>
         a match {
-          case a if a == "open-staged" => "open-staged"
-          case a => createdIdGen(a)
+          case id if id == "open-staged" => "open-staged"
+          case id => id
         }
     }
   }

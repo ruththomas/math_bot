@@ -1,13 +1,10 @@
 <template>
   <div class="profile-container">
-    <!--<splash-screen v-if="!auth.authenticated"></splash-screen>-->
-    <div class="profile" data-aos="fade-in">
-      <div v-if="auth.authenticated" class="profile-action">
-        <space :permanent-images="permanentImages"></space>
-        <steps :permanent-images="permanentImages"></steps>
-      </div>
-      <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
+    <div v-if="auth.authenticated" class="profile">
+      <space :permanent-images="permanentImages"></space>
+      <steps :permanent-images="permanentImages"></steps>
     </div>
+    <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
   </div>
 </template>
 
@@ -61,31 +58,23 @@ export default {
 
 <style scoped lang="scss">
   .profile-container {
-    background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522347137/misc/profileSpace.png");
-    background-size: cover;
     width: 100%;
+    max-width: 1166px;
     height: 100%;
-  }
-
-  .profile-main {
-    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
   }
 
   .profile {
     display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
+    max-height: 900px;
     overflow: hidden;
-    max-width: 1200px;
     margin: 0 auto;
-  }
-
-  .profile-action {
-    display: flex;
-    flex-grow: 2;
     justify-content: space-between;
-    align-items: center;
+    /*align-items: center;*/
+    align-self: center;
   }
-
 </style>

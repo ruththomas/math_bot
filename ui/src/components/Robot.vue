@@ -1,5 +1,6 @@
 <template>
   <div class="robot-container" data-aos="fade-in" v-if="auth.authenticated">
+    <trash></trash>
     <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
     <div  v-else id="robot" class="row animated">
 
@@ -9,20 +10,17 @@
 
       <div id="grid-box">
         <grid></grid>
-        <trash></trash>
       </div>
 
       <messages></messages>
 
-      <div
-        id="edit-main-box">
-        <trash></trash>
-        <editmain></editmain>
+      <div id="edit-main-box">
+        <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+        <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
       </div>
 
       <div id="commands-box">
         <commands></commands>
-        <trash></trash>
       </div>
 
       <!--<div class="filler-box"></div>-->
@@ -44,6 +42,8 @@ import SplashScreen from './Splash_screen'
 import api from '../services/api'
 import utils from '../services/utils'
 import Robot from '../services/RobotState'
+import RobotCarrying from './Robot_carrying'
+import PopoverBucket from './Popover_bucket'
 
 export default {
   mounted () {
@@ -149,7 +149,9 @@ export default {
     Editmain,
     Messages,
     ControlPanel,
-    SplashScreen
+    SplashScreen,
+    RobotCarrying,
+    PopoverBucket
   }
 }
 </script>
@@ -178,6 +180,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    flex: 1;
   }
 
   #grid-box {
@@ -185,12 +188,14 @@ export default {
     flex-direction: column;
     position: relative;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     /*border: 1px solid yellowgreen;*/
   }
 
   #edit-main-box {
     display: flex;
+    flex: 1;
+    z-index: 100;
     /*border: 1px solid mediumvioletred;*/
   }
 
@@ -198,6 +203,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex: 1.2;
     /*border: 1px solid firebrick;*/
   }
 
@@ -211,15 +217,91 @@ export default {
     transition: height 1s;
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    #robot {
-      width: 80vw;
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+  }
+
+  /* ipad pro Landscape */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: landscape)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+
+  }
+
+  @media only screen and (max-width: 823px) {
+    #commands-box {
+      flex: 1.8;
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  @media only screen and (max-width: 736px) {
+    #commands-box {
+      flex: 1.8;
+    }
+  }
+
+  @media only screen and (max-width : 667px) and (orientation: landscape) {
+    #commands-box {
+      flex: 1.8;
+    }
+  }
+
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) and (orientation: landscape) {
+
+    #control-panel-box {
+      flex: 0.8;
+    }
+
+    #grid-box {
+      justify-content: flex-start;
+    }
+
+    #edit-main-box {
+    }
+
+    #commands-box {
+      flex: 1.8;
+    }
+
+    #robot {
+      width: 100vw;
+    }
+  }
+
+  /* iphone 6/7/8 plus*/
+  @media only screen and (max-width: 414px) {
+    #robot {
+      padding: 0;
+    }
+
+    #control-panel-box {
+      flex: 1;
+    }
+
+    #grid-box {
+      justify-content: flex-start;
+    }
+
+    #edit-main-box {
+    }
+
+    #commands-box {
+      /*max-height: 95px;*/
+    }
+  }
+
+  /* iphone 6/7 portrait */
+  @media only screen and (max-width : 375px) {
+    #robot {
+    }
+
     #control-panel-box {
     }
 
@@ -230,25 +312,38 @@ export default {
     #edit-main-box {
     }
 
-    #robot {
-      width: 100vw;
+    #commands-box {
+      /*max-height: 95px;*/
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-  }
-
-  /* Custom, iPhone Retina */
+  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    #robot {
+    }
 
+    #control-panel-box {
+      flex: 1;
+    }
+
+    #grid-box {
+      justify-content: flex-start;
+    }
+
+    #edit-main-box {
+    }
+
+    #commands-box {
+      /*max-height: 95px;*/
+    }
+
+    #robot {
+      width: 100vw;
+    }
   }
 
   /* iPad */
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    #robot {
-      width: 100vw;
-    }
   }
 
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {

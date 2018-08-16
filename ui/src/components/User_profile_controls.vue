@@ -53,6 +53,9 @@ export default {
   .user-profile-controls {
     flex-grow: 1;
     display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
 
   .user-profile-controls-image-container {
