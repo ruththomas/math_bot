@@ -42,7 +42,7 @@
       "clearMain": true,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["74tUfeuLEg8"],
+      "videoHints": ["ro0V_ov9xPg"],
       "prevStep": "None",
       "nextStep": "WalkAround"
     },
@@ -84,7 +84,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["iZL0xwsXGT4", "muzWKrXK1cU", "lPX2d666xhc"],
+      "videoHints": ["a8PdMGZgeRY", "VupAbRPKvoc", "L-EMZv5YBRk"],
       "prevStep": "RecurForward",
       "nextStep": "SmallSpiral"
     },
@@ -118,7 +118,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["orA768io-sM"],
+      "videoHints": ["46p_GJz8vDU"],
       "prevStep": "WalkAround",
       "nextStep": "BigSpiral"
     },
@@ -152,7 +152,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["yGMEdd_UoUQ"],
       "prevStep": "SmallSpiral",
       "nextStep": "Stairs"
     },
@@ -194,7 +194,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["AfZpAmvrSf0", "cDTFBfdrR5I"],
+      "videoHints": ["OmTwwYGLvkc", "FrwGNObfH00"],
       "prevStep": "BigSpiral",
       "nextStep": "LongStairs"
     },
@@ -228,7 +228,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["iSGLCrv9YkQ"],
+      "videoHints": ["4X9m0M39Ruw", "_OHKFB54kds"],
       "prevStep": "Stairs",
       "nextStep": "Snake"
     },
@@ -270,7 +270,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["tbTcCSPODZw", "ohTSwV29tOk", "aMcAgpFzSUY"],
+      "videoHints": ["oq_yTn0c8HY", "dSK-wHfY5I4", "hufLnseGBeE"],
       "prevStep": "LongStairs",
       "nextStep": "ZigZag"
     },
@@ -304,7 +304,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["Vr54qVFP5dE"],
+      "videoHints": ["hHoG4K25CGg"],
       "prevStep": "LongStairs",
       "nextStep": "CleanUp"
     },
@@ -346,7 +346,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["Le5w3d8ZsX8", "Sba-RuRtXPM", "81lPIL9WQbU"],
+      "videoHints": ["LLV9JS7LYKE", "u-Zq0mpxq3E", "hvp6pvnlqZY"],
       "prevStep": "ZigZag",
       "nextStep": "CleanUpMore"
     },
@@ -402,7 +402,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["EP6QjYL3aFk"],
+      "videoHints": ["JMvBt7WWqQ4"],
       "prevStep": "CleanUp",
       "nextStep": "PickupPile"
     },
@@ -436,7 +436,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["4ruzychwloY"],
+      "videoHints": ["9kiV6T4Oxrc"],
       "prevStep": "CleanUpMore",
       "nextStep": "CleanComb"
     },
@@ -478,7 +478,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["6BtxMYaTHZI", "fj6NAFFpi4E", "WRrcc4EU344"],
+      "videoHints": ["XittjRWOp7M", "m3aFQypd8FA"],
       "prevStep": "PickupPile",
       "nextStep": "CleanComb2"
     },
@@ -512,7 +512,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["HkZpxXXGx0w", "vSUc3cIb184"],
+      "videoHints": ["-wPiyMf5Fe4", "8EdQe8izE3c", "3VzjyIq-2EY"],
       "prevStep": "CleanComb",
       "nextStep": "CleanComb3"
     },
@@ -546,7 +546,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["MgJMW6VSkj8", "Imvvc6sWP4U"],
+      "videoHints": ["wqSGUqFmbVk", "HxAdv9fAWoQ"],
       "prevStep": "CleanComb2",
       "nextStep": "CleanZigZags"
     },
@@ -580,7 +580,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["pn53eWiqibk"],
+      "videoHints": ["Hy5Yj8Bzjzs"],
       "prevStep": "CleanComb3",
       "nextStep": "None"
     }
