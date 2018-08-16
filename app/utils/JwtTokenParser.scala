@@ -14,7 +14,7 @@ import models.JwtToken
 import org.joda.time.{ Duration, Instant }
 import pdi.jwt.JwtAlgorithm.RS256
 import pdi.jwt.JwtJson
-import play.api.libs.json.{ JsString, Json, OFormat }
+import play.api.libs.json.{ JsObject, JsString, Json, OFormat }
 
 import scala.concurrent.{ Await, ExecutionContext, duration }
 import scala.util.{ Failure, Success, Try }
@@ -48,7 +48,8 @@ class JwtTokenParser @Inject() (
 
       } yield {
         jsonOrError match {
-          case Left(Some(certs)) =>
+          case Left(Some(c)) =>
+            val certs = c.asInstanceOf[JsObject]
             val cf = CertificateFactory.getInstance("X.509")
 
             certs.fields
@@ -86,12 +87,6 @@ class JwtTokenParser @Inject() (
     pemCertificates = LoadCertificates()
 
     val publicKeys = pemCertificates.map(_.getPublicKey)
-    val decoded = publicKeys
-      .map(
-        k => JwtJson.decodeJson(encodedToken, k, Seq(RS256))
-          .flatMap(js => Try(js.as[JwtToken]))
-      )
-
     val tokens = publicKeys.map(k => JwtJson.decodeJson(encodedToken, k, Seq(RS256))) map {
       case Success(jwtJson) => Left(jwtJson)
       case Failure(t) => Right(t)
