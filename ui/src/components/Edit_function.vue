@@ -72,6 +72,9 @@ export default {
   mounted () {
   },
   computed: {
+    stats () {
+      return this.$store.getters.getStats
+    },
     editingIndex () {
       return this.$store.getters.getEditingIndex
     },
@@ -166,10 +169,13 @@ export default {
       })
     },
     applyColorConditional () {
-      buildUtils.adjustColor({
-        context: this,
-        color: this.findColor()
-      })
+      const level = this.stats.level
+      if (level !== 'BasicProgramming' && level !== 'Counting' && level !== 'Numbers' && level !== 'Recursion') {
+        buildUtils.adjustColor({
+          context: this,
+          color: this.findColor()
+        })
+      }
       this.color = 'default'
     },
     deleteFuncContents () {
