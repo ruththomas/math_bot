@@ -308,19 +308,29 @@ class PlayerActor()(system: ActorSystem,
             .getToken(prepareLambdas.tokenId)
             .map {
               case Some(playerToken) =>
-                val lambdas = playerToken.lambdas.getOrElse(Lambdas())
-                val updatedActives = changeAllInstancesColor(lambdas.activeFuncs, prepareLambdas.funcToken)
-                val updatedInactives =
-                  changeAllInstancesColor(lambdas.inactiveActives.getOrElse(List.empty[FuncToken]),
-                                          prepareLambdas.funcToken)
-                val updatedMainFunc =
-                  changeAllInstancesColor(lambdas.main.func.getOrElse(List.empty[FuncToken]), prepareLambdas.funcToken)
-                val updatedLambdas =
-                  lambdas.copy(main = lambdas.main.copy(func = Some(updatedMainFunc)),
-                               activeFuncs = updatedActives,
-                               inactiveActives = Some(updatedInactives))
-                playerTokenDAO.updateToken(playerToken.copy(lambdas = Some(updatedLambdas)))
-                PreparedLambdasToken(updatedLambdas)
+                playerToken.stats match {
+                  case Some(stats) =>
+                    val noColorLevels = List("BasicProgramming", "Counting", "Numbers", "Recursion")
+                    if (!noColorLevels.contains(stats.level)) {
+                      val lambdas = playerToken.lambdas.getOrElse(Lambdas())
+                      val updatedActives = changeAllInstancesColor(lambdas.activeFuncs, prepareLambdas.funcToken)
+                      val updatedInactives =
+                        changeAllInstancesColor(lambdas.inactiveActives.getOrElse(List.empty[FuncToken]),
+                                                prepareLambdas.funcToken)
+                      val updatedMainFunc =
+                        changeAllInstancesColor(lambdas.main.func.getOrElse(List.empty[FuncToken]),
+                                                prepareLambdas.funcToken)
+                      val updatedLambdas =
+                        lambdas.copy(main = lambdas.main.copy(func = Some(updatedMainFunc)),
+                                     activeFuncs = updatedActives,
+                                     inactiveActives = Some(updatedInactives))
+                      playerTokenDAO.updateToken(playerToken.copy(lambdas = Some(updatedLambdas)))
+                      PreparedLambdasToken(updatedLambdas)
+                    } else {
+                      PreparedLambdasToken(playerToken.lambdas.getOrElse(Lambdas()))
+                    }
+                  case None => PreparedLambdasToken(playerToken.lambdas.getOrElse(Lambdas()))
+                }
               case None => ActorFailed("Unable to find player token")
             }
             .pipeTo(self)(sender)
