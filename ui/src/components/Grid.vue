@@ -242,7 +242,6 @@ export default {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     font-size: $grid-space-font-size;
     background: $grid-background;
-    z-index: 1;
 
     img {
       position: absolute;
