@@ -1,7 +1,7 @@
 package actors
 
 import actors.GoogleApiHelpers.GoogleTokens
-import actors.messages.auth.{ RequestTokensFromCode, TokensFromCodeFailure, TokensFromCodeSuccess }
+import actors.messages.auth.{ GoogleTokensFromCodeSuccess, RequestTokensFromCode, TokensFromCodeFailure }
 import akka.actor.Actor
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.{ Http, HttpExt }
@@ -10,6 +10,7 @@ import akka.stream.ActorMaterializer
 import com.google.inject.{ Inject, Singleton }
 import configuration.GoogleApiConfig
 import loggers.{ AkkaSemanticLog, SemanticLog }
+import play.api.libs.json.JsObject
 import utils.{ AkkaToPlayMarshaller, JwtTokenParser }
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -53,7 +54,8 @@ class GoogleOAuth @Inject()(
       tokensOrError <- AkkaToPlayMarshaller.unmarshalToPlayJson(response)
     } yield {
       tokensOrError match {
-        case Left(Some(tokens)) =>
+        case Left(Some(t)) =>
+          val tokens = t.asInstanceOf[JsObject]
           jwtTokenParser.parseAndVerify(tokens("id_token").as[String]) match {
             case Some(idToken) =>   Left(GoogleTokens(
               access_token = tokens("access_token").as[String],
@@ -75,7 +77,7 @@ class GoogleOAuth @Inject()(
     case RequestTokensFromCode(sessionId, code) =>
       retrieveTokens(code) map {
         case Left(tokens) =>
-          TokensFromCodeSuccess(sessionId, tokens)
+          GoogleTokensFromCodeSuccess(sessionId, tokens)
         case Right(reason) =>
           TokensFromCodeFailure(sessionId, config.oauthUrl, reason)
       } pipeTo sender() onComplete {
