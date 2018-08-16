@@ -1,17 +1,21 @@
 <template>
-  <div class="stars" :class="starGroup">
-    <star class="star-two" :active="stepStats.active" :success="success(2)"></star>
-    <star class="star-one" :active="stepStats.active" :success="success(1)"></star>
-    <star class="star-three" :active="stepStats.active" :success="success(3)"></star>
-    <span v-if="timer.stars < 3" class="star-timer">{{ convertTime(remainingTime) }}</span>
+  <div class="stars star-spread">
+    <star class="star-two" :star-group="starGroup" :active="stepStats.active" :success="success(2)"></star>
+    <star class="star-one" :star-group="starGroup" :active="stepStats.active" :success="success(1)"></star>
+    <star class="star-three" :star-group="starGroup" :active="stepStats.active" :success="success(3)"></star>
+    <span v-if="timer.stars < 3" class="star-timer" :class="'star-timer-' + starGroup">{{ convertTime(remainingTime) }}</span>
   </div>
 </template>
 
 <script>
 import Star from './Star'
+import _ from 'underscore'
 
 export default {
   name: 'Timer',
+  mounted () {
+    // console.log(this.timer)
+  },
   computed: {
     timer () {
       return this.videoTimers[`${this.level}/${this.step}`] || {stars: 3}
@@ -22,14 +26,22 @@ export default {
     },
     videoTimers () {
       return this.$store.getters.getVideoTimers
+    },
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
   },
   methods: {
-    convertTime (minutes) {
-      let h = Math.floor(minutes / 60)
-      let m = minutes % 60
-      m = m < 10 ? '0' + m : m
-      return h + ':' + m
+    convertTime (totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60)
+      const seconds = Math.floor(totalSeconds - minutes * 60)
+      return _.chain([minutes, seconds])
+        .map(t => {
+          if (t === 0) return '00'
+          else return t
+        })
+        .value()
+        .join(':')
     },
     success (starNumber) {
       if (starNumber === 1) {
@@ -51,229 +63,152 @@ export default {
 <style scoped lang="scss">
 $star-cluster-star-one-size: 50px;
 $star-cluster-star-two-three-size: 30px;
-$star-spread-star-size: 50px;
-$stars-shadow: inset 0 0 100px #D3D3D3;
+$star-spread-star-size: 40px;
+$stars-shadow: inset 0 0 100px #778899;
 $star-congrats-star-size: 70px;
-$star-margin: 5px 0 5px 0;
 $star-timer-right: 100%;
-$star-timer-bottom: -10px;
+$star-timer-bottom: 0;
 $star-timer-font-size: 16px;
+$star-timer-margin-right: 5px;
 .stars {
   position: relative;
   display: flex;
-  justify-content: space-around;
-  box-shadow: $stars-shadow;
+  align-items: center;
+  justify-content: center;
   border-radius: 5px;
   cursor: pointer;
-  * {
-    margin: $star-margin;
-  }
+  height: 100%;
 }
 
 .star-timer {
   position: absolute;
-  right: $star-timer-right;
   bottom: $star-timer-bottom;
   font-size: $star-timer-font-size;
+  color: #ffffff;
+}
+
+.help-button {
+  .star-timer {
+    bottom: -30px;
+    color: #000000;
+  }
 }
 
 .star-cluster {
+  color: #ffffff;
   .star-one {
-    height: $star-cluster-star-one-size;
-    width: $star-cluster-star-one-size;
     align-self: flex-start;
+    margin-top: -10px;
   }
 
   .star-two, .star-three {
-    height: $star-cluster-star-two-three-size;
-    width: $star-cluster-star-two-three-size;
     align-self: flex-end;
+    margin-bottom: -10px;
+  }
+
+  .star-timer {
+    top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
   }
 }
 
 .star-spread {
   .star-one, .star-two, .star-three {
-    height: $star-spread-star-size;
-    width: $star-spread-star-size;
     align-self: center;
   }
 
-}
-@media only screen and (max-width : 1280px) and (max-height: 900px) {
+  .question-mark {
+    position: absolute;
+    height: 40%;
+    top: 50%;
+    transform: translateY(-62%);
+  }
 }
 
-@media only screen and (max-width : 992px) {
-  $star-cluster-star-one-size: 15px;
-  $star-cluster-star-two-three-size: 13px;
-  $star-spread-star-size: 18px;
-  $stars-shadow: inset 0 0 100px #D3D3D3;
-  $star-congrats-star-size: 70px;
-  $star-timer-font-size: 10px;
-  .star-spread {
-    .star-one, .star-two, .star-three {
-      height: $star-spread-star-size;
-      width: $star-spread-star-size;
-    }
-
-    .star-timer {
-      font-size: $star-timer-font-size;
-    }
+@media only screen and (max-width: 823px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
   }
 
   .star-cluster {
-    .star-one {
-      height: $star-cluster-star-one-size;
-      width: $star-cluster-star-one-size;
-      align-self: flex-start;
-    }
-
-    .star-two, .star-three {
-      height: $star-cluster-star-two-three-size;
-      width: $star-cluster-star-two-three-size;
-      align-self: flex-end;
-    }
-
     .star-timer {
-      font-size: $star-timer-font-size;
+      display: none;
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
     }
   }
 }
 
-/* Small Devices */
-@media only screen and (max-width : 736px) {
-  $star-cluster-star-one-size: 15px;
-  $star-cluster-star-two-three-size: 13px;
-  $star-spread-star-size: 18px;
-  $stars-shadow: inset 0 0 100px #D3D3D3;
-  $star-congrats-star-size: 70px;
-  $star-timer-font-size: 10px;
-  .star-spread {
-    .star-one, .star-two, .star-three {
-      height: $star-spread-star-size;
-      width: $star-spread-star-size;
-    }
-
-    .star-timer {
-      right: $star-timer-right;
-      bottom: $star-timer-bottom;
-      font-size: $star-timer-font-size;
-    }
+@media only screen and (max-width: 736px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
   }
 
   .star-cluster {
-    .star-one {
-      height: $star-cluster-star-one-size;
-      width: $star-cluster-star-one-size;
-      align-self: flex-start;
-    }
-
-    .star-two, .star-three {
-      height: $star-cluster-star-two-three-size;
-      width: $star-cluster-star-two-three-size;
-      align-self: flex-end;
-    }
-
     .star-timer {
-      font-size: $star-timer-font-size;
-      top: 80%;
-      left: 50%;
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
     }
   }
 }
 
-/* Small Devices */
-@media only screen and (max-width : 667px) {
+@media only screen and (max-width: 667px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
+  }
+
+  .star-cluster {
+    .star-timer {
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
+    }
+  }
 }
 
 @media only screen and (max-width: 568px) {
-}
-
-/* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px) {
-}
-
-/* iPad */
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-  $star-cluster-star-one-size: 30px;
-  $star-cluster-star-two-three-size: 25px;
-  $star-spread-star-size: 40px;
-  $stars-shadow: inset 0 0 100px #D3D3D3;
-  $star-congrats-star-size: 70px;
-  $star-timer-right: 100%;
-  $star-timer-bottom: 0;
-  $star-timer-font-size: 16px;
-  .star-spread {
-    .star-one, .star-two, .star-three {
-      height: $star-spread-star-size;
-      width: $star-spread-star-size;
-    }
-
-    .star-timer {
-      right: $star-timer-right;
-      bottom: $star-timer-bottom;
-      font-size: $star-timer-font-size;
-    }
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
   }
 
   .star-cluster {
-    .star-one {
-      height: $star-cluster-star-one-size;
-      width: $star-cluster-star-one-size;
-      align-self: flex-start;
-    }
-
-    .star-two, .star-three {
-      height: $star-cluster-star-two-three-size;
-      width: $star-cluster-star-two-three-size;
-      align-self: flex-end;
-    }
-
     .star-timer {
-      right: $star-timer-right;
-      bottom: $star-timer-bottom;
-      font-size: $star-timer-font-size;
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
     }
   }
 }
 
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-  $star-cluster-star-one-size: 15px;
-  $star-cluster-star-two-three-size: 13px;
-  $star-spread-star-size: 30px;
-  $stars-shadow: inset 0 0 100px #D3D3D3;
-  $star-congrats-star-size: 70px;
-  $star-timer-font-size: 18px;
-  .star-spread {
-    .star-one, .star-two, .star-three {
-      height: $star-spread-star-size;
-      width: $star-spread-star-size;
-    }
-
-    .star-timer {
-      right: $star-timer-right;
-      bottom: $star-timer-bottom;
-      font-size: $star-timer-font-size;
-    }
+@media only screen and (max-width: 414px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
   }
 
   .star-cluster {
-    .star-one {
-      height: $star-cluster-star-one-size;
-      width: $star-cluster-star-one-size;
-      align-self: flex-start;
-    }
-
-    .star-two, .star-three {
-      height: $star-cluster-star-two-three-size;
-      width: $star-cluster-star-two-three-size;
-      align-self: flex-end;
-    }
-
     .star-timer {
-      font-size: $star-timer-font-size;
-      top: 80%;
-      left: 50%;
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
     }
   }
+}
+
+@media only screen and (max-width: 375px) {
+  $star-timer-font-size: 8px;
+  .star-timer {
+    font-size: $star-timer-font-size;
+  }
+
+  .star-cluster {
+    .star-timer {
+      left: 35%;
+      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
+    }
+  }
+}
+
+@media only screen and (max-width: 320px) {
 }
 </style>

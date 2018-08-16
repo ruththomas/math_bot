@@ -1,24 +1,24 @@
 <template>
-  <div class="control-panel">
+  <div v-if="!congratsShowing && !tryAgainShowing" class="control-panel">
+      <img @click="goToProfile()"
+           class="return-to-profile"
+           :src="permanentImages.returnToProfile"
+           data-toggle="tooltip" title="Return to profile"
+      />
 
-    <img @click="goToProfile()"
-         class="return-to-profile"
-         :src="permanentImages.returnToProfile"
-         data-toggle="tooltip" title="Return to profile"
-    />
-
-    <div class="instructions" :style="congratsShowing || tryAgainShowing ? {opacity: 0} : {}">
-      <div class="instructions-filler-left"></div>
-      <div class="instructions-robot-container">
-        <img :src="permanentImages.instructionsRobot" class="instructions-robot" data-toggle="tooltip" title="Toggle speech bubble">
+      <div class="instructions">
+        <div class="instructions-filler-left"></div>
+        <div class="instructions-robot-container">
+          <img :src="permanentImages.instructionsRobot" class="instructions-robot">
+        </div>
+        <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
       </div>
-      <speech-bubble :html="description" :showing="speechBubbleShowing" :step="step"></speech-bubble>
     </div>
-  </div>
 </template>
 
 <script>
 import SpeechBubble from './Speech_bubble'
+import RobotCarrying from './Robot_carrying'
 
 export default {
   name: 'control-panel',
@@ -59,7 +59,8 @@ export default {
     }
   },
   components: {
-    SpeechBubble
+    SpeechBubble,
+    RobotCarrying
   }
 }
 </script>
@@ -70,6 +71,7 @@ export default {
 
   .instructions {
     display: flex;
+    align-items: flex-end;
     width: 100%;
   }
 
@@ -77,16 +79,14 @@ export default {
     height: 150px;
     display: flex;
     align-items: flex-end;
-    margin-right: 20px;
   }
 
   .instructions-robot {
     height: 100%;
-    cursor: pointer;
   }
 
   .instructions-filler-left {
-    width: 100px;
+    width: 120px;
   }
 
   .return-to-profile {
@@ -96,17 +96,11 @@ export default {
     cursor: pointer;
   }
 
-  .fade-in-speech {
-    opacity: 1;
-    transition: all 0.4s ease-out;
-  }
-
-  .fade-out-speech {
-    opacity: 0;
-    transition: all 0.4s ease-in;
-  }
-
-  @media only screen and (max-width : 1280px) {
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
     .instructions-robot-container {
       height: 90px;
     }
@@ -116,29 +110,68 @@ export default {
     }
 
     .instructions-filler-left {
-      width: 250px;
+      width: 220px;
     }
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
     .instructions-robot-container {
-      height: 75px;
+      height: 90px;
     }
 
     .return-to-profile {
-      height: 65px;
+      height: 120px;
     }
 
     .instructions-filler-left {
-      width: 120px;
+      width: 100px;
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
     .instructions-robot-container {
-      height: 50px;
+      height: 90px;
+    }
+
+    .return-to-profile {
+      height: 120px;
+    }
+
+    .instructions-filler-left {
+      width: 220px;
+    }
+  }
+
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    .instructions-robot-container {
+      height: 55px;
+    }
+
+    .return-to-profile {
+      height: 95px;
+    }
+
+    .instructions-filler-left {
+      width: 230px;
+    }
+  }
+
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
+    .instructions-robot-container {
+      height: 55px;
+    }
+
+    .return-to-profile {
+      height: 95px;
     }
 
     .instructions-filler-left {
@@ -146,55 +179,71 @@ export default {
     }
   }
 
-  @media only screen and (max-width: 569px) {
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
     .instructions-filler-left {
-      width: 125px;
+      width: 170px;
     }
-  }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-    .return-to-profile {
-      height: 60px;
+    .instructions-robot-container {
+      height: 75px;
     }
 
     .instructions-robot-container {
       height: 50px;
     }
+  }
 
+  /* iphone 5 landscape*/
+  @media only screen and (max-width: 568px) and (orientation: landscape){
     .instructions-filler-left {
-      width: 40px;
+      width: 140px;
+    }
+
+    .instructions-robot-container {
+      height: 45px;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    .instructions-filler-left {
+      width: 50px;
+    }
+
+    .return-to-profile {
+      height: 80px;
+    }
+
+    .instructions-robot-container {
+      height: 50px;
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    .instructions-filler-left {
+      width: 60px;
+    }
+
+    .return-to-profile {
+      height: 80px;
+    }
+
+    .instructions-robot-container {
+      height: 50px;
     }
   }
 
   /* Custom, iPhone 5 Retina */
   @media only screen and (max-width : 320px) {
+    .instructions-filler-left {
+      width: 35px;
+    }
 
-  }
+    .return-to-profile {
+      height: 60px;
+    }
 
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     .instructions-robot-container {
-      height: 150px;
-    }
-
-    .return-to-profile {
-      height: 100px;
-    }
-
-    .instructions-filler-left {
-      width: 75px;
+      height: 45px;
     }
   }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .return-to-profile {
-      height: 150px;
-    }
-
-    .instructions-filler-left {
-      width: 180px;
-    }
-  }
-
 </style>

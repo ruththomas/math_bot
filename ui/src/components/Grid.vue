@@ -1,14 +1,15 @@
 <template>
   <div class="total-grid">
     <transition
+      mode="out-in"
       name="custom-classes-transition"
       enter-active-class="animated zoomIn"
-      leave-active-class="hidden"
+      leave-active-class="animated zoomOut"
     >
-      <congrats v-if="congratsShowing"></congrats>
-      <tryagain v-else-if="tryAgainShowing"></tryagain>
+      <congrats v-if="congratsShowing" :congrats="true"></congrats>
+      <congrats v-else-if="tryAgainShowing" :congrats="false"></congrats>
       <video-hint v-else-if="hintShowing.showing"></video-hint>
-      <div v-else-if="gridMap" class="grid">
+      <div v-else-if="gridMap" class="grid" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''">
         <div
           class="grid-row animated"
           v-for="(row, rInd) in gridMap"
@@ -17,42 +18,74 @@
           <div
             class="grid-space animated"
             v-for="(space, sInd) in row"
+            :id="`grid-cell-${rInd}-${sInd}`"
             :class="'grid-space-' + space.name.replace(/ /g, '-')"
             :key="'space:' + rInd + ':' + sInd"
           >
             <span v-if="space.name === 'final answer'"
                   class="problem single-digit-problem">{{singleDigitProblem(problem)}}</span>
-            <img
+            <b-img
               v-if="space.name === 'final answer'"
               class="portal glyphicon"
-              :src="permanentImages.blackHole" />
-            <img
+              :src="permanentImages.blackHole"></b-img>
+            <b-img
               v-if="space.tools.length"
               class="tool animated zoomIn"
               v-for="(tool, tInd) in space.tools"
               :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
-              :src="toolImages[tool.image]" />
-            <img
+              :src="toolImages[tool.image]"></b-img>
+            <b-img
               class="robot animated"
               v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
               :key="'ROBOT'"
-              :src="robot._robotDirections[robotOrientation]" />
+              :src="robot._robotDirections[robotOrientation]"></b-img>
+
+            <b-popover
+              v-if="space.tools.length"
+              :target="`grid-cell-${rInd}-${sInd}`"
+              placement="auto"
+              triggers="click"
+            >
+              <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover(`grid-cell-${rInd}-${sInd}`)" />
+              <div class="display-tools">
+                <div
+                  v-for="(tool, iInd) in space.tools.slice(0, 100)"
+                  :key="`d-image-${iInd}`"
+                  :class="tool.original ? 'replenish-tool' : ''"
+                >
+                  <b-img
+                    :src="permanentImages.tools[tool.image]"
+                    fluid
+                  ></b-img>
+                </div>
+              </div>
+            </b-popover>
           </div>
         </div>
+        <RobotCarrying></RobotCarrying>
       </div>
+      <splash-screen v-else></splash-screen>
     </transition>
-    <robotcarrying></robotcarrying>
   </div>
 </template>
 
 <script>
 import assets from '../assets/assets'
 import Congrats from './Congrats'
-import Tryagain from './Try_again'
-import Robotcarrying from './Robot_carrying'
 import VideoHint from './Video_hint'
+import SplashScreen from './Splash_screen'
+import RobotCarrying from './Robot_carrying'
+import _ from 'underscore'
+import utils from '../services/utils'
 
 export default {
+  mounted () {
+    this.popoverSyncs = _.chain(this.gridMap)
+      .map((row) => {
+        return row.map(() => false)
+      })
+      .value()
+  },
   computed: {
     problem () {
       return this.currentStepData.problem.problem
@@ -106,12 +139,16 @@ export default {
     },
     stepData () {
       return this.$store.getters.getStepData
+    },
+    robotCarrying () {
+      return this.$store.getters.getRobotCarrying
     }
   },
   data () {
     return {
       runCompiled: {},
-      showSpeech: true
+      showSpeech: true,
+      popoverSyncs: null
     }
   },
   methods: {
@@ -131,64 +168,133 @@ export default {
         default:
           return 'floor'
       }
-    }
+    },
+    closePopover: utils.closePopover
   },
   components: {
     Congrats,
-    Tryagain,
-    Robotcarrying,
-    VideoHint
+    VideoHint,
+    SplashScreen,
+    RobotCarrying
   }
 }
 </script>
 
 <style scoped lang="scss">
-  img {
-    height: auto;
-    width: auto;
-  }
+  $click-color: #B8E986;
+  $grid-space-font-size: 22px;
+  $grid-space-size: 96px;
+  $grid-border-radius: 4px;
+  $grid-background: rgba(0, 0, 0, 0.6);
+  $display-tool-size: 18px;
 
   .total-grid {
     width: 100%;
     height: 100%;
+    display: flex;
+    color: #ffffff;
+    z-index: 99;
   }
 
   .grid {
-    display: table;
+    position: relative;
+    border: 1px solid $click-color;
+    border-radius: $grid-border-radius;
+    flex-wrap: wrap;
     margin: 0 auto;
-    z-index: 100;
   }
 
   .grid-row {
-    display: table-row;
+    display: flex;
+    &:first-child .grid-space:first-child {
+      border-top-left-radius: $grid-border-radius;
+    }
+
+    &:first-child .grid-space:last-child {
+      border-top-right-radius: $grid-border-radius;
+    }
+
+    &:last-child .grid-space:first-child {
+      border-bottom-left-radius: $grid-border-radius;
+    }
+
+    &:last-child .grid-space:last-child {
+      border-bottom-right-radius: $grid-border-radius;
+    }
+  }
+
+  .no-radius-bottom-right {
+    border-bottom-right-radius: 0;
+
+    &:last-child .grid-space:last-child {
+      border-bottom-right-radius: 0;
+    }
   }
 
   .grid-space {
     position: relative;
-    display: table-cell;
-    height: 100px;
-    width: 100px;
-    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: $grid-space-size;
+    width: $grid-space-size;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
-    text-align: center;
-    vertical-align: middle;
-    background: rgba(0, 0, 0, 0.7);
+    font-size: $grid-space-font-size;
+    background: $grid-background;
+
+    img {
+      position: absolute;
+    }
+
+    img.tool {
+      cursor: pointer;
+      height: 75%;
+      width: 75%;
+    }
+
+    img.robot {
+      height: 150%;
+      top: -35%;
+      z-index: 9;
+    }
+
   }
 
-  .grid-space-empty-space {
+  .display-tools {
+    display: flex;
+    max-width: 300px;
+    flex-wrap: wrap;
+    position: relative;
+
+    img {
+      height: $display-tool-size;
+    }
+
+    .replenish-tool {
+      position: relative;
+      &::before {
+        background-size: 100%;
+        background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+        display: inline-block;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 0;
+        content: "";
+        height: calc(#{$display-tool-size} / 2);
+        width: calc(#{$display-tool-size} / 2);
+      }
+    }
   }
 
   .grid-space-wall {
-    height: 100px;
-    width: 100px;
     box-shadow: 0 0 30px 0 rgba(0,0,0,0.5);
     background: repeating-linear-gradient(
         45deg,
-        rgba(0, 0, 0, 0.3),
-        rgba(0, 0, 0, 0.3) 21px,
-        rgba(74, 74, 74, 0.5) 21px,
-        rgba(74, 74, 74, 0.5) 24px
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 21px,
+        rgba(74, 74, 74, 0.6) 21px,
+        rgba(74, 74, 74, 0.6) 24px
     )
   }
 
@@ -200,82 +306,443 @@ export default {
     border-left: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .problem {
-    z-index: 120;
-    font-size: 22px;
-  }
-
-  .grid-space > img {
-    position: absolute;
-    margin: auto;
-    height: 75%;
-    width: 75%;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    z-index: 100;
-  }
-
-  .robot {
-    z-index: 1010;
-    height: 160% !important;
-    width: 180% !important;
-    margin: 0 !important;
-    top: -42% !important;
-    bottom: 0 !important;
-    left: -38% !important;
-    right: 0 !important;
-  }
-
   .robot-shake {
     animation: shake 0.5s;
     animation-iteration-count: infinite;
   }
 
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
+  .close-popover {
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    top: -9px;
+    right: -9px;
   }
 
-  /* 13" screen */
-  @media only screen and (max-width : 1280px) {
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1024px)
+  and (max-device-height: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $grid-space-size: 56px;
+    $display-tool-size: 16px;
+    $grid-space-font-size: 14px;
+
     .grid-space {
-      height: 70px;
-      width: 70px;
+      height: $grid-space-size;
+      width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 100%;
+        width: 100%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
-  /* Large Phones, landscape*/
-  @media only screen and (max-width : 992px) {
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    $grid-space-size: 56px;
+    $display-tool-size: 16px;
+    $grid-space-font-size: 14px;
+
     .grid-space {
-      height: 35px;
-      width: 35px;
+      height: $grid-space-size;
+      width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 100%;
+        width: 100%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait)  {
+    $grid-space-size: 56px;
+    $display-tool-size: 16px;
+    $grid-space-font-size: 14px;
+
     .grid-space {
-      height: 30px;
-      width: 30px;
+      height: $grid-space-size;
+      width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 100%;
+        width: 100%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $grid-space-size: 32px;
+    $display-tool-size: 16px;
+    $grid-space-font-size: 12px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 100%;
+        width: 100%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
   }
 
-  /* Custom, iPhone 5 Retina */
+  @media only screen and (max-width : 736px) and (orientation: landscape) {
+    $grid-space-size: 38px;
+    $display-tool-size: 16px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    $grid-space-size: 30px;
+    $display-tool-size: 16px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 568px) and (orientation: landscape) {
+    $grid-space-size: 26px;
+    $display-tool-size: 16px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $grid-space-size: 32px;
+    $display-tool-size: 18px;
+    $grid-space-font-size: 10px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+      overflow: hidden;
+
+      .portal {
+        height: 100%;
+        width: 100%;
+      }
+
+      .problem {
+        font-size: $grid-space-font-size;
+      }
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    $grid-space-size: 26px;
+    $display-tool-size: 16px;
+
+    .grid-space {
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
+    }
+  }
+
   @media only screen and (max-width : 320px) {
+    $grid-space-size: 30px;
+    $display-tool-size: 12px;
 
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     .grid-space {
-      height: 70px;
-      width: 70px;
+      height: $grid-space-size;
+      width: $grid-space-size;
+    }
+
+    .display-tools {
+      display: flex;
+      max-width: 300px;
+      flex-wrap: wrap;
+      position: relative;
+
+      img {
+        height: $display-tool-size;
+      }
+
+      .replenish-tool {
+        position: relative;
+        &::before {
+          background-size: 100%;
+          background: #000000 url("http://res.cloudinary.com/doohickey/image/upload/v1530493572/noun_infinite_878473_cccccc_t4771o.svg");
+          display: inline-block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: 0;
+          content: "";
+          height: calc(#{$display-tool-size} / 2);
+          width: calc(#{$display-tool-size} / 2);
+        }
+      }
     }
   }
-
 </style>

@@ -122,7 +122,8 @@ class RunCompiled extends GridAnimator {
     this.$store.dispatch('updateStepData', stepData)
     this.$store.dispatch('updateLambdas', stepData.lambdas)
     stepData.initialRobotState.context = this.context
-    this.$store.dispatch('updateRobot', new Robot(stepData.initialRobotState))
+    const robot = new Robot(stepData.initialRobotState)
+    this.$store.dispatch('updateRobot', robot)
     this.constructor(this.context)
   }
 
@@ -165,6 +166,7 @@ class RunCompiled extends GridAnimator {
       // console.log('[grid]', JSON.parse(JSON.stringify(this.grid)))
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
+      this._stopRobot()
     })
   }
 
@@ -173,6 +175,7 @@ class RunCompiled extends GridAnimator {
     return this.initializeAnimation(this.$store, frame, async () => {
       await this._showBridgeScreen(frame)
       this._initializeOnLastFrame(frame)
+      this._stopRobot()
     })
   }
 
@@ -208,7 +211,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _controlAsk () {
-    if (this.robotFrames.length && this.robotFrames.length < 8) {
+    if (this.robotFrames.length > 0 && this.robotFrames.length < 20) {
       const last = this.robotFrames[this.robotFrames.length - 1]
       if (this.robotFrames.length < 8 && last.programState === 'running') {
         this._askCompiler()

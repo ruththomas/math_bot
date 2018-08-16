@@ -1,16 +1,8 @@
 <template>
-  <div v-if="functionAreaShowing !== 'editMain'">
-    <div class="popover-bucket">
-      <div class="popover-bucket-content">
-        <staged-functions v-if="functionAreaShowing === 'addFunction'"></staged-functions>
-        <edit-function v-else></edit-function>
-      </div>
-      <div class="pointer-slider">
-        <div class="pointer">
-          <div class="pointer-size pointer-border"></div>
-          <div class="pointer-size pointer-body"></div>
-        </div>
-      </div>
+  <div class="popover-bucket">
+    <div class="popover-bucket-content">
+      <staged-functions v-if="functionAreaShowing === 'addFunction'"></staged-functions>
+      <edit-function v-else></edit-function>
     </div>
   </div>
 </template>
@@ -22,26 +14,25 @@ import PopoverBucket from '../services/PopoverBucket'
 
 export default {
   mounted () {
-    this.popoverBucket = new PopoverBucket(this, this.target)
+    this.popoverBucket = new PopoverBucket(this, this.editFunctionEvent)
+  },
+  beforeDestroy () {
+    this.popoverBucket.removePointer()
   },
   computed: {
+    editFunctionEvent () {
+      return this.$store.getters.getEditFunctionEvent
+    },
     editingIndex () {
       return this.$store.getters.getEditingIndex
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    },
-    target () {
-      return this.evt.target
     }
   },
-  updated () {
-    if (this.functionAreaShowing === 'editFunction' || this.functionAreaShowing === 'addFunction') this.popoverBucket.updateTarget(this, this.target)
-    else this.popoverBucket.killBucket()
-  },
   watch: {
-    target (target) {
-      this.popoverBucket.updateTarget(this, target)
+    editFunctionEvent (evt) {
+      this.popoverBucket = new PopoverBucket(this, evt)
     }
   },
   data () {
@@ -52,19 +43,23 @@ export default {
   components: {
     StagedFunctions,
     EditFunction
-  },
-  props: ['evt']
+  }
 }
 </script>
 
 <style scoped lang="scss">
+  $popover-margin-top: 60px;
+
   .popover-bucket {
-    height: 200px;
-    left: 0;
-    right: 0;
-    z-index: 1010;
-    position: absolute;
-    top: -200%;
+    z-index: 100;
+    height: calc(100% + #{$popover-margin-top} + 2px);
+    width: 100%;
+    margin: calc(-#{$popover-margin-top}) auto;
+  }
+
+  .staged-popover-bucket {
+    left: 48px;
+    right: -48px;
   }
 
   .popover-bucket-content {
@@ -74,95 +69,108 @@ export default {
     background-color: black;
     margin: 0 auto;
     position: relative;
+    display: flex;
+    align-items: center;
   }
 
-  .pointer-slider {
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-  }
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    $popover-width: 100%;
+    $popover-margin-top: 50px;
 
-  .pointer {
-    position: relative;
-    width: 40px;
-    height: 20px;
-    margin-right: 1px;
-    margin-top: -1px;
-  }
-
-  .pointer-hidden {
-    opacity: 0;
-  }
-
-  .pointer-size {
-    position: absolute;
-    border-style: solid;
-    border-width: 20px 18px 0 18px;
-  }
-
-  .pointer-body {
-    top: -1px;
-    z-index: 1001;
-    border-color: #000000 transparent transparent transparent;
-  }
-
-  .pointer-border {
-    top: 1px;
-    z-index: 0;
-    border-color: #737373 transparent transparent transparent;
-  }
-
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
     .popover-bucket {
-      height: 100px;
-      top: -105px;
-    }
-
-    .pointer {
-      height: 10px;
-      width: 20px;
-    }
-
-    .pointer-size {
-      border-width: 10px 9px 0 9px;
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
     }
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    $popover-width: 100%;
+    $popover-margin-top: 70px;
 
+    .popover-bucket {
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
+    }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  @media only screen and (max-width : 823px) and (orientation: landscape) {
+    $popover-width: 98%;
+    $popover-margin-top: 50px;
 
+    .popover-bucket {
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
+    }
   }
 
-  /* Custom, iPhone Retina */
+  @media only screen and (max-width : 667px) and (orientation: landscape) {
+    $popover-width: 98%;
+    $popover-margin-top: 50px;
+
+    .popover-bucket {
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
+    }
+  }
+
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) and (orientation: landscape) {
+    $popover-width: 98%;
+    $popover-margin-top: 50px;
+
+    .popover-bucket {
+      z-index: 1010;
+      height: calc(100% + #{$popover-margin-top});
+      margin-top: calc(-#{$popover-margin-top} + 2px);
+      width: $popover-width;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $popover-width: 98%;
+
+    .popover-bucket {
+      z-index: 1010;
+      height: 100%;
+      margin-top: 2px;
+      width: $popover-width;
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    $popover-width: 98%;
+
+    .popover-bucket {
+      z-index: 1010;
+      height: 100%;
+      margin-top: 2px;
+      width: $popover-width;
+    }
+  }
+
+  /* iphone 5 portrait */
   @media only screen and (max-width : 320px) {
+    $popover-width: 98%;
 
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     .popover-bucket {
-      height: 200px;
-      top: -210px;
-    }
-
-    .pointer {
-      width: 40px;
-      height: 20px;
-    }
-
-    .pointer-size {
-      border-width: 20px 18px 0 18px;
+      z-index: 1010;
+      height: 100%;
+      margin-top: 2px;
+      width: $popover-width;
     }
   }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
-  }
-
 </style>

@@ -1,6 +1,6 @@
 package actors
 
-import actors.messages.{RawLevelData, RawStepData}
+import actors.messages.{AssignedFunction, RawLevelData, RawStepData}
 import play.api.Environment
 import play.api.libs.json.Json
 import types.LevelName
@@ -52,4 +52,11 @@ class LevelGenerator(environment: Environment) {
       case Some(levelData) => levelData.steps.get(step)
       case None => None
     }
+
+  def getAssignedFunctions: List[AssignedFunction] = {
+    getAllLevels.values
+      .flatMap(_.steps.values)
+      .flatMap(rsd => rsd.assignedStaged ++ rsd.preBuiltActive)
+      .toList
+  }
 }

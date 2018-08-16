@@ -1,118 +1,321 @@
 <template>
-  <div v-if="robotCarrying" class="robot-carrying" :style="robotCarrying.length ? {'background-color': 'rgba(0, 0, 0, 0.5)'} : ''">
-    <!--<p v-if="totalValueCarried">sum: {{totalValueCarried}}</p>-->
-    <img
-        class="animated zoomIn"
-        v-for="(image, ind) in robotCarrying"
-        :key="'robot-carrying' + ind"
-        :src="toolImages[image]"
-      >
+  <div id="robot-carrying-id" v-if="robotCarrying.length" class="robot-carrying">
+    <span
+      v-for="(tool, ind) in organizeCarrying"
+      :key="'carrying-' + ind"
+    >
+      <b-img class="tool-display-image" :src="toolImages[tool[0]]" /> <span>x</span> <span>{{tool[1]}}</span>
+    </span>
+    <b-popover
+      v-if="robotCarrying.length"
+      target="robot-carrying-id"
+      triggers="click"
+      placement="left"
+    >
+      <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover('robot-carrying-id')" />
+      <b-img
+        v-for="(imageName, iInd) in displayCarrying"
+        :key="'carrying-popover-image/' + iInd"
+        class="tool-display-image"
+        :src="toolImages[imageName]"
+      ></b-img>
+      <span class="tool-display-text" @click="adjustShowAmount"><strong>. . .</strong></span>
+    </b-popover>
   </div>
 </template>
 
 <script>
 import uid from 'uid'
-import assets from '../assets/assets'
+import _ from 'underscore'
+import utils from '../services/utils'
 
 export default {
   computed: {
-    totalValueCarried () {
-      return this.robotCarrying.reduce((acc, tool) => {
-        switch (tool) {
-          case 'kitty':
-            acc += 1
-            break
-          case 'ten':
-            acc += 10
-            break
-          case 'oneHundred':
-            acc += 100
-            break
-          case 'oneThousand':
-            acc += 1000
-            break
-          case 'tenHundred':
-            acc += 10000
-            break
-          default:
-            acc += 0
-        }
-        return acc
-      }, 0)
+    organizeCarrying () {
+      return _.chain(this.robotCarrying)
+        .reduce((organized, tool) => {
+          organized[tool] = organized[tool] + 1 || 1
+          return organized
+        }, {})
+        .pairs()
+        .sortBy((tup) => {
+          const values = {kitty: 1, ten: 10, oneHundred: 100, oneThousand: 1000, tenThousand: 10000}
+          return values[tup[0]]
+        })
+        .value()
     },
     toolImages () {
-      return assets.tools
+      return this.permanentImages.tools
+    },
+    displayAmt () {
+      return this.amountToShow
+    },
+    displayCarrying () {
+      return this.robotCarrying.slice(0, this.displayAmt)
     },
     robotCarrying () {
       return this.$store.getters.getRobotCarrying
     },
-    game () {
-      return this.$store.getters.getGame
-    },
-    level () {
-      return this.$store.getters.getLevel
-    },
-    equation () {
-      return this.$store.getters.getCurrentEquation
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
+    }
+  },
+  data () {
+    return {
+      amountToShow: 48
     }
   },
   methods: {
     uID () {
       return uid(7)
-    }
+    },
+    adjustShowAmount () {
+      this.amountToShow = this.amountToShow === 1000 ? 48 : 1000
+    },
+    closePopover: utils.closePopover
   }
 }
 </script>
 
 <style scoped lang="scss">
+  $carrying-size: 20px;
+  $click-color: #B8E986;
+
   .robot-carrying {
-    min-height: 20px;
-    min-width: 20px;
-    display: inline-block;
+    position: absolute;
+    bottom: -1px;
+    left: calc(100% - 0.5px);
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    margin: 0 auto;
     flex-wrap: wrap;
+    z-index: 10000;
+    font-size: $carrying-size;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 3px;
+    border: 1px solid $click-color;
+    border-left: 1.5px solid rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+
+    span {
+      display: flex;
+      align-items: center;
+      margin-left: 3px;
+    }
   }
 
-  .robot-carrying img {
-    height: 20px;
-    width: 20px;
+  .tool-display-image {
+    height: $carrying-size;
+    width: $carrying-size;
   }
 
-  .robot-carrying p {
-    height: 20px;
-    font-size: 20px;
+  .tool-display-text {
+    color: #ffffff;
+    cursor: pointer;
+    display: block;
   }
 
-  /* Large Phones, landscape*/
-  @media only screen and (max-width : 992px) {
-
+  .close-popover {
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    top: -9px;
+    right: -9px;
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  @media only screen and (max-width: 823px) and (orientation: landscape) {
+    $carrying-size: 12px;
+
     .robot-carrying {
-      min-height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
     }
 
-    .robot-carrying img {
-      height: 10px;
-      width: 10px;
-    }
-
-    .robot-carrying p {
-      height: 10px;
-      font-size: 10px;
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  @media only screen and (max-width: 736px) and (orientation: landscape) {
+    $carrying-size: 12px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
   }
 
-  /* Custom, iPhone 5 Retina */
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    $carrying-size: 8px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
+  }
+
+  @media only screen and (max-width: 568px) and (orientation: landscape) {
+    $carrying-size: 8px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    $carrying-size: 12px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
+  }
+
+  @media only screen and (max-width : 375px) {
+    $carrying-size: 8px;
+
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
+  }
+
   @media only screen and (max-width : 320px) {
+    $carrying-size: 8px;
 
+    .robot-carrying {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      z-index: 10000;
+      font-size: $carrying-size;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        img {
+          height: $carrying-size;
+          width: $carrying-size;
+        }
+      }
+    }
+
+    .tool-display-image {
+      height: $carrying-size;
+      width: $carrying-size;
+    }
   }
-
 </style>

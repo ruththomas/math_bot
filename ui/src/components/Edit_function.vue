@@ -15,15 +15,27 @@
           @click="applyColorConditional"
         >
         </div>
-        <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="52" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
+        <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="57" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
 
-        <div
+        <img
+          v-if="editingFunction.func.length"
+          id="delete-function"
           class='function-control trash'
-          @click="deleteFuncContents"
-        >
-        </div>
+          :src="permanentImages.trashCan"
+          @click="animateVulnerable"
+        />
 
-        <span class="function-limit-indicator" v-if="editingFunction.sizeLimit > 0">Size limit: {{ editingFunction.sizeLimit }}</span>
+        <b-popover
+          v-if="editingFunction.func.length"
+          target="delete-function"
+          placement="top"
+          triggers="click"
+        >
+          <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="[closePopover('delete-function'), animateVulnerable()]" />
+          <div class="button-effect trash-confirm" variant="danger"  @click="deleteFuncContents">
+            <img class="dialog-button" :src="permanentImages.openTrashCan" />
+          </div>
+        </b-popover>
       </div>
 
       <img class="close-edit-function dialog-button" @click="closeEditFunction" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
@@ -32,34 +44,42 @@
     <div class="edit-function-content">
 
       <function-drop
+        :id="'edit-function'"
         :list="functions"
-        :options="mainDraggableOptions"
-        :change="copyCommand"
+        :options="functionDraggableOptions"
+        :change="editFunction"
         :start="moving"
         :end="end"
+        :add="add"
         :origin="'editFunction'"
+        :size-limit="editingFunction.sizeLimit"
       ></function-drop>
 
     </div>
-
   </div>
 </template>
 
 <script>
 import draggable from 'vuedraggable'
 import {_} from 'underscore'
-import buildUtils from '../services/build_function_utils'
+import buildUtils from '../services/BuildFunction'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
+import utils from '../services/utils'
 
 export default {
+  mounted () {
+  },
   computed: {
     editingIndex () {
       return this.$store.getters.getEditingIndex
     },
     editingFunction () {
-      return this.$store.getters.getActiveFunctions[this.editingIndex]
+      return this.activeFunctions[this.editingIndex]
+    },
+    activeFunctions () {
+      return this.$store.getters.getActiveFunctions
     },
     colorSelected () {
       return this.colors[this.currentColor]
@@ -98,7 +118,7 @@ export default {
           next: 'grey'
         },
         grey: {
-          hex: '#CCCCCC',
+          hex: '#696969',
           next: 'blue'
         },
         blue: {
@@ -122,7 +142,7 @@ export default {
           next: 'default'
         }
       },
-      mainDraggableOptions: {
+      functionDraggableOptions: {
         group: {
           name: 'commands-slide',
           pull: true,
@@ -140,24 +160,56 @@ export default {
       return this.colors[this.currentColor].next
     },
     updateName () {
-      buildUtils.updateFunctionsOnChange({context: this, currentFunction: this.editingFunction, addedFunction: null, newIndex: this.editingFunction.index, newColor: null})
+      buildUtils._putFunc({
+        context: this,
+        funcToken: this.editingFunction
+      })
     },
     applyColorConditional () {
-      const newColor = this.findColor()
-      this.color = newColor
-      buildUtils.updateFunctionsOnChange({ context: this, currentFunction: this.editingFunction, addedFunction: null, newIndex: this.editingFunction.index, newColor: newColor })
+      buildUtils.adjustColor({
+        context: this,
+        color: this.findColor()
+      })
       this.color = 'default'
     },
     deleteFuncContents () {
-      let deleteFuncContents = buildUtils.currentFunc(this)
-      deleteFuncContents.func = []
-      buildUtils.updateFunctionsOnChange(({context: this, currentFunction: deleteFuncContents, addedFunction: null, newIndex: null}))
+      this.closePopover('delete-function')
+      buildUtils.deleteFunction({context: this})
     },
-    copyCommand (evt) {
+    animateVulnerable () {
+      const $functions = $('.editFunction-drop-zone > .piece:not(.placeholder-piece)')
+      const animationClass = 'piece-shake'
+      $functions.each(function () {
+        const $ele = $(this)
+        if ($ele.hasClass(animationClass)) {
+          $ele.removeClass(animationClass)
+        } else {
+          $ele.addClass(animationClass)
+        }
+      })
+    },
+    fullMessage () {
+      const messageBuilder = {
+        type: 'success',
+        msg: `Function full`
+      }
+      this.$store.dispatch('addMessage', messageBuilder)
+    },
+    togglePut (bool) {
+      this.functionDraggableOptions.group.put = bool
+      if (!bool) this.fullMessage()
+    },
+    editFunction (evt, groupInd) {
       if (!evt.hasOwnProperty('removed')) {
-        const command = evt.hasOwnProperty('added') ? evt.added.element : evt.moved.element
-        const ind = evt.hasOwnProperty('added') ? evt.added.newIndex : evt.moved.newIndex
-        buildUtils.updateFunctionsOnChange({context: this, currentFunction: buildUtils.currentFunc(this), addedFunction: command, newIndex: ind})
+        buildUtils.addToFunction({
+          context: this,
+          groupSize: this.groupSize,
+          groupInd: groupInd,
+          added: evt.hasOwnProperty('added') ? evt.added : evt.moved
+        })
+      }
+      if (this.editFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
+        this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
       }
     },
     closeEditFunction () {
@@ -170,9 +222,12 @@ export default {
     moving (evt) {
       this.$store.dispatch('updateTrashVisible', true)
     },
-    end () {
+    add (evt) {
+    },
+    end (evt) {
       this.$store.dispatch('updateTrashVisible', false)
-    }
+    },
+    closePopover: utils.closePopover
   },
   components: {
     draggable,
@@ -183,26 +238,33 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $form-left: 34px;
+  $click-color: #B8E986;
+  $danger-color: #F25C5C;
+
   .edit-function {
-    position: absolute;
-    /*height: 250px;*/
+    position: relative;
+    height: 100%;
     width: 100%;
-    top: -70px;
-    z-index: 10001;
+    z-index: 99;
     overflow: visible;
   }
 
   .edit-function-data {
-    position: relative;
+    position: absolute;
+    top: -70px;
+    right: 0;
+    left: 0;
     height: 105px;
-    margin-bottom: 12px;
   }
 
   .edit-function-content {
     position: relative;
     overflow: hidden;
-    padding: 10px 20px 10px 20px;
-    height: 130px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding-top: 5%;
   }
 
   .edit-function-drop > * {
@@ -224,7 +286,8 @@ export default {
     align-items: flex-end;
     position: absolute;
     bottom: 0;
-    left: 26px;
+    left: $form-left;
+    z-index: 1001;
   }
 
   .displayed-func {
@@ -239,7 +302,7 @@ export default {
     align-items: center;
     border: 1px solid #B8E986;
     border-radius: 3px;
-    margin-right: 12px;
+    margin-right: 8px;
   }
 
   .function-control {
@@ -250,10 +313,12 @@ export default {
     cursor: pointer;
   }
 
-  .function-control.trash {
-    background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png");
-    background-size: cover;
-    float: right;
+  .trash-confirm {
+    background-color: $danger-color;
+    box-shadow: 0 2px 10px 0 $danger-color;
+    animation: shake 0.8s;
+    animation-iteration-count: infinite;
+    margin: 40px;
   }
 
   .func-name {
@@ -264,7 +329,7 @@ export default {
     border-right: none !important;
     border-top: none !important;
     border-bottom: 1px solid #979797;
-    width: 350px;
+    margin-right: 20px;
     height: 23px;
     font-size: 18px;
     line-height: 21px;
@@ -273,126 +338,275 @@ export default {
   }
 
   .function-drop-drop-zone {
-    justify-content: flex-start!important;
     margin: 0;
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    .displayed-func {
-      height: 40px;
-      width: 40px;
-    }
+  .close-popover {
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    top: -9px;
+    right: -9px;
+  }
 
-    .func-param-form {
-      left: 1px;
-      right: 0;
-    }
-    .func-param-form > * {
-      margin-right: 3px;
-    }
-
-    .func-name {
-      width: auto;
-      font-size: 10px;
-    }
-
+  /* ipad pro Portrait */
+  @media only screen
+  and (min-device-width: 1025px)
+  and (max-device-width: 1366px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    $piece-size: 36px;
     .edit-function-data {
-      margin: 0;
-    }
+      top: -85px;
 
-    .edit-function-content {
-      padding: 0;
-      height: 60px;
-    }
+      .func-param-form {
+        left: 12px;
 
-    .close-edit-function {
-      right: -10px;
-      bottom: 26px;
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 15px;
+        right: -15px;
+      }
     }
   }
 
-  /* Small Devices */
+  // ipad landscape
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : landscape) {
+    $piece-size: 50px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 30px;
+        bottom: -5px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -15px;
+      }
+    }
+  }
+
+  // ipad portrait
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    $piece-size: 50px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+        bottom: -5px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -15px;
+      }
+    }
+  }
+
+  @media only screen and (max-width : 823px) and (orientation: landscape) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 736px) {
+    $piece-size: 36px;
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
+  }
+
   @media only screen and (max-width : 667px) {
-    .displayed-func {
-      height: 40px;
-      width: 40px;
-    }
-
-    .func-param-form {
-      left: 1px;
-      right: 0;
-    }
-    .func-param-form > * {
-      margin-right: 3px;
-    }
-
-    .func-name {
-      width: auto;
-      font-size: 10px;
-    }
-
+    $piece-size: 36px;
     .edit-function-data {
-      margin: 0;
-    }
+      top: -85px;
 
-    .edit-function-content {
-      padding: 0;
-      height: 60px;
-    }
+      .func-param-form {
+        left: 12px;
 
-    .close-edit-function {
-      right: -10px;
-      bottom: 26px;
+        .displayed-func {
+          height: $piece-size;
+          width: $piece-size;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  /* iphone 5 landscape */
+  @media only screen and (max-width : 568px) {
+    .edit-function-data {
+      top: -85px;
+
+      .func-param-form {
+        left: 12px;
+
+        .displayed-func {
+          height: 32px;
+          width: 32px;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+          width: 100px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
+    }
   }
 
-  /* Custom, iPhone Retina */
   @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .displayed-func {
-      height: 70px;
-      width: 70px;
-    }
-
-    .func-param-form {
-      left: 1px;
-      right: 0;
-    }
-    .func-param-form > * {
-      margin-right: 3px;
-    }
-
-    .func-name {
-      width: auto;
-      font-size: 18px;
-    }
-
     .edit-function-data {
-      margin: 0;
-    }
+      top: -85px;
 
-    .edit-function-content {
-      padding: 10px 20px 10px 20px;
-      height: 130px;
-    }
+      .func-param-form {
+        left: 12px;
 
-    .close-edit-function {
-      bottom: 20px;
-      right: -20px;
+        .displayed-func {
+          height: 32px;
+          width: 32px;
+        }
+
+        .function-control {
+          height: 18px;
+          width: 18px;
+        }
+
+        .func-name {
+          font-size: 12px;
+        }
+      }
+
+      .close-edit-function {
+        bottom: 10px;
+        right: -10px;
+      }
     }
   }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
-  }
-
 </style>

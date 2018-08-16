@@ -21,20 +21,4 @@ object PlayerToken {
   final val randomImagesField = "randomImages"
 
   implicit val jsonFormat = Json.format[PlayerToken]
-
-  /*
-  implicit val tokenReads: Reads[PlayerToken] = (
-    (JsPath \ PlayerToken.tokenIdField).read[String] and
-    (JsPath \ PlayerToken.lambdas).readNullable[Lambdas] and
-    (JsPath \ PlayerToken.statsField).readNullable[Stats] and
-    (JsPath \ PlayerToken.randomImagesField).readNullable[List[String]]
-  )(PlayerToken.apply _)
-
-  implicit val tokenWrites: Writes[PlayerToken] = (
-    (JsPath \ PlayerToken.tokenIdField).write[String] and
-    (JsPath \ PlayerToken.lambdas).writeNullable[Lambdas] and
-    (JsPath \ PlayerToken.statsField).writeNullable[Stats] and
-    (JsPath \ PlayerToken.randomImagesField).writeNullable[List[String]]
-  )(unlift(PlayerToken.unapply))
- */
 }

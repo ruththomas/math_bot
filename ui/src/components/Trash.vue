@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <draggable
-      v-if="trashVisible"
-      class="fire"
-      :list="trash"
-      :options="trashDraggableData"
-      @change="dumpTrash($event)"
-      @onDragOver="test($event)"
-    >
-    </draggable>
-  </div>
+  <draggable
+    v-if="trashVisible"
+    class="fire"
+    :list="trash"
+    :options="trashDraggableData"
+    @change="dumpTrash($event)"
+    @onDragOver="test($event)"
+  >
+  </draggable>
 </template>
 
 <script>
 import draggable from 'vuedraggable'
-import buildUtils from '../services/build_function_utils'
+import buildUtils from '../services/BuildFunction'
 
 export default {
   data () {
@@ -39,12 +37,9 @@ export default {
     }
   },
   methods: {
-    dumpTrash (evt) {
+    dumpTrash () {
       this.$store.dispatch('updateTrashVisible', false)
-      buildUtils.updateFunctionsOnChange({context: this, currentFunction: buildUtils.currentFunc(this), addedFunction: null, newIndex: null, override: true})
-    },
-    test (evt) {
-      console.log(evt)
+      buildUtils.deleteItemFromFunction({context: this})
     }
   },
   components: {
@@ -55,13 +50,10 @@ export default {
 
 <style scoped lang="scss">
   .fire {
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    bottom: 0;
-    right: 0;
-    z-index: 105;
-    height: 200vh;
-    width: 200vw;
+    position: absolute;
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.1);
   }
 </style>
