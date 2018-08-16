@@ -658,7 +658,7 @@
         "setItemDown"
       ],
       "specialParameters": [],
-      "problem": "60",
+      "problem": "80",
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
