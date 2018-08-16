@@ -83,7 +83,7 @@ export default {
   }
 
   .popover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.8)!important;
   }
 
   /*This is where v-html styles must go*/
