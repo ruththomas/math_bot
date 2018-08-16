@@ -170,7 +170,6 @@ export default {
     },
     applyColorConditional () {
       const level = this.stats.level
-      console.log(level)
       if (level !== 'BasicProgramming' && level !== 'Counting' && level !== 'Numbers' && level !== 'Recursion') {
         buildUtils.adjustColor({
           context: this,
