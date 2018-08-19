@@ -136,15 +136,15 @@ class RunCompiled extends GridAnimator {
     this._initializeStep(frame.stepData)
   }
 
-  _resetStep (res) {
-    console.log('STOP')
+  _resetStep () {
     api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
       this._initializeStep(stepData)
     })
   }
 
   _stopRobot () {
-    api.compilerWebSocket.haltProgram(this._resetStep)
+    api.compilerWebSocket.haltProgram(() => {})
+    this._resetStep()
   }
 
   _toggleBridge = (which, bool) => this.$store.dispatch(`toggle${which}`, bool)
@@ -214,7 +214,7 @@ class RunCompiled extends GridAnimator {
   _controlAsk () {
     if (this.robotFrames.length > 0 && this.robotFrames.length < 20) {
       const last = this.robotFrames[this.robotFrames.length - 1]
-      if (this.robotFrames.length < 8 && last.programState === 'running') {
+      if (this.robotFrames.length < 20 && last.programState === 'running') {
         this._askCompiler()
       }
     }
