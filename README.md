@@ -104,40 +104,6 @@ The project has been built thus far with Intellij
     !! sbt test             # Run both backend and frontend unit tests !! *coming soon!  
 ```
 
-#### Pre-prod Deployment
-* Use heroku for testing
-* If you do not plan to setup a heroku, just do step 3
-    
-1) Create a [Heroku](https://heroku.com/) account (if you don't have one) and create a new app.
-
-2) Setup an mLab resource for MongoDb.
-
-3) Change `project/HerokuDeployKeys` to `project/HerokuDeployKeys.scala` 
-    * If you do not plan to setup a heroku account you are finished
-    * Be sure to change the object name to match also
-    * Be sure not to remove `project/HerokuDeployKeys-example.scala`
-    
-4) Fill in all the appropriate fields in `project/HerokuDeployKeys.scala`
-    * Fill in the FILL_ME_IN spots
-
-5) Set remote location
-    * Add remote to git
-    ```
-       heroku git:remote -a HEROKU_REMOTE_LOCATION
-    ```
-
-* To deploy
-    
-    ```
-       # Prepare app for deployment
-       sbt stage 
-       
-       # Deploy app
-       sbt deployHeroku
-       
-       # Open app (From terminal only)
-       heroku open
-    ```
 ### Game Rules to Pass A Step
 
 1) Program must be completely finished running
@@ -189,11 +155,13 @@ The project has been built thus far with Intellij
       "stagedQty": <{int}QTY OF STAGED FUNCTIONS AVAILABLE (if infinite -1)>,
       "assignedStaged": <{list[object]}SEE `Adding Assigned Staged` SECTION>,
       "preBuiltActive": <{list[object]}SEE `Adding Pre-Built Actives` SECTION>,
+      "allowedActives": <{list[string]}LIST OF FUNCTION CREATED IDS (only applies to built functions)>,
       "cmdsAvailable": <{array[string]}ARRAY OF COMMAND NAMES, SEE `Command Names` SECTION FOR COMMAND NAMES>,
       "specialParameters": <{array[string]}LIST OF SPECIAL PARAMETERS, SEE `Special Parameters` SECTION FOR CURRENT SPECIAL PARAMETERS>,
       "problem": <{string}SEE `Building a Problem` SECTION FOR PROPER PROBLEM SYNTAX,
       "clearMain": <{boolean>INDICATES IF MAIN SHOULD BE EMPTY AT THE START OF THE LEVEL>,
       "initFocus": <{array[string]}LIST OF ELEMENTS TO ADD SPECIAL EFFECT ON AT START OF STEP, SEE `Init Focus` SECTION>
+      "videoHints": <{array[string]}LIST OF YOUTUBE VIDEO IDS>,
       "prevStep": <{String}PREVIOUS STEP NAME (Should be "None" if first step)>,
       "nextStep": <{String}NEXT STEP NAME (Should be "None" if last step)>
     },
@@ -256,6 +224,7 @@ The project has been built thus far with Intellij
     {
         "name": <{string}DISPLAY NAME>,
         "image": <{string}NAME OF IMAGE IN ASSETS>,
+        "createdId": <{string}CREATED ID, 11 DIGIT STRING OF NUMBERS STARTING WITH 5 (generate using random.org)>,
         "sizeLimit": <{int}MAX SIZE FUNCTION CAN BE>,
         "func": <{list[string]}MUST BE AN EMPTY ARRAY>,
     }
@@ -285,6 +254,7 @@ Current Special Parameters
     {
         "name": <{string}DISPLAY NAME>,
         "image": <{string}NAME OF IMAGE IN ASSETS>,
+        "createdId": <{string}CREATED ID, 11 DIGIT STRING OF NUMBERS STARTING WITH 5 (generate using random.org)>,
         "sizeLimit": <{int}MAX SIZE FUNCTION CAN BE>,
         "func": <{list[string]}LIST OF COMMANDS (see 'command names' section}>,
     }
