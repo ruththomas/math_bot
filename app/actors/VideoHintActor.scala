@@ -93,7 +93,7 @@ class VideoHintActor @Inject()(out: ActorRef,
   private val KEY: String = sys.env.getOrElse("MB_YOUTUBE_KEY", "none")
   private val YOUTUBE_URL: URL = "https://www.googleapis.com/youtube/v3/"
 
-  private def embedURL(videoId: String): URL = s"https://www.youtube.com/embed/$videoId"
+  private def embedURL(videoId: String): URL = s"https://www.youtube.com/embed/$videoId?rel=0"
 
   override def receive: Receive = {
     /*
