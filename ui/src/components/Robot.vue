@@ -1,6 +1,6 @@
 <template>
   <div class="robot-container" data-aos="fade-in" v-if="auth.authenticated">
-    <trash></trash>
+
     <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
     <div  v-else id="robot" class="row animated">
 
@@ -9,6 +9,7 @@
       </div>
 
       <div id="grid-box">
+        <trash></trash>
         <grid></grid>
       </div>
 
@@ -20,6 +21,7 @@
       </div>
 
       <div id="commands-box">
+        <trash></trash>
         <commands></commands>
       </div>
 
@@ -195,15 +197,17 @@ export default {
   #edit-main-box {
     display: flex;
     flex: 1;
-    z-index: 100;
+    z-index: 101;
     /*border: 1px solid mediumvioletred;*/
   }
 
   #commands-box {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     flex: 1.2;
+    z-index: 102;
     /*border: 1px solid firebrick;*/
   }
 
