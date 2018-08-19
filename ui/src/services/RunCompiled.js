@@ -137,6 +137,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _resetStep (res) {
+    console.log('STOP')
     api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
       this._initializeStep(stepData)
     })
