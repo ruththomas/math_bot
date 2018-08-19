@@ -10,7 +10,8 @@ object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
 
   def jsonToCompilerCommand(msg: JsValue): Any = {
     Json.fromJson[CompilerRequest](msg).asOpt match {
-      case Some(CompilerRequest(_, _, Some(true), _)) => CompilerHalt()
+      case Some(CompilerRequest(_, _, Some(true), _)) =>
+        CompilerHalt()
       case Some(CompilerRequest(Some(steps), Some(problem), _, None)) =>
         CompilerExecute(steps, Problem(encryptedProblem = problem))
       case Some(CompilerRequest(Some(steps), Some(problem), _, Some(true))) =>
