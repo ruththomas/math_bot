@@ -593,7 +593,7 @@ export default {
   }
 
   @media only screen and (max-width: 568px) and (orientation: landscape) {
-    $grid-space-size: 26px;
+    $grid-space-size: 32px;
     $display-tool-size: 16px;
 
     .grid-space {
