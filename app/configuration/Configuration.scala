@@ -35,3 +35,8 @@ case class GithubApiConfig(
     scopes: Seq[String],
     issuer : String
 )
+
+case class MathbotAuthConfig(
+                            signupUrl : Uri,
+                            authUrl : Uri
+                            )
