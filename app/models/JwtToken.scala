@@ -8,7 +8,8 @@ case class JwtToken(iss: String,
   def getIssuerShortName: String = {
     iss match {
       case "https://accounts.google.com" => "google-oauth2"
-      case "https://github.com" => "github-oauth2" // TODO: Find the value that auth0 uses.
+      case "https://github.com" => "github" // TODO: Find the value that auth0 uses.
+      case "https://mathbot.com" => "auth0"
     }
   }
 }

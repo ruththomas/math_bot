@@ -8,7 +8,7 @@ import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
 import com.google.inject.name.Named
-import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig}
+import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, MathbotAuthConfig}
 import daos.{SessionCache, SessionDAO}
 import javax.inject.Inject
 import loggers.SemanticLog
@@ -29,6 +29,7 @@ class AuthController @Inject()(
     val googleConfig: GoogleApiConfig,
     val githubConfig: GithubApiConfig,
     val actorConfig: ActorConfig,
+    val mathbotConfig: MathbotAuthConfig,
     val logger: SemanticLog
 )(implicit ec: ExecutionContext)
     extends Controller {
@@ -63,6 +64,26 @@ class AuthController @Inject()(
               )
             )
             .toString
+        ),
+        AuthUrl(
+          "mathbotSignup",
+          mathbotConfig.signupUrl
+            .withQuery(
+              Query(
+                "state" -> sessionId.toString
+              )
+            )
+            .toString()
+        ),
+        AuthUrl(
+          "mathbotAuth",
+          mathbotConfig.authUrl
+            .withQuery(
+              Query(
+                "state" -> sessionId.toString
+              )
+            )
+            .toString()
         )
       )
     )
@@ -197,6 +218,14 @@ class AuthController @Inject()(
           case Right(reason) => Unauthorized(JsString(reason.toString))
         }
     }).getOrElse(FastFuture.successful(BadRequest("One or more query parameters are missing")))
+  }
+
+  def signupMathbot() : Action[AnyContent] = Action.async { implicit request =>
+    FastFuture.successful(Ok("TBD"))
+  }
+
+  def authMathbot() : Action[AnyContent] = Action.async { implicit request =>
+    FastFuture.successful(Ok("TBD"))
   }
 
 }
