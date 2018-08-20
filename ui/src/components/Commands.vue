@@ -51,7 +51,7 @@
 
     <div
       id="open-staged"
-      class="dialog-button pulse"
+      class="dialog-button"
       @click="toggleFunctionAdd"
       v-if="stagedFunctions.length && stepData.stagedEnabled">
     </div>
@@ -197,6 +197,7 @@ export default {
       this.$store.dispatch('updateFunctionAreaShowing', this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction')
     },
     editFunction (evt, func, ind) {
+      $('#open-staged').show()
       this.handleEditFunctionEvent(evt)
       const i = ind === this.editingIndex ? null : ind
       if (i !== null) this.editingFunctionMessage(func)
