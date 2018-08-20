@@ -520,11 +520,11 @@
       "level": "Recursion",
       "step": "CleanComb3",
       "gridMap": [
-        "|W| |E| |E| |E|     |W| |E| |E| |E|     |W| |W|",
-        "|W| |E| |W| [TS(1)] |W| |E| |W| [TS(1)] |W| |W|",
-        "|W| |E| |W| |W|     |W| |E| |W| |W|     |W| |W|",
-        "|W| |E| |W| |W|     |W| |E| |W| |W|     |W| |W|",
-        "(R) |E| |E| |E|     |E| |E| |E| |E|     |E| ($)"
+        "|W| |E| |E| |E|     |W| |W| |E| |E| |E|     |W|",
+        "|W| |E| |W| [TS(1)] |W| |W| |E| |W| [TS(1)] |W|",
+        "|W| |E| |W| |W|     |W| |W| |E| |W| |W|     |W|",
+        "|W| |E| |W| |W|     |W| |W| |E| |W| |W|     |W|",
+        "(R) |E| |E| |E|     |E| |E| |E| |E| |E|     ($)"
       ],
       "description": "Pickup all kitties and place them on the portal.",
       "mainMax": 1,
