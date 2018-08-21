@@ -95,7 +95,8 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
   val statsActor = system.actorOf(StatsActor.props(system, playerTokenDAO, mathBotLogger), "stats-compiler-actor")
 
   val compilerConfiguration = CompilerConfiguration(
-    maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000)
+    maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000),
+    maxEmptyLoopCount = configuration.getInt("mathbot.maxEmptyLoopCount").getOrElse(100)
   )
 
   def wsPath(tokenId: TokenId, connection: String): Action[AnyContent] = Action { implicit request: RequestHeader =>
