@@ -1,19 +1,19 @@
 <template>
-  <div class="user-profile-controls">
-    <div class="user-profile-controls-image-container">
-      <img :src="permanentImages.instructionsRobot">
-    </div>
-    <div class="user-profile-controls-text-container">
-      <div class="user-profile-user">
-        <div class="user-profile-user-name text">{{currentUser.name}}</div>
-      </div>
-      <mathbot-header :font-size="headerFont" :line-height="headerFont + 2"></mathbot-header>
-      <div class="user-profile-controls-text-footer">
-        <div class="text nav-links about" @click="gotoMarketing">About</div>
-        <div class="text nav-links sign-in" v-if="!auth.authenticated" @click="auth.login()">Sign In</div>
-        <div class="text nav-links sign-out" v-else @click="auth.logout()">Sign Out</div>
-      </div>
-    </div>
+  <div class="col user-profile-controls">
+    <!--<div class="user-profile-controls-image-container">-->
+      <!--<img :src="permanentImages.instructionsRobot">-->
+    <!--</div>-->
+    <!--<div class="user-profile-controls-text-container">-->
+      <!--<div class="user-profile-user">-->
+        <!--<div class="user-profile-user-name text">{{currentUser.name}}</div>-->
+      <!--</div>-->
+      <!--<mathbot-header :font-size="headerFont" :line-height="headerFont + 2"></mathbot-header>-->
+      <!--<div class="user-profile-controls-text-footer">-->
+        <!--<div class="text nav-links about" @click="gotoMarketing">About</div>-->
+        <!--<div class="text nav-links sign-in" v-if="!auth.authenticated" @click="auth.login()">Sign In</div>-->
+        <!--<div class="text nav-links sign-out" v-else @click="auth.logout()">Sign Out</div>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -51,11 +51,7 @@ export default {
 
 <style scoped lang="scss">
   .user-profile-controls {
-    flex-grow: 1;
-    display: flex;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    border: 1px solid gold;
   }
 
   .user-profile-controls-image-container {
@@ -112,6 +108,7 @@ export default {
     height: 28px;
   }
 
+  /*
   @media only screen and (max-width : 992px) {
     .user-profile-controls-image-container > img {
       height: 120px;
@@ -135,7 +132,7 @@ export default {
 
   }
 
-  /* Small Devices */
+  // Small Devices
   @media only screen and (max-width : 736px) {
   }
 
@@ -158,14 +155,14 @@ export default {
     }
   }
 
-  /* Extra Small Devices, Phones */
+  // Extra Small Devices, Phones
   @media only screen and (max-width : 480px) {
 
   }
 
-  /* Custom, iPhone Retina */
+  // Custom, iPhone Retina
   @media only screen and (max-width : 360px) {
 
   }
-
+*/
 </style>

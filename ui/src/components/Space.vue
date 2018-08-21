@@ -1,13 +1,13 @@
 <template>
   <div class="col-8 space">
-    <!--<div v-for="planet in planets" :key="planet.planetName" class="planet-container">-->
-      <!--<img-->
-        <!--v-if="planet.planetState !== 'no-show'"-->
-        <!--class="planet"-->
-        <!--:class="[planet.planetName, planet.planetState]"-->
-        <!--:src="planet.image"-->
-        <!--@click="selectLevel(planet.level)" />-->
-    <!--</div>-->
+    <div v-for="planet in planets" :key="planet.planetName" class="planet-container">
+      <img
+        v-if="planet.planetState !== 'no-show'"
+        class="planet"
+        :class="[planet.planetName, planet.planetState]"
+        :src="planet.image"
+        @click="selectLevel(planet.level)" />
+    </div>
   </div>
 </template>
 
@@ -92,7 +92,7 @@ export default {
     /*width: 670px;*/
     /*height: 800px;*/
     /*margin-top: 0;*/
-    /*border: 1px solid teal;*/
+    border: 1px solid yellowgreen;
   }
 
   .planet {
