@@ -1,13 +1,12 @@
 <template>
   <div class="col-8 space">
-    <div v-for="planet in planets" :key="planet.planetName" class="planet-container">
-      <img
-        v-if="planet.planetState !== 'no-show'"
-        class="planet"
-        :class="[planet.planetName, planet.planetState]"
-        :src="planet.image"
-        @click="selectLevel(planet.level)" />
-    </div>
+    <img
+      v-for="planet in planets" :key="planet.planetName"
+      class="planet"
+      v-if="planet.planetState !== 'no-show'"
+      :class="[planet.planetName, planet.planetState]"
+      :src="planet.image"
+      @click="selectLevel(planet.level)" />
   </div>
 </template>
 
@@ -80,11 +79,11 @@ export default {
   $planet-5-color: rgba(80, 227, 194, 1);
   $planet-6-color: rgba(184, 233, 134, 1);
   $inactive-color: rgba(104, 104, 104, 1);
-  $planet-1-size: 262px;
-  $planet-2-size: 164px;
-  $planet-3-size: 187px;
-  $planet-4-size: 149px;
-  $planet-5-size: 100px;
+  $planet-1-size: 15em;
+  $planet-2-size: 10em;
+  $planet-3-size: 12em;
+  $planet-4-size: 9em;
+  $planet-5-size: 6em;
   $planet-gradient: rgba(0, 0, 0, 1);
 
   .space {
@@ -115,8 +114,8 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-2-color, $planet-gradient);
     height: $planet-2-size;
     width: $planet-2-size;
-    top: 10%;
-    left: 64%;
+    top: 0%;
+    left: 50%;
     /*box-shadow: inset 0 0 120px #F25C5C;*/
   }
 
@@ -124,8 +123,8 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-3-color, $planet-gradient);
     height: $planet-3-size;
     width: $planet-3-size;
-    top: 40%;
-    right: 0;
+    top: 33%;
+    left: 60%;
     /*box-shadow: inset 0 0 120px #4A90E2;*/
   }
 
