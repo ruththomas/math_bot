@@ -127,7 +127,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           commands = token.lambdas.head.cmds
           program <- Compiler.compile(main, funcs, commands, grid, problem)
         } yield {
-          val processor = Processor(program)
+          val processor = Processor(program, config)
           val stream = processor.execute()
           context.become(
             compileContinue(

@@ -3,7 +3,7 @@ package configuration
 import akka.http.scaladsl.model.Uri
 import akka.util.Timeout
 
-case class CompilerConfiguration(maxProgramSteps: Int)
+case class CompilerConfiguration(maxProgramSteps : Int, maxEmptyLoopCount : Int)
 
 case class GoogleApiConfig(
     oauthUrl: Uri,
