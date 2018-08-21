@@ -1,11 +1,11 @@
 <template>
   <div class="container profile">
-    <div class="row">
+    <div class="row" style="height: 80%;">
       <space :permanent-images="permanentImages"></space>
       <steps :permanent-images="permanentImages"></steps>
     </div>
-    <div class="row">
-      <!--<user-profile-controls :permanent-images="permanentImages"></user-profile-controls>-->
+    <div class="row" style="height: 20%;">
+      <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
     </div>
   </div>
 </template>
@@ -69,7 +69,7 @@ export default {
   } */
 
   .profile {
-    /*border: 1px solid teal;*/
+    border: 1px solid teal;
     height: 100%;
   }
 </style>

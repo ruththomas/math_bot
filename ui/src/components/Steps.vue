@@ -11,6 +11,7 @@
           class="btn btn-dark btn-lg btn-block"
           @click="step.active ? goToRobot(level, step.name) : ''"
           :key="step + ':' + value"
+          :disabled="!step.active"
         >
           <div class="col-6">
             <div class="step-info-text">Level {{ value + 1 }}</div>
@@ -19,26 +20,23 @@
             <stars :level="level" :step="step.name" :step-stats="step" :star-group="'star-cluster'"></stars>
           </div>
         </button>
-        <!--<button-->
-          <!--v-if="steps[steps.length - 1].wins > 0 && nextLevel !== 'None'"-->
-          <!--type="button"-->
-          <!--class="btn btn-outline-dark"-->
-          <!--@click="goToRobot(nextLevel.name, nextLevel.firstStep)">-->
-          <!--<div class="step-info-text-container">-->
-            <!--<div class="step-info-text">-->
-              <!--<span class="step-info-new-level">Next planet!</span>-->
-              <!--{{parseCamelCase(nextLevel.name)}}-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="step-info-image-container">-->
-            <!--<img-->
-              <!--class="step-image step-image-planet"-->
-              <!--:class="`step-${nextLevel.planetClass}`"-->
-              <!--:src="permanentImages.planets[nextLevel.planet]"-->
-              <!--alt="Image of a planet"-->
-            <!--/>-->
-          <!--</div>-->
-        <!--</button>-->
+        <button
+          v-if="steps[steps.length - 1].wins > 0 && nextLevel !== 'None'"
+          type="button"
+          class="btn btn-dark btn-lg btn-block"
+          @click="goToRobot(nextLevel.name, nextLevel.firstStep)">
+          <div class="col-6">
+            <div class="step-info-text"><div>Next planet!</div> {{parseCamelCase(nextLevel.name)}}</div>
+          </div>
+          <div class="col-6">
+            <img
+              class="step-next-planet"
+              :class="`step-${nextLevel.planetClass}`"
+              :src="permanentImages.planets[nextLevel.planet]"
+              alt="Image of a planet"
+            />
+          </div>
+        </button>
       </div>
     </div>
   </div>
@@ -113,7 +111,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $btn-font-size: 1.5rem;
+  $steps-font-size: 22px; // should only need to reset this value in media queries
   $gradient-size: 100px;
   $outer-shadow-blur: 50px;
   $outer-shadow-size: 1px;
@@ -129,10 +127,11 @@ export default {
   .steps {
     border: 1px solid maroon;
     color: $font-color;
-    height: 100%;
-    margin: 8% 0 8% 0;
+    margin: 8% 0 0 0;
+    font-size: $steps-font-size;
 
     .header {
+      font-size: 1.5em;
       padding: 2% 0;
     }
 
@@ -142,18 +141,26 @@ export default {
       margin: 0.15em 0 0.15em 0;
       border-radius: 0.25rem!important;
       background-color: #000000;
-      font-size: $btn-font-size;
+      font-size: 1em;
       padding: 8% 0;
     }
 
     .steps-container {
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      height: 100%;
-
+      overflow-y: auto;
+      height: 90%;
       .btn-group-vertical {
         min-height: min-content;
       }
+
+      .step-info-text {
+        width: 100%;
+        word-wrap: break-word;
+      }
+    }
+
+    .step-next-planet {
+      height: 2.5em;
+      border-radius: 50%;
     }
   }
 
