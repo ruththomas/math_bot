@@ -1,8 +1,8 @@
 <template>
   <div class="container profile">
-    <div v-if="auth.authenticated" class="row">
-      <!--<space :permanent-images="permanentImages"></space>-->
-      <!--<steps :permanent-images="permanentImages"></steps>-->
+    <div class="row">
+      <space :permanent-images="permanentImages"></space>
+      <steps :permanent-images="permanentImages"></steps>
     </div>
     <div class="row">
       <!--<user-profile-controls :permanent-images="permanentImages"></user-profile-controls>-->
@@ -69,6 +69,7 @@ export default {
   } */
 
   .profile {
-    border: 1px solid teal;
+    /*border: 1px solid teal;*/
+    height: 100%;
   }
 </style>

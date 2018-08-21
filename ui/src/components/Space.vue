@@ -1,13 +1,13 @@
 <template>
-  <div class="space">
-    <div v-for="planet in planets" :key="planet.planetName" class="planet-container">
-      <img
-        v-if="planet.planetState !== 'no-show'"
-        class="planet"
-        :class="[planet.planetName, planet.planetState]"
-        :src="planet.image"
-        @click="selectLevel(planet.level)" />
-    </div>
+  <div class="col-8 space">
+    <!--<div v-for="planet in planets" :key="planet.planetName" class="planet-container">-->
+      <!--<img-->
+        <!--v-if="planet.planetState !== 'no-show'"-->
+        <!--class="planet"-->
+        <!--:class="[planet.planetName, planet.planetState]"-->
+        <!--:src="planet.image"-->
+        <!--@click="selectLevel(planet.level)" />-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -88,10 +88,10 @@ export default {
   $planet-gradient: rgba(0, 0, 0, 1);
 
   .space {
-    position: relative;
-    width: 670px;
-    height: 800px;
-    margin-top: 0;
+    /*position: relative;*/
+    /*width: 670px;*/
+    /*height: 800px;*/
+    /*margin-top: 0;*/
     /*border: 1px solid teal;*/
   }
 
@@ -197,7 +197,8 @@ export default {
     /*box-shadow: inset 0 0 120px #686868;*/
   }
 
-  /* ipad pro Portrait */
+  /*
+  // ipad pro Portrait
   @media only screen
   and (min-device-width: 1024px) and (max-device-width: 1024px)
   and (min-device-height: 1366px) and (max-device-height: 1366px)
@@ -397,7 +398,7 @@ export default {
     }
   }
 
-  /* Small Devices */
+  // Small Devices
   @media only screen and (max-width : 736px) and (orientation: landscape) {
     $planet-1-size: 116px;
     $planet-2-size: 67px;
@@ -444,7 +445,7 @@ export default {
     }
   }
 
-  /* Small Devices */
+  // Small Devices
   @media only screen and (max-width : 667px) and (orientation: landscape) {
     $planet-1-size: 116px;
     $planet-2-size: 67px;
@@ -707,4 +708,5 @@ export default {
       width: 140px;
     }
   }
+  */
 </style>
