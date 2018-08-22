@@ -1,9 +1,12 @@
 <template>
-  <div class="stars star-spread">
-    <star class="star-two" :star-group="starGroup" :active="stepStats.active" :success="success(2)"></star>
-    <star class="star-one" :star-group="starGroup" :active="stepStats.active" :success="success(1)"></star>
-    <star class="star-three" :star-group="starGroup" :active="stepStats.active" :success="success(3)"></star>
+  <div v-if="stepStats.active" class="stars star-spread">
+    <star class="star-one" :star-group="starGroup" :success="success(1)"></star>
+    <star class="star-two" :star-group="starGroup" :success="success(2)"></star>
+    <star class="star-three" :star-group="starGroup" :success="success(3)"></star>
     <span v-if="timer.stars < 3" class="star-timer" :class="'star-timer-' + starGroup">{{ convertTime(remainingTime) }}</span>
+  </div>
+  <div v-else class="stars">
+    <img :src="permanentImages.lock" style="height: 1.5em;" />
   </div>
 </template>
 
@@ -14,7 +17,7 @@ import _ from 'underscore'
 export default {
   name: 'Timer',
   mounted () {
-    // console.log(this.timer)
+    // console.log(this.stepStats)
   },
   computed: {
     timer () {

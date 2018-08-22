@@ -8,15 +8,15 @@
           <g id="stars-5" transform="translate(386.000000, 269.000000)">
             <g id="Start-Large">
               <!-- inactive fill edges only -->
-              <use v-if="success && active" fill="#F8E71C" fill-rule="evenodd" xlink:href="#path-1"></use>
+              <use v-if="success" fill="#F8E71C" fill-rule="evenodd" xlink:href="#path-1"></use>
               <!-- inactive star -->
-              <path v-if="active" stroke="#F8E71C" stroke-width="4" d="M80.4362505,70.5136657 L76.3410146,46.6366086 L93.6887121,29.7267828 L69.7147838,26.2431671 L58.9933172,4.51910292 L48.2718505,26.2431671 L24.2979223,29.7267828 L41.6456197,46.6366086 L37.5503839,70.5136657 L58.9933172,59.2404485 L80.4362505,70.5136657 Z"></path>
+              <path stroke="#F8E71C" stroke-width="4" d="M80.4362505,70.5136657 L76.3410146,46.6366086 L93.6887121,29.7267828 L69.7147838,26.2431671 L58.9933172,4.51910292 L48.2718505,26.2431671 L24.2979223,29.7267828 L41.6456197,46.6366086 L37.5503839,70.5136657 L58.9933172,59.2404485 L80.4362505,70.5136657 Z"></path>
               <!--border -->
               <path stroke="#000000" stroke-width="3" d="M58.9933172,63.1946636 L32.9019253,76.9117201 L37.8849377,47.8585282 L16.7765583,27.2829435 L45.9476212,23.04414 L58.9933172,-3.38932719 L72.0390131,23.04414 L101.210076,27.2829435 L80.1016966,47.8585282 L85.0847091,76.9117201 L58.9933172,63.1946636 Z"></path>
             </g>
           </g>
         </g>
-        <image v-if="starGroup === 'star-spread' && success && active" :xlink:href="permanentImages.questionMark" height="40%" width="40%" x="30%" y="30%" />
+        <image v-if="starGroup === 'star-spread' && success" :xlink:href="permanentImages.questionMark" height="40%" width="40%" x="30%" y="30%" />
       </svg>
   </div>
 </template>
@@ -29,7 +29,7 @@ export default {
       return this.$store.getters.getPermanentImages
     }
   },
-  props: ['starGroup', 'active', 'success']
+  props: ['starGroup', 'success']
 }
 </script>
 

@@ -1,10 +1,12 @@
 <template>
-  <div class="profile-container">
-    <div v-if="auth.authenticated" class="profile">
+  <div class="container profile">
+    <div class="row" style="height: 80%;">
       <space :permanent-images="permanentImages"></space>
       <steps :permanent-images="permanentImages"></steps>
     </div>
-    <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
+    <div class="row" style="height: 20%;">
+      <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
+    </div>
   </div>
 </template>
 
@@ -57,24 +59,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .profile-container {
-    width: 100%;
-    max-width: 1166px;
-    height: 100%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-  }
-
   .profile {
-    display: flex;
-    width: 100%;
     height: 100%;
-    max-height: 900px;
-    overflow: hidden;
-    margin: 0 auto;
-    justify-content: space-between;
-    /*align-items: center;*/
-    align-self: center;
   }
 </style>

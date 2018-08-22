@@ -1,43 +1,42 @@
 <template>
-  <div class="steps">
-    <div class="steps-header-container">
-      <div class="steps-header level-header">{{`${planetName}`}}. {{ parseCamelCase(level) }}</div>
+  <div class="col-4 steps">
+    <div class="row">
+      <h2 class="header">{{`${planetName}`}}. {{ parseCamelCase(level) }}</h2>
     </div>
-    <div class="steps-navigator-container">
-      <div class="steps-navigator-items">
-        <div
+    <div class="row steps-container">
+      <div class="btn-group-vertical">
+        <button
           v-for="(step, value) in steps"
-          class="button-effect steps-navigator-item"
-          :class="step.active ? 'step-active' : 'step-disabled'"
+          type="button"
+          class="btn btn-dark btn-lg btn-block"
           @click="step.active ? goToRobot(level, step.name) : ''"
           :key="step + ':' + value"
+          :disabled="!step.active"
         >
-          <div class="step-info-text-container">
+          <div class="col-6">
             <div class="step-info-text">Level {{ value + 1 }}</div>
           </div>
-          <div class="step-info-image-container">
+          <div class="col-6">
             <stars :level="level" :step="step.name" :step-stats="step" :star-group="'star-cluster'"></stars>
           </div>
-        </div>
-        <div
+        </button>
+        <button
           v-if="steps[steps.length - 1].wins > 0 && nextLevel !== 'None'"
-          class="button-effect steps-navigator-item step-active"
+          type="button"
+          class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextLevel.name, nextLevel.firstStep)">
-          <div class="step-info-text-container">
-            <div class="step-info-text">
-              <span class="step-info-new-level">Next planet!</span>
-              {{parseCamelCase(nextLevel.name)}}
-            </div>
+          <div class="col-6">
+            <div class="step-info-text"><div>Next planet!</div> {{parseCamelCase(nextLevel.name)}}</div>
           </div>
-          <div class="step-info-image-container">
+          <div class="col-6">
             <img
-              class="step-image step-image-planet"
+              class="step-next-planet"
               :class="`step-${nextLevel.planetClass}`"
               :src="permanentImages.planets[nextLevel.planet]"
               alt="Image of a planet"
             />
           </div>
-        </div>
+        </button>
       </div>
     </div>
   </div>
@@ -112,6 +111,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $steps-font-size: 2.3vmin; // using vh for this font media queries all sizes
   $gradient-size: 100px;
   $outer-shadow-blur: 50px;
   $outer-shadow-size: 1px;
@@ -122,95 +122,46 @@ export default {
   $planet-5-color: rgba(80, 227, 194, 1);
   $planet-6-color: rgba(184, 233, 134, 1);
   $gradient-size: 100px;
-
-  .steps-navigator-container {
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    height: 100%;
-
-    .steps-navigator-items {
-      height: 100%;
-      width: min-content;
-    }
-  }
+  $font-color: #ffffff;
 
   .steps {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    width: 400px;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
+    color: $font-color;
+    margin: 8% 0 0 0;
+    font-size: $steps-font-size;
 
-  .steps-header-container {
-    margin-bottom: 16px;
-  }
+    .header {
+      font-size: 1.5em;
+      padding: 2% 0;
+    }
 
-  .steps-header {
-    text-align: left;
-    color: #FFFFFF;
-    font-family: Roboto, serif;
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 35px;
-  }
+    .btn {
+      color: $font-color;
+      display: flex;
+      margin: 0.15em 0 0.15em 0;
+      border-radius: 0.25rem!important;
+      background-color: #000000;
+      font-size: 1.1em;
+      padding: 8% 0;
+    }
 
-  .steps-navigator-container {
-    overflow: auto;
-  }
+    .steps-container {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      height: 90%;
+      .btn-group-vertical {
+        min-height: min-content;
+      }
 
-  .steps-navigator-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    box-sizing: border-box;
-    height: 98px;
-    width: 364px;
-    border: 1px solid rgba(255,255,255,0.47);
-    opacity: 0.6;
-    border-radius: 4px;
-    background-color: #000000;
-    box-shadow: 0 0 30px 0 rgba(0,0,0,0.5);
-    margin-bottom: 8px;
-  }
+      .step-info-text {
+        width: 100%;
+        word-wrap: break-word;
+      }
+    }
 
-  .step-info-text-container {
-    width: 180px;
-    margin-left: 5%;
-    color: #FFFFFF;
-    font-family: Roboto, serif;
-  }
-
-  .step-info-text {
-    color: #FFFFFF;
-    font-family: Roboto, serif;
-    font-size: 26px;
-    font-weight: 600;
-    line-height: normal;
-    text-align: left;
-  }
-
-  .step-info-new-level {
-    font-size: 50%;
-    text-decoration: underline;
-  }
-
-  .step-info-image-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    height: 100%;
-    width: 133px;
-  }
-
-  .step-image-planet {
-    height: 70%;
-    border-radius: 50%;
+    .step-next-planet {
+      height: 2.5em;
+      border-radius: 50%;
+    }
   }
 
   .step-planet-1 {
@@ -253,364 +204,5 @@ export default {
 
   .step-disables {
     opacity: 0.8;
-  }
-
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1024px) and (max-device-width: 1024px)
-  and (min-device-height: 1366px) and (max-device-height: 1366px)
-  and (min-width: 1024px) and (max-width: 1024px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-    $steps-height: 100%;
-    $steps-width: 380px;
-    $steps-header-font-size: 38px;
-    $steps-header-line-height: 42px;
-    $step-info-text-font-size: 26px;
-    $step-width: 350px;
-    $step-image-width: 120px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-      height: 98px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  // ipad landscape
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-height : 1024px)
-  and (orientation : landscape) {
-    $steps-height: 100%;
-    $steps-width: 280px;
-    $steps-header-font-size: 28px;
-    $steps-header-line-height: 32px;
-    $step-info-text-font-size: 20px;
-    $step-width: 250px;
-    $step-image-width: 120px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-      height: 98px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  // ipad portrait
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-height : 1024px)
-  and (orientation : portrait)  {
-    $steps-height: 100%;
-    $steps-width: 280px;
-    $steps-header-font-size: 28px;
-    $steps-header-line-height: 32px;
-    $step-info-text-font-size: 20px;
-    $step-width: 250px;
-    $step-image-width: 120px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-    height: 98px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 823px) and (orientation: landscape) {
-    $steps-height: 300px;
-    $steps-width: 250px;
-    $steps-header-font-size: 18px;
-    $steps-header-line-height: 22px;
-    $step-info-text-font-size: 12px;
-    $step-width: 225px;
-    $step-image-width: 120px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-      height: 50px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  @media only screen and (max-width : 736px) and (orientation: landscape) {
-    $steps-height: 300px;
-    $steps-width: 250px;
-    $steps-header-font-size: 18px;
-    $steps-header-line-height: 22px;
-    $step-info-text-font-size: 12px;
-    $step-width: 225px;
-    $step-image-width: 120px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-      height: 50px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) and (orientation: landscape) {
-    $steps-height: 300px;
-    $steps-width: 150px;
-    $steps-header-font-size: 18px;
-    $steps-header-line-height: 22px;
-    $step-info-text-font-size: 12px;
-    $step-width: 125px;
-    $step-image-width: 80px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-      height: 50px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  @media only screen and (max-width: 568px) and (orientation: landscape) {
-    $steps-height: 300px;
-    $steps-width: 150px;
-    $steps-header-font-size: 18px;
-    $steps-header-line-height: 22px;
-    $step-info-text-font-size: 12px;
-    $step-width: 125px;
-    $step-image-width: 80px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      height: $steps-height;
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-      height: 50px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  @media only screen and (max-width: 414px) {
-    $steps-height: 550px;
-    $steps-width: 150px;
-    $steps-header-font-size: 18px;
-    $steps-header-line-height: 22px;
-    $step-info-text-font-size: 12px;
-    $step-width: 125px;
-    $step-image-width: 80px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      height: $steps-height;
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-      height: 50px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  @media only screen and (max-width : 375px) {
-    $steps-height: 550px;
-    $steps-width: 150px;
-    $steps-header-font-size: 18px;
-    $steps-header-line-height: 22px;
-    $step-info-text-font-size: 12px;
-    $step-width: 125px;
-    $step-image-width: 80px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      height: $steps-height;
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: $step-width;
-      height: 50px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      width: $step-image-width;
-    }
-
-    .step-image-lock {}
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 320px) {
-    $steps-height: 400px;
-    $steps-width: 120px;
-    $steps-header-font-size: 18px;
-    $steps-header-line-height: 22px;
-    $step-info-text-font-size: 12px;
-
-    .steps-header {
-      font-size: $steps-header-font-size;
-      line-height: $steps-header-line-height;
-    }
-
-    .steps {
-      height: $steps-height;
-      width: $steps-width;
-    }
-
-    .steps-navigator-item {
-      width: 90px;
-      height: 50px;
-    }
-
-    .step-info-text {
-      font-size: $step-info-text-font-size;
-    }
-
-    .step-info-image-container {
-      display: none;
-    }
-
-    .step-image-lock {}
   }
 </style>
