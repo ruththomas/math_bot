@@ -59,17 +59,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  /* .profile-container {
-    width: 100%;
-    max-width: 1166px;
-    height: 100%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-  } */
-
   .profile {
-    border: 1px solid teal;
     height: 100%;
   }
 </style>
