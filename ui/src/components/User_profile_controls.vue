@@ -1,17 +1,15 @@
 <template>
-  <div class="user-profile-controls">
-    <div class="user-profile-controls-image-container">
-      <img :src="permanentImages.instructionsRobot">
+  <div class="col user-profile-controls" style="display: flex;">
+    <div class="profile-image">
+      <img class="profile-logo" :src="permanentImages.instructionsRobot">
     </div>
-    <div class="user-profile-controls-text-container">
-      <div class="user-profile-user">
-        <div class="user-profile-user-name text">{{currentUser.name}}</div>
-      </div>
+    <div class="profile-text">
+      <div class="user-profile-user-name">{{currentUser.name}}</div>
       <mathbot-header :font-size="headerFont" :line-height="headerFont + 2"></mathbot-header>
-      <div class="user-profile-controls-text-footer">
-        <div class="text nav-links about" @click="gotoMarketing">About</div>
-        <div class="text nav-links sign-in" v-if="!auth.authenticated" @click="auth.login()">Sign In</div>
-        <div class="text nav-links sign-out" v-else @click="auth.logout()">Sign Out</div>
+      <div class="profile-text-footer">
+        <span class="nav-links about" @click="gotoMarketing">About</span>
+        <span class="nav-links sign-in" v-if="!auth.authenticated" @click="auth.login()">Sign In</span>
+        <span class="nav-links sign-out" v-else @click="auth.logout()">Sign Out</span>
       </div>
     </div>
   </div>
@@ -50,122 +48,49 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $profile-font-size: 3vmin;
+  $text-color: rgba(255, 255, 255, 0.3);
+  $font-family: Roboto, Georgia, serif;
+  $logo-width: 20vmin;
+  $line-height: 1.2em;
+
   .user-profile-controls {
-    flex-grow: 1;
-    display: flex;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-  }
-
-  .user-profile-controls-image-container {
-    display: flex;
-    align-items: flex-end;
-  }
-
-  .user-profile-controls-image-container > img {
-    width: 240px;
-    height: 212px;
-  }
-
-  .user-profile-controls-text-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-
-  .user-profile-controls-text-footer {
-  }
-
-  .user-profile-controls-text-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-
-  .user-profile-user {
-    display: flex;
-    align-items: center;
-    flex-direction: column-reverse;
-  }
-
-  .user-profile-user-image {
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
-  }
-
-  .text {
-    opacity: 0.3;
-    color: #FFFFFF;
-    font-size: 32px;
+    font-size: $profile-font-size;
+    color: $text-color;
     font-weight: 600;
-    line-height: 30px;
-    cursor: pointer;
-  }
+    font-family: $font-family;
 
-  .nav-links:hover {
-    opacity: 1;
-  }
+    .profile-image {
+      display: flex;
+      align-items: flex-end;
+      padding: 0 1vmin 0 0;
 
-  .text-filler {
-    height: 28px;
-  }
-
-  @media only screen and (max-width : 992px) {
-    .user-profile-controls-image-container > img {
-      height: 120px;
-      width: 144px;
+      .profile-logo {
+        width: $logo-width;
+      }
     }
 
-    .mathbot-header {
-      //border: 1px solid maroon;
-      font-size: 36px;
-      line-height: 38px;
-    }
+    .profile-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      font-size: 1em;
+      line-height: $line-height;
+      padding: 0 0 1vmin 0;
 
-    .text {
-      //border: 1px solid yellowgreen;
-      font-size: 24px;
-      line-height: 26px;
-    }
-  }
+      .mathbot-header {
+        font-size: 1.5em;
+      }
 
-  @media only screen and (max-height: 411px) {
+      .profile-text-footer {
+        display: flex;
+        justify-content: space-between;
 
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 736px) {
-  }
-
-  @media only screen and (max-width: 568px) {
-    .user-profile-controls-image-container > img {
-      height: 100px;
-      width: 120px;
-    }
-
-    .mathbot-header {
-      //border: 1px solid maroon;
-      font-size: 30px;
-      line-height: 34px;
-    }
-
-    .text {
-      //border: 1px solid yellowgreen;
-      font-size: 20px;
-      line-height: 24px;
+        span:hover {
+          cursor: pointer;
+          color: #ffffff;
+        }
+      }
     }
   }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 360px) {
-
-  }
-
 </style>
