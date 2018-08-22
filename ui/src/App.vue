@@ -407,6 +407,10 @@ export default {
     $pointer-size: 10px;
     $dialog-button-size: 20px;
 
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
     .pointer {
       position: absolute;
       width: calc(#{$pointer-size} * 2);
