@@ -1,72 +1,75 @@
 <template>
-  <div class="total-grid">
-    <transition
-      mode="out-in"
-      name="custom-classes-transition"
-      enter-active-class="animated zoomIn"
-      leave-active-class="animated zoomOut"
-    >
-      <congrats v-if="congratsShowing" :congrats="true"></congrats>
-      <congrats v-else-if="tryAgainShowing" :congrats="false"></congrats>
-      <video-hint v-else-if="hintShowing.showing"></video-hint>
-      <div v-else-if="gridMap" class="grid" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''">
-        <div
-          class="grid-row animated"
-          v-for="(row, rInd) in gridMap"
-          :key="'row:' + rInd"
-        >
-          <div
-            class="grid-space animated"
-            v-for="(space, sInd) in row"
-            :id="`grid-cell-${rInd}-${sInd}`"
-            :class="'grid-space-' + space.name.replace(/ /g, '-')"
-            :key="'space:' + rInd + ':' + sInd"
-          >
-            <span v-if="space.name === 'final answer'"
-                  class="problem single-digit-problem">{{singleDigitProblem(problem)}}</span>
-            <b-img
-              v-if="space.name === 'final answer'"
-              class="portal glyphicon"
-              :src="permanentImages.blackHole"></b-img>
-            <b-img
-              v-if="space.tools.length"
-              class="tool animated zoomIn"
-              v-for="(tool, tInd) in space.tools"
-              :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
-              :src="toolImages[tool.image]"></b-img>
-            <b-img
-              class="robot animated"
-              v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
-              :key="'ROBOT'"
-              :src="robot._robotDirections[robotOrientation]"></b-img>
-
-            <b-popover
-              v-if="space.tools.length"
-              :target="`grid-cell-${rInd}-${sInd}`"
-              placement="auto"
-              triggers="click"
+    <div class="container grid">
+      <control-panel></control-panel>
+      <transition
+        mode="out-in"
+        name="grid-transition-group"
+        enter-active-class="animated zoomIn"
+        leave-active-class="animated zoomOut"
+      >
+        <congrats v-if="congratsShowing" :congrats="true" key="congrats-1234"></congrats>
+        <congrats v-else-if="tryAgainShowing" :congrats="false" key="congrats-5678"></congrats>
+        <video-hint v-else-if="hintShowing.showing" key="video-hint-1234"></video-hint>
+        <div v-else-if="gridMap" class="row" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''" key="grid-map-1234">
+          <div class="grid-map">
+            <div
+              class="grid-row animated"
+              v-for="(row, rInd) in gridMap"
+              :key="'row:' + rInd"
             >
-              <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover(`grid-cell-${rInd}-${sInd}`)" />
-              <div class="display-tools">
-                <div
-                  v-for="(tool, iInd) in space.tools.slice(0, 100)"
-                  :key="`d-image-${iInd}`"
-                  :class="tool.original ? 'replenish-tool' : ''"
+              <div
+                class="grid-space animated"
+                v-for="(space, sInd) in row"
+                :id="`grid-cell-${rInd}-${sInd}`"
+                :class="'grid-space-' + space.name.replace(/ /g, '-')"
+                :key="'space:' + rInd + ':' + sInd"
+              >
+                <span v-if="space.name === 'final answer'"
+                      class="problem single-digit-problem">{{singleDigitProblem(problem)}}</span>
+                <b-img
+                  v-if="space.name === 'final answer'"
+                  class="portal glyphicon"
+                  :src="permanentImages.blackHole"></b-img>
+                <b-img
+                  v-if="space.tools.length"
+                  class="tool animated zoomIn"
+                  v-for="(tool, tInd) in space.tools"
+                  :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
+                  :src="toolImages[tool.image]"></b-img>
+                <b-img
+                  class="robot animated"
+                  v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
+                  :key="'ROBOT'"
+                  :src="robot._robotDirections[robotOrientation]"></b-img>
+
+                <b-popover
+                  v-if="space.tools.length"
+                  :target="`grid-cell-${rInd}-${sInd}`"
+                  placement="auto"
+                  triggers="click"
                 >
-                  <b-img
-                    :src="permanentImages.tools[tool.image]"
-                    fluid
-                  ></b-img>
-                </div>
+                  <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover(`grid-cell-${rInd}-${sInd}`)" />
+                  <div class="display-tools">
+                    <div
+                      v-for="(tool, iInd) in space.tools.slice(0, 100)"
+                      :key="`d-image-${iInd}`"
+                      :class="tool.original ? 'replenish-tool' : ''"
+                    >
+                      <b-img
+                        :src="permanentImages.tools[tool.image]"
+                        fluid
+                      ></b-img>
+                    </div>
+                  </div>
+                </b-popover>
               </div>
-            </b-popover>
+            </div>
           </div>
         </div>
-        <RobotCarrying></RobotCarrying>
-      </div>
-      <splash-screen v-else></splash-screen>
-    </transition>
-  </div>
+        <splash-screen v-else></splash-screen>
+      </transition>
+      <RobotCarrying></RobotCarrying>
+    </div>
 </template>
 
 <script>
@@ -77,6 +80,7 @@ import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
 import utils from '../services/utils'
+import ControlPanel from './Control_panel'
 
 export default {
   mounted () {
@@ -175,7 +179,8 @@ export default {
     Congrats,
     VideoHint,
     SplashScreen,
-    RobotCarrying
+    RobotCarrying,
+    ControlPanel
   }
 }
 </script>
@@ -183,25 +188,20 @@ export default {
 <style scoped lang="scss">
   $click-color: #B8E986;
   $grid-space-font-size: 22px;
-  $grid-space-size: 96px;
+  $grid-space-size: 9.5vmin;
   $grid-border-radius: 4px;
   $grid-background: rgba(0, 0, 0, 0.6);
   $display-tool-size: 18px;
 
-  .total-grid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    color: #ffffff;
-    z-index: 99;
-  }
-
   .grid {
-    position: relative;
-    border: 1px solid $click-color;
-    border-radius: $grid-border-radius;
-    flex-wrap: wrap;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .grid-map {
+      border: 1px solid $click-color;
+      border-radius: $grid-border-radius;
+    }
   }
 
   .grid-row {
@@ -245,6 +245,7 @@ export default {
 
     img {
       position: absolute;
+      height: 90%;
     }
 
     img.tool {
@@ -318,8 +319,8 @@ export default {
     top: -9px;
     right: -9px;
   }
-
-  /* ipad pro Portrait */
+/*
+  // ipad pro Portrait
   @media only screen
   and (min-device-width: 1024px)
   and (max-device-height: 1366px)
@@ -745,4 +746,5 @@ export default {
       }
     }
   }
+  */
 </style>
