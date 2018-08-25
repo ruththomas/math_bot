@@ -1,31 +1,24 @@
 <template>
-  <div class="robot-container" data-aos="fade-in" v-if="auth.authenticated">
+  <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
+  <div class="container-fluid robot" data-aos="fade-in" v-else>
+    <div class="container">
 
-    <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
-    <div  v-else id="robot" class="row animated">
-
-      <div id="control-panel-box">
-        <control-panel></control-panel>
-      </div>
-
-      <div id="grid-box">
+      <div class="row" style="border: 1px solid red;">
         <trash></trash>
         <grid></grid>
       </div>
 
       <messages></messages>
 
-      <div id="edit-main-box">
+      <div class="row box" style="border: 1px solid blue; opacity: 0;">
         <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
         <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
       </div>
 
-      <div id="commands-box">
+      <div class="row box" style="border: 1px solid purple; opacity: 0;">
         <trash></trash>
         <commands></commands>
       </div>
-
-      <!--<div class="filler-box"></div>-->
     </div>
   </div>
 </template>
@@ -159,25 +152,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .robot-container {
-    height: 100%;
-    width: 100%;
+  .robot {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
     background-size: cover;
-  }
-
-  #robot {
-    position: relative;
-    width: 100%;
     height: 100%;
-    max-width: 1200px;
-    overflow: visible;
-    margin: 0 auto;
-    padding: 1vh 20px 0 20px;
-    display: flex;
-    flex-direction: column;
+
+    .container {
+      .box {
+        height: 200px;
+      }
+    }
   }
 
+/*
   #control-panel-box {
     display: flex;
     flex-direction: column;
@@ -191,14 +178,14 @@ export default {
     position: relative;
     align-items: center;
     justify-content: center;
-    /*border: 1px solid yellowgreen;*/
+    // border: 1px solid yellowgreen;
   }
 
   #edit-main-box {
     display: flex;
     flex: 1;
     z-index: 101;
-    /*border: 1px solid mediumvioletred;*/
+    // border: 1px solid mediumvioletred;
   }
 
   #commands-box {
@@ -208,7 +195,7 @@ export default {
     justify-content: center;
     flex: 1.2;
     z-index: 102;
-    /*border: 1px solid firebrick;*/
+    // border: 1px solid firebrick;
   }
 
   .filler-box {
@@ -217,11 +204,11 @@ export default {
 
   .grow {
     height: 40%;
-    -webkit-transition: height 1s; /* For Safari 3.1 to 6.0 */
+    -webkit-transition: height 1s;
     transition: height 1s;
   }
 
-  /* ipad pro Portrait */
+  // ipad pro Portrait
   @media only screen
   and (min-device-width: 1024px)
   and (max-device-width: 1366px)
@@ -229,7 +216,7 @@ export default {
   and (-webkit-min-device-pixel-ratio: 1.5) {
   }
 
-  /* ipad pro Landscape */
+  // ipad pro Landscape
   @media only screen
   and (min-device-width: 1024px)
   and (max-device-width: 1366px)
@@ -256,7 +243,7 @@ export default {
     }
   }
 
-  /* iphone 5 landscape */
+  // iphone 5 landscape
   @media only screen and (max-width : 568px) and (orientation: landscape) {
 
     #control-panel-box {
@@ -279,7 +266,7 @@ export default {
     }
   }
 
-  /* iphone 6/7/8 plus*/
+  // iphone 6/7/8 plus
   @media only screen and (max-width: 414px) {
     #robot {
       padding: 0;
@@ -297,11 +284,11 @@ export default {
     }
 
     #commands-box {
-      /*max-height: 95px;*/
+      // max-height: 95px
     }
   }
 
-  /* iphone 6/7 portrait */
+  // iphone 6/7 portrait
   @media only screen and (max-width : 375px) {
     #robot {
     }
@@ -317,11 +304,11 @@ export default {
     }
 
     #commands-box {
-      /*max-height: 95px;*/
+      // max-height: 95px;
     }
   }
 
-  /* iphone 5 portrait */
+  // iphone 5 portrait
   @media only screen and (max-width : 320px) {
     #robot {
     }
@@ -338,7 +325,7 @@ export default {
     }
 
     #commands-box {
-      /*max-height: 95px;*/
+      // max-height: 95px;
     }
 
     #robot {
@@ -346,12 +333,12 @@ export default {
     }
   }
 
-  /* iPad */
+  // iPad
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
   }
 
   @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
 
   }
-
+*/
 </style>

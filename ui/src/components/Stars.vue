@@ -73,6 +73,7 @@ $star-timer-right: 100%;
 $star-timer-bottom: 0;
 $star-timer-font-size: 16px;
 $star-timer-margin-right: 5px;
+
 .stars {
   position: relative;
   display: flex;
@@ -80,7 +81,6 @@ $star-timer-margin-right: 5px;
   justify-content: center;
   border-radius: 5px;
   cursor: pointer;
-  height: 100%;
 }
 
 .star-timer {
@@ -92,7 +92,7 @@ $star-timer-margin-right: 5px;
 
 .help-button {
   .star-timer {
-    bottom: -30px;
+    bottom: 0;
     color: #000000;
   }
 }
@@ -110,7 +110,6 @@ $star-timer-margin-right: 5px;
   }
 
   .star-timer {
-    top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
   }
 }
 
@@ -125,93 +124,5 @@ $star-timer-margin-right: 5px;
     top: 50%;
     transform: translateY(-62%);
   }
-}
-
-@media only screen and (max-width: 823px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      display: none;
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 736px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 667px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 568px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 414px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 375px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 320px) {
 }
 </style>
