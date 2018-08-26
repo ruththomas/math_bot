@@ -192,6 +192,7 @@ export default {
       this.$store.dispatch('updateFunctionAreaShowing', this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction')
     },
     editFunction (evt, func, ind) {
+      $('#open-staged').show()
       this.handleEditFunctionEvent(evt)
       const i = ind === this.editingIndex ? null : ind
       if (i !== null) this.editingFunctionMessage(func)
