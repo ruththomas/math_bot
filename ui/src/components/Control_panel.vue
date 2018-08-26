@@ -61,14 +61,13 @@ export default {
 
 <style scoped lang="scss">
   $instructions-robot-size: 13vmin;
-  $grid-space-size: 9.5vmin;
+  $grid-space-size: 9vmin;
 
   .control-panel {
-    border: 1px solid teal;
     display: flex;
     align-items: flex-end;
     position: relative;
-    right: calc(#{$grid-space-size});
+    right: calc(#{$grid-space-size} * 0.75);
   }
 
   .instructions {

@@ -25,6 +25,7 @@ export default {
 <style lang="scss">
   $click-color: #B8E986;
   $pointer-size: 20px;
+  $dialog-button-size: 3.5vmin;
 
   body {
     font-family: "Proba Pro Regular", serif;
@@ -60,8 +61,8 @@ export default {
   }
 
   .dialog-button {
-    height: 40px;
-    width: 40px;
+    height: $dialog-button-size;
+    width: $dialog-button-size;
     cursor: pointer;
   }
 
@@ -221,6 +222,21 @@ export default {
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
 
+  ::-webkit-scrollbar {
+    width: 22px;
+    height: 22px;
+  }
+  ::-webkit-scrollbar-track {
+    visibility: hidden;
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px rgba(216, 216, 216, 0.5);
+    border: solid 8px transparent;
+    border-radius: 10px;
+    background: transparent;
+  }
+ /*
   @media only screen
   and (min-device-width : 768px)
   and (max-device-width : 1024px)
@@ -465,7 +481,7 @@ export default {
       width: $dialog-button-size;
     }
   }
-  /* iphone 5 portrait */
+  // iphone 5 portrait
   @media only screen and (max-width : 320px) {
     $pointer-size: 10px;
     $dialog-button-size: 20px;
@@ -495,19 +511,5 @@ export default {
       width: $dialog-button-size;
     }
   }
-
-  ::-webkit-scrollbar {
-    width: 22px;
-    height: 22px;
-  }
-  ::-webkit-scrollbar-track {
-    visibility: hidden;
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 10px 10px rgba(216, 216, 216, 0.5);
-    border: solid 8px transparent;
-    border-radius: 10px;
-    background: transparent;
-  }
+  */
 </style>

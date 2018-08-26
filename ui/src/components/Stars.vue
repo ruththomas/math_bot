@@ -70,8 +70,8 @@ $star-spread-star-size: 40px;
 $stars-shadow: inset 0 0 100px #778899;
 $star-congrats-star-size: 70px;
 $star-timer-right: 100%;
-$star-timer-bottom: 0;
-$star-timer-font-size: 16px;
+$star-timer-bottom: -102%;
+$star-timer-font-size: 0.75em;
 $star-timer-margin-right: 5px;
 
 .stars {
@@ -92,7 +92,6 @@ $star-timer-margin-right: 5px;
 
 .help-button {
   .star-timer {
-    bottom: 0;
     color: #000000;
   }
 }
@@ -107,9 +106,6 @@ $star-timer-margin-right: 5px;
   .star-two, .star-three {
     align-self: flex-end;
     margin-bottom: -10px;
-  }
-
-  .star-timer {
   }
 }
 
