@@ -1,10 +1,5 @@
 <template>
   <div class="commands" v-if="commands !== null && activeFunctions !== null && !congratsShowing && !tryAgainShowing">
-    <!--<popover-bucket-->
-      <!--v-if="commandEvt !== null"-->
-      <!--:evt="evt"-->
-    <!--&gt;</popover-bucket>-->
-
     <div class="lambdas-container">
       <div class="methods-container">
         <draggable
@@ -51,7 +46,7 @@
 
     <div
       id="open-staged"
-      class="dialog-button pulse"
+      class="dialog-button"
       @click="toggleFunctionAdd"
       v-if="stagedFunctions.length && stepData.stagedEnabled">
     </div>
@@ -236,9 +231,7 @@ export default {
 
 <style scoped lang="scss">
   $click-color: #B8E986;
-  $functions-padding-left: 30px;
-  $functions-padding-right: 75%;
-  $functions-piece-margin-top: 20px;
+  $functions-padding-left: 2vmin;
 
   .invisible {
     visibility: hidden;
@@ -248,7 +241,7 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: row;
-    width: 1000px;
+    width: 100%;
     height: 100%;
     margin: 0 auto;
     position: relative;
@@ -269,8 +262,6 @@ export default {
 
   .methods-container {
     display: table;
-    margin-left: -50px;
-    margin-top: calc(#{$functions-piece-margin-top} - 5px);
 
     .methods {
       display: flex;
@@ -283,18 +274,14 @@ export default {
   .functions-container {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    width: 100%;
-    height: 100%;
-    margin-left: 12px;
-
-    .piece {
-      margin-top: $functions-piece-margin-top;
-    }
+    height: min-content;
+    margin-right: 7%;
 
     .functions {
       display: flex;
       height: 100%;
-      width: min-content;
+      border: 1px solid transparent;
+      width: 100%;
       min-width: 100%;
       padding: 0 0 0 $functions-padding-left;
     }
@@ -306,12 +293,13 @@ export default {
 
   #open-staged {
     position: absolute;
-    right: -50px;
-    top: 20px;
+    right: 0;
+    top: 0;
+    height: 5vmin;
+    width: 5vmin;
     z-index: 1000;
     background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
     background-size: contain;
-    border-radius: 50%;
   }
 
   .rotate-to-x {
@@ -322,528 +310,5 @@ export default {
   .rotate-to-plus {
     -webkit-transform: rotate(0);
     transform:rotate(0);
-  }
-
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 90px;
-    $functions-margin-right: 30px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 10px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : landscape) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 140px;
-    $functions-margin-right: 40px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 20px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : portrait) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 140px;
-    $functions-margin-right: 40px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 20px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-
-  @media only screen and (max-width: 823px) and (orientation: landscape) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 90px;
-    $functions-margin-right: 30px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 10px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-  @media only screen and (max-width : 736px) and (orientation: landscape) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 90px;
-    $functions-margin-right: 30px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 10px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) and (orientation: landscape) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 90px;
-    $functions-margin-right: 30px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 10px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) and (orientation: landscape){
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 90px;
-    $functions-margin-right: 30px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 10px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-
-  @media only screen and (max-width: 414px) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 90px;
-    $functions-margin-right: 30px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 10px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-
-  /* iphone 6/7 portrait */
-  @media only screen and (max-width: 375px) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 90px;
-    $functions-margin-right: 30px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 10px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
-  }
-  /* iphone 5 portrait */
-  @media only screen and (max-width : 320px) {
-    $functions-padding-left: 0;
-    $functions-padding-right: 0;
-    $functions-height: 90px;
-    $functions-margin-right: 30px;
-    $open-staged-right: 5px;
-    $methods-margin-left: 5px;
-    $functions-piece-margin-top: 10px;
-    $commands-margin-top-diff: 3px;
-
-    .commands {
-      width: 100%;
-    }
-
-    .methods-container {
-      display: table;
-      margin-left: $methods-margin-left;
-      margin-top: calc(#{$functions-piece-margin-top} - #{$commands-margin-top-diff});
-
-      .methods {
-        display: flex;
-        border: 1px solid $click-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 3px;
-      }
-    }
-
-    .functions-container {
-      min-height: $functions-height;
-      height: $functions-height;
-      margin-left: 5px;
-      margin-right: $functions-margin-right;
-      .functions {
-        padding: 0 $functions-padding-right 0 $functions-padding-left;
-      }
-
-      .piece {
-        margin-top: $functions-piece-margin-top;
-      }
-    }
-
-    #open-staged {
-      position: absolute;
-      right: $open-staged-right;
-      top: $functions-piece-margin-top;
-      z-index: 1000;
-      background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-      background-size: contain;
-    }
   }
 </style>

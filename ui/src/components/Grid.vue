@@ -188,7 +188,7 @@ export default {
 <style scoped lang="scss">
   $click-color: #B8E986;
   $grid-space-font-size: 22px;
-  $grid-space-size: 9.5vmin;
+  $grid-space-size: 9vmin;
   $grid-border-radius: 4px;
   $grid-background: rgba(0, 0, 0, 0.6);
   $display-tool-size: 18px;

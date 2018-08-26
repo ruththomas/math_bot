@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$grid-space-size: 9.5vmin;
+$grid-space-size: 9vmin;
 $video-hint-shadow: inset 0 0 200px #000;
 $video-hint-close-top: -20px;
 $video-hint-close-right: -20px;
