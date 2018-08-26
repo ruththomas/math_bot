@@ -3,7 +3,7 @@
   <div class="container-fluid robot" data-aos="fade-in" v-else>
     <div class="container">
 
-      <div class="row">
+      <div class="row" style="position: relative;">
         <trash></trash>
         <grid></grid>
       </div>
@@ -15,7 +15,7 @@
         <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
       </div>
 
-      <div class="row">
+      <div class="row" style="position: relative;">
         <trash></trash>
         <commands></commands>
       </div>
@@ -161,8 +161,10 @@ export default {
 
     .container {
       .box {
+        position: relative;
         height: $box-height;
         max-width: 100vw;
+        z-index: 100;
       }
     }
   }
