@@ -2,20 +2,19 @@
   <div class="edit-function">
     <div class="edit-function-data">
       <div class="func-param-form">
-        <div
-          class='displayed-func'
-          :style="{
-            'background-image': 'url(' + funcImages[editingFunction.image] + ')',
-            'border-color': colorSelected.hex}"
-        >
-        </div>
+        <puzzle-pieces
+          :id="'edit-function-displayed-func'"
+          :func="{name: '', image: editingFunction.image, color: editingFunction.color}"
+          :piece-to-show="'closed'"
+          :show-name="false"
+        ></puzzle-pieces>
         <div
           class='function-control'
           :style="{'background-color': colorSelected.hex}"
           @click="applyColorConditional"
         >
         </div>
-        <input v-default-value="editingFunction.name" class="func-name" type="text" maxlength="57" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
+        <input v-default-value="editingFunction.name" class="func-name"  autofocus type="text" maxlength="57" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
 
         <img
           v-if="editingFunction.func.length"
@@ -38,7 +37,7 @@
         </b-popover>
       </div>
 
-      <img class="close-edit-function dialog-button" @click="closeEditFunction" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
+      <img class="dialog-button close-edit-function" @click="closeEditFunction" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
     </div>
 
     <div class="edit-function-content">
@@ -67,6 +66,7 @@ import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
+import PuzzlePieces from './Puzzle_pieces'
 
 export default {
   mounted () {
@@ -238,15 +238,17 @@ export default {
   components: {
     draggable,
     FunctionBox,
-    FunctionDrop
+    FunctionDrop,
+    PuzzlePieces
   }
 }
 </script>
 
 <style scoped lang="scss">
-  $form-left: 34px;
   $click-color: #B8E986;
   $danger-color: #F25C5C;
+  $piece-height: 7.5vmin;
+  $dialog-button-size: 3.5vmin;
 
   .edit-function {
     position: relative;
@@ -258,19 +260,20 @@ export default {
 
   .edit-function-data {
     position: absolute;
-    top: -70px;
+    top: -5vmin;
     right: 0;
     left: 0;
-    height: 105px;
+    display: flex;
+    align-items: flex-end;
   }
 
   .edit-function-content {
     position: relative;
     overflow: hidden;
-    height: 100%;
     display: flex;
     align-items: flex-end;
-    padding-top: 5%;
+    height: calc(#{$piece-height} + 5vmin);
+    margin-top: 3vmin;
   }
 
   .edit-function-drop > * {
@@ -281,8 +284,8 @@ export default {
     float: right;
     display: flex;
     position: absolute;
-    bottom: 20px;
-    right: -20px;
+    bottom: calc(#{$dialog-button-size} / 2);
+    right:  calc(#{-$dialog-button-size} / 2);
     z-index: 10001;
     cursor: pointer;
   }
@@ -290,33 +293,36 @@ export default {
   .func-param-form {
     display: flex;
     align-items: flex-end;
-    position: absolute;
-    bottom: 0;
-    left: $form-left;
     z-index: 1001;
-  }
+    font-size: 2vmin;
+    width: 90%;
 
-  .displayed-func {
-    height: 70px;
-    width: 70px;
-    background-size: 65% 65%;
-    background-color: black;
-    background-repeat: no-repeat;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #B8E986;
-    border-radius: 3px;
-    margin-right: 8px;
-  }
+    .function-control {
+      height: 1em;
+      width: 1em;
+      border-radius: 0.5vmin;
+      margin-right: 10px;
+      cursor: pointer;
+    }
 
-  .function-control {
-    height: 25px;
-    width: 25px;
-    border-radius: 5px;
-    margin-right: 10px;
-    cursor: pointer;
+    .func-name {
+      color: white;
+      border-color: #979797;
+      background-color: transparent !important;
+      border-left: none !important;
+      border-right: none !important;
+      border-top: none !important;
+      border-bottom: 1px solid #979797;
+      height: 1em;
+      width: 50%;
+      line-height: 1.5em;
+      font-weight: 300;
+      outline: none;
+    }
+
+    .piece {
+      margin-bottom: 0;
+    }
   }
 
   .trash-confirm {
@@ -324,295 +330,10 @@ export default {
     box-shadow: 0 2px 10px 0 $danger-color;
     animation: shake 0.8s;
     animation-iteration-count: infinite;
-    margin: 40px;
-  }
-
-  .func-name {
-    color: white;
-    border-color: #979797;
-    background-color: transparent !important;
-    border-left: none !important;
-    border-right: none !important;
-    border-top: none !important;
-    border-bottom: 1px solid #979797;
-    margin-right: 20px;
-    height: 23px;
-    font-size: 18px;
-    line-height: 21px;
-    font-weight: 300;
-    outline: none;
+    margin: 3vmin;
   }
 
   .function-drop-drop-zone {
     margin: 0;
-  }
-
-  .close-popover {
-    height: 18px;
-    width: 18px;
-    position: absolute;
-    top: -9px;
-    right: -9px;
-  }
-
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1025px)
-  and (max-device-width: 1366px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-    $piece-size: 36px;
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 12px;
-
-        .displayed-func {
-          height: $piece-size;
-          width: $piece-size;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-          width: 100px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 15px;
-        right: -15px;
-      }
-    }
-  }
-
-  // ipad landscape
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : landscape) {
-    $piece-size: 50px;
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 30px;
-        bottom: -5px;
-
-        .displayed-func {
-          height: $piece-size;
-          width: $piece-size;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-          width: 100px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 10px;
-        right: -15px;
-      }
-    }
-  }
-
-  // ipad portrait
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : portrait) {
-    $piece-size: 50px;
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 12px;
-        bottom: -5px;
-
-        .displayed-func {
-          height: $piece-size;
-          width: $piece-size;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-          width: 100px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 10px;
-        right: -15px;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 823px) and (orientation: landscape) {
-    $piece-size: 36px;
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 12px;
-
-        .displayed-func {
-          height: $piece-size;
-          width: $piece-size;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-          width: 100px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 10px;
-        right: -10px;
-      }
-    }
-  }
-
-  @media only screen and (max-width: 736px) {
-    $piece-size: 36px;
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 12px;
-
-        .displayed-func {
-          height: $piece-size;
-          width: $piece-size;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-          width: 100px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 10px;
-        right: -10px;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 667px) {
-    $piece-size: 36px;
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 12px;
-
-        .displayed-func {
-          height: $piece-size;
-          width: $piece-size;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-          width: 100px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 10px;
-        right: -10px;
-      }
-    }
-  }
-
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) {
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 12px;
-
-        .displayed-func {
-          height: 32px;
-          width: 32px;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-          width: 100px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 10px;
-        right: -10px;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 320px) {
-    .edit-function-data {
-      top: -85px;
-
-      .func-param-form {
-        left: 12px;
-
-        .displayed-func {
-          height: 32px;
-          width: 32px;
-        }
-
-        .function-control {
-          height: 18px;
-          width: 18px;
-        }
-
-        .func-name {
-          font-size: 12px;
-        }
-      }
-
-      .close-edit-function {
-        bottom: 10px;
-        right: -10px;
-      }
-    }
   }
 </style>

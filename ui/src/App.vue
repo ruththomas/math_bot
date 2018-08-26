@@ -24,7 +24,7 @@ export default {
 
 <style lang="scss">
   $click-color: #B8E986;
-  $pointer-size: 20px;
+  $pointer-size: 2vmin;
   $dialog-button-size: 3.5vmin;
 
   body {
@@ -169,6 +169,14 @@ export default {
     -webkit-transform: rotate(135deg);
   }
 
+  .close-popover {
+    height: 2vmin;
+    width: 2vmin;
+    position: absolute;
+    top: -1vmin;
+    right: -1vmin;
+  }
+
   .up {
     transform: rotate(-135deg);
     -webkit-transform: rotate(-135deg);
@@ -223,8 +231,8 @@ export default {
   }
 
   ::-webkit-scrollbar {
-    width: 22px;
-    height: 22px;
+    width: 2vmin;
+    height: 2vmin;
   }
   ::-webkit-scrollbar-track {
     visibility: hidden;
@@ -232,284 +240,8 @@ export default {
   }
   ::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 10px 10px rgba(216, 216, 216, 0.5);
-    border: solid 8px transparent;
-    border-radius: 10px;
+    border: solid 0.75vmin transparent;
+    border-radius: 1.5vmin;
     background: transparent;
   }
- /*
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : landscape) {
-    $pointer-size: 20px;
-    $dialog-button-size: 30px;
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : portrait) {
-    $pointer-size: 20px;
-    $dialog-button-size: 30px;
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-
-  @media only screen and (max-width: 823px) and (orientation: landscape){
-    $pointer-size: 10px;
-    $dialog-button-size: 20px;
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-  @media only screen and (max-width: 736px) {
-    $pointer-size: 10px;
-    $dialog-button-size: 20px;
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-  @media only screen and (max-width: 667px) {
-    $pointer-size: 10px;
-    $dialog-button-size: 20px;
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-  @media only screen and (max-width: 568px) {
-    $pointer-size: 10px;
-    $dialog-button-size: 20px;
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-  @media only screen and (max-width: 414px) {
-    $pointer-size: 10px;
-    $dialog-button-size: 20px;
-
-    ::-webkit-scrollbar {
-      display: none;
-    }
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-  @media only screen and (max-width: 375px) {
-    $pointer-size: 10px;
-    $dialog-button-size: 20px;
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-  // iphone 5 portrait
-  @media only screen and (max-width : 320px) {
-    $pointer-size: 10px;
-    $dialog-button-size: 20px;
-
-    .pointer {
-      position: absolute;
-      width: calc(#{$pointer-size} * 2);
-      height: $pointer-size;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1011;
-    }
-
-    .pointer-hidden {
-      opacity: 0;
-    }
-
-    .pointer-size {
-      position: absolute;
-      border-style: solid;
-      border-width: $pointer-size $pointer-size 0 $pointer-size;
-    }
-
-    .dialog-button {
-      height: $dialog-button-size;
-      width: $dialog-button-size;
-    }
-  }
-  */
 </style>

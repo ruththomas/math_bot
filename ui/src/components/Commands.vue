@@ -233,6 +233,7 @@ export default {
 <style scoped lang="scss">
   $click-color: #B8E986;
   $functions-padding-left: 2vmin;
+  $commands-margin-top: 2vmin;
 
   .invisible {
     visibility: hidden;
@@ -266,6 +267,7 @@ export default {
 
     .methods {
       display: flex;
+      margin-top: $commands-margin-top;
       border: 1px solid $click-color;
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 3px;
@@ -284,6 +286,7 @@ export default {
       border: 1px solid transparent;
       width: 100%;
       min-width: 100%;
+      margin-top: $commands-margin-top;
       padding: 0 0 0 $functions-padding-left;
     }
   }
@@ -300,6 +303,7 @@ export default {
     width: 5vmin;
     z-index: 1000;
     background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+    margin-top: $commands-margin-top;
     background-size: contain;
   }
 

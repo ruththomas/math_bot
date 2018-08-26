@@ -1,12 +1,15 @@
 <template>
   <div
+    :id="id"
     class="piece"
     :class="pieceToShow === 'closed' ? 'piece-closed'
       : pieceToShow === 'start' ? 'piece-start'
       : 'piece-middle-or-end'"
+    @click="method ? method($event, func, ind) : ''"
+    data-toggle="tooltip" :title="func.name"
   >
-    <svg v-if="pieceToShow === 'closed'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="7vmin" height="7vmin" version="1.1">
-      <rect rx="5" ry="5" width="7vmin" height="7vmin" fill="#000000" :stroke="convertColor(func.color)" stroke-width="2" />
+    <svg v-if="pieceToShow === 'closed'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="7.5vmin" height="7.5vmin" version="1.1">
+      <rect rx="5" ry="5" width="7.5vmin" height="7.5vmin" fill="#000000" :stroke="convertColor(func.color)" stroke-width="2" />
       <image :xlink:href="funcAndCmdImages[func.image]" height="50%" width="50%" x="25%" y="25%" />
     </svg>
 
@@ -57,7 +60,7 @@
       <image :xlink:href="funcAndCmdImages[func.image]" height="50%" width="50%" x="25%" y="25%" />
     </svg>
     <div
-      v-if="pieceToShow === 'closed'"
+      v-if="pieceToShow === 'closed' && showName  "
       class="piece-name"
       :style="{background: convertColor(func.color)}"
     >
@@ -108,8 +111,10 @@ export default {
 
 <style scoped lang="scss">
   $piece-margin: 0.5vmin;
+  $piece-height: 7.5vmin;
 
   .piece {
+    position: relative;
     height: min-content;
     width: min-content;
     cursor: grab;
@@ -140,7 +145,7 @@ export default {
   }
 
   .piece.piece-start, .piece.piece-middle-or-end {
-    height: 7.5vmin;
+    height: $piece-height;
     width: 8vmin;
   }
 

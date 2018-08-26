@@ -98,4 +98,18 @@ export default {
     height: 15vmin;
     width: 15vmin;
   }
+
+  @media only screen and (orientation: portrait) {
+    .return-to-profile {
+      left: auto;
+      right: 0;
+    }
+  }
+  
+  @media only screen and (max-width: 567px) {
+    .return-to-profile {
+      left: auto;
+      right: 0;
+    }
+  }
 </style>

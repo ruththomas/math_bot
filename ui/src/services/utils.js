@@ -2,6 +2,10 @@ import elementResizeEvent from 'element-resize-event'
 import _ from 'underscore'
 
 const utils = {
+  openPopover (targetId) {
+    console.log(targetId)
+    this.$root.$emit('bv::show::popover', targetId)
+  },
   closePopover (targetId) {
     this.$root.$emit('bv::hide::popover', targetId)
   },

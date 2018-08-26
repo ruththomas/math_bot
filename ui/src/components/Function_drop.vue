@@ -138,8 +138,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $drop-zone-padding-right: 30px;
   $danger-color: #F25C5C;
+  $piece-height: 7.5vmin;
 
   .function-drop {
     overflow: auto;
@@ -151,11 +151,10 @@ export default {
       position: relative;
       width: min-content;
       min-width: 100%;
-      height: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      padding-right: $drop-zone-padding-right;
+      height: 100%;
     }
   }
 
@@ -182,6 +181,11 @@ export default {
 
   .placeholder-piece {
     opacity: 0.4;
+    border: 1px solid white;
+    border-radius: 5px;
+    svg {
+      display: none;
+    }
   }
 
   .center-function-drop {

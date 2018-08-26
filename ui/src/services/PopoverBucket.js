@@ -3,6 +3,8 @@ class PopoverBucket {
     this.context = context
     this.$selected = $(target)
 
+    this.$selected = this.$selected.is('div') ? this.$selected : this.$selected.parent().closest('div')
+
     this.removePointer()
     this._setPointer()
   }
