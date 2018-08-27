@@ -1,31 +1,24 @@
 <template>
-  <div class="robot-container" data-aos="fade-in" v-if="auth.authenticated">
+  <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
+  <div class="container-fluid robot" data-aos="fade-in" v-else>
+    <div class="container">
 
-    <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
-    <div  v-else id="robot" class="row animated">
-
-      <div id="control-panel-box">
-        <control-panel></control-panel>
-      </div>
-
-      <div id="grid-box">
+      <div class="row" style="position: relative;">
         <trash></trash>
         <grid></grid>
       </div>
 
       <messages></messages>
 
-      <div id="edit-main-box">
+      <div class="row box">
         <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
         <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
       </div>
 
-      <div id="commands-box">
+      <div class="row" style="position: relative;">
         <trash></trash>
         <commands></commands>
       </div>
-
-      <!--<div class="filler-box"></div>-->
     </div>
   </div>
 </template>
@@ -159,199 +152,20 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .robot-container {
-    height: 100%;
-    width: 100%;
+  $box-height: 18vmin;
+
+  .robot {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
     background-size: cover;
-  }
-
-  #robot {
-    position: relative;
-    width: 100%;
     height: 100%;
-    max-width: 1200px;
-    overflow: visible;
-    margin: 0 auto;
-    padding: 1vh 20px 0 20px;
-    display: flex;
-    flex-direction: column;
-  }
 
-  #control-panel-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    flex: 1;
-  }
-
-  #grid-box {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    align-items: center;
-    justify-content: center;
-    /*border: 1px solid yellowgreen;*/
-  }
-
-  #edit-main-box {
-    display: flex;
-    flex: 1;
-    z-index: 101;
-    /*border: 1px solid mediumvioletred;*/
-  }
-
-  #commands-box {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1.2;
-    z-index: 102;
-    /*border: 1px solid firebrick;*/
-  }
-
-  .filler-box {
-    display: flex;
-  }
-
-  .grow {
-    height: 40%;
-    -webkit-transition: height 1s; /* For Safari 3.1 to 6.0 */
-    transition: height 1s;
-  }
-
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-  }
-
-  /* ipad pro Landscape */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: landscape)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-
-  }
-
-  @media only screen and (max-width: 823px) {
-    #commands-box {
-      flex: 1.8;
+    .container {
+      .box {
+        position: relative;
+        height: $box-height;
+        max-width: 100vw;
+        z-index: 100;
+      }
     }
   }
-
-  @media only screen and (max-width: 736px) {
-    #commands-box {
-      flex: 1.8;
-    }
-  }
-
-  @media only screen and (max-width : 667px) and (orientation: landscape) {
-    #commands-box {
-      flex: 1.8;
-    }
-  }
-
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) and (orientation: landscape) {
-
-    #control-panel-box {
-      flex: 0.8;
-    }
-
-    #grid-box {
-      justify-content: flex-start;
-    }
-
-    #edit-main-box {
-    }
-
-    #commands-box {
-      flex: 1.8;
-    }
-
-    #robot {
-      width: 100vw;
-    }
-  }
-
-  /* iphone 6/7/8 plus*/
-  @media only screen and (max-width: 414px) {
-    #robot {
-      padding: 0;
-    }
-
-    #control-panel-box {
-      flex: 1;
-    }
-
-    #grid-box {
-      justify-content: flex-start;
-    }
-
-    #edit-main-box {
-    }
-
-    #commands-box {
-      /*max-height: 95px;*/
-    }
-  }
-
-  /* iphone 6/7 portrait */
-  @media only screen and (max-width : 375px) {
-    #robot {
-    }
-
-    #control-panel-box {
-    }
-
-    #grid-box {
-      justify-content: flex-start;
-    }
-
-    #edit-main-box {
-    }
-
-    #commands-box {
-      /*max-height: 95px;*/
-    }
-  }
-
-  /* iphone 5 portrait */
-  @media only screen and (max-width : 320px) {
-    #robot {
-    }
-
-    #control-panel-box {
-      flex: 1;
-    }
-
-    #grid-box {
-      justify-content: flex-start;
-    }
-
-    #edit-main-box {
-    }
-
-    #commands-box {
-      /*max-height: 95px;*/
-    }
-
-    #robot {
-      width: 100vw;
-    }
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
-  }
-
 </style>
