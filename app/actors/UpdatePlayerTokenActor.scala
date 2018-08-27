@@ -39,8 +39,10 @@ object UpdatePlayerTokenActor {
     val dedupedInactiveActives = dedupList(lambdas.inactiveActives.getOrElse(List.empty[FuncToken]))
     val dedupedStaged = dedupList(lambdas.stagedFuncs)
     val dedupedInactiveStaged = dedupList(lambdas.inactiveStaged.getOrElse(List.empty[FuncToken]))
-    val filteredMainFunc = lambdas.main.func.getOrElse(List.empty[FuncToken]).filterNot { ft =>
-      (dedupedActives ++ dedupedInactiveActives).exists(_.created_id == ft.created_id)
+    val filteredMainFunc = lambdas.main.func.getOrElse(List.empty[FuncToken]).filter { ft =>
+      (dedupedActives ++ dedupedInactiveActives ++ (lambdas.cmds ++ lambdas.inactiveCmds
+        .getOrElse(List.empty[FuncToken])))
+        .exists(_.created_id == ft.created_id)
     }
     lambdas.copy(
       main = lambdas.main.copy(func = Some(filteredMainFunc)),
