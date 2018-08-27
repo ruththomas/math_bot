@@ -193,7 +193,6 @@ export default {
     width: 90%;
     margin: 0 auto;
     height: 100%;
-    z-index: 102;
     padding: $edit-main-top-bottom-padding $edit-main-side-padding $edit-main-top-bottom-padding $edit-main-side-padding;
   }
 
