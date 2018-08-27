@@ -5,7 +5,7 @@ class CompilerSocket extends Ws {
   constructor (tokenId) {
     super()
     this.tokenId = tokenId
-    this._compilerTake = 4
+    this._compilerTake = 10
 
     this._openCompilerWs()
   }
@@ -37,21 +37,21 @@ class CompilerSocket extends Ws {
     if (this._ws === null || this._ws.readyState !== 1) { // if socket closed open new connection
       this._openCompilerWs(() => { // open connection
         this._wsOnMessage(cb) // make connection on message the callback
-        this._compilerSend(problem.problem, false)
+        this._compilerSend(this._compilerTake, problem.problem, false)
       })
     } else { // else just update this connections on message method
       this._wsOnMessage(cb) // make connection on message the callback
-      this._compilerSend(problem.problem, false)
+      this._compilerSend(this._compilerTake, problem.problem, false)
     }
   }
 
   haltProgram (cb) {
     this._wsOnMessage(cb)
-    this._compilerSend('0', true, false)
+    this._compilerSend(0, '0', true, false)
   }
 
-  _compilerSend (problem, halt, create) {
-    this._send(JSON.stringify({steps: this._compilerTake, problem: problem, halt: halt, create: create}))
+  _compilerSend (compilerTake, problem, halt, create) {
+    this._send(JSON.stringify({steps: compilerTake, problem: problem, halt: halt, create: create}))
   }
 }
 

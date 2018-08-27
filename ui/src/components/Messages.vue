@@ -36,6 +36,7 @@ export default {
     z-index: 1001;
     display: flex;
     flex-direction: column;
+    color: #ffffff;
   }
 
   .message {
@@ -113,7 +114,9 @@ export default {
 
   /* Small Devices */
   @media only screen and (max-width : 667px) {
-
+    .message-container {
+      display: none;
+    }
   }
 
   /* Extra Small Devices, Phones */

@@ -24,14 +24,6 @@ export default {
       .catch(console.error)
   },
 
-  insertTokenForTesting () {
-    const mToken = require('./mutated_token.json')
-    Vue.http.post('/api/token/test', mToken)
-      .then(res => res.body)
-      .then(console.log)
-      .catch(console.error)
-  },
-
   /*
   * activateFunction moves function token from stagedFunction list to activeFunction list
   * @param tokenId = JWT token_id
@@ -57,7 +49,7 @@ export default {
       .catch(console.error)
   },
   /*
-  * putFunc updates the current function in the database
+  * _putFunc updates the current function in the database
   * @param tokenId = JWT token_id
   * @param funcToken = current token
   * @response.body = lambdas property of JWT
@@ -69,11 +61,19 @@ export default {
       })
       .catch(console.error)
   },
-  updateActives ({tokenId, actives}, cb) {
-    Vue.http.put('/api/token/updateActives', {tokenId, actives})
+
+  changeFunctionColor ({tokenId, funcToken}, cb) {
+    Vue.http.put('/api/token/color', {tokenId, funcToken})
       .then(res => {
         cb(res.body)
       })
+      .catch(console.error)
+  },
+
+  updateActives ({tokenId, oldIndex, newIndex}, cb) {
+    Vue.http.get(`/api/token/updateActives/${urlEncode(tokenId)}/${oldIndex}/${newIndex}`)
+      .then(res => res.body)
+      .then(cb)
       .catch(console.error)
   },
   /*

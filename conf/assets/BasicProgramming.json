@@ -111,6 +111,7 @@
       "activeEnabled": true,
       "preBuiltActive": [
         {
+          "createdId": "50246629508",
           "name": "Rocket",
           "image": "rocket",
           "sizeLimit": -1,
@@ -122,6 +123,7 @@
           ]
         }
       ],
+      "allowedActives": ["50246629508"],
       "stagedQty": 0,
       "assignedStaged": [],
       "cmdsAvailable": [
@@ -155,6 +157,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["50246629508"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot"
       ],
@@ -186,6 +189,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["50246629508"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -216,6 +220,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "58071679485",
           "name": "U Turn",
           "image": "uTurn",
           "sizeLimit": 2,
@@ -223,6 +228,7 @@
         }
       ],
       "preBuiltActive": [],
+      "allowedActives": ["50246629508", "58071679485"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -255,6 +261,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "53367904610",
           "name": "Turn Left",
           "image": "turnLeft",
           "sizeLimit": 3,
@@ -262,6 +269,7 @@
         }
       ],
       "preBuiltActive": [],
+      "allowedActives": ["53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -294,6 +302,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -324,6 +333,7 @@
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["50246629508"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"

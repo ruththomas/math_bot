@@ -1,24 +1,18 @@
 <template>
-  <div class="control-panel">
-
+  <div class="row control-panel">
     <img @click="goToProfile()"
          class="return-to-profile"
          :src="permanentImages.returnToProfile"
          data-toggle="tooltip" title="Return to profile"
     />
-
-    <div class="instructions" :style="congratsShowing || tryAgainShowing ? {opacity: 0} : {}">
-      <div class="instructions-filler-left"></div>
-      <div class="instructions-robot-container">
-        <img :src="permanentImages.instructionsRobot" class="instructions-robot" data-toggle="tooltip" title="Toggle speech bubble">
-      </div>
-      <speech-bubble :html="description" :showing="speechBubbleShowing" :step="step"></speech-bubble>
-    </div>
+      <img :src="permanentImages.instructionsRobot" class="instructions-robot">
+      <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
   </div>
 </template>
 
 <script>
 import SpeechBubble from './Speech_bubble'
+import RobotCarrying from './Robot_carrying'
 
 export default {
   name: 'control-panel',
@@ -59,17 +53,26 @@ export default {
     }
   },
   components: {
-    SpeechBubble
+    SpeechBubble,
+    RobotCarrying
   }
 }
 </script>
 
 <style scoped lang="scss">
+  $instructions-robot-size: 13vmin;
+  $grid-space-size: 9vmin;
+
   .control-panel {
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+    right: calc(#{$grid-space-size} * 0.75);
   }
 
   .instructions {
     display: flex;
+    align-items: flex-end;
     width: 100%;
   }
 
@@ -77,16 +80,14 @@ export default {
     height: 150px;
     display: flex;
     align-items: flex-end;
-    margin-right: 20px;
   }
 
   .instructions-robot {
-    height: 100%;
-    cursor: pointer;
+    height: $instructions-robot-size;
   }
 
   .instructions-filler-left {
-    width: 100px;
+    width: 120px;
   }
 
   .return-to-profile {
@@ -94,107 +95,21 @@ export default {
     left: 0;
     top: 0;
     cursor: pointer;
+    height: 15vmin;
+    width: 15vmin;
   }
 
-  .fade-in-speech {
-    opacity: 1;
-    transition: all 0.4s ease-out;
-  }
-
-  .fade-out-speech {
-    opacity: 0;
-    transition: all 0.4s ease-in;
-  }
-
-  @media only screen and (max-width : 1280px) {
-    .instructions-robot-container {
-      height: 90px;
-    }
-
+  @media only screen and (orientation: portrait) {
     .return-to-profile {
-      height: 120px;
-    }
-
-    .instructions-filler-left {
-      width: 250px;
+      left: auto;
+      right: 0;
     }
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    .instructions-robot-container {
-      height: 75px;
-    }
-
+  @media only screen and (max-width: 567px) {
     .return-to-profile {
-      height: 65px;
-    }
-
-    .instructions-filler-left {
-      width: 120px;
+      left: auto;
+      right: 0;
     }
   }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    .instructions-robot-container {
-      height: 50px;
-    }
-
-    .instructions-filler-left {
-      width: 170px;
-    }
-  }
-
-  @media only screen and (max-width: 569px) {
-    .instructions-filler-left {
-      width: 125px;
-    }
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-    .return-to-profile {
-      height: 60px;
-    }
-
-    .instructions-robot-container {
-      height: 50px;
-    }
-
-    .instructions-filler-left {
-      width: 40px;
-    }
-  }
-
-  /* Custom, iPhone 5 Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .instructions-robot-container {
-      height: 150px;
-    }
-
-    .return-to-profile {
-      height: 100px;
-    }
-
-    .instructions-filler-left {
-      width: 75px;
-    }
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .return-to-profile {
-      height: 150px;
-    }
-
-    .instructions-filler-left {
-      width: 180px;
-    }
-  }
-
 </style>

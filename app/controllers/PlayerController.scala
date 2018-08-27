@@ -4,7 +4,7 @@ import java.net.URLDecoder
 
 import javax.inject.Inject
 import actors.messages.ActorFailed
-import actors.{PlayerActor, PolyfillActor}
+import actors.{PlayerActor, UpdatePlayerTokenActor}
 import actors.PlayerActor._
 import actors.messages.ResponsePlayerToken
 import akka.actor.ActorSystem
@@ -29,17 +29,19 @@ class PlayerController @Inject()(system: ActorSystem,
 
   implicit val timeout: Timeout = 5000.minutes
 
-  val polyfillActor = system.actorOf(PolyfillActor.props(system, logger, environment), "polyfill-actor")
+  val polyfillActor = system.actorOf(UpdatePlayerTokenActor.props(system, logger, environment), "polyfill-actor")
 
   val playerActor =
     system.actorOf(PlayerActor.props(system, playerTokenDAO, polyfillActor, logger, environment), "player-actor")
 
-  def updateActives(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
-    (playerActor ? UpdateActives(request.body)).mapTo[Either[UpdatedActives, ActorFailed]].map {
-      case Left(UpdatedActives(actives)) =>
-        Ok(Json.toJson(actives))
-      case Right(actorFailed) => BadRequest(actorFailed.msg)
-    }
+  def moveActiveFunc(tokenId: String, oldIndex: String, newIndex: String): Action[AnyContent] = Action.async {
+    implicit request: Request[AnyContent] =>
+      (playerActor ? ReorginizeActiveFunctions(URLDecoder.decode(tokenId, "UTF-8"), oldIndex, newIndex))
+        .mapTo[Either[PreparedLambdasToken, ActorFailed]]
+        .map {
+          case Left(preparedLambdasToken) => Ok(Json.toJson(preparedLambdasToken.lambdas))
+          case Right(actorFailed) => BadRequest(actorFailed.msg)
+        }
   }
 
   def addToken(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
@@ -52,6 +54,13 @@ class PlayerController @Inject()(system: ActorSystem,
 
   def editLambdas(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
     (playerActor ? EditLambdas(request.body)).mapTo[Either[PreparedLambdasToken, ActorFailed]].map {
+      case Left(preparedLambdasToken) => Ok(Json.toJson(preparedLambdasToken.lambdas))
+      case Right(invalidJson) => BadRequest(invalidJson.msg)
+    }
+  }
+
+  def changeFunctionColor(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    (playerActor ? ChangeFunctionColor(request.body)).mapTo[Either[PreparedLambdasToken, ActorFailed]].map {
       case Left(preparedLambdasToken) => Ok(Json.toJson(preparedLambdasToken.lambdas))
       case Right(invalidJson) => BadRequest(invalidJson.msg)
     }

@@ -13,11 +13,6 @@ export default {
   mounted () {
     window.scrollTo(0, 1)
     this.auth.isAuthenticated()
-    // utils.watcher(() => !this.auth.authenticated, () => {
-    //   api.videoHintSocket.requestHintsTaken(res => {
-    //     this.$store.dispatch('startExistingTimers', res.remainingTimes)
-    //   })
-    // })
   },
   computed: {
     auth () {
@@ -28,18 +23,24 @@ export default {
 </script>
 
 <style lang="scss">
+  $click-color: #B8E986;
+  $pointer-size: 2vmin;
+  $dialog-button-size: 3.5vmin;
+
   body {
     font-family: "Proba Pro Regular", serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #FFFFFF;
+    color: #000000;
     height: 100vh;
     width: 100vw;
-    background-color: #000000;
+    background-color: #000000!important;
     position: relative;
     display: flex;
     z-index: 200;
+    background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522347137/misc/profileSpace.png");
+    background-size: cover;
   }
 
   #app {
@@ -60,9 +61,30 @@ export default {
   }
 
   .dialog-button {
-    height: 40px;
-    width: 40px;
+    height: $dialog-button-size;
+    width: $dialog-button-size;
     cursor: pointer;
+  }
+
+  .button-effect {
+    color: #000000;
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 3px;
+    background-color: $click-color;
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,0.5);
+    cursor: pointer;
+    padding: 3px;
+    &:hover {
+      background-color: $click-color;
+    }
+  }
+
+  .popover {
+    background-color: rgba(0, 0, 0, 0.8)!important;
   }
 
   /*This is where v-html styles must go*/
@@ -72,27 +94,114 @@ export default {
   }
 
   .dragging, .ghost, .chosen {
-    height: 75px;
+    height: 70px;
+    width: 70px;
+
+    .pointer {
+      display: none;
+    }
   }
 
   .dragging {
     opacity: 1;
   }
 
-  .function-drop {
-    .ghost, .chosen {
-      margin: 0 12px 0 12px;
-    }
+  .ghost, .chosen {
+    margin: 0 12px 0 12px;
+  }
 
-    .ghost {
-      opacity: 0;
-    }
+  .ghost {
+    opacity: 0;
   }
 
   .pulse {
     box-shadow: 0 0 0 rgb(184, 233, 134);
     animation: pulse 1s;
     animation-iteration-count: 2;
+  }
+
+  .pointer {
+    position: absolute;
+    width: calc(#{$pointer-size} * 2);
+    height: $pointer-size;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+  }
+
+  .pointer-hidden {
+    opacity: 0;
+  }
+
+  .pointer-size {
+    position: absolute;
+    border-style: solid;
+    border-width: $pointer-size $pointer-size 0 $pointer-size;
+  }
+
+  .pointer-body {
+    top: -1px;
+    z-index: 1001;
+    border-color: #000000 transparent transparent transparent;
+  }
+
+  .pointer-border {
+    top: 1px;
+    z-index: 0;
+    border-color: #737373 transparent transparent transparent;
+  }
+
+  .arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 5px;
+  }
+
+  .right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+
+  .left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+
+  .close-popover {
+    height: 2vmin;
+    width: 2vmin;
+    position: absolute;
+    top: -1vmin;
+    right: -1vmin;
+  }
+
+  .up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+  }
+
+  .down {
+    transform: rotate(145deg);
+    -webkit-transform: rotate(45deg);
+  }
+
+  @keyframes bounce {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-5px);
+    }
+  }
+  @-webkit-keyframes bounce {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-5px);
+    }
   }
 
   @keyframes pulse {
@@ -121,59 +230,18 @@ export default {
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    .dialog-button {
-      height: 20px;
-      width: 20px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    .dialog-button {
-      height: 20px;
-      width: 20px;
-    }
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .dialog-button {
-      height: 30px;
-      width: 30px;
-    }
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .dialog-button {
-      height: 30px;
-      width: 30px;
-    }
-  }
-
   ::-webkit-scrollbar {
-    width: 22px;
-    height: 22px;
+    width: 2vmin;
+    height: 2vmin;
   }
-
   ::-webkit-scrollbar-track {
     visibility: hidden;
+    background: transparent;
   }
-
   ::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 10px 10px rgba(216, 216, 216, 0.5);
-    border: solid 8px transparent;
-    border-radius: 10px;
+    border: solid 0.75vmin transparent;
+    border-radius: 1.5vmin;
+    background: transparent;
   }
 </style>
