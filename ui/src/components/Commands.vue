@@ -1,85 +1,80 @@
 <template>
-  <div class="commands" v-if="commands !== null && activeFunctions !== null">
+  <div class="commands" v-if="commands !== null && activeFunctions !== null && !congratsShowing && !tryAgainShowing">
+    <div class="lambdas-container">
+      <div class="methods-container">
+        <draggable
+          class="methods"
+          :list="commands"
+          :options="commandOptions"
+          @start="start"
+          @end="end"
+        >
+          <function-box
+            v-for="(command, ind) in commands"
+            :key="command.id"
+            :func="command"
+            :ind="ind"
+            :collection="commands"
+            :origin="'functions'"
+            v-on:click.native="notEditableMessage"
+          ></function-box>
+        </draggable>
+      </div>
 
-    <popover-bucket
-      v-if="commandEvt !== null"
-      :evt="evt"
-    ></popover-bucket>
-
-    <div class="command-control-button-group">
-      <img class="command-button commands-up dialog-button" @click="moveSwiper('up')" :src="permanentImages.buttons.playButton">
-      <img class="command-button commands-down dialog-button" @click="moveSwiper('down')" :src="permanentImages.buttons.playButton">
+      <div class="functions-container">
+        <draggable
+          class="functions"
+          :list="activeFunctions"
+          :options="functionOptions"
+          @start="start"
+          @change="moveFunction"
+          @end="end"
+          @add="addToActiveFunc"
+        >
+          <function-box
+            v-for="(func, ind) in activeFunctions"
+            :key="ind + '/' + func.created_id"
+            :func="func"
+            :ind="ind"
+            :collection="activeFunctions"
+            :origin="'functions'"
+            @click.native="editFunction($event, func, ind)"
+          ></function-box>
+        </draggable>
+      </div>
     </div>
 
-    <div class="commands-slide">
-      <draggable
-        class="methods"
-        :list="commands"
-        :options="commandOptions"
-        @start="start"
-        @end="end"
-      >
-        <function-box
-          v-for="(command, ind) in commands"
-          :key="command.id"
-          :func="command"
-          :ind="ind"
-          :collection="commands"
-          :origin="'functions'"
-          v-on:click.native="notEditableMessage"
-        ></function-box>
-      </draggable>
-      <draggable
-        class="functions"
-        :list="activeFunctions"
-        :options="functionOptions"
-        @start="start"
-        @change="moveFunction"
-        @end="end"
-        @add="addToActiveFunc"
-      >
-        <function-box
-          v-for="(func, ind) in activeFunctions"
-          :key="ind + '/' + func.created_id"
-          :func="func"
-          :ind="ind"
-          :collection="activeFunctions"
-          :origin="'functions'"
-          :method="toggleFunctionEdit"
-          v-on:click.native="editingFunctionMessage(func)"
-        ></function-box>
-      </draggable>
-    </div>
-
-    <img
+    <div
       id="open-staged"
       class="dialog-button"
-      v-if="this.stepData.stagedEnabled"
-      :class="functionAreaShowing === 'addFunction' ? 'rotate-to-x' : 'rotate-to-plus'"
       @click="toggleFunctionAdd"
-      :src="permanentImages.buttons.plusButton"
-      data-toggle="tooltip" :title="functionAreaShowing === 'addFunction' ? 'Close' : 'Open'" />
+      v-if="stagedFunctions.length && stepData.stagedEnabled">
+    </div>
   </div>
 </template>
 
 <script>
 import draggable from 'vuedraggable'
-import api from '../services/api'
 import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
 import uId from 'uid'
+import buildUtils from '../services/BuildFunction'
+import PuzzlePieces from './Puzzle_pieces'
 
 export default {
   name: 'FunctionDrop',
   mounted () {
-    window.addEventListener('resize', () => {
-      if (window.location.hash === '#/robot') {
-        this.functionsPosition = 0
-        this.moveSwiper('up')
-      }
-    })
   },
   computed: {
+    stagedFunctions () {
+      return this.$store.getters.getStagedFunctions
+    },
+    congratsShowing () {
+      return this.$store.getters.getCongratsShowing
+    },
+    tryAgainShowing () {
+      return this.$store.getters.getTryAgainShowing
+    },
     evt () {
       return this.commandEvt
     },
@@ -109,9 +104,6 @@ export default {
     },
     activeFunctions () {
       return this.$store.getters.getActiveFunctions
-    },
-    colorSelected () {
-      return this.$store.getters.getColorSelected
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
@@ -143,7 +135,7 @@ export default {
           put: false
         },
         filter: '.command-name',
-        dragClass: 'dragging',
+        chosenClass: 'chosen',
         ghostClass: 'ghost',
         sort: false
       },
@@ -153,16 +145,19 @@ export default {
           pull: 'clone',
           put: ['commands-staged']
         },
+        animation: 100,
         filter: '.command-name',
-        dragClass: 'dragging',
-        ghostClass: 'ghost'
+        chosenClass: 'chosen',
+        ghostClass: 'ghost',
+        sort: true
       },
-      currentColor: this.colorSelected
+      currentColor: this.colorSelected,
+      editFunctionOpen: false
     }
   },
   methods: {
     uid: int => uId(int),
-    notEditableMessage (evt) {
+    notEditableMessage () {
       const messageBuilder = {
         type: 'warn',
         msg: 'Can\'t edit'
@@ -171,13 +166,11 @@ export default {
       this.$store.dispatch('addMessage', messageBuilder)
     },
     editingFunctionMessage (func) {
-      if (this.editingFunction) {
-        const messageBuilder = {
-          type: 'success',
-          msg: `${func.name ? `Edit: ${func.name}` : 'Edit: Function'}`
-        }
-        this.$store.dispatch('addMessage', messageBuilder)
+      const messageBuilder = {
+        type: 'success',
+        msg: `${func.name ? `Edit: ${func.name}` : 'Edit: Function'}`
       }
+      this.$store.dispatch('addMessage', messageBuilder)
     },
     findColor () {
       return this.colors[this.colorSelected].next
@@ -186,35 +179,28 @@ export default {
       const color = this.findColor()
       this.$store.dispatch('colorSelected', color)
     },
-    togglePopoverBucket ({ind, show}) {
+    toggleEditFunction (ind) {
       this.$store.dispatch('updateEditingIndex', ind)
-      this.$store.dispatch('updateFunctionAreaShowing', show)
+      this.$store.dispatch('updateFunctionAreaShowing', ind === null ? 'editMain' : 'editFunction')
     },
-    toggleFunctionEdit (evt, _2, ind) {
-      this.commandEvt = evt
-      const i = ind === this.editingIndex ? null : ind
-      const show = i === null ? 'editMain' : 'editFunction'
-      this.togglePopoverBucket({ind: i, show: show})
+    handleEditFunctionEvent (evt) {
+      this.$store.dispatch('updateEditFunctionEvent', evt.target)
     },
     toggleFunctionAdd (evt) {
-      this.commandEvt = evt
-      this.togglePopoverBucket({ind: null, show: this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction'})
+      this.handleEditFunctionEvent(evt)
+      this.$store.dispatch('updateEditingIndex', null)
+      this.$store.dispatch('updateFunctionAreaShowing', this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction')
     },
-    closeFunctionBox () {
-      this.commandEvt = null
-      this.togglePopoverBucket({ind: null, show: 'editMain'})
+    editFunction (evt, func, ind) {
+      $('#open-staged').show()
+      this.handleEditFunctionEvent(evt)
+      const i = ind === this.editingIndex ? null : ind
+      if (i !== null) this.editingFunctionMessage(func)
+      this.toggleEditFunction(i)
     },
     start () {
       if (this.functionAreaShowing === 'editMain') {
         this.$store.dispatch('toggleShowMesh', true)
-        // If main is full apply message letting the user know
-        if (this.mainFunctionFunc.length >= this.stepData.mainMax) {
-          const messageBuilder = {
-            type: 'warn',
-            msg: `Main full`
-          }
-          this.$store.dispatch('addMessage', messageBuilder)
-        }
       }
     },
     end () {
@@ -222,57 +208,33 @@ export default {
     },
     moveFunction (evt) {
       if (evt.moved) {
-        api.updateActives({tokenId: this.token.token_id, actives: this.activeFunctions}, actives => {
-          this.$store.dispatch('updateActives', actives)
+        buildUtils.moveFunction({
+          oldIndex: evt.moved.oldIndex,
+          newIndex: evt.moved.newIndex
         })
       }
     },
     addToActiveFunc (evt) {
-      const index = evt.item.getAttribute('data-function-index')
-      // console.log('INDEX IN ~ ', index)
-      if (evt.type === 'add') {
-        api.activateFunction({tokenId: this.token.token_id, stagedIndex: index, activeIndex: evt.newIndex}, lambdas => {
-          // console.log('NEW LAMBDAS ~ ', lambdas)
-          this.$store.dispatch('updateLambdas', lambdas)
-        })
-      }
-    },
-    moveSwiper (direction) {
-      const $functions = $('.functions')
-      const $functionBoxes = $functions.children()
-      if ($functionBoxes.length) {
-        (function (windowWidth, dis) {
-          const functionsWidth = $functions.width()
-          const $firstFunctionBox = $functionBoxes.first()
-          const functionBoxMarginRight = Number($firstFunctionBox.css('margin-right').replace('px', ''))
-          const functionBoxMarginBottom = Number($firstFunctionBox.css('margin-bottom').replace('px', ''))
-          const functionBoxWidth = $firstFunctionBox.outerWidth() + (functionBoxMarginRight * 2)
-          const functionBoxHeight = $firstFunctionBox.outerHeight() + (functionBoxMarginBottom)
-          const amtPerRow = Math.floor(functionsWidth / functionBoxWidth)
-          const rowCount = Math.ceil($functionBoxes.length / amtPerRow)
-          const allRowsHeight = functionBoxHeight * rowCount
-          const ableToScrollDown = (dis.functionsPosition + functionBoxHeight) < allRowsHeight
-
-          if (direction === 'up' && dis.functionsPosition > 0) {
-            dis.functionsPosition -= functionBoxHeight
-          } else if (direction === 'down' && ableToScrollDown) {
-            dis.functionsPosition += functionBoxHeight
-          }
-
-          $functions.animate({scrollTop: dis.functionsPosition + 'px'}, 300, 'linear')
-        })($(window).width(), this)
-      }
+      buildUtils.activateFunction({
+        stagedIndex: evt.oldIndex,
+        activeIndex: evt.newIndex
+      })
     }
   },
   components: {
     draggable,
     FunctionBox,
-    PopoverBucket
+    PopoverBucket,
+    PuzzlePieces
   }
 }
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
+  $functions-padding-left: 2vmin;
+  $commands-margin-top: 2vmin;
+
   .invisible {
     visibility: hidden;
   }
@@ -282,12 +244,13 @@ export default {
     align-items: center;
     flex-direction: row;
     width: 100%;
-    height: 105px;
+    height: 100%;
+    margin: 0 auto;
     position: relative;
-    padding: 10px 0;
+    z-index: 100;
   }
 
-  .commands-slide {
+  .lambdas-container {
     transition-duration: 300ms;
     width: 100%;
     height: 100%;
@@ -295,118 +258,37 @@ export default {
     justify-content: flex-start;
   }
 
-  .commands-slide > * {
-    display: flex;
-    padding: 0 3px 0 0;
-    height: 100%;
-    z-index: 100;
-    justify-content: flex-start;
-  }
-
   .command-border-info {
     border: 1px solid rgb(0, 0, 255)!important;
   }
 
-  .methods {
-    border-right: 2px solid #B8E986;
+  .methods-container {
+    display: table;
+
+    .methods {
+      display: flex;
+      margin-top: $commands-margin-top;
+      border: 1px solid $click-color;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 3px;
+    }
   }
 
-  .methods > * {
-    float: left;
-  }
+  .functions-container {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    height: min-content;
+    margin-right: 7%;
 
-  .functions {
-    flex-wrap: wrap;
-    overflow: hidden;
-    flex-grow: 1;
-  }
-
-  .functions-show-overflow {
-    overflow: visible;
-  }
-
-  .functions > * {
-    margin-bottom: 20px!important;
-  }
-
-  .two-x-command-name {
-    top: 40px;
-    height: 25px;
-  }
-
-  .three-x-command-name {
-    top: 46px;
-    height: 37px;
-  }
-
-  .four-x-command-name {
-    top: 52px;
-    height: 49px;
-  }
-
-  .five-x-command-name {
-    top: 58px;
-    height: 60px;
-  }
-
-  .funcText {
-    width: 94%;
-    position: absolute;
-    top: 1px;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .commandText {
-    position: absolute;
-    top: 1px;
-    left: 0;
-    right: 0;
-    white-space: nowrap;
-  }
-
-  .command-control-button-group {
-    height: 100%;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    margin-right: 20px;
-  }
-
-  .command-control-button-group:after {
-    content:"";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    border-left: 2px solid #B8E986;
-    transform: translate(-50%);
-  }
-
-  .command-control-button {
-    cursor: pointer;
-    height: 30px;
-    width: 30px;
-    right: -21px;
-  }
-
-  .command-button {
-    max-height: 30px;
-    max-width: 30px;
-  }
-
-  .commands-up {
-    -webkit-transform: rotate(-90deg);
-    transform:rotate(-90deg);
-  }
-
-  .commands-down {
-    -webkit-transform: rotate(90deg);
-    transform:rotate(90deg);
+    .functions {
+      display: flex;
+      height: 100%;
+      border: 1px solid transparent;
+      width: 100%;
+      min-width: 100%;
+      margin-top: $commands-margin-top;
+      padding: 0 0 0 $functions-padding-left;
+    }
   }
 
   #commands-box {
@@ -414,9 +296,15 @@ export default {
   }
 
   #open-staged {
-    display: flex;
-    align-self: flex-start;
-    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 5vmin;
+    width: 5vmin;
+    z-index: 1000;
+    background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
+    margin-top: $commands-margin-top;
+    background-size: contain;
   }
 
   .rotate-to-x {
@@ -428,86 +316,4 @@ export default {
     -webkit-transform: rotate(0);
     transform:rotate(0);
   }
-
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    .commands {
-      margin-bottom: 5px;
-      height: 55px;
-    }
-
-    .commands-slide {
-      margin: 0 auto;
-    }
-
-    .commands-slide > * {
-      /*height: 35px;*/
-    }
-
-    .command-control-button-group {
-      margin-right: 10px;
-    }
-
-    .command-control-button {
-      height: 15px;
-      width: 15px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    .commands {
-      margin-bottom: 5px;
-      height: 65px;
-    }
-
-    .commands-slide {
-      margin: 0 auto;
-    }
-
-    .commands-slide > * {
-      /*height: 35px;*/
-    }
-
-    .methods {
-    }
-
-    .command-control-button-group {
-      height: 35px;
-      margin-right: 10px;
-    }
-
-    .command-control-button {
-      height: 15px;
-      width: 15px;
-    }
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .commands {
-      height: 115px;
-    }
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .commands {
-      height: 115px;
-    }
-  }
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-
 </style>

@@ -2,6 +2,7 @@ import auth0 from 'auth0-js'
 import { AUTH0_DOMAIN, AUTH0_ID, AUTH_REDIRECT, AUTH_AUDIENCE } from '../keys'
 import router from './../router'
 import api from '../services/api'
+import $store from '../store/store'
 
 class AuthService {
   authenticated = this.isAuthenticated()
@@ -16,10 +17,10 @@ class AuthService {
   }
 
   auth0 = new auth0.WebAuth({
-    domain: AUTH0_DOMAIN,
-    clientID: AUTH0_ID,
-    redirectUri: AUTH_REDIRECT,
-    audience: AUTH_AUDIENCE,
+    domain: process.env.AUTH0_DOMAIN || AUTH0_DOMAIN,
+    clientID: process.env.AUTH0_ID || AUTH0_ID,
+    redirectUri: process.env.AUTH_REDIRECT || AUTH_REDIRECT,
+    audience: process.env.AUTH_AUDIENCE || AUTH_AUDIENCE,
     responseType: 'token id_token',
     scope: 'openid profile'
   })
@@ -45,13 +46,30 @@ class AuthService {
     return JSON.parse(localStorage.getItem('profile'))
   }
 
+  storeLastRoute () {
+    localStorage.setItem('last_location', router.history.current.fullPath)
+  }
+
+  _getVideoHints () {
+    api.videoHintSocket.requestHintsTaken((hints) => {
+      $store.dispatch('startExistingTimers', hints.remainingTimes)
+    })
+  }
+
   getUserToken () {
     this.userProfile = this.getUserProfile()
     const tokenId = this.userProfile.sub || this.userProfile.user_id
     api.getUserToken({tokenId: tokenId}, token => {
       this.userToken = token
       this.authenticated = true
-      router.push({path: '/profile'})
+      window.onbeforeunload = this.storeLastRoute
+      const lastPath = localStorage.getItem('last_location')
+      this._getVideoHints()
+      if (lastPath && lastPath !== '/about') {
+        router.push({path: lastPath})
+      } else {
+        router.push({path: '/profile'})
+      }
     })
   }
 
@@ -91,8 +109,8 @@ class AuthService {
 
   isAuthenticated () {
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'))
-    const expired = new Date().getTime() < expiresAt
-    if (expired) {
+    const notExpired = new Date().getTime() < expiresAt
+    if (notExpired) {
       this.getUserToken()
     }
   }

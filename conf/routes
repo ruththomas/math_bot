@@ -1,7 +1,4 @@
-# Load index page
-GET         /                                                                     controllers.Assets.at(path="/public", file="index.html")
-GET         /callback                                                             controllers.Assets.at(path="/public", file="index.html")
-
+GET         /                                                                     controllers.SpaController.index
 # Levels
 GET         /api/levels/getStep/:level/:step                                      controllers.LevelController.getStep(level, step, tokenId: Option[String])
 GET         /api/levels/getLevel/:level                                           controllers.LevelController.getLevel(level, tokenId: Option[String])
@@ -13,10 +10,11 @@ GET         /api/wsPath/:tokenId/:connection                                    
 
 # PLAYER
 PUT         /api/token/editLambdas                                                 controllers.PlayerController.editLambdas
+PUT         /api/token/color                                                       controllers.PlayerController.changeFunctionColor
 POST        /api/token                                                             controllers.PlayerController.addToken
 GET         /api/token/activateFunction/:tokenId/:stagedIndex/:activeIndex         controllers.PlayerController.activateFunction(tokenId, stagedIndex, activeIndex)
 POST        /api/token/test                                                        controllers.PlayerController.test
-PUT         /api/token/updateActives                                               controllers.PlayerController.updateActives
+GET         /api/token/updateActives/:tokenId/:oldIndex/:newIndex                  controllers.PlayerController.moveActiveFunc(tokenId, oldIndex, newIndex)
 
 # Stats
 GET         /api/stats/update/:tokenId                                             controllers.StatsController.advanceStats(tokenId, success: Option[String])
@@ -31,7 +29,7 @@ GET         /ws/videohint                                                       
 # Get game stats
 GET         /api/gameStats/getTokenCount                                           controllers.GameStatsController.getCount
 
-# Auth
+# Auth !! Not being used yet !!
 GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
 POST        /api/auth/resumeSession                                                controllers.AuthController.resumeSession
 GET         /api/auth/authorizeGoogle                                              controllers.AuthController.authorizeGoogle
@@ -40,4 +38,4 @@ GET         /api/auth/authorizeGithub                                           
 
 # !! This must be last - and may show an error until prod build !!
 # Map static resources from the /public folder to the file resource path
-GET         /*file                                                                controllers.Assets.at(path="/public", file)
+GET         /*file                                                                 controllers.SpaController.assetOrDefault(file)

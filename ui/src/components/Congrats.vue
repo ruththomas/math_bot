@@ -2,8 +2,15 @@
   <div
     class="message-template congrats"
   >
-    <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'star-spread'"></stars>
-    <p>NICE!!!</p>
+    <div v-if="congrats" class="won">
+      <img class="congrats-icon won-icon" :src="permanentImages.smileyFace" />
+      <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
+      <div class="text-minor">You won!</div>
+    </div>
+    <div v-else class="lost">
+      <img class="congrats-icon lost-icon" :src="permanentImages.thinkingFace"/>
+      <div class="text-minor">Try again!</div>
+    </div>
   </div>
 </template>
 
@@ -23,8 +30,12 @@ export default {
     stepStats () {
       const stepName = this.step
       return this.steps.find(s => s.name === stepName)
+    },
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
   },
+  props: ['congrats'],
   components: {
     Stars
   }
@@ -32,59 +43,41 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
+  $grid-background: rgba(0, 0, 0, 0.6);
+  $grid-border-radius: 4px;
+  $icon-size: 150px;
+  $text-minor-font-size: 24px;
+  $grid-space-size: 9vmin;
+
   .message-template {
+    border: 1px solid $click-color;
+    background: $grid-background;
+    border-radius: $grid-border-radius;
+    position: relative;
+    height: calc(#{$grid-space-size} * 5);
+    width: calc(#{$grid-space-size} * 10);
     display: flex;
-    vertical-align: middle;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
     margin: 0 auto;
-    flex-grow: 2;
-    font-size: 40px;
-    font-weight: bold;
-    color: white;
-    z-index: 10012;
-    height: 500px;
-  }
+    color: #ffffff;
 
-  .congrats {
+    .text-minor {
+      font-size: $text-minor-font-size;
+    }
 
-  }
+    .congrats-icon {
+      height: $icon-size;
+      width: $icon-size;
+    }
 
-  .star {
-    height: 10vh;
-    z-index: 10012;
-  }
-
-  /* 13" screen */
-  @media only screen and (max-width : 1280px) {
-    .message-template {
-      height: 350px;
+    .won {
+      .stars {
+        height: calc(#{$icon-size} / 2);
+        width: 25%;
+        margin: 0 auto;
+      }
     }
   }
-
-  /* Large Phones, landscape*/
-  @media only screen and (max-width : 992px) {
-    .message-template {
-      height: 210px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-  }
-
-  /* Custom, iPhone 5 Retina */
-  @media only screen and (max-width : 320px) {
-    .grid-space {
-      height: 30px;
-      width: 30px;
-    }
-  }
-
 </style>

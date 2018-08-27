@@ -1,11 +1,10 @@
 <template>
-  <div class="profile-container">
-    <!--<splash-screen v-if="!auth.authenticated"></splash-screen>-->
-    <div class="profile" data-aos="fade-in">
-      <div v-if="auth.authenticated" class="profile-action">
-        <space :permanent-images="permanentImages"></space>
-        <steps :permanent-images="permanentImages"></steps>
-      </div>
+  <div class="container profile">
+    <div class="row" style="height: 80%;">
+      <space :permanent-images="permanentImages"></space>
+      <steps :permanent-images="permanentImages"></steps>
+    </div>
+    <div class="row" style="height: 20%;">
       <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
     </div>
   </div>
@@ -60,32 +59,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .profile-container {
-    background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522347137/misc/profileSpace.png");
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-  }
-
-  .profile-main {
-    height: 100%;
-  }
-
   .profile {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
     height: 100%;
-    overflow: hidden;
-    max-width: 1200px;
-    margin: 0 auto;
   }
-
-  .profile-action {
-    display: flex;
-    flex-grow: 2;
-    justify-content: space-between;
-    align-items: center;
-  }
-
 </style>

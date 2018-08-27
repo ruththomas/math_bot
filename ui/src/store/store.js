@@ -81,9 +81,13 @@ export default new Vuex.Store({
       showing: false,
       videoURL: ''
     },
-    videoTimers: {}
+    videoTimers: {},
+    editFunctionEvent: {}
   },
   mutations: {
+    UPDATE_EDIT_FUNCTION_EVENT (state, evt) {
+      state.editFunctionEvent = evt
+    },
     UPDATE_ACTIVES (state, actives) {
       state.auth.userToken.lambdas.activeFuncs = actives
     },
@@ -122,14 +126,6 @@ export default new Vuex.Store({
     UPDATE_TRASH_VISIBLE (state, bool) {
       state.trashVisible = bool
     },
-    CLEAR_CURRENT_FUNCTION (state) {
-      const currentFunction = state.currentFunction
-      if (currentFunction === 'main') {
-        state.auth.userToken.lambdas.main.func = []
-      } else {
-        state.auth.userToken.lambdas.activeFuncs[currentFunction].func = []
-      }
-    },
     DEACTIVATE_ROBOT (state) {
       state.robotDeactivated = !state.robotDeactivated
     },
@@ -154,25 +150,8 @@ export default new Vuex.Store({
     PUSH_RANDOM_IMAGE (state, image) {
       state.auth.userToken.randomImages.push(image)
     },
-    CHANGE_CURRENT_FUNCTION (state, args) {
-      const type = args[0]
-      const ind = args[1]
-      if (type === 'main') {
-        state.currentFunction = 'main'
-      } else {
-        state.currentFunction = ind
-      }
-    },
     ADD_NEW_FUNCTION (state, func) {
       state.auth.userToken.oldVersion.funcs.push(func)
-    },
-    DELETE_FUNCTION (state, ind, context) {
-      const currentFunction = state.currentFunction
-      if (currentFunction === 'main') {
-        state.auth.userToken.lambdas.main.func.splice(ind, 1)
-      } else {
-        state.auth.userToken.lambdas.activeFuncs[currentFunction].func.splice(ind, 1)
-      }
     },
     PUT_IMAGE_BACK (state, img, context) {
       state.randomImages.unshift(img)
@@ -193,29 +172,6 @@ export default new Vuex.Store({
     },
     CHANGE_FULLSCREEN (state) {
       state.fullscreen = !state.fullscreen
-    },
-    SPLICE_CURRENT (state, args) {
-      const ind = args[0]
-      const copy = args[1]
-      const currentFunc = state.currentFunction
-      const funcToUpdate = currentFunc === 'main' ? state.auth.userToken.lambdas.main.func : state.auth.userToken.lambdas.activeFuncs[currentFunc].func
-      funcToUpdate.splice(ind, 1)
-      funcToUpdate.splice(ind, 0, copy)
-    },
-    PUSH_CURRENT (state, c) {
-      const copy = c
-      const currentFunc = state.currentFunction
-      const funcToUpdate = currentFunc === 'main' ? state.auth.userToken.lambdas.main.func : state.auth.userToken.lambdas.activeFuncs[currentFunc].func
-
-      funcToUpdate.push(copy)
-    },
-    INSERT_CURRENT (state, args) {
-      const ind = args[0]
-      const copy = args[1]
-      const currentFunc = state.currentFunction
-      const funcToUpdate = currentFunc === 'main' ? state.auth.userToken.lambdas.main.func : state.auth.userToken.lambdas.activeFuncs[currentFunc].func
-
-      funcToUpdate[state.currentFunction].splice(ind, 0, copy)
     },
     UPDATE_PROFILE_VIEW (state, loc) {
       state.profileView = loc
@@ -247,6 +203,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateEditFunctionEvent ({commit}, evt) {
+      commit('UPDATE_EDIT_FUNCTION_EVENT', evt)
+    },
     updateActives ({commit}, actives) {
       commit('UPDATE_ACTIVES', actives)
     },
@@ -283,9 +242,6 @@ export default new Vuex.Store({
     updateStats ({commit}, stats) {
       commit('UPDATE_STATS', stats)
     },
-    clearCurrentFunction ({commit}) {
-      commit('CLEAR_CURRENT_FUNCTION')
-    },
     deactivateRobot ({commit}) {
       commit('DEACTIVATE_ROBOT')
     },
@@ -304,14 +260,8 @@ export default new Vuex.Store({
     addFunctions ({commit}) {
       commit('ADD_FUNCTIONS')
     },
-    changeCurrentFunction ({commit}, args) {
-      commit('CHANGE_CURRENT_FUNCTION', args)
-    },
     addNewFunction ({commit}, func) {
       commit('ADD_NEW_FUNCTION', func)
-    },
-    deleteFunction ({commit}, ind) {
-      commit('DELETE_FUNCTION', ind)
     },
     putImageBack ({commit}, img) {
       commit('PUT_IMAGE_BACK', img)
@@ -336,15 +286,6 @@ export default new Vuex.Store({
     },
     createLock ({commit}) {
       commit('CREATE_LOCK')
-    },
-    spliceCurrent ({commit}, args) {
-      commit('SPLICE_CURRENT', args)
-    },
-    pushCurrent ({commit}, copy) {
-      commit('PUSH_CURRENT', copy)
-    },
-    insertCurrent ({commit}, args) {
-      commit('INSERT_CURRENT', args)
     },
     updateProfileView ({commit}, loc) {
       commit('UPDATE_PROFILE_VIEW', loc)
@@ -378,6 +319,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getEditFunctionEvent: state => state.editFunctionEvent,
     getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,
     getCurrentUser: state => state.currentUser,

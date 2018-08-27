@@ -1,17 +1,20 @@
 <template>
-  <div class="edit-main">
-
+  <div v-if="!congratsShowing && !tryAgainShowing" class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
     <function-drop
+      :id="'edit-main'"
+      :class="'edit-main-drop'"
       :list="mainFunctionFunc"
       :options="mainDraggableOptions"
-      :change="copyCommand"
+      :change="editFunction"
+      :add="add"
       :start="moving"
       :end="end"
       :origin="'editMain'"
+      :size-limit="stepData.mainMax"
     ></function-drop>
 
     <div class="bar noDrag" v-if="Object.keys(robot).length">
-      <main-placeholder></main-placeholder>
+      <!--<main-placeholder></main-placeholder>-->
       <img class="trash noDrag dialog-button" :src="permanentImages.buttons.trashButton"  @click="wipeFunction" data-toggle="tooltip" title="Clear main" />
       <div class="speed dialog-button" @click="adjustSpeed" data-toggle="tooltip" title="Adjust speed"> {{ robotSpeedDisplay }}</div>
 
@@ -42,7 +45,7 @@
 <script>
 import {_} from 'underscore'
 import utils from '../services/utils'
-import buildUtils from '../services/build_function_utils'
+import buildUtils from '../services/BuildFunction'
 import draggable from 'vuedraggable'
 import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
@@ -54,6 +57,12 @@ export default {
     mainFunctionFunc () {
       const mainToken = this.$store.getters.getMainFunction
       return mainToken === null ? [] : mainToken.func
+    },
+    congratsShowing () {
+      return this.$store.getters.getCongratsShowing
+    },
+    tryAgainShowing () {
+      return this.$store.getters.getTryAgainShowing
     },
     showMesh () {
       return this.$store.getters.getShowMesh
@@ -109,11 +118,11 @@ export default {
           put: true
         },
         animation: 100,
-        scrollSensitivity: 500,
         ghostClass: 'ghost',
         chosenClass: 'chosen',
         filter: '.noDrag',
-        dragClass: 'dragging'
+        dragClass: 'dragging',
+        sort: true
       },
       runCompiled: new RunCompiled(this)
     }
@@ -122,15 +131,20 @@ export default {
     closeHint () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
     },
+    fullMessage () {
+      const messageBuilder = {
+        type: 'success',
+        msg: `Main full`
+      }
+      this.$store.dispatch('addMessage', messageBuilder)
+    },
     togglePut (bool) {
       this.mainDraggableOptions.group.put = bool
+      if (!bool) this.fullMessage()
     },
-    copyCommand (evt) {
+    editFunction (evt) {
       if (!evt.hasOwnProperty('removed')) {
-        const command = evt.hasOwnProperty('added') ? evt.added.element : evt.moved.element
-        const ind = evt.hasOwnProperty('added') ? evt.added.newIndex : evt.moved.newIndex
-        const currentFunc = buildUtils.currentFunc(this)
-        buildUtils.updateFunctionsOnChange({context: this, currentFunction: currentFunc, addedFunction: command, newIndex: ind, override: evt.hasOwnProperty('moved')})
+        buildUtils.addToFunction()
       }
       this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
     },
@@ -140,19 +154,24 @@ export default {
       }
     },
     wipeFunction () {
-      this.$store.dispatch('clearCurrentFunction')
-      buildUtils.updateFunctionsOnChange({context: this, currentFunction: buildUtils.currentFunc(this), addedFunction: null, newIndex: null, override: true})
+      buildUtils.deleteFunction({context: this})
+      this.togglePut(true)
     },
     adjustSpeed () {
       this.$store.dispatch('changeRobotSpeed')
     },
+    add () {
+      buildUtils._positionBar()
+    },
     moving () {
       this.$store.dispatch('updateTrashVisible', true)
       this.$store.dispatch('toggleShowMesh', true)
+      buildUtils._positionBar()
     },
     end () {
       this.$store.dispatch('toggleShowMesh', false)
       this.$store.dispatch('updateTrashVisible', false)
+      buildUtils._positionBar()
     }
   },
   components: {
@@ -165,34 +184,33 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $edit-main-side-padding: 16%;
+  $edit-main-top-bottom-padding: 0;
+  $bar-height: 1px;
+
   .edit-main {
-    z-index: 1000!important;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    overflow: visible;
-    width: 100%;
-    height: 120px;
-    /*border: 1px solid goldenrod;*/
+    width: 90%;
+    margin: 0 auto;
+    height: 100%;
+    padding: $edit-main-top-bottom-padding $edit-main-side-padding $edit-main-top-bottom-padding $edit-main-side-padding;
   }
 
-  .edit-main .function-drop {
-    width: 65%!important;
-    /*border: 1px solid teal;*/
+  .deactivate-edit-main {
+    opacity: 0;
   }
 
   .bar {
     position: absolute;
-    left: 48px;
-    right: 48px;
-    top: 39.5%;
-    height: 2px;
+    left: 0;
+    right: 0;
+    top: calc(50%);
+    height: $bar-height;
     background-color: #B8E986;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: -1;
   }
 
   .red-bar {
@@ -204,7 +222,6 @@ export default {
     display: flex;
     cursor: pointer;
     position: absolute;
-    top: -20px;
     float: right;
   }
 
@@ -218,7 +235,7 @@ export default {
   }
 
   .stop {
-    right: -58px;
+    right: 12vmin;
   }
 
   .trash {
@@ -226,171 +243,18 @@ export default {
   }
 
   .speed {
-    right: 60px;
+    right: 6vmin;
     background-color: #B8E986;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: black;
-    font-size: 22px;
+    font-size: 2vmin;
     font-weight: 500;
   }
 
   .x {
     float: left;
   }
-
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    .edit-main {
-      padding: 0;
-      height: 55px;
-    }
-
-    .function-drop {
-      height: 60px;
-      width: 75%;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .bar {
-      top: 30%;
-      left: -10px;
-      right: -10px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      display: none;
-    }
-
-    .speed {
-      right: 24px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-
-    .edit-main {
-      padding: 0;
-      align-items: center;
-      height: 60px;
-    }
-
-    .function-drop {
-      height: 60px;
-      width: 75%;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .bar {
-      top: 30%;
-      left: -10px;
-      right: -10px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      display: none;
-    }
-
-    .speed {
-      right: 24px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-
-    .edit-main .function-drop {
-      width: 70%!important;
-    }
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .edit-main {
-      height: 105px;
-    }
-
-    .dialog-button {
-      top: -15px;
-    }
-
-    .bar {
-      top: 39%;
-      left: -10px;
-      right: -10px;
-    }
-
-    .stop {
-      display: none;
-    }
-
-    .speed {
-      right: 35px;
-      font-size: 12px;
-    }
-  }
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .edit-main {
-      padding: 0;
-    }
-
-    .function-drop {
-      height: 60px;
-      width: 75%;
-    }
-
-    .dialog-button {
-      top: -15px;
-    }
-
-    .stop {
-      display: none;
-    }
-
-    .speed {
-      right: 35px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
 </style>

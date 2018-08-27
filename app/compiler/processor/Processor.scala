@@ -2,10 +2,11 @@ package compiler.processor
 
 import compiler.operations.{ ChangeRobotDirection, MoveRobotForwardOneSpot, _ }
 import compiler.{ Grid, GridAndProgram }
+import configuration.CompilerConfiguration
 
 import scala.annotation.tailrec
 
-class Processor(val initialGridAndProgram: GridAndProgram) {
+class Processor(val initialGridAndProgram: GridAndProgram, config : CompilerConfiguration) {
 
   private class ProcessorState(
       var currentRegister: Register,
@@ -14,47 +15,52 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
 
   def execute(): Stream[Frame] = {
     val state = new ProcessorState(Register(), initialGridAndProgram.grid)
-    execute(state, Some(initialGridAndProgram.program), Stream.empty[Operation])
+    execute(state, Some(initialGridAndProgram.program), Stream.empty[Operation], 0)
   }
 
   private def passColorCheck(operation: Operation, state: ProcessorState): Boolean = true
 
   @tailrec
-  private def execute(state: ProcessorState, maybeOperation: Option[Operation], post: Seq[Operation]): Stream[Frame] = {
-    maybeOperation match {
-      case Some(operation) if passColorCheck(operation, state) =>
-        operation match {
-          case Program(operations) =>
-            // Execute the main program.
-            // Note: smh69 observed Program and UserFunction are practically the same, and they are.
-            // This is more than likely temporary, but for now its because the UI treats them differently
-            // because they display differently.
-            execute(state, operations.headOption, operations.tail ++: post)
-          case UserFunction(operations) =>
-            if (operations.length == 1 && operations.head.isInstanceOf[UserFunction])
+  private def execute(state: ProcessorState, maybeOperation: Option[Operation], post: Seq[Operation], emptyLoopCount : Int): Stream[Frame] = {
+    if (emptyLoopCount > config.maxEmptyLoopCount) {
+      Stream.empty[Frame] // End of program
+    } else {
+
+      maybeOperation match {
+        case Some(operation) if passColorCheck(operation, state) =>
+          operation match {
+            case Program(operations) =>
+              // Execute the main program.
+              // Note: smh69 observed Program and UserFunction are practically the same, and they are.
+              // This is more than likely temporary, but for now its because the UI treats them differently
+              // because they display differently.
+              execute(state, operations.headOption, operations.tail ++: post, 0)
+            case UserFunction(operations) =>
+              if (operations.length == 1 && operations.head.isInstanceOf[UserFunction])
               // Skip functions that only call another function to avoid non-existing function call loop (not best solution)
-              execute(state, post.headOption, post.drop(1))
-            else
+                execute(state, post.headOption, post.drop(1), emptyLoopCount + 1)
+              else
               // Insert the function into the operations stream
-              execute(state, operations.headOption, operations.tail ++: post)
-          case IfColor(color, conditionalOperation) =>
-            state.currentRegister.peek() match {
-              case Some(element) if element.color == color =>
-                execute(state, Some(conditionalOperation), post )
-              case Some(_) if color == "grey" =>
-                execute(state, Some(conditionalOperation), post )
-              case _ =>
-                execute(state, post.headOption, post.drop(1)) // Skip the operation inside the if
-            }
-          case _ =>
-            // Execute the operation
-            executeHelp(state, process(state, operation), post.headOption, post.drop(1))
-        }
-      case _ =>
-        if (post.isEmpty)
-          Stream.empty[Frame] // End of program
-        else
-          execute(state, post.headOption, post.drop(1)) // Skip the current operation
+                execute(state, operations.headOption, operations.tail ++: post, emptyLoopCount + 1)
+            case IfColor(color, conditionalOperation) =>
+              state.currentRegister.peek() match {
+                case Some(element) if element.color == color =>
+                  execute(state, Some(conditionalOperation), post, emptyLoopCount + 1)
+                case Some(_) if color == "grey" =>
+                  execute(state, Some(conditionalOperation), post, emptyLoopCount + 1)
+                case _ =>
+                  execute(state, post.headOption, post.drop(1), emptyLoopCount + 1) // Skip the operation inside the if
+              }
+            case _ =>
+              // Execute the operation
+              executeHelp(state, process(state, operation), post.headOption, post.drop(1))
+          }
+        case _ =>
+          if (post.isEmpty)
+            Stream.empty[Frame] // End of program
+          else
+            execute(state, post.headOption, post.drop(1), emptyLoopCount + 1) // Skip the current operation
+      }
     }
   }
 
@@ -62,7 +68,7 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
                           executed: Frame,
                           maybeOperation: Option[Operation],
                           post: Seq[Operation]): Stream[Frame] = {
-    executed #:: execute(state, maybeOperation, post)
+    executed #:: execute(state, maybeOperation, post, 0)
   }
 
   private def process(state: ProcessorState, operation: Operation): Frame = operation match {
@@ -114,5 +120,5 @@ class Processor(val initialGridAndProgram: GridAndProgram) {
 }
 
 object Processor {
-  def apply(initialGridAndProgram: GridAndProgram): Processor = new Processor(initialGridAndProgram)
+  def apply(initialGridAndProgram: GridAndProgram, config: CompilerConfiguration): Processor = new Processor(initialGridAndProgram, config)
 }
