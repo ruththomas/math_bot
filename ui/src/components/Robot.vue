@@ -161,6 +161,7 @@ export default {
 
     .container {
       .box {
+        background: transparent;
         position: relative;
         height: $box-height;
         max-width: 100vw;
