@@ -105,7 +105,7 @@ export default {
       right: 0;
     }
   }
-  
+
   @media only screen and (max-width: 567px) {
     .return-to-profile {
       left: auto;
