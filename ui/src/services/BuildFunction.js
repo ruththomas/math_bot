@@ -107,5 +107,5 @@ class BuildFunction {
 }
 
 const buildUtils = new BuildFunction()
-$(window).on('resize', buildUtils._positionBar.bind(buildUtils))
+// $(window).on('resize', buildUtils._positionBar.bind(buildUtils))
 export default buildUtils

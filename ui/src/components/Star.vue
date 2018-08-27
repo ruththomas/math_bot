@@ -7,8 +7,8 @@
         <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-399.000000, -262.000000)">
           <g id="stars-5" transform="translate(386.000000, 269.000000)">
             <g id="Start-Large">
-              <!-- inactive fill edges only -->
-              <use v-if="success" fill="#F8E71C" fill-rule="evenodd" xlink:href="#path-1"></use>
+              <!-- active star -->
+              <path v-if="success" fill="#F8E71C" stroke-width="4" d="M80.4362505,70.5136657 L76.3410146,46.6366086 L93.6887121,29.7267828 L69.7147838,26.2431671 L58.9933172,4.51910292 L48.2718505,26.2431671 L24.2979223,29.7267828 L41.6456197,46.6366086 L37.5503839,70.5136657 L58.9933172,59.2404485 L80.4362505,70.5136657 Z"></path>
               <!-- inactive star -->
               <path stroke="#F8E71C" stroke-width="4" d="M80.4362505,70.5136657 L76.3410146,46.6366086 L93.6887121,29.7267828 L69.7147838,26.2431671 L58.9933172,4.51910292 L48.2718505,26.2431671 L24.2979223,29.7267828 L41.6456197,46.6366086 L37.5503839,70.5136657 L58.9933172,59.2404485 L80.4362505,70.5136657 Z"></path>
               <!--border -->

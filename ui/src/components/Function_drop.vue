@@ -138,8 +138,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $drop-zone-padding-right: 30px;
   $danger-color: #F25C5C;
+  $piece-height: 7.5vmin;
 
   .function-drop {
     overflow: auto;
@@ -151,11 +151,14 @@ export default {
       position: relative;
       width: min-content;
       min-width: 100%;
-      height: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      padding-right: $drop-zone-padding-right;
+      height: 100%;
+    }
+
+    .editMain-drop-zone {
+      justify-content: center;
     }
   }
 
@@ -182,83 +185,16 @@ export default {
 
   .placeholder-piece {
     opacity: 0.4;
-  }
-
-  .center-function-drop {
-    justify-content: center!important;
-    padding: 0!important;
+    border: 1px solid white;
+    border-radius: 5px;
+    svg {
+      display: none;
+    }
   }
 
   .piece-shake {
     animation: shake 0.8s;
     animation-iteration-count: infinite;
     box-shadow: 0 0 0 2px rgba(242, 92, 92, 0.9);
-  }
-
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-  }
-
-  /* ipad pro Landscape */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: landscape)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-
-  }
-
-  @media only screen and (max-width: 823px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
-  }
-
-  @media only screen and (max-width: 736px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 667px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 568px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 320px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
   }
 </style>
