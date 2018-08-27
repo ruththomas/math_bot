@@ -156,6 +156,10 @@ export default {
       align-items: center;
       height: 100%;
     }
+
+    .editMain-drop-zone {
+      justify-content: center;
+    }
   }
 
   .hide-piece {
@@ -186,11 +190,6 @@ export default {
     svg {
       display: none;
     }
-  }
-
-  .center-function-drop {
-    justify-content: center!important;
-    padding: 0!important;
   }
 
   .piece-shake {
