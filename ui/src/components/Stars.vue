@@ -71,7 +71,7 @@ $stars-shadow: inset 0 0 100px #778899;
 $star-congrats-star-size: 70px;
 $star-timer-right: 100%;
 $star-timer-bottom: -102%;
-$star-timer-font-size: 0.75em;
+$star-timer-font-size: 1.5vmin;
 $star-timer-margin-right: 5px;
 
 .stars {
