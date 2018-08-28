@@ -5,8 +5,12 @@
          :src="permanentImages.returnToProfile"
          data-toggle="tooltip" title="Return to profile"
     />
+    <div class="col" style="padding: 0;">
       <img :src="permanentImages.instructionsRobot" class="instructions-robot">
+    </div>
+    <div class="col" style="padding: 0;">
       <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
+    </div>
   </div>
 </template>
 
