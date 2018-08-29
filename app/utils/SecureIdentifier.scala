@@ -12,6 +12,8 @@ import spray.json.JsonFormat
 class SecureIdentifier private (aId : Seq[Byte]) {
   private val id : Seq[Byte] = aId
 
+  def toByteArray : Array[Byte] = id.toArray
+
   override def toString : String = SecureIdentifier.encoder.encodeToString(id.to[Array])
 
   override def equals(obj : scala.Any) : Boolean = super.equals(obj) || (obj match {

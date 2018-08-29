@@ -8,29 +8,31 @@ import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
 import com.google.inject.name.Named
-import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, MathbotAuthConfig}
-import daos.{SessionCache, SessionDAO}
+import configuration.{ ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig }
+import daos.{ LocalCredentialDao, SessionCache, SessionDAO }
 import javax.inject.Inject
 import loggers.SemanticLog
-import models.JwtToken
-import play.api.libs.json.{JsString, Json}
-import play.api.mvc.{Action, AnyContent, Controller}
-import utils.{JwtTokenParser, SecureIdentifier}
+import models.{ JwtToken, LocalCredential, UsernameAndPassword }
+import play.api.libs.json.{ JsString, Json }
+import play.api.mvc.{ Action, AnyContent, Controller }
+import utils.{ JwtTokenParser, SecureIdentifier }
+import org.bouncycastle.crypto.generators.SCrypt
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
 class AuthController @Inject()(
-    val sessionDAO: SessionDAO,
-    val sessionCache: SessionCache,
-    @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
-    @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
-    val jwtParser: JwtTokenParser,
-    val googleConfig: GoogleApiConfig,
-    val githubConfig: GithubApiConfig,
-    val actorConfig: ActorConfig,
-    val mathbotConfig: MathbotAuthConfig,
-    val logger: SemanticLog
+                                val sessionDAO: SessionDAO,
+                                val sessionCache: SessionCache,
+                                val localCredential : LocalCredentialDao,
+                                @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
+                                @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
+                                val jwtParser: JwtTokenParser,
+                                val googleConfig: GoogleApiConfig,
+                                val githubConfig: GithubApiConfig,
+                                val actorConfig: ActorConfig,
+                                val mathbotConfig: LocalAuthConfig,
+                                val logger: SemanticLog
 )(implicit ec: ExecutionContext)
     extends Controller {
 
@@ -98,10 +100,12 @@ class AuthController @Inject()(
 
   private implicit val timeout: Timeout = actorConfig.timeout
 
+  private val scryptIteration = Math.pow(2, mathbotConfig.scryptIterationExponent.toDouble).toInt
+
   import actors.messages.auth.AuthFormatters._
 
   def requestSession(): Action[AnyContent] = Action.async { implicit request =>
-    val sid = SecureIdentifier(32)
+    val sid = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
     sessionCache.put(sid, None)
 
     Future { Ok(Json.toJson(generateNeedsAuthorization(sid))) }
@@ -221,7 +225,43 @@ class AuthController @Inject()(
   }
 
   def signupMathbot() : Action[AnyContent] = Action.async { implicit request =>
-    FastFuture.successful(Ok("TBD"))
+    val credentialOpt = for {
+      json <- request.body.asJson
+      signup <- json.validate[UsernameAndPassword].asOpt
+    } yield signup
+
+    credentialOpt match {
+      case Some(credential) =>
+        localCredential.find(credential.username) flatMap  {
+          case Some(_) =>
+            FastFuture.successful(Unauthorized("Username already exists"))
+          case None =>
+            val password = credential.password.getBytes
+            val salt = SecureIdentifier(mathbotConfig.saltByteWidth).toByteArray
+            val hash = SCrypt.generate(password, salt, scryptIteration, mathbotConfig.scryptBlockSize, 1, mathbotConfig.hashByteSize)
+            val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
+            val lc = LocalCredential(accountId, None, credential.username, salt, hash, scryptIteration, mathbotConfig.scryptBlockSize)
+            val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
+
+
+            localCredential.insertOrUpdate(accountId, lc) map {
+              _ =>
+                val jwt = JwtToken(
+                  iss = "https://mathbot.com",
+                  sub = lc.accountId.toString,
+                  email = lc.username,
+                  name = lc.username,
+                  picture = ""
+                )
+                sessionCache.put(sessionId, Some(jwt))
+                Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+            }
+
+        }
+      case None =>
+        FastFuture.successful(BadRequest("Malformed Json"))
+    }
+
   }
 
   def authMathbot() : Action[AnyContent] = Action.async { implicit request =>
