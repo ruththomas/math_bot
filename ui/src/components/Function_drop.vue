@@ -119,9 +119,9 @@ export default {
         $dropped.find('.piece').addClass('dropped-indicator')
 
         if ((childrenWidthSum * 2) > dropWidth) {
-          $dropZone.css({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`})
+          $dropZone.animate({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`}, 200)
         } else {
-          $dropZone.css({'padding-right': 0})
+          $dropZone.animate({'padding-right': 0}, 200)
         }
 
         $functionDrop.animate({
