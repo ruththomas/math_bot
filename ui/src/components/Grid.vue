@@ -192,11 +192,13 @@ export default {
   $grid-border-radius: 4px;
   $grid-background: rgba(0, 0, 0, 0.6);
   $display-tool-size: 2vmin;
+  $popover-btn-size: 2vmin;
 
   .grid {
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: #ffffff;
 
     .grid-map {
       position: relative;
@@ -311,5 +313,17 @@ export default {
   .robot-shake {
     animation: shake 0.5s;
     animation-iteration-count: infinite;
+  }
+
+  .close-popover {
+    float: right;
+    display: flex;
+    position: absolute;
+    height: $popover-btn-size;
+    width: auto;
+    bottom: calc(100% - #{$popover-btn-size} / 2);
+    right:  calc(#{-$popover-btn-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
   }
 </style>

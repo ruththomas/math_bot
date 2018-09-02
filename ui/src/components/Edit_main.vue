@@ -14,7 +14,6 @@
     ></function-drop>
 
     <div class="bar noDrag" v-if="Object.keys(robot).length">
-      <!--<main-placeholder></main-placeholder>-->
       <img class="trash noDrag dialog-button" :src="permanentImages.buttons.trashButton"  @click="wipeFunction" data-toggle="tooltip" title="Clear main" />
       <div class="speed dialog-button" @click="adjustSpeed" data-toggle="tooltip" title="Adjust speed"> {{ robotSpeedDisplay }}</div>
 
@@ -50,7 +49,6 @@ import draggable from 'vuedraggable'
 import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
-import MainPlaceholder from './Main_placeholder'
 
 export default {
   computed: {
@@ -177,8 +175,7 @@ export default {
   components: {
     draggable,
     FunctionBox,
-    FunctionDrop,
-    MainPlaceholder
+    FunctionDrop
   }
 }
 </script>
@@ -190,10 +187,11 @@ export default {
 
   .edit-main {
     position: relative;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     height: 100%;
     padding: $edit-main-top-bottom-padding $edit-main-side-padding $edit-main-top-bottom-padding $edit-main-side-padding;
+    z-index: 1000;
   }
 
   .deactivate-edit-main {
@@ -235,7 +233,7 @@ export default {
   }
 
   .stop {
-    right: 12vmin;
+    right: 10vmin;
   }
 
   .trash {
@@ -243,7 +241,7 @@ export default {
   }
 
   .speed {
-    right: 6vmin;
+    right: 5vmin;
     background-color: #B8E986;
     border-radius: 50%;
     display: flex;
