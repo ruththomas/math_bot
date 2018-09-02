@@ -3,7 +3,6 @@
     <div class="staged-functions-header">
       <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
     </div>
-
     <div class="staged-functions-content">
       <draggable
         class="staged-functions"
@@ -80,6 +79,8 @@ export default {
 <style scoped lang="scss">
   $staged-functions-padding: 32px;
   $piece-height: 7.5vmin;
+  $dialog-button-size: 3.5vmin;
+  $piece-height: 7.5vmin;
 
   .staged-functions-container {
     position: relative;
@@ -87,7 +88,7 @@ export default {
     flex-direction: column;
     justify-content: space-around;
     width: 100%;
-    height: 100%;
+    height: calc(#{$piece-height} * 2.2);
   }
 
   .staged-functions-header {
@@ -111,7 +112,6 @@ export default {
     .staged-functions {
       min-width: min-content;
       display: flex;
-      height: calc(#{$piece-height} + 5vmin);
       align-items: center;
       justify-content: flex-start;
       margin: 0 auto;
@@ -119,8 +119,12 @@ export default {
   }
 
   .close-popover {
+    float: right;
+    display: flex;
     position: absolute;
-    right: -20px;
-    top: -20px;
+    bottom: calc(#{$dialog-button-size} / 2);
+    right:  calc(#{-$dialog-button-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
   }
 </style>

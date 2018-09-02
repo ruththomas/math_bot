@@ -14,7 +14,10 @@
           @click="applyColorConditional"
         >
         </div>
-        <input v-default-value="editingFunction.name" class="func-name"  autofocus type="text" maxlength="57" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
+
+        <div class="func-name">
+          <input v-default-value="editingFunction.name" autofocus type="text" maxlength="57" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
+        </div>
 
         <img
           v-if="editingFunction.func.length"
@@ -67,9 +70,11 @@ import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
 import PuzzlePieces from './Puzzle_pieces'
+import ScrollBar from 'vue-perfect-scrollbar'
 
 export default {
   mounted () {
+    this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
   },
   computed: {
     stats () {
@@ -214,7 +219,7 @@ export default {
           added: evt.hasOwnProperty('added') ? evt.added : evt.moved
         })
       }
-      if (this.editFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
+      if (this.editingFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
         this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
       }
     },
@@ -239,7 +244,8 @@ export default {
     draggable,
     FunctionBox,
     FunctionDrop,
-    PuzzlePieces
+    PuzzlePieces,
+    ScrollBar
   }
 }
 </script>
@@ -298,26 +304,30 @@ export default {
     width: 90%;
 
     .function-control {
-      height: 1em;
-      width: 1em;
+      height: 1.3em;
+      width: 1.3em;
       border-radius: 0.5vmin;
       margin-right: 10px;
       cursor: pointer;
     }
 
     .func-name {
-      color: white;
-      border-color: #979797;
       background-color: transparent !important;
       border-left: none !important;
       border-right: none !important;
       border-top: none !important;
-      border-bottom: 1px solid #979797;
-      height: 1em;
+      border: 1px solid #979797;
+      border-radius: 0;
       width: 50%;
-      line-height: 1.5em;
-      font-weight: 300;
-      outline: none;
+      height: 3vmin;
+
+      input {
+        width: 100%;
+        background: transparent;
+        color: white;
+        border: none;
+        vertical-align: bottom;
+      }
     }
 
     .piece {
@@ -335,5 +345,15 @@ export default {
 
   .function-drop-drop-zone {
     margin: 0;
+  }
+
+  .close-popover {
+    float: right;
+    display: flex;
+    position: absolute;
+    bottom: calc(100% - #{$dialog-button-size} / 2);
+    right:  calc(#{-$dialog-button-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
   }
 </style>
