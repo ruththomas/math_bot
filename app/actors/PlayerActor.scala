@@ -354,10 +354,10 @@ class PlayerActor()(system: ActorSystem,
 
         val updatedPlayerToken = {
 
-          val funcTokenLengthInBounds = funcType == "function" && funcToken.func.get.length < makeQtyUnlimited(
+          val funcTokenLengthInBounds = funcType == "function" && funcToken.func.get.length <= makeQtyUnlimited(
             funcToken.sizeLimit.getOrElse(-1)
           )
-          val mainFuncLengthInBounds = funcType == "main-function" && mainFunc.length < makeQtyUnlimited(
+          val mainFuncLengthInBounds = funcType == "main-function" && mainFunc.length <= makeQtyUnlimited(
             rawStepData.mainMax
           )
 
