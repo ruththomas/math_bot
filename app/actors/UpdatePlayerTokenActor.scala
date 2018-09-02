@@ -28,6 +28,8 @@ object UpdatePlayerTokenActor {
 
   final case class EnsureCorrectCreatedId(playerToken: PlayerToken)
 
+  final case class AdjustFunctionLimits(playerToken: PlayerToken)
+
   def dedup(lambdas: Lambdas): Lambdas = {
     def dedupList(funcList: List[FuncToken]): List[FuncToken] = funcList match {
       case Nil => Nil
@@ -142,7 +144,25 @@ class UpdatePlayerTokenActor()(system: ActorSystem, logger: MathBotLogger, envir
                 }
               })))
           }
-        }.map { PolyfillsApplied }.pipeTo(self)(sender)
+        }.map { AdjustFunctionLimits.apply }.pipeTo(self)(sender)
+    case AdjustFunctionLimits(playerToken) => // for adjusting size limits on generated functions
+      val onesToAdjust: Map[String, Int] = Map(
+        "59033416266" -> 30
+      )
+      Future {
+        val lambdas = playerToken.lambdas.getOrElse(Lambdas())
+        val updatedLambdas = lambdas.copy(
+          inactiveActives = Some(lambdas.inactiveActives.getOrElse(List.empty[FuncToken]).map {
+            case ft if onesToAdjust isDefinedAt ft.created_id => ft.copy(sizeLimit = Some(onesToAdjust(ft.created_id)))
+            case ft => ft
+          }),
+          activeFuncs = lambdas.activeFuncs.map {
+            case ft if onesToAdjust isDefinedAt ft.created_id => ft.copy(sizeLimit = Some(onesToAdjust(ft.created_id)))
+            case ft => ft
+          }
+        )
+        playerToken.copy(lambdas = Some(updatedLambdas))
+      }.map { PolyfillsApplied.apply }.pipeTo(self)(sender)
     case PolyfillsApplied(playerToken) =>
       sender ! UpdatePlayerToken(playerToken)
   }

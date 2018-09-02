@@ -327,6 +327,7 @@ export default {
         color: white;
         border: none;
         vertical-align: bottom;
+        outline: none;
       }
     }
 
