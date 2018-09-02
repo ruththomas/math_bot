@@ -65,7 +65,7 @@ class BuildFunction {
       const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
       const barOffsetTop = $bar.offset().top
       const barPosTop = $bar.position().top
-      $bar.animate({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'}, 100)
+      $bar.css({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'})
     }
   }
 
@@ -107,5 +107,5 @@ class BuildFunction {
 }
 
 const buildUtils = new BuildFunction()
-// $(window).on('resize', buildUtils._positionBar.bind(buildUtils))
+$(window).on('resize', buildUtils._positionBar.bind(buildUtils))
 export default buildUtils

@@ -116,6 +116,8 @@ export default {
 <style scoped lang="scss">
   $piece-margin: 0.5vmin;
   $piece-height: 7.5vmin;
+  $click-color: #B8E986;
+  $danger-color: #F25C5C;
 
   .piece {
     position: relative;

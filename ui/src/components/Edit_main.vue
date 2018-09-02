@@ -51,6 +51,9 @@ import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 
 export default {
+  mounted () {
+    this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
+  },
   computed: {
     mainFunctionFunc () {
       const mainToken = this.$store.getters.getMainFunction

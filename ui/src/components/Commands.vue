@@ -279,8 +279,10 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     margin-right: 7%;
+    position: relative;
 
     .functions {
+      position: relative;
       display: flex;
       height: min-content;
       border: 1px solid transparent;
