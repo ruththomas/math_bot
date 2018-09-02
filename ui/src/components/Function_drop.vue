@@ -31,6 +31,7 @@
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import _ from 'underscore'
+import ScrollBar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'function_drop',
@@ -110,12 +111,12 @@ export default {
         dropZoneChildren.each(function () {
           const $ele = $(this)
           childrenWidthSum += $ele.outerWidth()
-          $ele.removeClass('dropped-indication')
-          $ele.find('.tab-insert').removeClass('dropped-indication')
+          $ele.removeClass('dropped-indicator')
+          $ele.find('.piece').removeClass('dropped-indicator')
         })
 
-        $dropped.addClass('dropped-indication')
-        $dropped.find('.tab-insert').addClass('dropped-indication')
+        $dropped.addClass('dropped-indicator')
+        $dropped.find('.piece').addClass('dropped-indicator')
 
         if ((childrenWidthSum * 2) > dropWidth) {
           $dropZone.css({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`})
@@ -131,13 +132,15 @@ export default {
   },
   components: {
     draggable,
-    FunctionBox
+    FunctionBox,
+    ScrollBar
   },
   props: ['id', 'className', 'origin', 'list', 'options', 'add', 'change', 'start', 'end', 'groupSize', 'sizeLimit']
 }
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
   $danger-color: #F25C5C;
   $piece-height: 7.5vmin;
 
@@ -147,6 +150,7 @@ export default {
     height: 100%;
     width: 100%;
     z-index: 999;
+    margin: 0;
     .function-drop-drop-zone {
       position: relative;
       width: min-content;
@@ -183,18 +187,26 @@ export default {
     );
   }
 
-  .placeholder-piece {
-    opacity: 0.4;
-    border: 1px solid white;
-    border-radius: 5px;
-    svg {
-      display: none;
-    }
-  }
-
   .piece-shake {
     animation: shake 0.8s;
     animation-iteration-count: infinite;
-    box-shadow: 0 0 0 2px rgba(242, 92, 92, 0.9);
+  }
+
+  .dropped-indicator {
+    position: relative;
+
+    &::before {
+      content: url("../assets/next-arrow.svg");
+      height: 2vmin;
+      width: 2vmin;
+      position: absolute;
+      transform: rotate(90deg);
+      top: -2vmin;
+      left: 50%;
+    }
+  }
+
+  .full-indicator {
+    box-shadow: 0.5vmin 0 0 0 $danger-color;
   }
 </style>

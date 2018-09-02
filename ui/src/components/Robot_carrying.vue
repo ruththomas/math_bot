@@ -83,6 +83,7 @@ export default {
 <style scoped lang="scss">
   $carrying-size: 2vmin;
   $click-color: #B8E986;
+  $popover-btn-size: 2vmin;
 
   .robot-carrying {
     position: absolute;
@@ -122,5 +123,17 @@ export default {
     color: #ffffff;
     cursor: pointer;
     display: block;
+  }
+
+  .close-popover {
+    float: right;
+    display: flex;
+    position: absolute;
+    height: $popover-btn-size;
+    width: auto;
+    bottom: calc(100% - #{$popover-btn-size} / 2);
+    right:  calc(#{-$popover-btn-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
   }
 </style>

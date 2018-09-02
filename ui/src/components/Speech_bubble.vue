@@ -19,10 +19,11 @@
           </g>
         </g>
       </g>
-    </svg>
-    <div class="card">
-      <div class="card-body">
-        <div @click="videoHint.getHint()" xmlns="http://www.w3.org/1999/xhtml" class="bubble-text" v-html="needHelpAdded"></div>
+      <text class="bubble-text" x="30" y="30">
+        <tspan x="35" dy="1.2em">Click on the stars to get video hints.</tspan>
+        <tspan x="35" dy="1.2em">Some levels can't be beat without hints.</tspan>
+      </text>
+      <foreignObject x="470" y="40" width="130">
         <div
           class="btn button-effect help-button bubble-stars"
           @click="videoHint.getHint()"
@@ -33,8 +34,8 @@
             :step="step"
             :step-stats="stepStats"></stars>
         </div>
-      </div>
-    </div>
+      </foreignObject>
+    </svg>
   </div>
 </template>
 
@@ -80,36 +81,22 @@ export default {
 <style scoped lang="scss">
   $click-color: #B8E986;
   $speech-bubble-width: 60vmin;
+  $speech-text-size: 1.5rem;
 
   .speech-bubble {
     width: $speech-bubble-width;
     height: auto;
     position: relative;
 
-    .card {
-      position: absolute;
-      top: 1vmin;
-      right: 1vmin;
-      bottom: 2vmin;
-      left: 2.5vmin;
-      background: transparent;
-      border-color: transparent;
-      .card-body {
-        display: flex;
-        align-items: center;
-        padding: 1em;
-      }
+    .help-button {
+      padding: 1vmin;
     }
   }
-</style>
-<style lang="scss">
-  $bubble-font-size: 2vmin;
-
   .bubble-text {
     color: #000000;
     height: 100%;
     text-align: left;
-    font-size: $bubble-font-size;
-    line-height: calc(#{$bubble-font-size} + 30%);
+    font-size: $speech-text-size;
+    line-height: calc(#{$speech-text-size} + 30%);
   }
 </style>

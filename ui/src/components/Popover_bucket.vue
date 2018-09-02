@@ -48,11 +48,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $pointer-size: 2vmin;
+
   .popover-bucket {
     position: absolute;
-    bottom: -0.75vmin;
-    width: 100%;
+    bottom: -1px;
+    right: 0;
+    left: 0;
     z-index: 110;
+    margin: 0 auto;
   }
 
   .popover-bucket-content {

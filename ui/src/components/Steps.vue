@@ -150,6 +150,7 @@ export default {
       height: 90%;
       .btn-group-vertical {
         min-height: min-content;
+        width: 100%;
       }
 
       .step-info-text {
