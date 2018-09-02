@@ -75,6 +75,7 @@ import ScrollBar from 'vue-perfect-scrollbar'
 export default {
   mounted () {
     this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
+    this.functionDraggableOptions.group.put = true
   },
   computed: {
     stats () {
