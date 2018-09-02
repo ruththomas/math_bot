@@ -3,7 +3,6 @@ import _ from 'underscore'
 
 const utils = {
   openPopover (targetId) {
-    console.log(targetId)
     this.$root.$emit('bv::show::popover', targetId)
   },
   closePopover (targetId) {

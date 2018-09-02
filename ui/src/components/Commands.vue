@@ -234,6 +234,7 @@ export default {
   $click-color: #B8E986;
   $functions-padding-left: 2vmin;
   $commands-margin-top: 2vmin;
+  $piece-height: 7.5vmin;
 
   .invisible {
     visibility: hidden;
@@ -244,7 +245,7 @@ export default {
     align-items: center;
     flex-direction: row;
     width: 100%;
-    height: 100%;
+    height: calc(#{$piece-height} * 2.2);
     margin: 0 auto;
     position: relative;
     z-index: 100;
@@ -263,12 +264,11 @@ export default {
   }
 
   .methods-container {
-    display: table;
-
     .methods {
-      display: flex;
-      margin-top: $commands-margin-top;
       border: 1px solid $click-color;
+      display: flex;
+      height: min-content;
+      margin-top: $commands-margin-top;
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 3px;
     }
@@ -277,12 +277,12 @@ export default {
   .functions-container {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    height: min-content;
+    height: 100%;
     margin-right: 7%;
 
     .functions {
       display: flex;
-      height: 100%;
+      height: min-content;
       border: 1px solid transparent;
       width: 100%;
       min-width: 100%;

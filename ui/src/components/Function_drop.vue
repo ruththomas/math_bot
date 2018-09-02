@@ -31,6 +31,7 @@
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import _ from 'underscore'
+import ScrollBar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'function_drop',
@@ -131,7 +132,8 @@ export default {
   },
   components: {
     draggable,
-    FunctionBox
+    FunctionBox,
+    ScrollBar
   },
   props: ['id', 'className', 'origin', 'list', 'options', 'add', 'change', 'start', 'end', 'groupSize', 'sizeLimit']
 }
@@ -147,6 +149,7 @@ export default {
     height: 100%;
     width: 100%;
     z-index: 999;
+    margin: 0;
     .function-drop-drop-zone {
       position: relative;
       width: min-content;
@@ -183,18 +186,8 @@ export default {
     );
   }
 
-  .placeholder-piece {
-    opacity: 0.4;
-    border: 1px solid white;
-    border-radius: 5px;
-    svg {
-      display: none;
-    }
-  }
-
   .piece-shake {
     animation: shake 0.8s;
     animation-iteration-count: infinite;
-    box-shadow: 0 0 0 2px rgba(242, 92, 92, 0.9);
   }
 </style>

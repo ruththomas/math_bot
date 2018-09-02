@@ -124,7 +124,7 @@ export default {
     position: absolute;
     width: calc(#{$pointer-size} * 2);
     height: $pointer-size;
-    bottom: 100%;
+    bottom: calc(100% + #{$pointer-size} / 2 - 1px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -167,14 +167,6 @@ export default {
   .left {
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
-  }
-
-  .close-popover {
-    height: 2vmin;
-    width: 2vmin;
-    position: absolute;
-    top: -1vmin;
-    right: -1vmin;
   }
 
   .up {

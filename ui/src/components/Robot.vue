@@ -10,12 +10,12 @@
 
       <messages></messages>
 
-      <div class="row box">
+      <div class="row box" style="padding: 0;">
         <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
         <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
       </div>
 
-      <div class="row" style="position: relative;">
+      <div class="row">
         <trash></trash>
         <commands></commands>
       </div>
@@ -160,11 +160,18 @@ export default {
     height: 100%;
 
     .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .row {
+        margin: 0;
+      }
+
       .box {
         background: transparent;
         position: relative;
         height: $box-height;
-        max-width: 100vw;
         z-index: 100;
       }
     }
