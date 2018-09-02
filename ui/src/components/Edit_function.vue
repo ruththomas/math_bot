@@ -74,6 +74,7 @@ import ScrollBar from 'vue-perfect-scrollbar'
 
 export default {
   mounted () {
+    this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
   },
   computed: {
     stats () {
@@ -218,7 +219,7 @@ export default {
           added: evt.hasOwnProperty('added') ? evt.added : evt.moved
         })
       }
-      if (this.editFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
+      if (this.editingFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
         this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
       }
     },

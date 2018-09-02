@@ -26,6 +26,7 @@ export default {
   $click-color: #B8E986;
   $pointer-size: 2vmin;
   $dialog-button-size: 3.5vmin;
+  $piece-height: 7.5vmin;
 
   body {
     font-family: "Proba Pro Regular", serif;
@@ -94,20 +95,13 @@ export default {
   }
 
   .dragging, .ghost, .chosen {
-    height: 70px;
-    width: 70px;
-
+    opacity: 0.8;
+    position: absolute;
+    height: $piece-height;
+    width: auto;
     .pointer {
       display: none;
     }
-  }
-
-  .dragging {
-    opacity: 1;
-  }
-
-  .ghost, .chosen {
-    margin: 0 12px 0 12px;
   }
 
   .ghost {

@@ -1,6 +1,7 @@
 import api from './api'
 import Robot from './RobotState'
 import GridAnimator from './GridAnimator'
+import _ from 'underscore'
 
 class RunCompiled extends GridAnimator {
   constructor (context) {
@@ -29,59 +30,29 @@ class RunCompiled extends GridAnimator {
     }
   }
 
-  _reconstructFunctions (_funcToken) {
-    const func = !_funcToken ? Object.assign({}, this.$store.getters.getMainFunction) : Object.assign({}, _funcToken)
-    const funcList = func.func
+  _testForEmptyFunctions () {
+    const mainFunction = this.$store.getters.getMainFunction.func
     const activeFuncs = this.$store.getters.getActiveFunctions
-    const commands = this.$store.getters.getCommands
-    return funcList
+
+    if (!mainFunction.length) return [{name: 'Main'}]
+
+    return _.chain(mainFunction)
       .map(f => {
         const funcToken = activeFuncs.find(af => af.created_id === f.created_id)
-        if (funcToken) return Object.assign({}, funcToken)
-        else return commands.find(cf => cf.created_id === f.created_id)
+        if (funcToken) return funcToken
+        else return null
       })
-      .map(f => {
-        if (func.created_id !== f.created_id) {
-          f.func = this._reconstructFunctions(f)
-        } else {
-          f.func = []
-          f.recursive = true
-        }
-        return f
-      })
-  }
-
-  _flattenFunctions (funcs, _acc) {
-    _acc = !_acc ? [] : _acc
-    for (let i = 0; i < funcs.length; i++) {
-      const current = funcs[i]
-      _acc.push(current)
-      this._flattenFunctions(current.func, _acc)
-    }
-    return _acc
-  }
-
-  _isCommand (func) {
-    const createdId = Number(func.created_id)
-    return createdId < 2000 && createdId > 999
-  }
-
-  _unexecutableTest () {
-    const funcs = this._flattenFunctions(this._reconstructFunctions())
-    return funcs.reduce((bool, f) => {
-      if (!this._isCommand(f) && !f.recursive && !f.func.length) {
-        bool = false
-      }
-      return bool
-    }, true)
+      .filter(func => func !== null)
+      .filter(func => !func.func.length)
+      .value()
   }
 
   start () {
     // console.log('start ~ ', this.robotFrames.slice())
-    const isExecutable = this.$store.getters.getMainFunction.func.length ? this._unexecutableTest() : false
+    const emptyFuncs = this._testForEmptyFunctions()
 
-    if (!isExecutable) {
-      this._unexecutableFunctionMessage()
+    if (emptyFuncs.length) {
+      this._mainEmptyMessage(emptyFuncs)
     } else if (this.robot.state !== 'paused') {
       this.robotFrames = []
       this.robot.setState('running')
@@ -120,10 +91,12 @@ class RunCompiled extends GridAnimator {
     this._addMessage(messageBuilder)
   }
 
-  _unexecutableFunctionMessage () {
+  _mainEmptyMessage (emptyFuncs) {
+    const emptyCount = emptyFuncs.length
+
     const messageBuilder = {
       type: 'warn',
-      msg: 'One of your functions is empty',
+      msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : `${emptyFuncs.length} of your functions ${emptyCount > 1 ? 'are' : 'is'} empty`,
       handlers () {
         const $bar = $('.bar')
 
@@ -249,7 +222,6 @@ class RunCompiled extends GridAnimator {
 
   _askCompiler (startRunning) {
     api.compilerWebSocket.compileWs({problem: this.stepData.problem.encryptedProblem}, (compiled) => {
-      // console.log(compiled)
       this.robotFrames = this.robotFrames.concat(compiled.frames)
       if (startRunning) startRunning()
     })

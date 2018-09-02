@@ -48,11 +48,11 @@ export default {
     },
     success (starNumber) {
       if (starNumber === 1) {
-        return this.timer.stars >= 1
-      } else if (starNumber === 2) {
         return this.timer.stars >= 3
-      } else {
+      } else if (starNumber === 2) {
         return this.timer.stars >= 2
+      } else {
+        return this.timer.stars >= 1
       }
     }
   },
