@@ -46,8 +46,8 @@ export default {
   $click-color: #B8E986;
   $grid-background: rgba(0, 0, 0, 0.6);
   $grid-border-radius: 4px;
-  $icon-size: 150px;
-  $text-minor-font-size: 24px;
+  $icon-size: 50%;
+  $text-minor-font-size: 4vmin;
   $grid-space-size: 9vmin;
 
   .message-template {
@@ -62,6 +62,11 @@ export default {
     align-items: center;
     margin: 0 auto;
     color: #ffffff;
+
+    * {
+      height: 100%;
+      width: 100%;
+    }
 
     .text-minor {
       font-size: $text-minor-font-size;
