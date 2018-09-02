@@ -23,19 +23,17 @@
         <tspan x="35" dy="1.2em">Click on the stars to get video hints.</tspan>
         <tspan x="35" dy="1.2em">Some levels can't be beat without hints.</tspan>
       </text>
-      <foreignObject x="470" y="40" width="130">
-        <div
-          class="btn button-effect help-button bubble-stars"
-          @click="videoHint.getHint()"
-        >
-          <stars
-            :star-group="'star-spread'"
-            :level="level"
-            :step="step"
-            :step-stats="stepStats"></stars>
-        </div>
-      </foreignObject>
     </svg>
+    <div
+      class="btn button-effect help-button bubble-stars"
+      @click="videoHint.getHint()"
+    >
+      <stars
+        :star-group="'star-spread'"
+        :level="level"
+        :step="step"
+        :step-stats="stepStats"></stars>
+    </div>
   </div>
 </template>
 
@@ -89,6 +87,11 @@ export default {
     position: relative;
 
     .help-button {
+      position: absolute;
+      margin: auto;
+      top: 50%;
+      right: 2vmin;
+      transform: translateY(calc(-50% - 0.75vmin));
       padding: 1vmin;
     }
   }
