@@ -277,16 +277,15 @@ export default {
   .functions-container {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    height: 100%;
     margin-right: 7%;
-    position: relative;
 
     .functions {
       position: relative;
       display: flex;
       height: min-content;
       border: 1px solid transparent;
-      width: 100%;
+      width: min-content;
+      width: -moz-min-content;
       min-width: 100%;
       margin-top: $commands-margin-top;
       padding: 0 0 0 $functions-padding-left;
