@@ -1,6 +1,6 @@
 <template>
   <div
-    class="message-template congrats"
+    class="row message-template congrats"
   >
     <div v-if="congrats" class="won">
       <img class="congrats-icon won-icon" :src="permanentImages.smileyFace" />
