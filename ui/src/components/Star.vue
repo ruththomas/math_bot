@@ -37,11 +37,15 @@ export default {
   $star-size: 4vmin;
 
   .star {
-    height: auto;
+    height: $star-size;
     width: $star-size;
+    position: relative;
     svg {
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 100%;
-      width: auto;
+      width: 100%;
     }
   }
   .heavy { font: bold 30px sans-serif; }
