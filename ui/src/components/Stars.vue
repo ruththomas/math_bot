@@ -40,7 +40,8 @@ export default {
       const seconds = Math.floor(totalSeconds - minutes * 60)
       return _.chain([minutes, seconds])
         .map(t => {
-          if (t === 0) return '00'
+          if (t < 10) return '0' + t
+          else if (t === 0) return '00'
           else return t
         })
         .value()
@@ -70,7 +71,7 @@ $star-spread-star-size: 40px;
 $stars-shadow: inset 0 0 100px #778899;
 $star-congrats-star-size: 70px;
 $star-timer-right: 100%;
-$star-timer-bottom: -102%;
+$star-timer-bottom: -85%;
 $star-timer-font-size: 1.5vmin;
 $star-timer-margin-right: 5px;
 

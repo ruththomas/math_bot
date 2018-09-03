@@ -154,6 +154,7 @@ export default {
     .function-drop-drop-zone {
       position: relative;
       width: min-content;
+      width: -moz-min-content;
       min-width: 100%;
       display: flex;
       justify-content: flex-start;

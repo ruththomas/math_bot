@@ -110,7 +110,9 @@ export default {
     height: 100%;
     width: 100%;
     .staged-functions {
-      min-width: min-content;
+      width: min-content;
+      min-width: 100%;
+      width: -moz-min-content;
       display: flex;
       align-items: center;
       justify-content: flex-start;
