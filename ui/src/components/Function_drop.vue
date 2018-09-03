@@ -31,7 +31,6 @@
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import _ from 'underscore'
-import ScrollBar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'function_drop',
@@ -132,8 +131,7 @@ export default {
   },
   components: {
     draggable,
-    FunctionBox,
-    ScrollBar
+    FunctionBox
   },
   props: ['id', 'className', 'origin', 'list', 'options', 'add', 'change', 'start', 'end', 'groupSize', 'sizeLimit']
 }
