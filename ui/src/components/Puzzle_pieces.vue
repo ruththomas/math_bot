@@ -8,9 +8,8 @@
     @click="method ? method($event, func, ind) : ''"
     data-toggle="tooltip" :title="func.name"
   >
-    <svg v-if="pieceToShow === 'closed'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="7.5vmin" height="7.5vmin" version="1.1">
-      <rect rx="5" ry="5" width="7.5vmin" height="7.5vmin" fill="#000000" :stroke="convertColor(func.color)" stroke-width="2" />
-      <image :xlink:href="funcAndCmdImages[func.image]" height="50%" width="50%" x="25%" y="25%" />
+    <svg v-if="pieceToShow === 'closed'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+      <rect rx="5" ry="5" height="100" width="100" fill="#000000" :stroke="convertColor(func.color)" stroke-width="2" />
     </svg>
 
     <svg v-else-if="pieceToShow === 'start'" version="1.1" viewBox="-10 0 85 75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -25,7 +24,6 @@
           <path :stroke="convertColor(func.color)" fill="#000000" stroke-width="1" d="M303.5,582.285514 L303.5,558.009635 C303.5,556.614884 302.381558,555.5 300.990365,555.5 L232.009635,555.5 C230.614884,555.5 229.5,556.618442 229.5,558.009635 L229.5,626.990365 C229.5,628.385116 230.618442,629.5 232.009635,629.5 L300.990365,629.5 C302.385116,629.5 303.5,628.381558 303.5,626.990365 L303.5,603.464486 C298.02767,603.018692 293.75,598.434342 293.75,592.875 C293.75,587.315658 298.02767,582.731308 303.5,582.285514 Z"></path>
         </g>
       </g>
-      <image :xlink:href="funcAndCmdImages[func.image]" height="50%" width="50%" x="20%" y="25%" />
     </svg>
 
     <svg v-else-if="pieceToShow === 'middle'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 85 75" version="1.1">
@@ -42,7 +40,6 @@
           </g>
         </g>
       </g>
-      <image :xlink:href="funcAndCmdImages[func.image]" height="50%" width="50%" x="25%" y="25%" />
     </svg>
 
     <svg  v-else-if="pieceToShow === 'end'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 85 75" version="1.1">
@@ -57,8 +54,8 @@
           <path :stroke="convertColor(func.color)" fill="#000000" stroke-width="1" d="M598.7969,602.493513 L599.278761,602.511006 L599.278761,626.990365 C599.278761,628.385655 600.391294,629.5 601.773942,629.5 L671.00482,629.5 C672.384503,629.5 673.5,628.378225 673.5,626.990365 L673.5,558.009635 C673.5,556.614345 672.387467,555.5 671.00482,555.5 L601.773942,555.5 C600.394258,555.5 599.278761,556.621775 599.278761,558.009635 L599.278761,583.238994 L598.7969,583.256487 C593.61692,583.44453 589.5,587.692441 589.5,592.875 C589.5,598.057559 593.61692,602.30547 598.7969,602.493513 Z"/>
         </g>
       </g>
-      <image :xlink:href="funcAndCmdImages[func.image]" height="50%" width="50%" x="25%" y="25%" />
     </svg>
+    <img :src="funcAndCmdImages[func.image]" />
     <div
       v-if="pieceToShow === 'closed' && showName  "
       class="piece-name"
@@ -123,7 +120,19 @@ export default {
     position: relative;
     height: min-content;
     width: min-content;
+    width: -moz-min-content;
     cursor: grab;
+    border-radius: 3px;
+
+    img {
+      height: 50%;
+      width: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
 
     .piece > svg {
       position: relative;
@@ -148,6 +157,8 @@ export default {
 
   .piece.piece-closed {
     margin: $piece-margin;
+    height: $piece-height;
+    width: $piece-height;
   }
 
   .piece.piece-start, .piece.piece-middle-or-end {
