@@ -7,7 +7,7 @@
         enter-active-class="animated zoomIn"
         leave-active-class="animated zoomOut"
       >
-        <congrats v-if="congratsShowing || true " :congrats="true" key="congrats-1234"></congrats>
+        <congrats v-if="congratsShowing" :congrats="true" key="congrats-1234"></congrats>
         <congrats v-else-if="tryAgainShowing" :congrats="false" key="congrats-5678"></congrats>
         <video-hint v-else-if="hintShowing.showing" key="video-hint-1234"></video-hint>
         <div v-else-if="gridMap" class="row" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''" key="grid-map-1234">
