@@ -1,5 +1,6 @@
 package actors.messages.auth
 
+import models.UsernameAndPassword
 import play.api.libs.json._
 
 object AuthFormatters {
@@ -18,5 +19,5 @@ object AuthFormatters {
   implicit val resumeSessionFormat : Format[ResumeSession] = Json.format[ResumeSession]
   implicit val needsAuthorizationFormat : Format[NeedsAuthorization] = Json.format[NeedsAuthorization]
   implicit val sessionAuthorizedFormat : Format[SessionAuthorized] = Json.format[SessionAuthorized]
-
+  implicit val usernameAndPasswordFormate : Format[UsernameAndPassword] = Json.format[UsernameAndPassword]
 }

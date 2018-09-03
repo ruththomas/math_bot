@@ -70,7 +70,6 @@ import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
 import PuzzlePieces from './Puzzle_pieces'
-import ScrollBar from 'vue-perfect-scrollbar'
 
 export default {
   mounted () {
@@ -245,8 +244,7 @@ export default {
     draggable,
     FunctionBox,
     FunctionDrop,
-    PuzzlePieces,
-    ScrollBar
+    PuzzlePieces
   }
 }
 </script>
