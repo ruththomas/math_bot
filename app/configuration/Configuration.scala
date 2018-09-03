@@ -3,7 +3,7 @@ package configuration
 import akka.http.scaladsl.model.Uri
 import akka.util.Timeout
 
-case class CompilerConfiguration(maxProgramSteps : Int, maxEmptyLoopCount : Int)
+case class CompilerConfiguration(maxProgramSteps: Int, maxEmptyLoopCount: Int)
 
 case class GoogleApiConfig(
     oauthUrl: Uri,
@@ -33,5 +33,16 @@ case class GithubApiConfig(
     clientId: String,
     clientSecret: String,
     scopes: Seq[String],
-    issuer : String
+    issuer: String
+)
+
+case class LocalAuthConfig(
+    signupUrl: Uri,
+    authUrl: Uri,
+    accountIdByteWidth: Int,
+    saltByteWidth: Int,
+    sessionIdByteWidth: Int,
+    scryptIterationExponent: Int,
+    scryptBlockSize: Int,
+    hashByteSize: Int
 )

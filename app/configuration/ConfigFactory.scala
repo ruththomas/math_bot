@@ -40,17 +40,32 @@ object ConfigFactory {
       val name: String = "mathbot.mongodb.name"
       val url: String = "mathbot.mongodb.url"
     }
+    object localauth {
+      val signupUrl : String = "mathbot.localauth.signupUrl"
+      val authUrl : String = "mathbot.localauth.authUrl"
+      val accountIdByteWidth : String = "mathbot.localauth.accountIdByteWidth"
+      val saltByteWidth : String = "mathbot.localauth.saltByteWidth"
+      val sessionIdByteWidth : String = "mathbot.localauth.sessionIdByteWidth"
+      val scryptIterationExponent : String = "mathbot.localauth.scryptIterationExponent"
+      val scryptBlockSize : String = "mathbot.localauth.sessionIdByteWidth"
+      val hashByteSize : String = "mathbot.localauth.hashByteSize"
+    }
   }
 }
 
 class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
   import ConfigFactory._
 
-  private def exWrap[C](path: String, readers: String => Option[C]*) = {
+  private def exWrap[C](path: String, readers: (String => Option[C])*) = {
     readers.map(r => r(path)).find(_.isDefined).flatten getOrElse {
       throw new MissingConfigurationException(path)
     }
   }
+
+  private def wrap[T](path : String, converter: String => T ) : T =
+    playConfig.getString(path).map(converter(_)) getOrElse {
+      throw new MissingConfigurationException(path)
+    }
 
   private def envGet(path: String) =
     sys.env.get(path.replace(".", "_"))
@@ -94,4 +109,15 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
     )
   }
 
+  def localAuthConfig : LocalAuthConfig =
+    LocalAuthConfig(
+      signupUrl = wrap(mathbot.localauth.signupUrl, Uri(_)),
+      authUrl = wrap(mathbot.localauth.authUrl, Uri(_)),
+      accountIdByteWidth = wrap(mathbot.localauth.accountIdByteWidth, _.toInt),
+      saltByteWidth = wrap(mathbot.localauth.saltByteWidth, _.toInt),
+      sessionIdByteWidth = wrap(mathbot.localauth.sessionIdByteWidth, _.toInt),
+      scryptIterationExponent = wrap(mathbot.localauth.scryptIterationExponent, _.toInt),
+      scryptBlockSize = wrap(mathbot.localauth.scryptBlockSize, _.toInt),
+      hashByteSize = wrap(mathbot.localauth.hashByteSize, _.toInt)
+    )
 }
