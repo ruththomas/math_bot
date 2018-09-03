@@ -278,6 +278,7 @@ export default {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     margin-right: 7%;
+    width: 100%;
 
     .functions {
       position: relative;
