@@ -1,5 +1,5 @@
 <template>
-  <div class="video-hint">
+  <div class="row video-hint">
     <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
     <iframe class="embedded" :src="hintShowing.videoURL" scrolling="no" frameborder="0"></iframe>
   </div>
