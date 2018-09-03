@@ -128,7 +128,6 @@ export default {
     color: $font-color;
     margin: 8% 0 0 0;
     font-size: $steps-font-size;
-    height: 100%;
 
     .header {
       font-size: 1.5em;
