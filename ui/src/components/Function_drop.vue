@@ -110,17 +110,17 @@ export default {
         dropZoneChildren.each(function () {
           const $ele = $(this)
           childrenWidthSum += $ele.outerWidth()
-          $ele.removeClass('dropped-indication')
-          $ele.find('.tab-insert').removeClass('dropped-indication')
+          $ele.removeClass('dropped-indicator')
+          $ele.find('.piece').removeClass('dropped-indicator')
         })
 
-        $dropped.addClass('dropped-indication')
-        $dropped.find('.tab-insert').addClass('dropped-indication')
+        $dropped.addClass('dropped-indicator')
+        $dropped.find('.piece').addClass('dropped-indicator')
 
         if ((childrenWidthSum * 2) > dropWidth) {
-          $dropZone.css({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`})
+          $dropZone.animate({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`}, 200)
         } else {
-          $dropZone.css({'padding-right': 0})
+          $dropZone.animate({'padding-right': 0}, 200)
         }
 
         $functionDrop.animate({
@@ -138,8 +138,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $drop-zone-padding-right: 30px;
+  $click-color: #B8E986;
   $danger-color: #F25C5C;
+  $piece-height: 7.5vmin;
 
   .function-drop {
     overflow: auto;
@@ -147,15 +148,20 @@ export default {
     height: 100%;
     width: 100%;
     z-index: 999;
+    margin: 0;
     .function-drop-drop-zone {
       position: relative;
       width: min-content;
+      width: -moz-min-content;
       min-width: 100%;
-      height: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      padding-right: $drop-zone-padding-right;
+      height: 100%;
+    }
+
+    .editMain-drop-zone {
+      justify-content: center;
     }
   }
 
@@ -180,85 +186,26 @@ export default {
     );
   }
 
-  .placeholder-piece {
-    opacity: 0.4;
-  }
-
-  .center-function-drop {
-    justify-content: center!important;
-    padding: 0!important;
-  }
-
   .piece-shake {
     animation: shake 0.8s;
     animation-iteration-count: infinite;
-    box-shadow: 0 0 0 2px rgba(242, 92, 92, 0.9);
   }
 
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-  }
+  .dropped-indicator {
+    position: relative;
 
-  /* ipad pro Landscape */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: landscape)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-
-  }
-
-  @media only screen and (max-width: 823px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
+    &::before {
+      content: url("../assets/next-arrow.svg");
+      height: 2vmin;
+      width: 2vmin;
+      position: absolute;
+      transform: rotate(90deg);
+      top: -2vmin;
+      left: 50%;
     }
   }
 
-  @media only screen and (max-width: 736px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 667px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 568px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
-  }
-
-  @media only screen and (max-width : 320px) {
-    $drop-zone-padding-left: 10px;
-    .function-drop {
-      .function-drop-drop-zone {
-        padding-left: $drop-zone-padding-left;
-        padding-right: $drop-zone-padding-left;
-      }
-    }
+  .full-indicator {
+    box-shadow: 0.5vmin 0 0 0 $danger-color;
   }
 </style>

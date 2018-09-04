@@ -3,7 +3,6 @@
     <div class="staged-functions-header">
       <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
     </div>
-
     <div class="staged-functions-content">
       <draggable
         class="staged-functions"
@@ -79,7 +78,9 @@ export default {
 
 <style scoped lang="scss">
   $staged-functions-padding: 32px;
-  $staged-functions-padding-right: 50%;
+  $piece-height: 7.5vmin;
+  $dialog-button-size: 3.5vmin;
+  $piece-height: 7.5vmin;
 
   .staged-functions-container {
     position: relative;
@@ -87,7 +88,7 @@ export default {
     flex-direction: column;
     justify-content: space-around;
     width: 100%;
-    height: 100%;
+    height: calc(#{$piece-height} * 2.2);
   }
 
   .staged-functions-header {
@@ -109,10 +110,10 @@ export default {
     height: 100%;
     width: 100%;
     .staged-functions {
-      padding: 0 $staged-functions-padding-right 0 $staged-functions-padding;
-      min-width: min-content;
+      width: min-content;
+      min-width: 100%;
+      width: -moz-min-content;
       display: flex;
-      height: 100%;
       align-items: center;
       justify-content: flex-start;
       margin: 0 auto;
@@ -120,87 +121,12 @@ export default {
   }
 
   .close-popover {
+    float: right;
+    display: flex;
     position: absolute;
-    right: -20px;
-    top: -20px;
-  }
-
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 812px) {
-    .close-popover {
-      position: absolute;
-      right: -10px;
-      top: -10px;
-    }
-  }
-
-  @media only screen and (max-width: 736px) {
-    .close-popover {
-      position: absolute;
-      right: -10px;
-      top: -10px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    .close-popover {
-      position: absolute;
-      right: -10px;
-      top: -10px;
-    }
-  }
-
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) {
-    $staged-functions-padding-left: 14px;
-
-    .staged-functions {
-      padding-left: $staged-functions-padding-left;
-    }
-
-    .staged-functions-header {
-      left: $staged-functions-padding-left;
-
-      span {
-        font-size: 12px;
-      }
-    }
-
-    .close-popover {
-      position: absolute;
-      right: 5px;
-      top: -10px;
-    }
-  }
-
-  /* iphone 5 portrait */
-  @media only screen and (max-width : 414px) {
-    $staged-functions-padding-left: 15.5px;
-
-    .staged-functions {
-      padding-left: $staged-functions-padding-left;
-    }
-
-    .staged-functions-header {
-      left: $staged-functions-padding-left;
-
-      span {
-        font-size: 12px;
-      }
-    }
-
-    .close-popover {
-      position: absolute;
-      right: 12px;
-      top: -10px;
-    }
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+    bottom: calc(#{$dialog-button-size} / 2);
+    right:  calc(#{-$dialog-button-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
   }
 </style>

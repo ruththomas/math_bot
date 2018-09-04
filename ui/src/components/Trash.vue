@@ -54,6 +54,6 @@ export default {
     z-index: 101;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.1);
+    opacity: 0;
   }
 </style>

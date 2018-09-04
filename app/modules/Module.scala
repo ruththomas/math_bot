@@ -2,7 +2,7 @@ package modules
 import actors.{ ActorTags, GithubOAuth, GoogleOAuth }
 import akka.actor.ActorSystem
 import com.google.inject.{ AbstractModule, Provides }
-import configuration.{ ActorConfig, ConfigFactory, GithubApiConfig, GoogleApiConfig }
+import configuration._
 import loggers.{ AkkaSemanticLog, SemanticLog }
 import models.JwtToken
 import org.bson.codecs.Codec
@@ -52,4 +52,8 @@ class Module extends AbstractModule with AkkaGuiceSupport {
 
   @Provides
   def mongoCodecProviders : Seq[CodecProvider] = Seq(Macros.createCodecProvider[JwtToken])
+
+  @Provides
+  def provideLocalAuthConfig(configFactory: ConfigFactory) : LocalAuthConfig =
+    configFactory.localAuthConfig
 }

@@ -86,6 +86,10 @@ export default {
   $planet-5-size: 12vmin;
   $planet-gradient: rgba(0, 0, 0, 1);
 
+  .space {
+    height: 100%;
+  }
+
   .planet {
     position: absolute;
     color: white;

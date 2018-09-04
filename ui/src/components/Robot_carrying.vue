@@ -1,11 +1,13 @@
 <template>
-  <div id="robot-carrying-id" v-if="robotCarrying.length" class="robot-carrying">
-    <span
-      v-for="(tool, ind) in organizeCarrying"
-      :key="'carrying-' + ind"
-    >
-      <b-img class="tool-display-image" :src="toolImages[tool[0]]" /> <span>x</span> <span>{{tool[1]}}</span>
-    </span>
+  <div>
+    <div id="robot-carrying-id" class="robot-carrying" :class="!organizeCarrying.length ? 'hide-carrying' : ''" @click="openPopover('robot-carrying-id')">
+      <span
+        v-for="(tool, ind) in organizeCarrying"
+        :key="'carrying-' + ind"
+      >
+        <b-img class="tool-display-image" :src="toolImages[tool[0]]" /> <span>x</span> <span>{{tool[1]}}</span>
+      </span>
+    </div>
     <b-popover
       v-if="robotCarrying.length"
       target="robot-carrying-id"
@@ -72,19 +74,21 @@ export default {
     adjustShowAmount () {
       this.amountToShow = this.amountToShow === 1000 ? 48 : 1000
     },
-    closePopover: utils.closePopover
+    closePopover: utils.closePopover,
+    openPopover: utils.openPopover
   }
 }
 </script>
 
 <style scoped lang="scss">
-  $carrying-size: 20px;
+  $carrying-size: 2vmin;
   $click-color: #B8E986;
+  $popover-btn-size: 2vmin;
 
   .robot-carrying {
     position: absolute;
     bottom: -1px;
-    left: calc(100% - 0.5px);
+    left: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -92,16 +96,22 @@ export default {
     z-index: 10000;
     font-size: $carrying-size;
     background: rgba(0, 0, 0, 0.6);
-    border-radius: 3px;
+    border-bottom-right-radius: 0.4vmin;
+    border-top-right-radius: 0.4vmin;
     border: 1px solid $click-color;
     border-left: 1.5px solid rgba(0, 0, 0, 0.6);
     cursor: pointer;
+    color: #ffffff;
 
     span {
       display: flex;
       align-items: center;
-      margin-left: 3px;
+      margin: 0 0.3em 0 0.3em;
     }
+  }
+
+  .hide-carrying {
+    opacity: 0;
   }
 
   .tool-display-image {
@@ -116,206 +126,14 @@ export default {
   }
 
   .close-popover {
-    height: 18px;
-    width: 18px;
+    float: right;
+    display: flex;
     position: absolute;
-    top: -9px;
-    right: -9px;
-  }
-
-  @media only screen and (max-width: 823px) and (orientation: landscape) {
-    $carrying-size: 12px;
-
-    .robot-carrying {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-wrap: wrap;
-      z-index: 10000;
-      font-size: $carrying-size;
-
-      span {
-        display: flex;
-        align-items: center;
-
-        img {
-          height: $carrying-size;
-          width: $carrying-size;
-        }
-      }
-    }
-
-    .tool-display-image {
-      height: $carrying-size;
-      width: $carrying-size;
-    }
-  }
-
-  @media only screen and (max-width: 736px) and (orientation: landscape) {
-    $carrying-size: 12px;
-
-    .robot-carrying {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-wrap: wrap;
-      z-index: 10000;
-      font-size: $carrying-size;
-
-      span {
-        display: flex;
-        align-items: center;
-
-        img {
-          height: $carrying-size;
-          width: $carrying-size;
-        }
-      }
-    }
-
-    .tool-display-image {
-      height: $carrying-size;
-      width: $carrying-size;
-    }
-  }
-
-  @media only screen and (max-width: 667px) and (orientation: landscape) {
-    $carrying-size: 8px;
-
-    .robot-carrying {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-wrap: wrap;
-      z-index: 10000;
-      font-size: $carrying-size;
-
-      span {
-        display: flex;
-        align-items: center;
-
-        img {
-          height: $carrying-size;
-          width: $carrying-size;
-        }
-      }
-    }
-
-    .tool-display-image {
-      height: $carrying-size;
-      width: $carrying-size;
-    }
-  }
-
-  @media only screen and (max-width: 568px) and (orientation: landscape) {
-    $carrying-size: 8px;
-
-    .robot-carrying {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-wrap: wrap;
-      z-index: 10000;
-      font-size: $carrying-size;
-
-      span {
-        display: flex;
-        align-items: center;
-
-        img {
-          height: $carrying-size;
-          width: $carrying-size;
-        }
-      }
-    }
-
-    .tool-display-image {
-      height: $carrying-size;
-      width: $carrying-size;
-    }
-  }
-
-  @media only screen and (max-width: 414px) {
-    $carrying-size: 12px;
-
-    .robot-carrying {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-wrap: wrap;
-      z-index: 10000;
-      font-size: $carrying-size;
-
-      span {
-        display: flex;
-        align-items: center;
-
-        img {
-          height: $carrying-size;
-          width: $carrying-size;
-        }
-      }
-    }
-
-    .tool-display-image {
-      height: $carrying-size;
-      width: $carrying-size;
-    }
-  }
-
-  @media only screen and (max-width : 375px) {
-    $carrying-size: 8px;
-
-    .robot-carrying {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-wrap: wrap;
-      z-index: 10000;
-      font-size: $carrying-size;
-
-      span {
-        display: flex;
-        align-items: center;
-
-        img {
-          height: $carrying-size;
-          width: $carrying-size;
-        }
-      }
-    }
-
-    .tool-display-image {
-      height: $carrying-size;
-      width: $carrying-size;
-    }
-  }
-
-  @media only screen and (max-width : 320px) {
-    $carrying-size: 8px;
-
-    .robot-carrying {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-wrap: wrap;
-      z-index: 10000;
-      font-size: $carrying-size;
-
-      span {
-        display: flex;
-        align-items: center;
-
-        img {
-          height: $carrying-size;
-          width: $carrying-size;
-        }
-      }
-    }
-
-    .tool-display-image {
-      height: $carrying-size;
-      width: $carrying-size;
-    }
+    height: $popover-btn-size;
+    width: auto;
+    bottom: calc(100% - #{$popover-btn-size} / 2);
+    right:  calc(#{-$popover-btn-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
   }
 </style>

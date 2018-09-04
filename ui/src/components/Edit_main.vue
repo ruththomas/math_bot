@@ -14,7 +14,6 @@
     ></function-drop>
 
     <div class="bar noDrag" v-if="Object.keys(robot).length">
-      <!--<main-placeholder></main-placeholder>-->
       <img class="trash noDrag dialog-button" :src="permanentImages.buttons.trashButton"  @click="wipeFunction" data-toggle="tooltip" title="Clear main" />
       <div class="speed dialog-button" @click="adjustSpeed" data-toggle="tooltip" title="Adjust speed"> {{ robotSpeedDisplay }}</div>
 
@@ -50,9 +49,11 @@ import draggable from 'vuedraggable'
 import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
-import MainPlaceholder from './Main_placeholder'
 
 export default {
+  mounted () {
+    this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
+  },
   computed: {
     mainFunctionFunc () {
       const mainToken = this.$store.getters.getMainFunction
@@ -177,8 +178,7 @@ export default {
   components: {
     draggable,
     FunctionBox,
-    FunctionDrop,
-    MainPlaceholder
+    FunctionDrop
   }
 }
 </script>
@@ -186,15 +186,15 @@ export default {
 <style scoped lang="scss">
   $edit-main-side-padding: 16%;
   $edit-main-top-bottom-padding: 0;
-  $bar-height: 2px;
+  $bar-height: 1px;
 
   .edit-main {
     position: relative;
     width: 100%;
     margin: 0 auto;
     height: 100%;
-    z-index: 102;
     padding: $edit-main-top-bottom-padding $edit-main-side-padding $edit-main-top-bottom-padding $edit-main-side-padding;
+    z-index: 1000;
   }
 
   .deactivate-edit-main {
@@ -223,7 +223,6 @@ export default {
     display: flex;
     cursor: pointer;
     position: absolute;
-    top: -20px;
     float: right;
   }
 
@@ -237,7 +236,7 @@ export default {
   }
 
   .stop {
-    right: 100px;
+    right: 10vmin;
   }
 
   .trash {
@@ -245,376 +244,18 @@ export default {
   }
 
   .speed {
-    right: 50px;
+    right: 5vmin;
     background-color: #B8E986;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: black;
-    font-size: 22px;
+    font-size: 2vmin;
     font-weight: 500;
   }
 
   .x {
     float: left;
-  }
-
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-    $edit-main-side-padding: 16%;
-    $edit-main-top-bottom-padding: 0;
-    $bar-height: 2px;
-    $edit-main-per-margin: 0;
-
-    .edit-main {
-      margin-right: $edit-main-per-margin;
-      margin-left: $edit-main-per-margin;
-    }
-
-    .bar {
-      right: 0;
-      left: 0;
-      height: $bar-height;
-    }
-
-    .dialog-button {
-      top: -15px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: -40px;
-    }
-
-    .speed {
-      right: 40px;
-      font-size: 16px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  // ipad landscape
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : landscape) {
-    $edit-main-padding-left: 12%;
-    $edit-main-padding-right: 12%;
-    $bar-height: 1px;
-
-    .bar {
-      right: 10px;
-      left: 10px;
-      height: $bar-height;
-    }
-
-    .dialog-button {
-      top: -15px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 80px;
-    }
-
-    .speed {
-      right: 40px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  // ipad portrait
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : portrait) {
-    $edit-main-side-padding: 16%;
-    $edit-main-top-bottom-padding: 0;
-    $bar-height: 2px;
-
-    .bar {
-      right: 0;
-      left: 0;
-      height: $bar-height;
-    }
-
-    .dialog-button {
-      top: -15px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 80px;
-    }
-
-    .speed {
-      right: 40px;
-      font-size: 16px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  @media only screen and (max-width: 823px) and (orientation: landscape) {
-    $edit-main-side-padding: 16%;
-    $edit-main-top-bottom-padding: 0;
-    $bar-height: 2px;
-    $bar-height: 1px;
-
-    .bar {
-      right: 10px;
-      left: 10px;
-      height: $bar-height;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 50px;
-    }
-
-    .speed {
-      right: 25px;
-      font-size: 16px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  @media only screen and (max-width: 736px) and (orientation: landscape) {
-    $edit-main-padding-left: 12%;
-    $edit-main-padding-right: 12%;
-    $bar-height: 1px;
-
-    .bar {
-      right: 10px;
-      left: 10px;
-      height: $bar-height;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 24px;
-    }
-
-    .speed {
-      left: 24px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  @media only screen and (max-width : 667px) and (orientation: landscape) {
-    $edit-main-padding-left: 12%;
-    $edit-main-padding-right: 12%;
-    $bar-height: 1px;
-
-    .bar {
-      right: 10px;
-      left: 10px;
-      height: $bar-height;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 24px;
-    }
-
-    .speed {
-      left: 24px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) and (orientation: landscape) {
-    $edit-main-padding-left: 12%;
-    $edit-main-padding-right: 12%;
-    $bar-height: 1px;
-
-    .bar {
-      right: 10px;
-      left: 10px;
-      height: $bar-height;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 24px;
-    }
-
-    .speed {
-      left: 24px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  @media only screen and (max-width: 414px) {
-    $edit-main-padding-left: 12%;
-    $edit-main-padding-right: 12%;
-    $bar-height: 1px;
-
-    .bar {
-      right: 5px;
-      left: 5px;
-      height: $bar-height;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 24px;
-    }
-
-    .speed {
-      left: 24px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  /* iphone 6/7 portrait */
-  @media only screen and (max-width : 375px) {
-    $edit-main-padding-left: 12%;
-    $edit-main-padding-right: 12%;
-    $bar-height: 1px;
-
-    .bar {
-      right: 5px;
-      left: 5px;
-      height: 1px;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 24px;
-    }
-
-    .speed {
-      left: 24px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  /* iphone 5 portrait */
-  @media only screen and (max-width : 320px) {
-    .bar {
-      right: 5px;
-      left: 5px;
-    }
-
-    .dialog-button {
-      top: -9px;
-    }
-
-    .play {
-      right: 0;
-    }
-
-    .stop {
-      right: 24px;
-    }
-
-    .speed {
-      left: 24px;
-      font-size: 12px;
-    }
-
-    .ghost, .sortable-chosen, .dragging {
-      width: 40px;
-      height: 40px;
-    }
   }
 </style>

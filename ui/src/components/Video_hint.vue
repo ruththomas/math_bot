@@ -1,13 +1,17 @@
 <template>
-  <div class="video-hint">
-    <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
-    <iframe class="embedded" :src="hintShowing.videoURL" scrolling="no" frameborder="0"></iframe>
+  <div class="video-hint" data-aos="fade-in">
+    <div class="embedded">
+      <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
+      <iframe :src="hintShowing.videoURL" scrolling="no" frameborder="0" allowfullscreen></iframe>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Video_hint',
+  mounted () {
+  },
   computed: {
     hintShowing () {
       return this.$store.getters.getHintShowing
@@ -25,116 +29,39 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$video-hint-height: 500px;
-$video-hint-width: 1000px;
-$video-hint-shadow: inset 0 0 200px #000;
-$video-hint-close-top: -20px;
-$video-hint-close-right: -20px;
+$grid-space-size: 9vmin;
+$video-hint-close-top: 0;
+$video-hint-close-left: 100%;
+$dialog-button-size: 3.5vmin;
+
 .video-hint {
-  height: $video-hint-height;
-  width: $video-hint-width;
-  margin: 0 auto;
+  border: 1px solid transparent;
   border-radius: 5px;
-  box-shadow: $video-hint-shadow;
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
 
   .embedded {
-    height: 100%;
-    width: 100%;
+    position: relative;
+    height: calc(#{$grid-space-size} * 5);
+    width: calc(#{$grid-space-size} * 10);
+
+    iframe {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 
 .close-video-edit {
   position: absolute;
-  top: $video-hint-close-top;
-  right: $video-hint-close-right;
-}
-
-@media only screen and (max-width : 1280px) and (max-height: 900px) {
-}
-
-@media only screen and (max-width: 1280px) {
-  $video-hint-height: 350px;
-  $video-hint-width: 100%;
-  $video-hint-max-width: 700px;
-
-  .video-hint {
-    height: $video-hint-height;
-    width: $video-hint-width;
-    max-width: $video-hint-max-width;
-  }
-
-  .close-video-edit {
-  }
-}
-
-@media only screen and (max-width : 992px) {
-  $video-hint-height: 175px;
-  $video-hint-width: 100%;
-  $video-hint-max-width: 350px;
-  $video-hint-close-top: -10px;
-  $video-hint-close-right: -10px;
-
-  .video-hint {
-    height: $video-hint-height;
-    width: $video-hint-width;
-    max-width: $video-hint-max-width;
-  }
-
-  .close-video-edit {
-    top: $video-hint-close-top;
-    right: $video-hint-close-right;
-    z-index: 1000;
-  }
-}
-
-/* Small Devices */
-@media only screen and (max-width : 736px) {
-}
-
-/* Small Devices */
-@media only screen and (max-width : 667px) {
-  $video-hint-height: 150px;
-  $video-hint-width: 100%;
-  $video-hint-max-width: 300px;
-  $video-hint-close-top: -10px;
-  $video-hint-close-right: -10px;
-
-  .video-hint {
-    height: $video-hint-height;
-    width: $video-hint-width;
-    max-width: $video-hint-max-width;
-  }
-
-  .close-video-edit {
-    top: $video-hint-close-top;
-    right: $video-hint-close-right;
-  }
-}
-
-@media only screen and (max-width: 568px) {
-}
-
-/* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px) {
-}
-
-/* iPad */
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-  $video-hint-height: 350px;
-  $video-hint-width: 100%;
-  $video-hint-max-width: 700px;
-
-  .video-hint {
-    height: $video-hint-height;
-    width: $video-hint-width;
-    max-width: $video-hint-max-width;
-  }
-
-  .close-video-edit {
-  }
-}
-
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+  top: calc(-#{$dialog-button-size} / 2);
+  left: calc(#{$video-hint-close-left} - #{$dialog-button-size} / 2);
 }
 </style>

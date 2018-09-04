@@ -1,62 +1,72 @@
 <template>
-    <div
-      :id="id"
-      v-if="pieceToShow === 'closed'"
-      class="piece closed-piece border-right"
-      :class="'piece-' + func.color"
-      :style="{'background-image': `url(${funcAndCmdImages[func.image]})`}"
-      data-toggle="tooltip" :title="func.name"
-      @click="method ? method($event, func, ind) : ''">
-      <div v-if="showName">
-        <div v-if="func.name !== ''" class="command-name" :class="'piece-' + func.color">{{func.name}}</div>
-        <div v-else class="command-name command-name-empty" :class="'piece-' + func.color">Name me!</div>
-      </div>
-    </div>
+  <div
+    :id="id"
+    class="piece"
+    :class="[func.placeholder ? 'piece-placeholder' : '', pieceToShow === 'closed' ? 'piece-closed'
+      : pieceToShow === 'start' ? 'piece-start'
+      : 'piece-middle-or-end']"
+    @click="method ? method($event, func, ind) : ''"
+    data-toggle="tooltip" :title="func.name"
+  >
+    <svg v-if="pieceToShow === 'closed'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+      <rect rx="5" ry="5" height="100" width="100" fill="#000000" :stroke="convertColor(func.color)" stroke-width="2" />
+    </svg>
 
-    <div
-      :id="id"
-      v-else-if="pieceToShow === 'start'"
-      class="piece puzzle-start"
-      :class="'piece-' + func.color"
-      :style="{'background-image': `url(${funcAndCmdImages[func.image]})`}"
-      data-toggle="tooltip" :title="func.name"
-      @click="method ? method($event, func, ind) : ''">
-      <div class="tab-insert">
-        <div class="top-insert insert"></div>
-        <div class="notch"></div>
-        <div class="bottom-insert insert"></div>
-      </div>
-    </div>
+    <svg v-else-if="pieceToShow === 'start'" version="1.1" viewBox="-10 0 85 75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+      <title>Combined Shape</title>
+      <desc>Created with Sketch.</desc>
+      <defs>
+        <path d="M304,582.756816 C298.58185,582.954085 294.25,587.408664 294.25,592.875 C294.25,598.341336 298.58185,602.795915 304,602.993184 L304,626.990365 C304,628.652541 302.666404,630 300.990365,630 L232.009635,630 C230.347459,630 229,628.666404 229,626.990365 L229,558.009635 C229,556.347459 230.333596,555 232.009635,555 L300.990365,555 C302.652541,555 304,556.333596 304,558.009635 L304,582.756816 Z" id="path-1"></path>
+      </defs>
+      <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-229.000000, -555.000000)">
+        <g id="Combined-Shape">
+          <path :stroke="convertColor(func.color)" fill="#000000" stroke-width="1" d="M303.5,582.285514 L303.5,558.009635 C303.5,556.614884 302.381558,555.5 300.990365,555.5 L232.009635,555.5 C230.614884,555.5 229.5,556.618442 229.5,558.009635 L229.5,626.990365 C229.5,628.385116 230.618442,629.5 232.009635,629.5 L300.990365,629.5 C302.385116,629.5 303.5,628.381558 303.5,626.990365 L303.5,603.464486 C298.02767,603.018692 293.75,598.434342 293.75,592.875 C293.75,587.315658 298.02767,582.731308 303.5,582.285514 Z"></path>
+        </g>
+      </g>
+    </svg>
 
-    <div
-      :id="id"
-      v-else-if="pieceToShow === 'middle'"
-      class="piece puzzle-middle"
-      :class="'piece-' + func.color"
-      :style="{'background-image': `url(${funcAndCmdImages[func.image]})`}"
-      data-toggle="tooltip" :title="func.name"
-      @click="method ? method($event, func, ind) : ''">
-      <div class="left-tab"></div>
-      <div class="tab-insert">
-        <div class="top-insert insert"></div>
-        <div class="notch"></div>
-        <div class="bottom-insert insert"></div>
-      </div>
-    </div>
+    <svg v-else-if="pieceToShow === 'middle'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 85 75" version="1.1">
+      <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+      <title>Combined Shape</title>
+      <desc>Created with Sketch.</desc>
+      <defs>
+        <path d="M9.75,27.7568158 L9.75,3.00963453 C9.75,1.34745928 11.0835964,0 12.7596345,0 L81.7403655,0 C83.4025407,0 84.75,1.33359642 84.75,3.00963453 L84.75,27.7568158 C79.3318504,27.9540853 75,32.4086637 75,37.875 C75,43.3413363 79.3318504,47.7959147 84.75,47.9931842 L84.75,71.9903655 C84.75,73.6525407 83.4164036,75 81.7403655,75 L12.7596345,75 C11.0974593,75 9.75,73.6664036 9.75,71.9903655 L9.75,47.9931842 C4.33185035,47.7959147 0,43.3413363 0,37.875 C0,32.4086637 4.33185035,27.9540853 9.75,27.7568158 Z" id="path-1"/>
+      </defs>
+      <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Function/ActionMiddle">
+          <g id="Combined-Shape">
+            <path :stroke="convertColor(func.color)" fill="#000000" stroke-width="1" d="M84.25,48.4644864 C78.7776704,48.0186922 74.5,43.4343422 74.5,37.875 C74.5,32.3156578 78.7776704,27.7313078 84.25,27.2855136 L84.25,3.00963453 C84.25,1.61488395 83.1315575,0.5 81.7403655,0.5 L12.7596345,0.5 C11.3648839,0.5 10.25,1.61844247 10.25,3.00963453 L10.25,28.2389426 L9.76819246,28.2564847 C4.60452726,28.4444887 0.5,32.6921053 0.5,37.875 C0.5,43.0578947 4.60452726,47.3055113 9.76819246,47.4935153 L10.25,47.5110574 L10.25,71.9903655 C10.25,73.3851161 11.3684425,74.5 12.7596345,74.5 L81.7403655,74.5 C83.1351161,74.5 84.25,73.3815575 84.25,71.9903655 L84.25,48.4644864 Z"/>
+          </g>
+        </g>
+      </g>
+    </svg>
 
+    <svg  v-else-if="pieceToShow === 'end'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 85 75" version="1.1">
+      <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+      <title>Combined Shape Copy 19</title>
+      <desc>Created with Sketch.</desc>
+      <defs>
+        <path d="M598.778761,602.993184 C593.344629,602.795915 589,598.341336 589,592.875 C589,587.408664 593.344629,582.954085 598.778761,582.756816 L598.778761,558.009635 C598.778761,556.347459 600.116291,555 601.773942,555 L671.00482,555 C672.659012,555 674,556.333596 674,558.009635 L674,626.990365 C674,628.652541 672.66247,630 671.00482,630 L601.773942,630 C600.119749,630 598.778761,628.666404 598.778761,626.990365 L598.778761,602.993184 Z" id="path-1"/>
+      </defs>
+      <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-589.000000, -555.000000)">
+        <g id="Combined-Shape-Copy-19">
+          <path :stroke="convertColor(func.color)" fill="#000000" stroke-width="1" d="M598.7969,602.493513 L599.278761,602.511006 L599.278761,626.990365 C599.278761,628.385655 600.391294,629.5 601.773942,629.5 L671.00482,629.5 C672.384503,629.5 673.5,628.378225 673.5,626.990365 L673.5,558.009635 C673.5,556.614345 672.387467,555.5 671.00482,555.5 L601.773942,555.5 C600.394258,555.5 599.278761,556.621775 599.278761,558.009635 L599.278761,583.238994 L598.7969,583.256487 C593.61692,583.44453 589.5,587.692441 589.5,592.875 C589.5,598.057559 593.61692,602.30547 598.7969,602.493513 Z"/>
+        </g>
+      </g>
+    </svg>
+    <img :src="funcAndCmdImages[func.image]" />
     <div
-      :id="id"
-      v-else-if="pieceToShow === 'end'"
-      class="piece puzzle-end border-right"
-      :class="'piece-' + func.color"
-      :style="{'background-image': `url(${funcAndCmdImages[func.image]})`}"
-      data-toggle="tooltip" :title="func.name"
-      @click="method ? method($event, func, ind) : ''">
-      <div class="left-tab"></div>
+      v-if="pieceToShow === 'closed' && showName  "
+      class="piece-name"
+      :style="{background: convertColor(func.color)}"
+    >
+      <span :style="{opacity: func.name === '' ? 0 : 1}">
+        {{func.name === '' ? 'name me' : func.name}}
+      </span>
     </div>
-
+  </div>
 </template>
-
 <script>
 import _ from 'underscore'
 
@@ -78,615 +88,92 @@ export default {
       return _.extend(this.funcImages, this.commandImages)
     }
   },
+  methods: {
+    convertColor (color) {
+      const hexCodes = {
+        default: '#FFFFFF',
+        grey: '#696969',
+        green: '#50E3C2',
+        blue: '#4A90E2',
+        pink: '#FF98B1',
+        red: '#F25C5C',
+        purple: '#CA7AFF'
+      }
+      if (this.func.placeholder) {
+        return hexCodes.default
+      } else {
+        return hexCodes[color]
+      }
+    }
+  },
   props: ['id', 'ind', 'func', 'pieceToShow', 'showName', 'method']
 }
 </script>
 
 <style scoped lang="scss">
-  $puzzle-piece-border-color: #FFFFFF;
-  $piece-margin: 4px;
-  $piece-default: #FFFFFF;
-  $piece-grey: #696969;
-  $piece-green: #50E3C2;
-  $piece-blue: #4A90E2;
-  $piece-pink: #FF98B1;
-  $piece-red: #F25C5C;
-  $piece-purple: #CA7AFF;
+  $piece-margin: 0.5vmin;
+  $piece-height: 7.5vmin;
   $click-color: #B8E986;
-
-  .puzzle-piece {
-    display: flex;
-  }
+  $danger-color: #F25C5C;
 
   .piece {
     position: relative;
-    height: 75px;
-    width: 75px;
-    margin: $piece-margin;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
-    color: white;
-    border: 1px solid;
-    background-color: #000000;
-    border-right: none;
-    background-size: 70%;
-    background-position: center;
-    background-repeat: no-repeat;
+    height: min-content;
+    width: min-content;
+    width: -moz-min-content;
     cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
-  }
-
-  .dropped-indication {
-    box-shadow: 0 -5px 0 0 $click-color;
-  }
-
-  .full-indicator {
-
-  }
-
-  .piece-default {
-    border-color: $piece-default!important;
-    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: $piece-default!important;
-    }
-    .command-name {
-      background-color: $piece-default!important;
-    }
-  }
-
-  .piece-grey {
-    border-color: $piece-grey!important;
-    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: $piece-grey!important;
-    }
-    .command-name {
-      background-color: $piece-grey!important;
-    }
-  }
-
-  .piece-green {
-    border-color: $piece-green!important;
-    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: $piece-green!important;
-    }
-    .command-name {
-      background-color: $piece-green!important;
-    }
-  }
-
-  .piece-blue {
-    border-color: $piece-blue!important;
-    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: $piece-blue!important;
-    }
-    .command-name {
-      background-color: $piece-blue!important;
-    }
-  }
-
-  .piece-pink {
-    border-color: $piece-pink!important;
-    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: $piece-pink!important;
-    }
-    .command-name {
-      background-color: $piece-pink!important;
-    }
-  }
-
-  .piece-red {
-    border-color: $piece-red!important;
-    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: $piece-red!important;
-    }
-    .command-name {
-      background-color: $piece-red!important;
-    }
-  }
-
-  .piece-purple {
-    border-color: $piece-purple!important;
-    .border-right, .left-tab::before, .tab-insert, .top-insert, .bottom-insert {
-      border-color: $piece-purple!important;
-    }
-    .command-name {
-      background-color: $piece-purple!important;
-    }
-  }
-
-  .full-indicator {
-    border-right: 4px solid $piece-red!important;
-  }
-
-  .piece:active {
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
-  }
-
-  .puzzle-start, .puzzle-middle {
-    width: 65px;
-  }
-
-  .border-right {
-    border-right: 1px solid $puzzle-piece-border-color;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-  }
-
-  .closed-piece {
-    width: 70px;
-  }
-
-  .left-tab {
-    display: flex;
-    position: absolute;
-    align-items: center;
-    left: -10px;
-    height: 100%;
-    background-color: transparent;
-  }
-
-  .left-tab::before {
-    content: "";
-    width: 10px;
-    height: 20px;
-    background-color: #000000;
-    border-bottom-right-radius: 20px;
-    border-top-right-radius: 20px;
-    border: 1px solid $puzzle-piece-border-color;
-    border-left: 0;
-    box-sizing: border-box;
-    transform: rotate(180deg);
-  }
-
-  .tab-insert {
-    top: -1px;
-    left: 64px;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    width: 10px;
-    height: 75px;
-    background: radial-gradient(transparent 10px, rgba(0,0,0,1) 20px);
-    border-top: 1px solid $puzzle-piece-border-color;
-    border-bottom: 1px solid $puzzle-piece-border-color;
-  }
-
-  .top-insert, .bottom-insert {
-    content: "";
-    flex-grow: 1;
-    width: 100%;
-    border-right: 1px solid $puzzle-piece-border-color;
-    background-color: #000000;
-  }
-
-  .insert {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .notch {
-    position: relative;
-    left: -10px;
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(transparent 10px, rgba(0, 0, 0, 1) 10px) no-repeat 10px;
-    pointer-events: none;
-  }
-
-  .command-name {
-    position: absolute;
-    top: 93%;
-    width: 90%;
-    overflow: hidden;
-    left: 1px;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    color: #000000;
-    font-size: 12px;
-    line-height: 14px;
-    font-weight: bold;
-    text-align: center;
-    /*word-wrap: break-word;*/
-    white-space: normal;
     border-radius: 3px;
-    background-color: $puzzle-piece-border-color;
-  }
 
-  .command-name-empty {
-    color: transparent;
-  }
-
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-width: 1366px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-    $piece-size: 50px;
-    $piece-margin: 2px;
-    $tab-insert-width: 5px;
-    $tab-size: 5px;
-
-    .piece {
-      height: $piece-size;
-      width: $piece-size;
-      margin: $piece-margin;
-      z-index: 1000;
+    img {
+      height: 50%;
+      width: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
     }
 
-    .puzzle-start, .puzzle-middle {
-      width: calc(#{$piece-size} - #{$tab-insert-width});
+    .piece > svg {
+      position: relative;
+      z-index: 1;
     }
 
-    .tab-insert {
-      width: $tab-insert-width;
-      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
-      height: $piece-size;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: 100px;
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-    }
-
-    .left-tab::before {
-      content: "";
-      width: $tab-size;
-      height: calc(#{$tab-size} * 2);
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
+    .piece-name {
+      color: #000000;
+      font-size: 1.2vmin;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      line-height: 1.5vmin;
+      text-align: center;
+      width: 90%;
+      margin: -0.3rem auto;
+      border-radius: 3px;
+      background-color: #ffffff;
+      z-index: 2;
+      position: relative;
     }
   }
 
-  // ipad landscape
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : landscape) {
-    $piece-size: 50px;
-    $piece-margin: 2px;
-    $tab-insert-width: 5px;
-    $tab-size: 5px;
-
-    .piece {
-      height: $piece-size;
-      width: $piece-size;
-      margin: $piece-margin;
-      z-index: 1000;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: calc(#{$piece-size} - #{$tab-insert-width});
-    }
-
-    .tab-insert {
-      width: $tab-insert-width;
-      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
-      height: $piece-size;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-    }
-
-    .left-tab::before {
-      content: "";
-      width: $tab-size;
-      height: calc(#{$tab-size} * 2);
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
-    }
+  .piece.piece-closed {
+    margin: $piece-margin;
+    height: $piece-height;
+    width: $piece-height;
   }
 
-  // ipad portrait
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : portrait) {
-    $piece-size: 50px;
-    $piece-margin: 2px;
-    $tab-insert-left: 26px;
-    $tab-insert-width: 5px;
-    $tab-size: 5px;
-
-    .piece {
-      height: $piece-size;
-      width: $piece-size;
-      margin: $piece-margin;
-      z-index: 1000;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: calc(#{$piece-size} - #{$tab-insert-width});
-    }
-
-    .tab-insert {
-      width: $tab-insert-width;
-      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
-      height: $piece-size;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-    }
-
-    .left-tab::before {
-      content: "";
-      width: $tab-size;
-      height: calc(#{$tab-size} * 2);
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
-    }
+  .piece.piece-start, .piece.piece-middle-or-end {
+    height: $piece-height;
+    width: 8vmin;
   }
 
-  @media only screen and (max-width: 823px) and (orientation: landscape) {
-    $piece-size: 36px;
-    $piece-margin: 2px;
-    $tab-insert-width: 5px;
-    $tab-size: 5px;
-
-    .command-name {
-      display: none;
-    }
-
-    .piece {
-      height: $piece-size;
-      width: $piece-size;
-      margin: $piece-margin;
-      z-index: 1000;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: calc(#{$piece-size} - #{$tab-insert-width});
-    }
-
-    .tab-insert {
-      width: $tab-insert-width;
-      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
-      height: $piece-size;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-    }
-
-    .left-tab::before {
-      content: "";
-      width: $tab-size;
-      height: calc(#{$tab-size} * 2);
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
-    }
+  .piece.piece-start {
   }
 
-  @media only screen and (max-width : 736px) and (orientation: landscape) {
-    $piece-size: 36px;
-    $piece-margin: 2px;
-    $tab-insert-width: 5px;
-    $tab-size: 5px;
-
-    .command-name {
-      display: none;
-    }
-
-    .piece {
-      height: $piece-size;
-      width: $piece-size;
-      margin: $piece-margin;
-      z-index: 1000;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: calc(#{$piece-size} - #{$tab-insert-width});
-    }
-
-    .tab-insert {
-      width: $tab-insert-width;
-      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
-      height: $piece-size;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-    }
-
-    .left-tab::before {
-      content: "";
-      width: $tab-size;
-      height: calc(#{$tab-size} * 2);
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
-    }
+  .piece.piece-middle-or-end {
+    margin: 0 0 0 -1vmin;
   }
 
-  @media only screen and (max-width: 667px) and (orientation: landscape) {
-    $piece-size: 31px;
-    $piece-margin: 2px;
-    $tab-insert-width: 5px;
-    $tab-size: 5px;
-
-    .command-name {
-      display: none;
-    }
-
-    .piece {
-      height: $piece-size;
-      width: $piece-size;
-      margin: $piece-margin;
-      z-index: 1000;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: calc(#{$piece-size} - #{$tab-insert-width});
-    }
-
-    .tab-insert {
-      width: $tab-insert-width;
-      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
-      height: $piece-size;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-    }
-
-    .left-tab::before {
-      content: "";
-      width: $tab-size;
-      height: calc(#{$tab-size} * 2);
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-  }
-
-  @media only screen and (max-width: 568px) and (orientation: landscape){
-    $piece-size: 31px;
-    $piece-margin: 2px;
-    $tab-insert-width: 5px;
-    $tab-size: 5px;
-
-    .command-name {
-      display: none;
-    }
-
-    .piece {
-      height: $piece-size;
-      width: $piece-size;
-      margin: $piece-margin;
-      z-index: 1000;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: calc(#{$piece-size} - #{$tab-insert-width});
-    }
-
-    .tab-insert {
-      width: $tab-insert-width;
-      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
-      height: $piece-size;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-    }
-
-    .left-tab::before {
-      content: "";
-      width: $tab-size;
-      height: calc(#{$tab-size} * 2);
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-  }
-
-  @media only screen and (max-width: 414px) {
-    $piece-size: 36px;
-    $piece-margin: 2px;
-    $tab-insert-width: 5px;
-    $tab-size: 5px;
-
-    .command-name {
-      display: none;
-    }
-
-    .piece {
-      height: $piece-size;
-      width: $piece-size;
-      margin: $piece-margin;
-      z-index: 1000;
-    }
-
-    .dropped-indication {
-      box-shadow: 0 -2px 0 0 $click-color;
-    }
-
-    .puzzle-start, .puzzle-middle {
-      width: calc(#{$piece-size} - #{$tab-insert-width});
-    }
-
-    .tab-insert {
-      width: $tab-insert-width;
-      left: calc(#{$piece-size} - #{$tab-insert-width} - 1px);
-      height: $piece-size;
-    }
-
-    .notch {
-      width: 10px;
-      height: 10px;
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-      background: radial-gradient(transparent 5px, rgba(0, 0, 0, 1) 5px) no-repeat 5px;
-    }
-
-    .left-tab {
-      left: calc(#{$tab-size} - #{$tab-size} - #{$tab-size});
-    }
-
-    .left-tab::before {
-      content: "";
-      width: $tab-size;
-      height: calc(#{$tab-size} * 2);
-      border-bottom-right-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-  }
-
-  @media only screen and (max-width: 375px) {
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 320px) {
-
+  .piece.piece-placeholder {
+    opacity: 0.3;
   }
 </style>

@@ -40,7 +40,8 @@ export default {
       const seconds = Math.floor(totalSeconds - minutes * 60)
       return _.chain([minutes, seconds])
         .map(t => {
-          if (t === 0) return '00'
+          if (t < 10) return '0' + t
+          else if (t === 0) return '00'
           else return t
         })
         .value()
@@ -48,11 +49,11 @@ export default {
     },
     success (starNumber) {
       if (starNumber === 1) {
-        return this.timer.stars >= 1
-      } else if (starNumber === 2) {
         return this.timer.stars >= 3
-      } else {
+      } else if (starNumber === 2) {
         return this.timer.stars >= 2
+      } else {
+        return this.timer.stars >= 1
       }
     }
   },
@@ -70,9 +71,10 @@ $star-spread-star-size: 40px;
 $stars-shadow: inset 0 0 100px #778899;
 $star-congrats-star-size: 70px;
 $star-timer-right: 100%;
-$star-timer-bottom: 0;
-$star-timer-font-size: 16px;
+$star-timer-bottom: -85%;
+$star-timer-font-size: 1.5vmin;
 $star-timer-margin-right: 5px;
+
 .stars {
   position: relative;
   display: flex;
@@ -80,7 +82,6 @@ $star-timer-margin-right: 5px;
   justify-content: center;
   border-radius: 5px;
   cursor: pointer;
-  height: 100%;
 }
 
 .star-timer {
@@ -92,7 +93,6 @@ $star-timer-margin-right: 5px;
 
 .help-button {
   .star-timer {
-    bottom: -30px;
     color: #000000;
   }
 }
@@ -108,10 +108,6 @@ $star-timer-margin-right: 5px;
     align-self: flex-end;
     margin-bottom: -10px;
   }
-
-  .star-timer {
-    top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-  }
 }
 
 .star-spread {
@@ -125,93 +121,5 @@ $star-timer-margin-right: 5px;
     top: 50%;
     transform: translateY(-62%);
   }
-}
-
-@media only screen and (max-width: 823px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      display: none;
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 736px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 667px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 568px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 414px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 375px) {
-  $star-timer-font-size: 8px;
-  .star-timer {
-    font-size: $star-timer-font-size;
-  }
-
-  .star-cluster {
-    .star-timer {
-      left: 35%;
-      top: calc(100% - #{$star-timer-font-size + $star-timer-font-size / 2});
-    }
-  }
-}
-
-@media only screen and (max-width: 320px) {
 }
 </style>

@@ -48,19 +48,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $popover-margin-top: 60px;
+  $pointer-size: 2vmin;
 
   .popover-bucket {
-    position: relative;
+    position: absolute;
+    bottom: -1px;
+    right: 0;
+    left: 0;
     z-index: 110;
-    height: calc(100% + #{$popover-margin-top} + 2px);
-    width: 100%;
-    margin: calc(-#{$popover-margin-top}) auto;
-  }
-
-  .staged-popover-bucket {
-    left: 48px;
-    right: -48px;
+    margin: 0 auto;
   }
 
   .popover-bucket-content {
@@ -72,106 +68,5 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-  }
-
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : landscape) {
-    $popover-width: 100%;
-    $popover-margin-top: 50px;
-
-    .popover-bucket {
-      z-index: 1010;
-      height: calc(100% + #{$popover-margin-top});
-      margin-top: calc(-#{$popover-margin-top} + 2px);
-      width: $popover-width;
-    }
-  }
-
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : portrait) {
-    $popover-width: 100%;
-    $popover-margin-top: 70px;
-
-    .popover-bucket {
-      z-index: 1010;
-      height: calc(100% + #{$popover-margin-top});
-      margin-top: calc(-#{$popover-margin-top} + 2px);
-      width: $popover-width;
-    }
-  }
-
-  @media only screen and (max-width : 823px) and (orientation: landscape) {
-    $popover-width: 98%;
-    $popover-margin-top: 50px;
-
-    .popover-bucket {
-      z-index: 1010;
-      height: calc(100% + #{$popover-margin-top});
-      margin-top: calc(-#{$popover-margin-top} + 2px);
-      width: $popover-width;
-    }
-  }
-
-  @media only screen and (max-width : 667px) and (orientation: landscape) {
-    $popover-width: 98%;
-    $popover-margin-top: 50px;
-
-    .popover-bucket {
-      z-index: 1010;
-      height: calc(100% + #{$popover-margin-top});
-      margin-top: calc(-#{$popover-margin-top} + 2px);
-      width: $popover-width;
-    }
-  }
-
-  /* iphone 5 landscape */
-  @media only screen and (max-width : 568px) and (orientation: landscape) {
-    $popover-width: 98%;
-    $popover-margin-top: 50px;
-
-    .popover-bucket {
-      z-index: 1010;
-      height: calc(100% + #{$popover-margin-top});
-      margin-top: calc(-#{$popover-margin-top} + 2px);
-      width: $popover-width;
-    }
-  }
-
-  @media only screen and (max-width: 414px) {
-    $popover-width: 98%;
-
-    .popover-bucket {
-      z-index: 1010;
-      height: 100%;
-      margin-top: 2px;
-      width: $popover-width;
-    }
-  }
-
-  @media only screen and (max-width: 375px) {
-    $popover-width: 98%;
-
-    .popover-bucket {
-      z-index: 1010;
-      height: 100%;
-      margin-top: 2px;
-      width: $popover-width;
-    }
-  }
-
-  /* iphone 5 portrait */
-  @media only screen and (max-width : 320px) {
-    $popover-width: 98%;
-
-    .popover-bucket {
-      z-index: 1010;
-      height: 100%;
-      margin-top: 2px;
-      width: $popover-width;
-    }
   }
 </style>

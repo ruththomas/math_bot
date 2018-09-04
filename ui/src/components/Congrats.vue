@@ -1,6 +1,6 @@
 <template>
   <div
-    class="message-template congrats"
+    class="row message-template congrats"
   >
     <div v-if="congrats" class="won">
       <img class="congrats-icon won-icon" :src="permanentImages.smileyFace" />
@@ -43,12 +43,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $grid-space-size: 96px;
   $click-color: #B8E986;
   $grid-background: rgba(0, 0, 0, 0.6);
   $grid-border-radius: 4px;
-  $icon-size: 150px;
-  $text-minor-font-size: 24px;
+  $icon-size: 50%;
+  $text-minor-font-size: 4vmin;
+  $grid-space-size: 9vmin;
 
   .message-template {
     border: 1px solid $click-color;
@@ -62,6 +62,11 @@ export default {
     align-items: center;
     margin: 0 auto;
     color: #ffffff;
+
+    * {
+      height: 100%;
+      width: 100%;
+    }
 
     .text-minor {
       font-size: $text-minor-font-size;
@@ -77,268 +82,6 @@ export default {
         height: calc(#{$icon-size} / 2);
         width: 25%;
         margin: 0 auto;
-      }
-    }
-  }
-
-  /* ipad pro Portrait */
-  @media only screen
-  and (min-device-width: 1024px)
-  and (max-device-height: 1366px)
-  and (orientation: portrait)
-  and (-webkit-min-device-pixel-ratio: 1.5) {
-    $grid-space-size: 96px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 150px;
-    $text-minor-font-size: 24px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-    }
-  }
-
-  // ipad landscape
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : landscape) {
-    $grid-space-size: 56px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 150px;
-    $text-minor-font-size: 24px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-    }
-  }
-
-  // ipad portrait
-  @media only screen
-  and (min-device-width : 768px)
-  and (max-device-width : 1024px)
-  and (orientation : portrait)  {
-    $grid-space-size: 56px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 150px;
-    $text-minor-font-size: 24px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-    }
-  }
-
-  @media only screen and (max-width: 823px) and (orientation: landscape) {
-    $grid-space-size: 32px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 70px;
-    $text-minor-font-size: 18px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-
-      .text-minor {
-        font-size: $text-minor-font-size;
-      }
-
-      .congrats-icon {
-        height: $icon-size;
-        width: $icon-size;
-      }
-
-      .won {
-        .stars {
-          height: calc(#{$icon-size} / 2);
-          width: 25%;
-          margin: 0 auto;
-        }
-      }
-    }
-  }
-
-  @media only screen and (max-width : 736px) and (orientation: landscape) {
-    $grid-space-size: 38px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 70px;
-    $text-minor-font-size: 18px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-
-      .text-minor {
-        font-size: $text-minor-font-size;
-      }
-
-      .congrats-icon {
-        height: $icon-size;
-        width: $icon-size;
-      }
-
-      .won {
-        .stars {
-          height: calc(#{$icon-size} / 2);
-          width: 25%;
-          margin: 0 auto;
-        }
-      }
-    }
-  }
-
-  @media only screen and (max-width: 667px) and (orientation: landscape) {
-    $grid-space-size: 30px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 50px;
-    $text-minor-font-size: 14px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-
-      .text-minor {
-        font-size: $text-minor-font-size;
-      }
-
-      .congrats-icon {
-        height: $icon-size;
-        width: $icon-size;
-      }
-
-      .won {
-        .stars {
-          height: calc(#{$icon-size} / 2);
-          width: 25%;
-          margin: 0 auto;
-        }
-      }
-    }
-  }
-
-  @media only screen and (max-width: 568px) and (orientation: landscape) {
-    $grid-space-size: 26px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 50px;
-    $text-minor-font-size: 14px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-
-      .text-minor {
-        font-size: $text-minor-font-size;
-      }
-
-      .congrats-icon {
-        height: $icon-size;
-        width: $icon-size;
-      }
-
-      .won {
-        .stars {
-          height: calc(#{$icon-size} / 2);
-          width: 25%;
-          margin: 0 auto;
-        }
-      }
-    }
-  }
-
-  @media only screen and (max-width: 414px) {
-    $grid-space-size: 32px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 70px;
-    $text-minor-font-size: 18px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-
-      .text-minor {
-        font-size: $text-minor-font-size;
-      }
-
-      .congrats-icon {
-        height: $icon-size;
-        width: $icon-size;
-      }
-
-      .won {
-        .stars {
-          height: calc(#{$icon-size} / 2);
-          width: 25%;
-          margin: 0 auto;
-        }
-      }
-    }
-  }
-
-  @media only screen and (max-width: 375px) {
-    $grid-space-size: 26px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 50px;
-    $text-minor-font-size: 14px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-
-      .text-minor {
-        font-size: $text-minor-font-size;
-      }
-
-      .congrats-icon {
-        height: $icon-size;
-        width: $icon-size;
-      }
-
-      .won {
-        .stars {
-          height: calc(#{$icon-size} / 2);
-          width: 25%;
-          margin: 0 auto;
-        }
-      }
-    }
-  }
-
-  @media only screen and (max-width : 320px) {
-    $grid-space-size: 24px;
-    $click-color: #B8E986;
-    $grid-background: rgba(0, 0, 0, 0.6);
-    $grid-border-radius: 4px;
-    $icon-size: 50px;
-    $text-minor-font-size: 14px;
-    .message-template {
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-
-      .text-minor {
-        font-size: $text-minor-font-size;
-      }
-
-      .congrats-icon {
-        height: $icon-size;
-        width: $icon-size;
-      }
-
-      .won {
-        .stars {
-          height: calc(#{$icon-size} / 2);
-          width: 25%;
-          margin: 0 auto;
-        }
       }
     }
   }

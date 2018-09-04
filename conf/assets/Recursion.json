@@ -461,7 +461,7 @@
           "createdId": "59033416266",
           "name": "Clean Comb",
           "image": "cleanComb",
-          "sizeLimit": 28,
+          "sizeLimit": 30,
           "func": []
         }
       ],
@@ -520,10 +520,10 @@
       "level": "Recursion",
       "step": "CleanComb3",
       "gridMap": [
-        "|W| |E| |E| |E|     |W| |E| |E| |E|     |W| |W|",
-        "|W| |E| |W| [TS(1)] |W| |E| |W| [TS(1)] |W| |W|",
-        "|W| |E| |W| |W|     |W| |E| |W| |W|     |W| |W|",
-        "|W| |E| |W| |W|     |W| |E| |W| |W|     |W| |W|",
+        "|W| |E| |E| |E|     |W| |W| |E| |E| |E|     |W|",
+        "|W| |E| |W| [TS(1)] |W| |W| |E| |W| [TS(1)] |W|",
+        "|W| |E| |W| |W|     |W| |W| |E| |W| |W|     |W|",
+        "|W| |E| |W| |W|     |W| |W| |E| |W| |W|     |W|",
         "(R) |E| |E| |E|     |E| |E| |E| |E|     |E| ($)"
       ],
       "description": "Pickup all kitties and place them on the portal.",
@@ -546,7 +546,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["wqSGUqFmbVk", "HxAdv9fAWoQ"],
+      "videoHints": ["Y8DCXlnBhRo", "CntzuVR13mM"],
       "prevStep": "CleanComb2",
       "nextStep": "CleanZigZags"
     },
