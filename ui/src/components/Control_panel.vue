@@ -96,21 +96,15 @@ export default {
 
   .return-to-profile {
     position: fixed;
-    left: 0;
+    left: auto;
+    right: 0;
     top: 0;
     cursor: pointer;
     height: 15vmin;
     width: 15vmin;
   }
 
-  @media only screen and (orientation: portrait) {
-    .return-to-profile {
-      left: auto;
-      right: 0;
-    }
-  }
-
-  @media only screen and (max-width: 567px) {
+  @media only screen and (max-width: 902px) {
     .return-to-profile {
       left: auto;
       right: 0;
