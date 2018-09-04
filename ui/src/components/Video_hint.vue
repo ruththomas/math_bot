@@ -1,13 +1,17 @@
 <template>
-  <div class="row video-hint">
-    <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
-    <iframe class="embedded" :src="hintShowing.videoURL" scrolling="no" frameborder="0"></iframe>
+  <div class="video-hint" data-aos="fade-in">
+    <div class="embedded">
+      <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
+      <iframe :src="hintShowing.videoURL" scrolling="no" frameborder="0" allowfullscreen></iframe>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Video_hint',
+  mounted () {
+  },
   computed: {
     hintShowing () {
       return this.$store.getters.getHintShowing
@@ -26,27 +30,38 @@ export default {
 
 <style scoped lang="scss">
 $grid-space-size: 9vmin;
-$video-hint-shadow: inset 0 0 200px #000;
-$video-hint-close-top: -20px;
-$video-hint-close-right: -20px;
+$video-hint-close-top: 0;
+$video-hint-close-left: 100%;
+$dialog-button-size: 3.5vmin;
+
 .video-hint {
-  height: calc(#{$grid-space-size} * 5);
-  width: calc(#{$grid-space-size} * 10);
   border: 1px solid transparent;
-  margin: 0 auto;
   border-radius: 5px;
-  box-shadow: $video-hint-shadow;
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
 
   .embedded {
-    height: 100%;
-    width: 100%;
+    position: relative;
+    height: calc(#{$grid-space-size} * 5);
+    width: calc(#{$grid-space-size} * 10);
+
+    iframe {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 
 .close-video-edit {
   position: absolute;
-  top: $video-hint-close-top;
-  right: $video-hint-close-right;
+  top: calc(-#{$dialog-button-size} / 2);
+  left: calc(#{$video-hint-close-left} - #{$dialog-button-size} / 2);
 }
 </style>
