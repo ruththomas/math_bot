@@ -1,5 +1,6 @@
 <template>
   <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
+  <video-hint v-else-if="hintShowing.showing" key="video-hint-1234"></video-hint>
   <div class="container-fluid robot" data-aos="fade-in" v-else>
     <div class="container">
 
@@ -39,12 +40,16 @@ import utils from '../services/utils'
 import Robot from '../services/RobotState'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
+import VideoHint from './Video_hint'
 
 export default {
   mounted () {
     this.initializeRobot()
   },
   computed: {
+    hintShowing () {
+      return this.$store.getters.getHintShowing
+    },
     tokenId () {
       return this.$store.getters.getTokenId
     },
@@ -146,7 +151,8 @@ export default {
     ControlPanel,
     SplashScreen,
     RobotCarrying,
-    PopoverBucket
+    PopoverBucket,
+    VideoHint
   }
 }
 </script>
