@@ -9,7 +9,6 @@
       >
         <congrats v-if="congratsShowing" :congrats="true" key="congrats-1234"></congrats>
         <congrats v-else-if="tryAgainShowing" :congrats="false" key="congrats-5678"></congrats>
-        <video-hint v-else-if="hintShowing.showing" key="video-hint-1234"></video-hint>
         <div v-else-if="gridMap" class="row" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''" key="grid-map-1234">
           <div class="grid-map">
             <div
@@ -75,7 +74,6 @@
 <script>
 import assets from '../assets/assets'
 import Congrats from './Congrats'
-import VideoHint from './Video_hint'
 import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
@@ -127,9 +125,6 @@ export default {
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
-    hintShowing () {
-      return this.$store.getters.getHintShowing
-    },
     messageShowing () {
       if (this.congratsShowing) {
         return true
@@ -177,7 +172,6 @@ export default {
   },
   components: {
     Congrats,
-    VideoHint,
     SplashScreen,
     RobotCarrying,
     ControlPanel
