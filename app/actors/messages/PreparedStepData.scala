@@ -23,11 +23,13 @@ case class PreparedStepData(
     prevStep: String,
     nextStep: String,
     initFocus: List[String],
+    freeHint: Option[String],
     stepControl: StepControl
 )
 
 object PreparedStepData {
   import models.Problem._
+  import actors.VideoHintActor.embedURL
 
   def apply(playerToken: PlayerToken, rawStepData: RawStepData): PreparedStepData = {
     new PreparedStepData(
@@ -47,6 +49,7 @@ object PreparedStepData {
       prevStep = rawStepData.prevStep,
       nextStep = rawStepData.nextStep,
       initFocus = createInitFocus(rawStepData.initFocus),
+      freeHint = freeHintUrl(rawStepData.freeHint),
       stepControl = new StepControl(rawStepData, playerToken.lambdas.getOrElse(Lambdas()))
     )
   }
@@ -54,6 +57,11 @@ object PreparedStepData {
   case class InitialRobotState(location: Map[String, Int], orientation: String, holding: List[String])
 
   import daos.DefaultCommands._
+
+  def freeHintUrl(idOpt: Option[String]): Option[String] = idOpt match {
+    case Some(id) => Some(embedURL(id))
+    case None => None
+  }
 
   def findRobotCoords(grid: List[String], coords: Map[String, Int] = Map("x" -> 0, "y" -> 0)): Map[String, Int] =
     grid match {
@@ -142,6 +150,7 @@ object PreparedStepData {
     (JsPath \ "prevStep").write[String] and
     (JsPath \ "nextStep").write[String] and
     (JsPath \ "initFocus").write[List[String]] and
+    (JsPath \ "freeHint").writeNullable[String] and
     OWrites[StepControl](_ => Json.obj())
   )(unlift(PreparedStepData.unapply))
 
