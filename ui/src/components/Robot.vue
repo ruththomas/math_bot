@@ -1,6 +1,6 @@
 <template>
   <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
-  <video-hint v-else-if="hintShowing.showing" key="video-hint-1234"></video-hint>
+  <video-hint v-else-if="hintShowing.showing" :video-url="hintShowing.videoURL" key="video-hint-1234"></video-hint>
   <div class="container-fluid robot" data-aos="fade-in" v-else>
     <div class="container">
 
