@@ -7,6 +7,7 @@ import Profile from '@/components/Profile'
 import Marketing from '@/components/marketing/Marketing'
 import Callback from '@/components/Callback'
 import BootstrapVue from 'bootstrap-vue'
+import VueYouTubeEmbed from 'vue-youtube-embed'
 
 import $store from '../store/store'
 
@@ -14,6 +15,7 @@ import $store from '../store/store'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+Vue.use(VueYouTubeEmbed)
 Vue.use(BootstrapVue)
 Vue.use(Router)
 Vue.use(VueResource)

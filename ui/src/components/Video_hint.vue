@@ -5,13 +5,22 @@
       <div class="hint-spinner">
         <splash-screen></splash-screen>
       </div>
-      <iframe :src="hintShowing.videoURL" scrolling="no" frameborder="0" allowfullscreen></iframe>
+      <youtube
+        class="player"
+        :video-id="videoId"
+        :player-vars="{ autoplay: 1 }"
+        :player-height="'100%'"
+        :player-width="'100%'"
+        @ended="closeHint"
+      ></youtube>
     </div>
   </div>
 </template>
 
 <script>
 import SplashScreen from './Splash_screen'
+import { getIdFromURL } from 'vue-youtube-embed'
+
 export default {
   name: 'Video_hint',
   mounted () {
@@ -20,6 +29,9 @@ export default {
     }, 80)
   },
   computed: {
+    videoId () {
+      return getIdFromURL(this.hintShowing.videoURL)
+    },
     hintShowing () {
       return this.$store.getters.getHintShowing
     },
@@ -61,30 +73,26 @@ $embedded-background: #1b1e21;
   z-index: 1000;
 
   .embedded {
-    position: relative;
     height: calc(#{$grid-space-size} * 5);
     width: calc(#{$grid-space-size} * 10);
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     background: $embedded-background;
 
-    iframe {
+    .player {
       height: 100%;
       width: 100%;
       z-index: 1;
     }
-  }
 
-  .hint-spinner {
-    position: absolute;
-    *:first-child {
-      background: $embedded-background!important;
+    .hint-spinner {
+      position: absolute;
+      *:first-child {
+        background: $embedded-background!important;
+      }
     }
-  }
-
-  .hide-embedded {
-    display: none;
   }
 }
 
