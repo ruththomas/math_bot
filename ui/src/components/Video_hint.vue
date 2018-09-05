@@ -1,11 +1,11 @@
 <template>
-  <div class="video-hint" data-aos="fade-in">
+  <div class="video-hint">
     <div class="embedded">
       <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
       <div class="hint-spinner">
         <splash-screen></splash-screen>
       </div>
-      <iframe :src="videoUrl" scrolling="no" frameborder="0" allowfullscreen></iframe>
+      <iframe :src="hintShowing.videoURL" scrolling="no" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
 </template>
@@ -20,6 +20,9 @@ export default {
     }, 80)
   },
   computed: {
+    hintShowing () {
+      return this.$store.getters.getHintShowing
+    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     }
@@ -31,8 +34,7 @@ export default {
   },
   components: {
     SplashScreen
-  },
-  props: ['videoUrl']
+  }
 }
 </script>
 
@@ -56,6 +58,7 @@ $embedded-background: #1b1e21;
   align-items: center;
   justify-content: center;
   background: #000000;
+  z-index: 1000;
 
   .embedded {
     position: relative;
