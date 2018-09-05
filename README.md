@@ -162,6 +162,7 @@ The project has been built thus far with Intellij
       "clearMain": <{boolean>INDICATES IF MAIN SHOULD BE EMPTY AT THE START OF THE LEVEL>,
       "initFocus": <{array[string]}LIST OF ELEMENTS TO ADD SPECIAL EFFECT ON AT START OF STEP, SEE `Init Focus` SECTION>
       "videoHints": <{array[string]}LIST OF YOUTUBE VIDEO IDS>,
+      "freeHint": <{option[string]}YOUTUBE VIDEO ID THAT PLAYS AT THE BEGGINING OF LEVEL AUTOMATICALLY>,
       "prevStep": <{String}PREVIOUS STEP NAME (Should be "None" if first step)>,
       "nextStep": <{String}NEXT STEP NAME (Should be "None" if last step)>
     },
