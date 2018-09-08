@@ -6,7 +6,7 @@
       <star class="star-three" :star-group="starGroup" :success="success(3)"></star>
     </div>
     <div v-if="remainingTime > 0" class="row star-timer">
-      <b-progress :style="{'background-color': '#B8E986', height: '1vmin'}" variant="secondary" :value="remainingTimeInPercent" :max="max" animated></b-progress>
+      <b-progress :style="{'background-color': 'rgba(255, 255, 255, 0.6)', height: '1vmin'}" variant="secondary" :value="remainingTimeInPercent" :max="max" animated></b-progress>
     </div>
   </div>
   <div v-else class="stars">
