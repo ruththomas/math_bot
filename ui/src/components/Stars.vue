@@ -5,7 +5,7 @@
       <star class="star-two" :star-group="starGroup" :active="isActive(2)"></star>
       <star class="star-three" :star-group="starGroup" :active="isActive(3)"></star>
     </div>
-    <div class="progress">
+    <div v-if="timer.stars < 3" class="progress">
       <div class="progress-bar progress-bar-striped progress-bar-animated"
            role="progressbar"
            aria-valuenow="0"
