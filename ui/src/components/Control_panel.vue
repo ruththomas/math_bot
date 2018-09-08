@@ -8,18 +8,27 @@
       <img :src="handlePicture(userProfile.picture)" />
     </div>
 
-    <div class="col" style="padding: 0;">
+    <div class="" style="padding: 0;">
       <img :src="permanentImages.instructionsRobot" class="instructions-robot">
     </div>
-    <div class="col" style="padding: 0;">
-      <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
+
+    <div
+      class="btn button-effect help-button"
+      @click="videoHint.getHint()"
+    >
+      <stars
+        :star-group="'star-spread'"
+        :level="level"
+        :step="step"
+        :step-stats="stepStats"></stars>
     </div>
   </div>
 </template>
 
 <script>
-import SpeechBubble from './Speech_bubble'
 import RobotCarrying from './Robot_carrying'
+import Stars from './Stars'
+import VideoHint from '../services/VideoHint'
 
 export default {
   name: 'control-panel',
@@ -46,13 +55,21 @@ export default {
       return this.$store.getters.getSteps
     },
     step () {
-      const stepName = this.$store.getters.getStep
+      return this.$store.getters.getStep
+    },
+    level () {
+      return this.$store.getters.getLevel
+    },
+    stepStats () {
+      const stepName = this.step
       return this.steps.find(s => s.name === stepName)
     }
   },
   data () {
     return {
-      speechBubbleShowing: true
+      speechBubbleShowing: true,
+      getTime: false,
+      videoHint: new VideoHint(this)
     }
   },
   methods: {
@@ -70,22 +87,29 @@ export default {
     }
   },
   components: {
-    SpeechBubble,
-    RobotCarrying
+    RobotCarrying,
+    Stars
   }
 }
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
   $instructions-robot-size: 13vmin;
   $grid-space-size: 9vmin;
 
   .control-panel {
     display: flex;
     align-items: flex-end;
-    justify-content: flex-start;
+    justify-content: space-between;
     position: relative;
-    right: calc(#{$grid-space-size} * 0.75);
+    width: calc(#{$grid-space-size} * 10 + 2px);
+
+    .help-button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border: 1px solid $click-color;
+    }
   }
 
   .instructions {
@@ -102,6 +126,7 @@ export default {
 
   .instructions-robot {
     height: $instructions-robot-size;
+    margin-left: calc(#{$grid-space-size} / 3);
   }
 
   .instructions-filler-left {

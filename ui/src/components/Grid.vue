@@ -220,6 +220,7 @@ export default {
       position: relative;
       border: 1px solid $click-color;
       border-radius: $grid-border-radius;
+      border-top-right-radius: 0;
     }
   }
 
