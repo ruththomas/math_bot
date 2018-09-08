@@ -1,26 +1,41 @@
 <template>
   <div class="row control-panel">
-    <img @click="goToProfile()"
-         class="return-to-profile"
-         :src="permanentImages.returnToProfile"
-         data-toggle="tooltip" title="Return to profile"
-    />
-    <div class="col" style="padding: 0;">
+    <div
+      @click="goToProfile()"
+      class="return-to-profile"
+      data-toggle="tooltip" title="Return to profile"
+    >
+      <img :src="handlePicture(userProfile.picture)" />
+    </div>
+
+    <div class="" style="padding: 0;">
       <img :src="permanentImages.instructionsRobot" class="instructions-robot">
     </div>
-    <div class="col" style="padding: 0;">
-      <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
+
+    <div
+      class="btn button-effect help-button"
+      @click="videoHint.getHint()"
+    >
+      <stars
+        :star-group="'star-spread'"
+        :level="level"
+        :step="step"
+        :step-stats="stepStats"></stars>
     </div>
   </div>
 </template>
 
 <script>
-import SpeechBubble from './Speech_bubble'
 import RobotCarrying from './Robot_carrying'
+import Stars from './Stars'
+import VideoHint from '../services/VideoHint'
 
 export default {
   name: 'control-panel',
   computed: {
+    userProfile () {
+      return JSON.parse(localStorage.getItem('profile'))
+    },
     tryAgainShowing () {
       return this.$store.getters.getTryAgainShowing
     },
@@ -40,16 +55,31 @@ export default {
       return this.$store.getters.getSteps
     },
     step () {
-      const stepName = this.$store.getters.getStep
+      return this.$store.getters.getStep
+    },
+    level () {
+      return this.$store.getters.getLevel
+    },
+    stepStats () {
+      const stepName = this.step
       return this.steps.find(s => s.name === stepName)
     }
   },
   data () {
     return {
-      speechBubbleShowing: true
+      speechBubbleShowing: true,
+      getTime: false,
+      videoHint: new VideoHint(this)
     }
   },
   methods: {
+    handlePicture (picture) {
+      if (!picture || picture.match(/gravatar/)) {
+        return this.permanentImages.gravatar
+      } else {
+        return picture
+      }
+    },
     goToProfile () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
       this.$store.dispatch('deleteMessages')
@@ -57,21 +87,29 @@ export default {
     }
   },
   components: {
-    SpeechBubble,
-    RobotCarrying
+    RobotCarrying,
+    Stars
   }
 }
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
   $instructions-robot-size: 13vmin;
   $grid-space-size: 9vmin;
 
   .control-panel {
     display: flex;
     align-items: flex-end;
+    justify-content: space-between;
     position: relative;
-    right: calc(#{$grid-space-size} * 0.75);
+    width: calc(#{$grid-space-size} * 10 + 2px);
+
+    .help-button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border: 1px solid $click-color;
+    }
   }
 
   .instructions {
@@ -88,6 +126,7 @@ export default {
 
   .instructions-robot {
     height: $instructions-robot-size;
+    margin-left: calc(#{$grid-space-size} / 3);
   }
 
   .instructions-filler-left {
@@ -102,6 +141,18 @@ export default {
     cursor: pointer;
     height: 15vmin;
     width: 15vmin;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /*background-color: rgba(0, 0, 0, 0.2);*/
+
+    img {
+      border-radius: 50%;
+      height: 60%;
+      width: auto;
+      box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
+    }
   }
 
   @media only screen and (max-width: 902px) {
