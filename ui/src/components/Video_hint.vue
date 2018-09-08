@@ -1,18 +1,37 @@
 <template>
-  <div class="video-hint" data-aos="fade-in">
+  <div class="video-hint">
     <div class="embedded">
       <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
-      <iframe :src="hintShowing.videoURL" scrolling="no" frameborder="0" allowfullscreen></iframe>
+      <div class="hint-spinner">
+        <splash-screen></splash-screen>
+      </div>
+      <youtube
+        class="player"
+        :video-id="videoId"
+        :player-vars="{ autoplay: 1 }"
+        :player-height="'100%'"
+        :player-width="'100%'"
+        @ended="closeHint"
+      ></youtube>
     </div>
   </div>
 </template>
 
 <script>
+import SplashScreen from './Splash_screen'
+import { getIdFromURL } from 'vue-youtube-embed'
+
 export default {
   name: 'Video_hint',
   mounted () {
+    setTimeout(() => {
+      this.splashScreenShowing = false
+    }, 80)
   },
   computed: {
+    videoId () {
+      return getIdFromURL(this.hintShowing.videoURL)
+    },
     hintShowing () {
       return this.$store.getters.getHintShowing
     },
@@ -24,6 +43,9 @@ export default {
     closeHint () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
     }
+  },
+  components: {
+    SplashScreen
   }
 }
 </script>
@@ -33,6 +55,8 @@ $grid-space-size: 9vmin;
 $video-hint-close-top: 0;
 $video-hint-close-left: 100%;
 $dialog-button-size: 3.5vmin;
+$click-color: #B8E986;
+$embedded-background: #1b1e21;
 
 .video-hint {
   border: 1px solid transparent;
@@ -46,15 +70,28 @@ $dialog-button-size: 3.5vmin;
   align-items: center;
   justify-content: center;
   background: #000000;
+  z-index: 1000;
 
   .embedded {
-    position: relative;
     height: calc(#{$grid-space-size} * 5);
     width: calc(#{$grid-space-size} * 10);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $embedded-background;
 
-    iframe {
+    .player {
       height: 100%;
       width: 100%;
+      z-index: 1;
+    }
+
+    .hint-spinner {
+      position: absolute;
+      *:first-child {
+        background: $embedded-background!important;
+      }
     }
   }
 }
@@ -63,5 +100,6 @@ $dialog-button-size: 3.5vmin;
   position: absolute;
   top: calc(-#{$dialog-button-size} / 2);
   left: calc(#{$video-hint-close-left} - #{$dialog-button-size} / 2);
+  z-index: 2;
 }
 </style>
