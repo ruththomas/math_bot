@@ -1,12 +1,18 @@
 <template>
   <div v-if="stepStats.active" class="stars">
     <div class="star-spread">
-      <star class="star-one" :star-group="starGroup" :success="success(1)"></star>
-      <star class="star-two" :star-group="starGroup" :success="success(2)"></star>
-      <star class="star-three" :star-group="starGroup" :success="success(3)"></star>
+      <star class="star-one" :star-group="starGroup" :active="isActive(1)"></star>
+      <star class="star-two" :star-group="starGroup" :active="isActive(2)"></star>
+      <star class="star-three" :star-group="starGroup" :active="isActive(3)"></star>
     </div>
-    <div v-if="remainingTime > 0" class="row star-timer">
-      <b-progress :style="{'background-color': 'rgba(255, 255, 255, 0.6)', height: '1vmin'}" variant="secondary" :value="remainingTimeInPercent" :max="max" animated></b-progress>
+    <div class="progress">
+      <div class="progress-bar progress-bar-striped progress-bar-animated"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           :style="{width: `${timeSpent}%`, 'background-color': 'rgba(0, 0, 0, 0.5)'}"
+      ></div>
     </div>
   </div>
   <div v-else class="stars">
@@ -16,7 +22,6 @@
 
 <script>
 import Star from './Star'
-import _ from 'underscore'
 
 export default {
   name: 'Timer',
@@ -24,8 +29,8 @@ export default {
     timer () {
       return this.videoTimers[`${this.level}/${this.step}`] || {stars: 3}
     },
-    remainingTimeInPercent () {
-      return this.remainingTime * 100 / 3600
+    timeSpent () {
+      return 100 - this.remainingTime * 100 / 3600
     },
     remainingTime () {
       if (this.timer) return this.timer.remainingTime
@@ -45,19 +50,7 @@ export default {
     }
   },
   methods: {
-    convertTime (totalSeconds) {
-      const minutes = Math.floor(totalSeconds / 60)
-      const seconds = Math.floor(totalSeconds - minutes * 60)
-      return _.chain([minutes, seconds])
-        .map(t => {
-          if (t < 10) return '0' + t
-          else if (t === 0) return '00'
-          else return t
-        })
-        .value()
-        .join(':')
-    },
-    success (starNumber) {
+    isActive (starNumber) {
       if (starNumber === 1) {
         return this.timer.stars >= 3
       } else if (starNumber === 2) {
@@ -95,19 +88,16 @@ $click-color: #B8E986;
   justify-content: center;
   border-radius: 5px;
   cursor: pointer;
-}
 
-.star-timer {
-  position: absolute;
-  top: 100%;
-  z-index: 100;
-  width: 100%;
-  font-size: $star-timer-font-size;
-  color: #ffffff;
-  margin: 0;
-
-  * {
+  .progress {
+    position: absolute;
     width: 100%;
+    height: 100%;
+    background-color: transparent;
+
+    .progress-bar {
+      min-width: 3px;
+    }
   }
 }
 
@@ -117,11 +107,9 @@ $click-color: #B8E986;
   }
 }
 
-.progress-bar {
-}
-
 .star-spread {
   display: flex;
+  z-index: 101;
   .star-one, .star-two, .star-three {
     align-self: center;
   }
