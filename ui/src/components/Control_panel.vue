@@ -1,16 +1,8 @@
 <template>
   <div class="row control-panel">
-    <div
-      @click="goToProfile()"
-      class="return-to-profile"
-      data-toggle="tooltip" title="Return to profile"
-    >
-      <img :src="handlePicture(userProfile.picture)" />
-    </div>
-
-    <div class="" style="padding: 0;">
-      <img :src="permanentImages.instructionsRobot" class="instructions-robot">
-    </div>
+    <!--<div class="" style="padding: 0;">-->
+      <!--<img :src="permanentImages.instructionsRobot" class="instructions-robot">-->
+    <!--</div>-->
 
     <div
       class="btn button-effect help-button"
@@ -21,6 +13,14 @@
         :level="level"
         :step="step"
         :step-stats="stepStats"></stars>
+    </div>
+
+    <div
+      @click="goToProfile()"
+      class="return-to-profile"
+      data-toggle="tooltip" title="Return to profile"
+    >
+      <img :src="handlePicture(userProfile.picture)" />
     </div>
   </div>
 </template>
@@ -134,31 +134,19 @@ export default {
   }
 
   .return-to-profile {
-    position: fixed;
-    left: auto;
-    right: 0;
-    top: 0;
     cursor: pointer;
-    height: 15vmin;
-    width: 15vmin;
+    height: 12vmin;
+    width: 12vmin;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    /*background-color: rgba(0, 0, 0, 0.2);*/
 
     img {
       border-radius: 50%;
-      height: 60%;
-      width: auto;
+      height: 80%;
+      width: 80%;
       box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
-    }
-  }
-
-  @media only screen and (max-width: 902px) {
-    .return-to-profile {
-      left: auto;
-      right: 0;
     }
   }
 </style>
