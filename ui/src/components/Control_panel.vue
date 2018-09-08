@@ -1,8 +1,8 @@
 <template>
   <div class="row control-panel">
-    <!--<div class="" style="padding: 0;">-->
-      <!--<img :src="permanentImages.instructionsRobot" class="instructions-robot">-->
-    <!--</div>-->
+    <div class="" style="padding: 0;">
+      <img :src="permanentImages.instructionsRobot" class="instructions-robot">
+    </div>
 
     <div
       class="btn button-effect help-button"
@@ -137,9 +137,12 @@ export default {
   }
 
   .return-to-profile {
+    position: fixed;
+    right: 0;
+    top: 0;
     cursor: pointer;
-    height: 12vmin;
-    width: 12vmin;
+    height: 9vmin;
+    width: 9vmin;
     display: flex;
     align-items: center;
     justify-content: center;
