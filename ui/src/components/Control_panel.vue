@@ -69,7 +69,9 @@ export default {
     return {
       speechBubbleShowing: true,
       getTime: false,
-      videoHint: new VideoHint(this)
+      videoHint: new VideoHint(this),
+      counter: 45,
+      max: 100
     }
   },
   methods: {
@@ -109,6 +111,7 @@ export default {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
       border: 1px solid $click-color;
+      display: flex;
     }
   }
 
