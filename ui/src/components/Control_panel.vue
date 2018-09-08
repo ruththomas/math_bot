@@ -1,10 +1,13 @@
 <template>
   <div class="row control-panel">
-    <img @click="goToProfile()"
-         class="return-to-profile"
-         :src="permanentImages.returnToProfile"
-         data-toggle="tooltip" title="Return to profile"
-    />
+    <div
+      @click="goToProfile()"
+      class="return-to-profile"
+      data-toggle="tooltip" title="Return to profile"
+    >
+      <img :src="handlePicture(userProfile.picture)" />
+    </div>
+
     <div class="col" style="padding: 0;">
       <img :src="permanentImages.instructionsRobot" class="instructions-robot">
     </div>
@@ -21,6 +24,9 @@ import RobotCarrying from './Robot_carrying'
 export default {
   name: 'control-panel',
   computed: {
+    userProfile () {
+      return JSON.parse(localStorage.getItem('profile'))
+    },
     tryAgainShowing () {
       return this.$store.getters.getTryAgainShowing
     },
@@ -50,6 +56,13 @@ export default {
     }
   },
   methods: {
+    handlePicture (picture) {
+      if (!picture || picture.match(/gravatar/)) {
+        return this.permanentImages.gravatar
+      } else {
+        return picture
+      }
+    },
     goToProfile () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
       this.$store.dispatch('deleteMessages')
@@ -70,6 +83,7 @@ export default {
   .control-panel {
     display: flex;
     align-items: flex-end;
+    justify-content: flex-start;
     position: relative;
     right: calc(#{$grid-space-size} * 0.75);
   }
@@ -102,6 +116,18 @@ export default {
     cursor: pointer;
     height: 15vmin;
     width: 15vmin;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /*background-color: rgba(0, 0, 0, 0.2);*/
+
+    img {
+      border-radius: 50%;
+      height: 60%;
+      width: auto;
+      box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
+    }
   }
 
   @media only screen and (max-width: 902px) {
