@@ -20,7 +20,23 @@ Vue.use(BootstrapVue)
 Vue.use(Router)
 Vue.use(VueResource)
 Vue.use(Sortable)
-Vue.use(VueForm)
+Vue.use(VueForm, {
+  inputClasses: {
+    valid: 'form-control-success',
+    invalid: 'form-control-danger'
+  },
+  validators: {
+    matches (value, attrValue) {
+      if (!attrValue) {
+        return true
+      }
+      return value === attrValue
+    },
+    'password-strength' (value) {
+      return value.length > 7
+    }
+  }
+})
 
 const router = new Router({
   mode: 'history',
