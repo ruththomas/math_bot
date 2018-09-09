@@ -1,16 +1,24 @@
 <template>
   <div class="signup">
     <vue-form :state="formstate" @submit.prevent="onSubmit">
-      <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.name)">
+      <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.email)">
         <div class="input-group-prepend">
           <span class="input-group-text input-icon" id="email-icon-sm"><i class="fa fa-at"></i></span>
         </div>
 
-        <input aria-describedby="email-icon-sm" type="text" name="name" class="form-control" placeholder="yours@example.com" required v-model.lazy="signupForm.email">
+        <input
+          aria-describedby="email-icon-sm"
+          type="email"
+          name="email"
+          class="form-control required-field"
+          placeholder="yours@example.com"
+          required
+          v-model.lazy="signupForm.email"
+        >
 
-        <field-messages name="name" show="$touched || $submitted" class="form-control-feedback">
-          <div>Success!</div>
-          <div slot="required">Name is a required field</div>
+        <field-messages name="email" show="$touched || $submitted" class="form-control-feedback">
+          <div slot="required">Required field</div>
+          <div slot="email">Email is invalid</div>
         </field-messages>
 
       </validate>
@@ -20,27 +28,20 @@
           <span class="input-group-text input-icon" id="password-1-icon-sm"><i class="fa fa-lock"></i></span>
         </div>
 
-        <input aria-describedby="password-1-icon-sm" type="password" password-strength name="password" class="form-control" placeholder="your password" required v-model.lazy="signupForm.password">
+        <input
+          aria-describedby="password-1-icon-sm"
+          type="password"
+          autocomplete="off"
+          password-strength
+          name="password"
+          class="form-control"
+          placeholder="your password"
+          required v-model.lazy="signupForm.password"
+        >
 
         <field-messages auto-label name="password" show="$touched || $submitted" class="form-control-feedback">
-          <div>Success!</div>
-          <div slot="required">Password is a required field</div>
-          <div slot="password-strength">Password requires UpperCase, LowerCase, Number/SpecialChar and min 8 Chars</div>
-        </field-messages>
-
-      </validate>
-
-      <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.confirmPassword)">
-        <div class="input-group-prepend">
-          <span class="input-group-text input-icon" id="password-2-icon-sm"><i class="fa fa-lock"></i></span>
-        </div>
-
-        <input aria-describedby="password-2-icon-sm" type="password" :matches="signupForm.password" name="confirmPassword" class="form-control" placeholder="confirm password" required v-model.lazy="signupForm.confirmPassword">
-
-        <field-messages auto-label name="confirmPassword" show="$touched || $submitted" class="form-control-feedback">
-          <div>Success!</div>
-          <div slot="required">Confirm password is a required field</div>
-          <div slot="matches">Passwords do not match</div>
+          <div slot="required">Required field</div>
+          <div slot="password-strength">Min length is 8 characters</div>
         </field-messages>
 
       </validate>
@@ -88,6 +89,10 @@ export default {
 
 <style scoped lang="scss">
 $btn-height: 3rem;
+$danger-color: #F25C5C;
+$success-color: #50E3C2;
+$danger-background: rgba(242,92,92,0.2);
+$success-background: rgba(80,227,194, 0.2);
 .signup {
   padding-top: 2vmin;
 }
@@ -97,15 +102,28 @@ $btn-height: 3rem;
   width: 90%;
   height: $btn-height;
   margin: 1em auto;
+  position: relative;
   .form-control {
     font-size: 0.75rem;
     height: 100%;
     border-radius: 0 0.25rem 0.25rem 0;
   }
+  .form-control-feedback {
+    position: absolute;
+    font-size: 0.75em;
+    top: 100%;
+  }
+
   .input-group-prepend {
     .input-icon {
       border-radius: 0.25rem 0 0 0.25rem;
     }
+  }
+  .input-success, .input-failure {
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
   }
 }
 .text-center {
@@ -119,5 +137,29 @@ $btn-height: 3rem;
     border-radius: 0 0 0.25rem 0.25rem;
     background-color: rgb(0, 170, 228);
   }
+}
+.required-field {
+  border-radius: 0.25rem;
+}
+.required-field.has-danger {
+  border: 1px solid $danger-color;
+  input {
+    background-color: $danger-background;
+  }
+}
+.required-field.has-success {
+  border: 1px solid $success-color;
+  input {
+    color: black;
+    font-weight: bold;
+    font-size: 0.9em;
+    background-color: $success-background;
+  }
+}
+.has-danger .form-control-feedback {
+  color: $danger-color;
+}
+.has-success .form-control-feedback {
+  color: $success-color;
 }
 </style>

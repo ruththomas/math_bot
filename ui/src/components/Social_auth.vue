@@ -1,23 +1,32 @@
 <template>
 <div class="social-auth">
-  <button class="btn btn-block btn-dark">
+  <button class="btn btn-block btn-dark" @click="auth('Github')">
     <span class="btn-icon">
       <i class="fa fa-github"></i>
     </span>
-    <span class="btn-text">LOGIN WITH GITHUB</span>
+    <span class="btn-text">LOG IN WITH GITHUB</span>
   </button>
-  <button class="btn btn-block btn-primary">
+  <button class="btn btn-block btn-primary" @click="auth('Google')">
     <span class="btn-icon">
       <i class="fa fa-google"></i>
     </span>
-    <span class="btn-text">LOGIN WITH GOOGLE</span>
+    <span class="btn-text">LOG IN WITH GOOGLE</span>
   </button>
 </div>
 </template>
 
 <script>
+import api from '../services/api'
 export default {
-  name: 'Social_auth'
+  name: 'Social_auth',
+  methods: {
+    auth (provider) {
+      console.log('GITHUB')
+      api[`authorize${provider}`]((body) => {
+        console.log(body)
+      })
+    }
+  }
 }
 </script>
 

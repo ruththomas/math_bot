@@ -24,6 +24,20 @@ export default {
       .catch(console.error)
   },
 
+  authorizeGoogle (cb) {
+    Vue.http.get('/api/auth/authorizeGoogle')
+      .then(res => res.body)
+      .then(cb)
+      .catch(console.error)
+  },
+
+  authorizeGithub (cb) {
+    Vue.http.get('/api/auth/authorizeGithub')
+      .then(res => res.body)
+      .then(cb)
+      .catch(console.error)
+  },
+
   /*
   * activateFunction moves function token from stagedFunction list to activeFunction list
   * @param tokenId = JWT token_id
