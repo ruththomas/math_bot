@@ -25,10 +25,10 @@ export default {
   },
   methods: {
     goToSite () {
-      if (!this.auth.authenticated) {
-        this.auth.login()
-      }
-      this.$router.push({path: '/profile'})
+      // if (!this.auth.authenticated) {
+      //   this.auth.login()
+      // }
+      this.$router.push({path: '/auth'})
     }
   }
 }
