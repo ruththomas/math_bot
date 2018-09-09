@@ -112,6 +112,7 @@ export default {
       border-bottom-right-radius: 0;
       border: 1px solid $click-color;
       display: flex;
+      z-index: 100;
     }
   }
 
