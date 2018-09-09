@@ -6,10 +6,10 @@ import Robot from '@/components/Robot'
 import Profile from '@/components/Profile'
 import Marketing from '@/components/marketing/Marketing'
 import Callback from '@/components/Callback'
+import Auth from '@/components/Auth'
 import BootstrapVue from 'bootstrap-vue'
 import VueYouTubeEmbed from 'vue-youtube-embed'
-
-import $store from '../store/store'
+import VueForm from 'vue-form'
 
 // require styles
 import 'bootstrap/dist/css/bootstrap.css'
@@ -20,10 +20,16 @@ Vue.use(BootstrapVue)
 Vue.use(Router)
 Vue.use(VueResource)
 Vue.use(Sortable)
+Vue.use(VueForm)
 
 const router = new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/auth',
+      name: 'Auth',
+      component: Auth
+    },
     {
       path: '/robot',
       name: 'Robot',
@@ -62,8 +68,8 @@ router.beforeEach((to, from, next) => {
   // Look at all routes
   router.options.routes.forEach((route) => {
     // If this is the current route and it's secure
-    if (to.matched[0].path === route.path && route.secure && !$store.state.auth.authenticated) {
-      return next('/about')
+    if (to.matched[0].path === route.path && route.secure) {
+      return next('/auth')
     }
   })
   // Proceed as normal

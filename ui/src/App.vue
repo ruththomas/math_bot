@@ -12,7 +12,7 @@ export default {
   name: 'app',
   mounted () {
     window.scrollTo(0, 1)
-    this.auth.isAuthenticated()
+    // this.auth.isAuthenticated()
   },
   computed: {
     auth () {
