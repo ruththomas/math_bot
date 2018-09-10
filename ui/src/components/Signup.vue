@@ -93,9 +93,6 @@ $danger-color: #F25C5C;
 $success-color: #50E3C2;
 $danger-background: rgba(242,92,92,0.2);
 $success-background: rgba(80,227,194, 0.2);
-.signup {
-  padding-top: 2vmin;
-}
 .form-group {
   display: flex;
   justify-content: center;

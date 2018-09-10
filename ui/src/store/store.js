@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import VueDefaultValue from 'vue-default-value/dist/vue-default-value'
 import permanentImages from '../assets/assets'
 import Message from '../services/Message'
-import _AuthService from '../services/_AuthService'
+import { AuthService } from '../services/AuthService'
 import utils from '../services/utils'
 // import api from '../services/api'
 import VideoTimer from '../services/VideoTimer'
@@ -74,7 +74,7 @@ export default new Vuex.Store({
     activeFunctionGroups: null,
     swiperSlide: 0,
     messageList: [],
-    auth: new _AuthService(),
+    auth: new AuthService(),
     showMesh: false,
     splashScreenShowing: false,
     hintShowing: {

@@ -22,7 +22,7 @@ class _AuthService {
     redirectUri: process.env.AUTH_REDIRECT || AUTH_REDIRECT,
     audience: process.env.AUTH_AUDIENCE || AUTH_AUDIENCE,
     responseType: 'token id_token',
-    scope: 'openid profile'
+    scope: 'openid userProfile'
   })
 
   login () {
@@ -68,7 +68,7 @@ class _AuthService {
       if (lastPath && lastPath !== '/about') {
         router.push({path: lastPath})
       } else {
-        router.push({path: '/profile'})
+        router.push({path: '/userProfile'})
       }
     })
   }

@@ -1,7 +1,8 @@
 <template>
-<div class="container-fluid auth">
+<div class="container-fluid auth" v-if="auth.session !== null">
   <div class="row">
     <div class="card" style="width: 18rem;">
+      <img class="dialog-button close-auth" @click="auth.logout" :src="permanentImages.buttons.xButtonTransparent">
       <img class="card-img-top" :src="permanentImages.instructionsRobot" alt="Card image cap">
       <div class="card-title">MATH_BOT</div>
       <div class="card-body">
@@ -15,7 +16,7 @@
             </li>
           </ul>
         </div>
-        <social-auth></social-auth>
+        <social-auth :auth-urls="auth.session.authUrls"></social-auth>
         <div class="or-divider">or</div>
         <signup v-if="signupShowing"></signup>
         <login v-else></login>
@@ -26,23 +27,29 @@
 </template>
 
 <script>
-import { AuthService } from '../services/AuthService'
 import Signup from './Signup'
 import Login from './Login'
 import SocialAuth from './Social_auth'
 
 export default {
   name: 'Auth',
+  mounted () {
+    this.auth.login()
+  },
   computed: {
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    auth () {
+      return this.$store.getters.getAuth
     }
   },
   data () {
     return {
-      authService: new AuthService(),
       signupShowing: true
     }
+  },
+  methods: {
   },
   components: {
     Signup,
@@ -118,6 +125,14 @@ $font-size: 0.75rem;
       color: #5c666f;
       font-size: 1em;
     }
+  }
+  .close-auth {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-radius: 50%;
+    height: 1.5em;
+    width: 1.5em;
   }
 }
 
