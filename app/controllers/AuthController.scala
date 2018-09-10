@@ -4,6 +4,7 @@ import actors.ActorTags
 import actors.messages.auth._
 import akka.actor.ActorRef
 import akka.http.scaladsl.model.Uri.Query
+import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
@@ -12,7 +13,7 @@ import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthCo
 import daos.{LocalCredentialDao, SessionCache, SessionDAO}
 import javax.inject.Inject
 import loggers.SemanticLog
-import models.{JwtToken, LocalCredential, UsernameAndPassword}
+import models.{ExistsRequest, JwtToken, LocalCredential, UsernameAndPassword}
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{Action, AnyContent, Controller}
 import utils.{JwtTokenParser, SecureIdentifier}
@@ -103,6 +104,20 @@ class AuthController @Inject()(
   private val scryptIteration = Math.pow(2, mathbotConfig.scryptIterationExponent.toDouble).toInt
 
   import actors.messages.auth.AuthFormatters._
+
+  def usernameExists(): Action[AnyContent] = Action.async { implicit request =>
+    request.body.asJson.flatMap(_.asOpt[ExistsRequest]) match {
+      case Some(ExistsRequest(username)) =>
+        for {
+          maybeUser <- localCredential.find(username)
+        } yield
+          Ok(maybeUser match {
+            case Some(_) => Json.obj("exists" -> true)
+            case None => Json.obj("exists" -> false)
+          })
+      case None => FastFuture.successful(BadRequest("Invalid body"))
+    }
+  }
 
   def requestSession(): Action[AnyContent] = Action.async { implicit request =>
     val sid = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
