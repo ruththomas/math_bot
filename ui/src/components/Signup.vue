@@ -23,6 +23,42 @@
 
       </validate>
 
+      <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.name)">
+        <div class="input-group-prepend">
+          <span class="input-group-text input-icon" id="name-icon-sm"><i class="fa fa-user"></i></span>
+        </div>
+
+        <input
+          aria-describedby="name-icon-sm"
+          type="text"
+          name="name"
+          class="form-control required-field"
+          required
+          placeholder="Samantha Smith"
+          v-model.lazy="signupForm.name"
+        >
+
+        <field-messages auto-label name="password" show="$touched || $submitted" class="form-control-feedback">
+          <div slot="required">Required field</div>
+        </field-messages>
+
+      </validate>
+
+      <validate auto-label class="form-group" :class="fieldClassName(formstate.picture)">
+        <div class="input-group-prepend">
+          <span class="input-group-text input-icon" id="picture-icon-sm"><i class="fa fa-image"></i></span>
+        </div>
+
+        <input
+          aria-describedby="picture-icon-sm"
+          type="text"
+          name="picture"
+          class="form-control required"
+          placeholder="https://link/to/image.png"
+          v-model.lazy="signupForm.name"
+        >
+      </validate>
+
       <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.password)">
         <div class="input-group-prepend">
           <span class="input-group-text input-icon" id="password-1-icon-sm"><i class="fa fa-lock"></i></span>
@@ -41,7 +77,7 @@
 
         <field-messages auto-label name="password" show="$touched || $submitted" class="form-control-feedback">
           <div slot="required">Required field</div>
-          <div slot="password-strength">Min length is 8 characters</div>
+          <div slot="password-strength">Min length is 5 characters</div>
         </field-messages>
 
       </validate>
@@ -56,13 +92,19 @@
 <script>
 export default {
   name: 'Signup',
+  computed: {
+    auth () {
+      return this.$store.getters.getAuth
+    }
+  },
   data () {
     return {
       formstate: {},
       signupForm: {
         email: '',
         password: '',
-        confirmPassword: ''
+        name: '',
+        picture: ''
       }
     }
   },
@@ -81,7 +123,9 @@ export default {
       }
     },
     onSubmit () {
-      console.log(this.formstate.$valid)
+      if (this.formstate.$valid) {
+        this.auth.signup(this.signupForm)
+      }
     }
   }
 }
@@ -113,7 +157,11 @@ $success-background: rgba(80,227,194, 0.2);
 
   .input-group-prepend {
     .input-icon {
+      width: $btn-height;
       border-radius: 0.25rem 0 0 0.25rem;
+      * {
+        margin: 0 auto;
+      }
     }
   }
   .input-success, .input-failure {

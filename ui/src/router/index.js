@@ -34,7 +34,7 @@ Vue.use(VueForm, {
       return value === attrValue
     },
     'password-strength' (value) {
-      return value.length > 7
+      return value.length > 4
     }
   }
 })
