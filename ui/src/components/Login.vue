@@ -119,7 +119,11 @@ export default {
 
     .input-group-prepend {
       .input-icon {
+        width: $btn-height;
         border-radius: 0.25rem 0 0 0.25rem;
+        * {
+          margin: 0 auto;
+        }
       }
     }
     .input-success, .input-failure {

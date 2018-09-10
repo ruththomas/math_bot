@@ -18,8 +18,15 @@
         </div>
         <social-auth></social-auth>
         <div class="or-divider">or</div>
-        <signup v-if="signupShowing"></signup>
-        <login v-else></login>
+        <transition
+          mode="out-in"
+          name="grid-transition-group"
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+        >
+          <signup v-if="signupShowing"></signup>
+          <login v-else></login>
+        </transition>
       </div>
     </div>
   </div>
@@ -81,6 +88,7 @@ $font-size: 0.75rem;
 
 .card {
   font-size: 1em;
+  transition: all .5s linear;
 
   .card-img-top, .card-title {
     background-color: $title-background-color;
