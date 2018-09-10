@@ -56,13 +56,17 @@
 <script>
 export default {
   name: 'Login',
+  computed: {
+    auth () {
+      return this.$store.getters.getAuth
+    }
+  },
   data () {
     return {
       formstate: {},
       loginForm: {
         email: '',
-        password: '',
-        confirmPassword: ''
+        password: ''
       }
     }
   },
@@ -81,7 +85,9 @@ export default {
       }
     },
     onSubmit () {
-      console.log(this.formstate.$valid)
+      if (this.formstate.$valid) {
+        this.auth.authorizeMathbot(this.loginForm)
+      }
     }
   }
 }

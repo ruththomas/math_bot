@@ -30,19 +30,18 @@ export class AuthService {
       window.onbeforeunload = this._storeLastRoute
       const lastPath = localStorage.getItem('last_location')
       this._getVideoHints()
-      console.log(this.authenticated)
       if (lastPath && lastPath !== '/about' && lastPath !== '/auth') {
         $router.push({path: lastPath})
       } else {
         $router.push({path: '/profile'})
       }
-    })
+    }, this._handleErr)
   }
 
   _getVideoHints () {
     api.videoHintSocket.requestHintsTaken((hints) => {
       $store.dispatch('startExistingTimers', hints.remainingTimes)
-    })
+    }, this._handleErr)
   }
 
   _setSession (profile) {
@@ -54,7 +53,16 @@ export class AuthService {
   _requestSession () {
     api.requestSession((session) => {
       this.session = session
-    })
+    }, this._handleErr)
+  }
+
+  _handleErr (err) {
+    const messageBuilder = {
+      type: 'warn',
+      msg: err.body
+    }
+    $store.dispatch('addMessage', messageBuilder)
+    $router.push({path: '/auth'})
   }
 
   handleAuthentication () {
@@ -69,7 +77,7 @@ export class AuthService {
     api.authorize(provider, params, (profile) => {
       localStorage.removeItem('authProvider')
       this._setSession(profile)
-    })
+    }, this._handleErr)
   }
 
   login () {
@@ -87,5 +95,27 @@ export class AuthService {
     localStorage.clear()
     this.authenticated = false
     $router.push({path: '/about'})
+  }
+
+  signup (form) {
+    const prep = {}
+    prep.username = form.email
+    prep.password = form.password
+    prep.picture = form.picture
+    prep.name = form.name
+    api.signup(prep, (profile) => {
+      this.userProfile = profile
+      this._setSession(profile)
+    }, this._handleErr)
+  }
+
+  authorizeMathbot (form) {
+    const prep = {}
+    prep.username = form.email
+    prep.password = form.password
+    api.login(prep, (profile) => {
+      this.userProfile = profile
+      this._setSession(profile)
+    }, this._handleErr)
   }
 }

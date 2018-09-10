@@ -1,12 +1,12 @@
 <template>
 <div class="social-auth">
-  <button class="btn btn-block btn-dark" @click="auth('github')">
+  <button class="btn btn-block btn-dark" @click="onSubmit('github')">
     <span class="btn-icon">
       <i class="fa fa-github"></i>
     </span>
     <span class="btn-text">LOG IN WITH GITHUB</span>
   </button>
-  <button class="btn btn-block btn-primary" @click="auth('google')">
+  <button class="btn btn-block btn-primary" @click="onSubmit('google')">
     <span class="btn-icon">
       <i class="fa fa-google"></i>
     </span>
@@ -19,14 +19,18 @@
 // import api from '../services/api'
 export default {
   name: 'Social_auth',
-  methods: {
-    auth (provider) {
-      localStorage.setItem('authProvider', provider)
-      const url = this.authUrls.find(p => p.provider === provider).url
-      window.location = url
+  computed: {
+    auth () {
+      return this.$store.getters.getAuth
     }
   },
-  props: ['authUrls']
+  methods: {
+    onSubmit (provider) {
+      localStorage.setItem('authProvider', provider)
+      const url = this.auth.session.authUrls.find(p => p.provider === provider).url
+      window.location = url
+    }
+  }
 }
 </script>
 

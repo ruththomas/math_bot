@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid auth" v-if="auth.session !== null">
+<div class="container-fluid auth" v-if="auth.session !== null" data-aos="zoom-in">
   <div class="row">
     <div class="card" style="width: 18rem;">
       <img class="dialog-button close-auth" @click="auth.logout" :src="permanentImages.buttons.xButtonTransparent">
@@ -16,7 +16,7 @@
             </li>
           </ul>
         </div>
-        <social-auth :auth-urls="auth.session.authUrls"></social-auth>
+        <social-auth></social-auth>
         <div class="or-divider">or</div>
         <signup v-if="signupShowing"></signup>
         <login v-else></login>
