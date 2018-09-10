@@ -118,10 +118,4 @@ export class AuthService {
       this._setSession(profile)
     }, this._handleErr)
   }
-
-  existsCheck (email) {
-    api.existsCheck(email, (res) => {
-      console.log(res)
-    })
-  }
 }
