@@ -65,6 +65,18 @@ export default {
       .catch(console.error)
   },
 
+  testUrl (url, cb) {
+    Vue.http.get(url)
+      .then(() => {
+        // eslint-disable-next-line
+        cb(true)
+      })
+      .catch(() => {
+        // eslint-disable-next-line
+        cb(false)
+      })
+  },
+
   /*
   * activateFunction moves function token from stagedFunction list to activeFunction list
   * @param tokenId = JWT token_id

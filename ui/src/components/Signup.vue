@@ -1,7 +1,12 @@
 <template>
   <div class="signup">
     <vue-form :state="formstate" @submit.prevent="onSubmit">
-      <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.email)">
+      <validate
+        auto-label
+        class="form-group required-field"
+        :class="fieldClassName(formstate.email)"
+        :custom="{emailExists: emailExists}"
+      >
         <div class="input-group-prepend">
           <span class="input-group-text input-icon" id="email-icon-sm"><i class="fa fa-at"></i></span>
         </div>
@@ -19,6 +24,7 @@
         <field-messages name="email" show="$touched || $submitted" class="form-control-feedback">
           <div slot="required">Required field</div>
           <div slot="email">Email is invalid</div>
+          <div slot="emailExists">Email already exists</div>
         </field-messages>
 
       </validate>
@@ -38,13 +44,18 @@
           v-model.lazy="signupForm.name"
         >
 
-        <field-messages auto-label name="password" show="$touched || $submitted" class="form-control-feedback">
+        <field-messages auto-label name="name" show="$touched || $submitted" class="form-control-feedback">
           <div slot="required">Required field</div>
         </field-messages>
 
       </validate>
 
-      <validate auto-label class="form-group" :class="fieldClassName(formstate.picture)">
+      <validate
+        auto-label
+        class="form-group"
+        :class="fieldClassName(formstate.picture)"
+        :custom="{validUrl: validUrl}"
+      >
         <div class="input-group-prepend">
           <span class="input-group-text input-icon" id="picture-icon-sm"><i class="fa fa-image"></i></span>
         </div>
@@ -55,8 +66,12 @@
           name="picture"
           class="form-control required"
           placeholder="https://link/to/image.png"
-          v-model.lazy="signupForm.name"
+          v-model.lazy="signupForm.picture"
         >
+
+        <field-messages auto-label name="picture" show="$touched || $submitted" class="form-control-feedback">
+          <div slot="validUrl">Not a valid url</div>
+        </field-messages>
       </validate>
 
       <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.password)">
@@ -90,6 +105,8 @@
 </template>
 
 <script>
+import api from '../services/api'
+
 export default {
   name: 'Signup',
   computed: {
@@ -126,6 +143,20 @@ export default {
       if (this.formstate.$valid) {
         this.auth.signup(this.signupForm)
       }
+    },
+    emailExists () {
+      return new Promise((resolve, reject) => {
+        api.existsCheck(this.signupForm.email, (res) => {
+          resolve(!res.exists)
+        })
+      })
+    },
+    validUrl () {
+      return new Promise((resolve, reject) => {
+        api.testUrl(this.signupForm.picture, (valid) => {
+          resolve(valid)
+        })
+      })
     }
   }
 }
