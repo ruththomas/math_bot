@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import vueResource from 'vue-resource'
 import urlEncode from 'urlencode'
-
 import CompilerSocket from './CompilerSocket'
 import VideoHintSocket from './VideoHintSocket'
+import $store from '../store/store'
 
 Vue.use(vueResource)
 
@@ -24,18 +24,34 @@ export default {
       .catch(console.error)
   },
 
-  authorizeGoogle (cb) {
-    Vue.http.get('/api/auth/authorizeGoogle')
+  requestSession (cb) {
+    Vue.http.get('/api/auth/requestSession')
       .then(res => res.body)
       .then(cb)
-      .catch(console.error)
+      .catch((err) => {
+        console.error(err)
+        $store.state.auth.logout()
+      })
   },
 
-  authorizeGithub (cb) {
-    Vue.http.get('/api/auth/authorizeGithub')
+  resumeSession (sessionId, cb) {
+    Vue.http.post('/api/auth/resumeSession', {sessionId, action: 'resumeSession'})
       .then(res => res.body)
       .then(cb)
-      .catch(console.error)
+      .catch((err) => {
+        console.error(err)
+        $store.state.auth.logout()
+      })
+  },
+
+  authorize (provider, params, cb) {
+    Vue.http.get(`/api/auth/authorize${provider}${params}`)
+      .then(res => res.body)
+      .then(cb)
+      .catch((err) => {
+        console.error(err)
+        $store.state.auth.logout()
+      })
   },
 
   /*

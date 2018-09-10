@@ -151,6 +151,7 @@ module.exports = {
     pauseButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/pauseButton.png',
     stopButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/stopButton.png',
     xButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/xButton.png',
+    xButtonTransparent: 'https://res.cloudinary.com/doohickey/image/upload/c_scale,w_30/v1536602587/noun_X_1890803_000000_jtu1k7.svg',
     plusButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png',
     emptyButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/Green_Circle.png',
     trashButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png'
