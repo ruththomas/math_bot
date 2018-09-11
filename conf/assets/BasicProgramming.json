@@ -31,6 +31,7 @@
       "clearMain": false,
       "initFocus": ["Walk"],
       "videoHints": ["u5BqiML0q70"],
+      "freeHint": "q9V-TnU-0Yw",
       "prevStep": "None",
       "nextStep": "WalkThree"
     },
@@ -61,6 +62,7 @@
       "clearMain": false,
       "initFocus": ["Walk"],
       "videoHints": ["aGRc1MR91Fk", "hAOSQnzbVLY", "CUbBgS7llOI"],
+      "freeHint": "RUxCBeJx-Bg",
       "prevStep": "WalkOne",
       "nextStep": "WalkFour"
     },
@@ -136,6 +138,7 @@
       "clearMain": false,
       "initFocus": ["rocket"],
       "videoHints": ["NvEIoXrjc0A"],
+      "freeHint": "WBMNlpX_VqE",
       "prevStep": "WalkFour",
       "nextStep": "EditFirstFunction"
     },

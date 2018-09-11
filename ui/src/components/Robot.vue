@@ -1,6 +1,5 @@
 <template>
   <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
-  <video-hint v-else-if="hintShowing.showing" key="video-hint-1234"></video-hint>
   <div class="container-fluid robot" data-aos="fade-in" v-else>
     <div class="container">
 
@@ -8,8 +7,6 @@
         <trash></trash>
         <grid></grid>
       </div>
-
-      <messages></messages>
 
       <div class="row box" style="padding: 0;">
         <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
@@ -40,16 +37,12 @@ import utils from '../services/utils'
 import Robot from '../services/RobotState'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
-import VideoHint from './Video_hint'
 
 export default {
   mounted () {
     this.initializeRobot()
   },
   computed: {
-    hintShowing () {
-      return this.$store.getters.getHintShowing
-    },
     tokenId () {
       return this.$store.getters.getTokenId
     },
@@ -66,7 +59,7 @@ export default {
       return this.$store.getters.getSplashScreenShowing
     },
     gridMap () {
-      return this.currentStepData.gridMap
+      return this.stepData.gridMap
     },
     Functions () {
       return this.$store.getters.getFunctions
@@ -118,9 +111,6 @@ export default {
     },
     activeFunctionGroups () {
       return this.$store.getters.getActiveFunctionGroups
-    },
-    currentStepData () {
-      return this.$store.getters.getStepData
     }
   },
   methods: {
@@ -151,8 +141,7 @@ export default {
     ControlPanel,
     SplashScreen,
     RobotCarrying,
-    PopoverBucket,
-    VideoHint
+    PopoverBucket
   }
 }
 </script>

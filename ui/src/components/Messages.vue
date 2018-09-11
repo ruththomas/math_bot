@@ -31,7 +31,6 @@ export default {
     position: fixed;
     right: 5px;
     top: 10px;
-    min-height: 42px;
     width: 181px;
     z-index: 1001;
     display: flex;

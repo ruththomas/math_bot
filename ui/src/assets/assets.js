@@ -151,9 +151,11 @@ module.exports = {
     pauseButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/pauseButton.png',
     stopButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/stopButton.png',
     xButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/xButton.png',
+    xButtonTransparent: 'https://res.cloudinary.com/doohickey/image/upload/c_scale,w_30/v1536602587/noun_X_1890803_000000_jtu1k7.svg',
     plusButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png',
     emptyButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/Green_Circle.png',
-    trashButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png'
+    trashButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png',
+    back: 'https://res.cloudinary.com/doohickey/image/upload/v1536692019/noun_back_1751217_000000_eeirpz.svg'
   },
   robotImages: {
     robotUp: 'https://res.cloudinary.com/doohickey/image/upload/v1527608921/robot_away_eane70.png',
@@ -179,5 +181,6 @@ module.exports = {
   speechBubble: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522347745/misc/speechBubble.png',
   gridMesh: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522345998/misc/grid-mesh_auu3wh.svg',
   lock: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522347906/misc/lock.png',
-  spaceShip: 'https://res.cloudinary.com/doohickey/image/upload/v1521989176/noun_1018446_cc_zvq5px.svg'
+  spaceShip: 'https://res.cloudinary.com/doohickey/image/upload/v1521989176/noun_1018446_cc_zvq5px.svg',
+  gravatar: 'https://res.cloudinary.com/doohickey/image/upload/v1536423046/noun_person_924847_cccccc_wi94pe.svg'
 }

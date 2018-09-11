@@ -13,6 +13,10 @@ class VideoHint {
     this.$store.dispatch('toggleHintShowing', {showing: true, videoURL: videoURL})
   }
 
+  startFreeHint (videoURL) {
+    this._startVideo(videoURL)
+  }
+
   getHint () {
     this.socket.getHint(res => {
       if (res.status !== 'no-videos') {
