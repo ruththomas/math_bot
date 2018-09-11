@@ -251,7 +251,6 @@ class AuthController @Inject()(
       json <- request.body.asJson
       signup <- json.validate[SignUpForm].asOpt
     } yield signup
-    val p = 0
     signupFormOpt match {
       case Some(credential) =>
         localCredential.find(credential.username) flatMap {
