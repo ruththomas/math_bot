@@ -1,6 +1,7 @@
 <template>
     <div class="container grid">
       <control-panel></control-panel>
+      <video-hint v-if="hintShowing.showing" key="video-hint-1234"></video-hint>
       <transition
         mode="out-in"
         name="grid-transition-group"
@@ -79,9 +80,12 @@ import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
 import utils from '../services/utils'
 import ControlPanel from './Control_panel'
+import VideoHint from './Video_hint'
+import VideoHintControl from '../services/VideoHint'
 
 export default {
   mounted () {
+    this.startFreeHint(this.freeHint)
     this.popoverSyncs = _.chain(this.gridMap)
       .map((row) => {
         return row.map(() => false)
@@ -89,6 +93,9 @@ export default {
       .value()
   },
   computed: {
+    freeHint () {
+      return this.currentStepData.freeHint
+    },
     problem () {
       return this.currentStepData.problem.problem
     },
@@ -141,16 +148,30 @@ export default {
     },
     robotCarrying () {
       return this.$store.getters.getRobotCarrying
+    },
+    hintShowing () {
+      return this.$store.getters.getHintShowing
+    }
+  },
+  watch: {
+    stepData (newData) {
+      this.startFreeHint(newData.freeHint)
     }
   },
   data () {
     return {
       runCompiled: {},
       showSpeech: true,
-      popoverSyncs: null
+      popoverSyncs: null,
+      videoHintControl: new VideoHintControl(this)
     }
   },
   methods: {
+    startFreeHint (videoUrl) {
+      if (videoUrl) {
+        this.videoHintControl.startFreeHint(videoUrl)
+      }
+    },
     singleDigitProblem (problem) {
       const pNumber = Number(problem)
       if (!isNaN(pNumber) && pNumber > 0) {
@@ -174,7 +195,8 @@ export default {
     Congrats,
     SplashScreen,
     RobotCarrying,
-    ControlPanel
+    ControlPanel,
+    VideoHint
   }
 }
 </script>
@@ -197,7 +219,7 @@ export default {
     .grid-map {
       position: relative;
       border: 1px solid $click-color;
-      border-radius: $grid-border-radius;
+      border-radius: $grid-border-radius 0 $grid-border-radius $grid-border-radius;
     }
   }
 

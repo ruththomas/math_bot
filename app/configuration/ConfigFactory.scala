@@ -41,14 +41,14 @@ object ConfigFactory {
       val url: String = "mathbot.mongodb.url"
     }
     object localauth {
-      val signupUrl : String = "mathbot.localauth.signupUrl"
-      val authUrl : String = "mathbot.localauth.authUrl"
-      val accountIdByteWidth : String = "mathbot.localauth.accountIdByteWidth"
-      val saltByteWidth : String = "mathbot.localauth.saltByteWidth"
-      val sessionIdByteWidth : String = "mathbot.localauth.sessionIdByteWidth"
-      val scryptIterationExponent : String = "mathbot.localauth.scryptIterationExponent"
-      val scryptBlockSize : String = "mathbot.localauth.sessionIdByteWidth"
-      val hashByteSize : String = "mathbot.localauth.hashByteSize"
+      val signupUrl: String = "mathbot.localauth.signupUrl"
+      val authUrl: String = "mathbot.localauth.authUrl"
+      val accountIdByteWidth: String = "mathbot.localauth.accountIdByteWidth"
+      val saltByteWidth: String = "mathbot.localauth.saltByteWidth"
+      val sessionIdByteWidth: String = "mathbot.localauth.sessionIdByteWidth"
+      val scryptIterationExponent: String = "mathbot.localauth.scryptIterationExponent"
+      val scryptBlockSize: String = "mathbot.localauth.sessionIdByteWidth"
+      val hashByteSize: String = "mathbot.localauth.hashByteSize"
     }
   }
 }
@@ -62,13 +62,14 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
     }
   }
 
-  private def wrap[T](path : String, converter: String => T ) : T =
+  private def wrap[T](path: String, converter: String => T): T =
     playConfig.getString(path).map(converter(_)) getOrElse {
       throw new MissingConfigurationException(path)
     }
 
-  private def envGet(path: String) =
+  private def envGet(path: String) = {
     sys.env.get(path.replace(".", "_"))
+  }
 
   def googleApiConfig(): GoogleApiConfig = {
     GoogleApiConfig(
@@ -109,7 +110,7 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
     )
   }
 
-  def localAuthConfig : LocalAuthConfig =
+  def localAuthConfig: LocalAuthConfig =
     LocalAuthConfig(
       signupUrl = wrap(mathbot.localauth.signupUrl, Uri(_)),
       authUrl = wrap(mathbot.localauth.authUrl, Uri(_)),
