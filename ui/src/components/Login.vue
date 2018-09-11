@@ -46,6 +46,8 @@
 
      </validate>
 
+     <div class="password-recovery" @click="showRecover()">Don't remember your password?</div>
+
      <div class="py-2 text-center">
        <button class="btn btn-primary" type="submit">LOG IN</button>
      </div>
@@ -89,7 +91,8 @@ export default {
         this.auth.authorizeMathbot(this.loginForm)
       }
     }
-  }
+  },
+  props: ['showRecover']
 }
 </script>
 
@@ -168,5 +171,10 @@ export default {
   }
   .has-success .form-control-feedback {
     color: $success-color;
+  }
+  .password-recovery {
+    font-size: 0.85em;
+    cursor: pointer;
+    margin-bottom: 2vmin;
   }
 </style>

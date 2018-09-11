@@ -14,7 +14,7 @@ import daos.{LocalCredentialDao, SessionCache, SessionDAO}
 import javax.inject.Inject
 import loggers.SemanticLog
 import models._
-import play.api.libs.json.{JsString, Json}
+import play.api.libs.json.{JsString, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, Controller}
 import utils.{JwtTokenParser, SecureIdentifier}
 import org.bouncycastle.crypto.generators.SCrypt
@@ -104,6 +104,15 @@ class AuthController @Inject()(
   private val scryptIteration = Math.pow(2, mathbotConfig.scryptIterationExponent.toDouble).toInt
 
   import actors.messages.auth.AuthFormatters._
+
+  // todo - implement password recovery, currently just responds with sent email
+  def passwordRecovery(): Action[AnyContent] = Action.async { implicit request =>
+    request.body.asJson.flatMap(_.asOpt[PasswordRecovery]) match {
+      case Some(PasswordRecovery(email)) => FastFuture.successful(Ok(Json.obj("email" -> email)))
+      case None =>
+        FastFuture.successful(BadRequest(s"Invalid body"))
+    }
+  }
 
   def usernameExists(): Action[AnyContent] = Action.async { implicit request =>
     request.body.asJson.flatMap(_.asOpt[ExistsRequest]) match {
@@ -345,5 +354,4 @@ class AuthController @Inject()(
         FastFuture.successful(BadRequest("Malformed Json"))
     }
   }
-
 }
