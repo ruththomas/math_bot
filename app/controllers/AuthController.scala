@@ -4,6 +4,7 @@ import actors.ActorTags
 import actors.messages.auth._
 import akka.actor.ActorRef
 import akka.http.scaladsl.model.Uri.Query
+import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
@@ -12,7 +13,7 @@ import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthCo
 import daos.{LocalCredentialDao, SessionCache, SessionDAO}
 import javax.inject.Inject
 import loggers.SemanticLog
-import models.{JwtToken, LocalCredential, UsernameAndPassword}
+import models._
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{Action, AnyContent, Controller}
 import utils.{JwtTokenParser, SecureIdentifier}
@@ -94,7 +95,7 @@ class AuthController @Inject()(
   private def generateSessionAuthorized(sessionId: SecureIdentifier, idToken: JwtToken) =
     SessionAuthorized(sessionId,
                       idToken.name,
-                      idToken.picture,
+                      idToken.picture.getOrElse(""),
                       s"${idToken.getIssuerShortName}|${idToken.sub}",
                       idToken.email)
 
@@ -103,6 +104,20 @@ class AuthController @Inject()(
   private val scryptIteration = Math.pow(2, mathbotConfig.scryptIterationExponent.toDouble).toInt
 
   import actors.messages.auth.AuthFormatters._
+
+  def usernameExists(): Action[AnyContent] = Action.async { implicit request =>
+    request.body.asJson.flatMap(_.asOpt[ExistsRequest]) match {
+      case Some(ExistsRequest(username)) =>
+        for {
+          maybeUser <- localCredential.find(username)
+        } yield
+          Ok(maybeUser match {
+            case Some(_) => Json.obj("exists" -> true)
+            case None => Json.obj("exists" -> false)
+          })
+      case None => FastFuture.successful(BadRequest("Invalid body"))
+    }
+  }
 
   def requestSession(): Action[AnyContent] = Action.async { implicit request =>
     val sid = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
@@ -232,32 +247,37 @@ class AuthController @Inject()(
     SCrypt.generate(credential.password.getBytes, salt.toByteArray, iteration, blocksize, 1, hashByteSize)
 
   def signupMathbot(): Action[AnyContent] = Action.async { implicit request =>
-    val credentialOpt = for {
+    val signupFormOpt = for {
       json <- request.body.asJson
-      signup <- json.validate[UsernameAndPassword].asOpt
+      signup <- json.validate[SignUpForm].asOpt
     } yield signup
-
-    credentialOpt match {
+    signupFormOpt match {
       case Some(credential) =>
         localCredential.find(credential.username) flatMap {
           case Some(_) =>
             FastFuture.successful(Unauthorized("Username already exists"))
           case None =>
             val salt = SecureIdentifier(mathbotConfig.saltByteWidth)
-            val hash = hashCredential(credential,
-                                      salt,
-                                      scryptIteration,
-                                      mathbotConfig.scryptBlockSize,
-                                      mathbotConfig.hashByteSize)
+            val hash = hashCredential(
+              UsernameAndPassword(username = credential.username, password = credential.password),
+              salt,
+              scryptIteration,
+              mathbotConfig.scryptBlockSize,
+              mathbotConfig.hashByteSize
+            )
             val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
-            val lc = LocalCredential(accountId,
-                                     None,
-                                     credential.username,
-                                     salt,
-                                     hash,
-                                     scryptIteration,
-                                     mathbotConfig.scryptBlockSize,
-                                     mathbotConfig.hashByteSize)
+            val lc = LocalCredential(
+              accountId,
+              None,
+              credential.username,
+              credential.name,
+              credential.picture,
+              salt,
+              hash,
+              scryptIteration,
+              mathbotConfig.scryptBlockSize,
+              mathbotConfig.hashByteSize
+            )
             val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
 
             localCredential.insertOrUpdate(accountId, lc) map { _ =>
@@ -265,8 +285,8 @@ class AuthController @Inject()(
                 iss = "https://mathbot.com",
                 sub = lc.accountId.toString,
                 email = lc.username,
-                name = lc.username,
-                picture = ""
+                name = lc.name,
+                picture = lc.picture
               )
               sessionCache.put(sessionId, Some(jwt))
               Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
@@ -309,8 +329,8 @@ class AuthController @Inject()(
                   iss = "https://mathbot.com",
                   sub = lc.accountId.toString,
                   email = lc.username,
-                  name = lc.username,
-                  picture = ""
+                  name = lc.name,
+                  picture = lc.picture
                 )
                 val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
                 sessionCache.put(sessionId, Some(jwt))

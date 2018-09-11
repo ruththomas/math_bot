@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import vueResource from 'vue-resource'
 import urlEncode from 'urlencode'
-
 import CompilerSocket from './CompilerSocket'
 import VideoHintSocket from './VideoHintSocket'
 
@@ -22,6 +21,60 @@ export default {
         cb(token)
       })
       .catch(console.error)
+  },
+
+  requestSession (successCb, errCb) {
+    Vue.http.get('/api/auth/requestSession')
+      .then(res => res.body)
+      .then(successCb)
+      .catch(errCb)
+  },
+
+  resumeSession (sessionId, successCb, errCb) {
+    Vue.http.post('/api/auth/resumeSession', {sessionId, action: 'resumeSession'})
+      .then(res => res.body)
+      .then(successCb)
+      .catch(errCb)
+  },
+
+  authorize (provider, params, successCb, errCb) {
+    Vue.http.get(`/api/auth/authorize${provider}${params}`)
+      .then(res => res.body)
+      .then(successCb)
+      .catch(errCb)
+  },
+
+  signup (form, successCb, errCb) {
+    Vue.http.post('/api/auth/signup', form)
+      .then(res => res.body)
+      .then(successCb)
+      .catch(errCb)
+  },
+
+  login (form, successCb, errCb) {
+    Vue.http.post('/api/auth/authorizeMathbot', form)
+      .then(res => res.body)
+      .then(successCb)
+      .catch(errCb)
+  },
+
+  existsCheck (email, cb) {
+    Vue.http.post('/api/auth/existsCheck', {username: email})
+      .then(res => res.body)
+      .then(cb)
+      .catch(console.error)
+  },
+
+  testUrl (url, cb) {
+    Vue.http.get(url)
+      .then(() => {
+        // eslint-disable-next-line
+        cb(true)
+      })
+      .catch(() => {
+        // eslint-disable-next-line
+        cb(false)
+      })
   },
 
   /*

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <messages></messages>
     <router-view></router-view>
   </div>
 </template>
@@ -7,17 +8,20 @@
 <script>
 // import api from './services/api'
 // import utils from './services/utils'
-
+import Messages from './components/Messages'
 export default {
   name: 'app',
   mounted () {
     window.scrollTo(0, 1)
-    this.auth.isAuthenticated()
+    // this.auth.login()
   },
   computed: {
     auth () {
       return this.$store.getters.getAuth
     }
+  },
+  components: {
+    Messages
   }
 }
 </script>

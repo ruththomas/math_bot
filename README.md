@@ -74,17 +74,15 @@ The project has been built thus far with Intellij
 
 ### Getting started
 
-#### Setting up front end keys
+#### Github and Google api keys
 
-1) Inside `ui/src` add a file named `keys.js`
-
-2) Copy the contents of `ui/src/example-keys.js` into `keys.js`
-
-3) Fill out fields, you will need to setup an [Auth0](https://auth0.com/) account for development. 
-
-* Be sure to leave `example-key.js` in place before pushing. `Keys.js` is being ignored.
-
-* When deployed we will use our Auth0 account using environment variables. 
+Add the following to your environment, then restart you OS
+```
+ mathbot_oauth_google_clientId="your_id"
+ mathbot_oauth_google_clientSecret="your_secret"
+ mathbot_oauth_github_clientId="your_id"
+ mathbot_oauth_github_clientSecret="your_secret"
+```
 
 #### Starting and build app
 
