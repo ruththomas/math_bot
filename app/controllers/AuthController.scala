@@ -108,7 +108,17 @@ class AuthController @Inject()(
   // todo - implement password recovery, currently just responds with sent email
   def passwordRecovery(): Action[AnyContent] = Action.async { implicit request =>
     request.body.asJson.flatMap(_.asOpt[PasswordRecovery]) match {
-      case Some(PasswordRecovery(email)) => FastFuture.successful(Ok(Json.obj("email" -> email)))
+      case Some(PasswordRecovery(email)) =>
+        localCredential.find(email) flatMap {
+          case Some(credential) =>
+            val recoveryId = SecureIdentifier(mathbotConfig.recoveryIdByteWidth)
+            localCredential.insertOrUpdate(credential.accountId, credential.copy(recoveryId = Some(recoveryId))) map {
+              _ =>
+              Ok(Json.obj("email" -> email))
+            }
+          case None =>
+            FastFuture.successful(Ok(Json.obj("email" -> email)))
+        }
       case None =>
         FastFuture.successful(BadRequest(s"Invalid body"))
     }
