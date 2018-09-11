@@ -118,4 +118,10 @@ export class AuthService {
       this._setSession(profile)
     }, this._handleErr)
   }
+
+  recoverPassword (email) {
+    api.recoverPassword(email, (res) => {
+      console.log(res) // todo
+    })
+  }
 }

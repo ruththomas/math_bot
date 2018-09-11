@@ -2,12 +2,11 @@
 <div class="container-fluid auth" v-if="auth.session !== null" data-aos="zoom-in">
   <div class="row">
     <div class="card" style="width: 18rem;">
-      <img class="dialog-button close-auth" @click="auth.logout" :src="permanentImages.buttons.xButtonTransparent">
+      <img class="dialog-button control-btn close-auth" @click="auth.logout" :src="permanentImages.buttons.xButtonTransparent">
+      <img v-if="recoverShowing" class="dialog-button control-btn back-button" @click="recoverShowing = false" :src="permanentImages.buttons.back"/>
       <img class="card-img-top" :src="permanentImages.instructionsRobot" alt="Card image cap">
       <div class="card-title">MATH_BOT</div>
-      <div class="card-body">
-        <social-auth></social-auth>
-        <div class="or-divider">or</div>
+      <div class="card-body" v-if="!recoverShowing">
         <div class="card-header">
           <ul class="nav nav-tabs">
             <li class="nav-item" @click="signupShowing = true">
@@ -18,15 +17,13 @@
             </li>
           </ul>
         </div>
-        <transition
-          mode="out-in"
-          name="grid-transition-group"
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-        >
-          <signup v-if="signupShowing"></signup>
-          <login v-else></login>
-        </transition>
+        <social-auth :title-prefix="signupShowing ? 'SIGN UP' : 'LOG IN'"></social-auth>
+        <div class="or-divider">or</div>
+        <signup v-if="signupShowing"></signup>
+        <login v-else :show-recover="showRecover"></login>
+      </div>
+      <div class="card-body" v-else>
+        <recover-password></recover-password>
       </div>
     </div>
   </div>
@@ -37,6 +34,7 @@
 import Signup from './Signup'
 import Login from './Login'
 import SocialAuth from './Social_auth'
+import RecoverPassword from './Recover_password'
 
 export default {
   name: 'Auth',
@@ -53,15 +51,20 @@ export default {
   },
   data () {
     return {
+      recoverShowing: false,
       signupShowing: true
     }
   },
   methods: {
+    showRecover () {
+      this.recoverShowing = true
+    }
   },
   components: {
     Signup,
     Login,
-    SocialAuth
+    SocialAuth,
+    RecoverPassword
   }
 }
 </script>
@@ -114,7 +117,7 @@ $font-size: 0.75rem;
           .nav-link {
             border: none;
             background-color: #ffffff;
-            color: rgba(92,102,111,0.6);
+            color: rgba(92, 102, 111, 0.6);
             border-radius: 0;
             font-size: 0.75em;
           }
@@ -134,13 +137,20 @@ $font-size: 0.75rem;
       font-size: 1em;
     }
   }
-  .close-auth {
+  .control-btn {
     position: absolute;
-    right: 0;
     top: 0;
     border-radius: 50%;
     height: 1.5em;
     width: 1.5em;
+  }
+  .close-auth {
+    right: 0;
+  }
+  .back-button {
+    left: 0;
+    height: 1.9em;
+    width: 1.9em;
   }
 }
 

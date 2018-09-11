@@ -154,7 +154,8 @@ module.exports = {
     xButtonTransparent: 'https://res.cloudinary.com/doohickey/image/upload/c_scale,w_30/v1536602587/noun_X_1890803_000000_jtu1k7.svg',
     plusButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png',
     emptyButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/Green_Circle.png',
-    trashButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png'
+    trashButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342913/buttons/trashButton.png',
+    back: 'https://res.cloudinary.com/doohickey/image/upload/v1536692019/noun_back_1751217_000000_eeirpz.svg'
   },
   robotImages: {
     robotUp: 'https://res.cloudinary.com/doohickey/image/upload/v1527608921/robot_away_eane70.png',
