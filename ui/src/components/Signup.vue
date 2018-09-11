@@ -54,7 +54,7 @@
         auto-label
         class="form-group"
         :class="fieldClassName(formstate.picture)"
-        :custom="{validUrl: validUrl}"
+        :custom="{validTld: validTld, validUrl: validUrl}"
       >
         <div class="input-group-prepend">
           <span class="input-group-text input-icon" id="picture-icon-sm"><i class="fa fa-image"></i></span>
@@ -64,13 +64,14 @@
           aria-describedby="picture-icon-sm"
           type="text"
           name="picture"
-          class="form-control required"
+          class="form-control"
           placeholder="https://link/to/image.png"
           v-model.lazy="signupForm.picture"
         >
 
         <field-messages auto-label name="picture" show="$touched || $submitted" class="form-control-feedback">
-          <div slot="validUrl">Not a valid url</div>
+          <div slot="validTld">Url must end with `.png` or `.jpg`</div>
+          <div slot="validUrl">Url contains no data</div>
         </field-messages>
       </validate>
 
@@ -112,6 +113,10 @@ export default {
   computed: {
     auth () {
       return this.$store.getters.getAuth
+    },
+    validTld () {
+      const tld = this.signupForm.picture.split('.').pop()
+      return tld === 'png' || tld === 'jpg'
     }
   },
   data () {
