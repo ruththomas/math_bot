@@ -23,9 +23,11 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-xml" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.pauldijou" %% "jwt-play-json" % "0.16.0",
-  "com.lihaoyi" %% "fastparse" % "1.0.0",
+  "com.sendgrid" % "sendgrid-java" % "4.1.2",
+  "com.lihaoyi" %% "scalatags" % "0.6.7",
 
-  // Test
+
+// Test
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test,
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.5" % Test,
   "io.gatling" % "gatling-test-framework" % "2.2.5" % Test,

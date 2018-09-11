@@ -43,12 +43,14 @@ object ConfigFactory {
     object localauth {
       val signupUrl: String = "mathbot.localauth.signupUrl"
       val authUrl: String = "mathbot.localauth.authUrl"
+      val recoveryEmailUrl: String = "mathbot.localauth.recoveryemailUrl"
       val accountIdByteWidth: String = "mathbot.localauth.accountIdByteWidth"
       val saltByteWidth: String = "mathbot.localauth.saltByteWidth"
       val sessionIdByteWidth: String = "mathbot.localauth.sessionIdByteWidth"
       val scryptIterationExponent: String = "mathbot.localauth.scryptIterationExponent"
       val scryptBlockSize: String = "mathbot.localauth.sessionIdByteWidth"
       val hashByteSize: String = "mathbot.localauth.hashByteSize"
+      val recoveryIdByteWidth : String = "mathbot.localauth.recoveryIdByteWidth"
     }
   }
 }
@@ -114,11 +116,13 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
     LocalAuthConfig(
       signupUrl = wrap(mathbot.localauth.signupUrl, Uri(_)),
       authUrl = wrap(mathbot.localauth.authUrl, Uri(_)),
+      recoveryEmailUrl = wrap(mathbot.localauth.recoveryEmailUrl, Uri(_)),
       accountIdByteWidth = wrap(mathbot.localauth.accountIdByteWidth, _.toInt),
       saltByteWidth = wrap(mathbot.localauth.saltByteWidth, _.toInt),
       sessionIdByteWidth = wrap(mathbot.localauth.sessionIdByteWidth, _.toInt),
       scryptIterationExponent = wrap(mathbot.localauth.scryptIterationExponent, _.toInt),
       scryptBlockSize = wrap(mathbot.localauth.scryptBlockSize, _.toInt),
-      hashByteSize = wrap(mathbot.localauth.hashByteSize, _.toInt)
+      hashByteSize = wrap(mathbot.localauth.hashByteSize, _.toInt),
+      recoveryIdByteWidth = wrap(mathbot.localauth.recoveryIdByteWidth, _.toInt)
     )
 }

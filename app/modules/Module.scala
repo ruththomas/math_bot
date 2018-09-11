@@ -1,5 +1,5 @@
 package modules
-import actors.{ ActorTags, GithubOAuth, GoogleOAuth }
+import actors.{ ActorTags, GithubOAuth, GoogleOAuth, SendgridActor }
 import akka.actor.ActorSystem
 import com.google.inject.{ AbstractModule, Provides }
 import configuration._
@@ -10,13 +10,13 @@ import org.bson.codecs.configuration.CodecProvider
 import org.mongodb.scala.bson.codecs.Macros
 import org.mongodb.scala.{ MongoClient, MongoDatabase }
 import play.api.libs.concurrent.AkkaGuiceSupport
-import utils.SecureIdentifier
 import utils.SecureIdentifier.SecureIdentifierCodec
 
 class Module extends AbstractModule with AkkaGuiceSupport {
   override def configure() = {
     bindActor[GoogleOAuth](ActorTags.googleOAuth)
     bindActor[GithubOAuth](ActorTags.githubOAuth)
+    bindActor[SendgridActor](ActorTags.sendGrid)
 
   }
 
