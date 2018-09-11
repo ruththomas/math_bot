@@ -4,13 +4,13 @@
     <span class="btn-icon">
       <i class="fa fa-github"></i>
     </span>
-    <span class="btn-text">LOG IN WITH GITHUB</span>
+    <span class="btn-text">{{ titlePrefix }} WITH GITHUB</span>
   </button>
   <button class="btn btn-block btn-primary" @click="onSubmit('google')">
     <span class="btn-icon">
       <i class="fa fa-google"></i>
     </span>
-    <span class="btn-text">LOG IN WITH GOOGLE</span>
+    <span class="btn-text">{{ titlePrefix }} WITH GOOGLE</span>
   </button>
 </div>
 </template>
@@ -30,7 +30,8 @@ export default {
       const url = this.auth.session.authUrls.find(p => p.provider === provider).url
       window.location = url
     }
-  }
+  },
+  props: ['titlePrefix']
 }
 </script>
 

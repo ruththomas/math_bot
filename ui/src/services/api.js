@@ -77,6 +77,13 @@ export default {
       })
   },
 
+  recoverPassword (email, cb) {
+    Vue.http.post('/api/auth/recoverPassword', {email: email})
+      .then(res => res.body)
+      .then(cb)
+      .catch(console.error)
+  },
+
   /*
   * activateFunction moves function token from stagedFunction list to activeFunction list
   * @param tokenId = JWT token_id
