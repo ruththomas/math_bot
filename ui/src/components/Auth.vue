@@ -6,6 +6,8 @@
       <img class="card-img-top" :src="permanentImages.instructionsRobot" alt="Card image cap">
       <div class="card-title">MATH_BOT</div>
       <div class="card-body">
+        <social-auth></social-auth>
+        <div class="or-divider">or</div>
         <div class="card-header">
           <ul class="nav nav-tabs">
             <li class="nav-item" @click="signupShowing = true">
@@ -16,8 +18,6 @@
             </li>
           </ul>
         </div>
-        <social-auth></social-auth>
-        <div class="or-divider">or</div>
         <transition
           mode="out-in"
           name="grid-transition-group"
