@@ -219,7 +219,7 @@ export default {
     .grid-map {
       position: relative;
       border: 1px solid $click-color;
-      border-radius: $grid-border-radius;
+      border-radius: $grid-border-radius 0 $grid-border-radius $grid-border-radius;
     }
   }
 
