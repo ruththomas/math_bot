@@ -54,7 +54,7 @@
         auto-label
         class="form-group"
         :class="fieldClassName(formstate.picture)"
-        :custom="{validTld: validTld, validUrl: validUrl}"
+        :custom="{validImageUrl: validImageUrl}"
       >
         <div class="input-group-prepend">
           <span class="input-group-text input-icon" id="picture-icon-sm"><i class="fa fa-image"></i></span>
@@ -70,8 +70,7 @@
         >
 
         <field-messages auto-label name="picture" show="$touched || $submitted" class="form-control-feedback">
-          <div slot="validTld">Url must end with `.png` or `.jpg`</div>
-          <div slot="validUrl">Url contains no data</div>
+          <div slot="validImageUrl">Not a valid image</div>
         </field-messages>
       </validate>
 
@@ -107,16 +106,13 @@
 
 <script>
 import api from '../services/api'
+import isImageUrl from 'is-image-url'
 
 export default {
   name: 'Signup',
   computed: {
     auth () {
       return this.$store.getters.getAuth
-    },
-    validTld () {
-      const tld = this.signupForm.picture.split('.').pop()
-      return tld === 'png' || tld === 'jpg'
     }
   },
   data () {
@@ -156,11 +152,9 @@ export default {
         })
       })
     },
-    validUrl () {
+    validImageUrl () {
       return new Promise((resolve, reject) => {
-        api.testUrl(this.signupForm.picture, (valid) => {
-          resolve(valid)
-        })
+        resolve(isImageUrl(this.signupForm.picture))
       })
     }
   }
