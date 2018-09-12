@@ -58,11 +58,11 @@ export default {
       .catch(errCb)
   },
 
-  existsCheck (email, cb) {
+  existsCheck (email, successCb, errCb) {
     Vue.http.post('/api/auth/existsCheck', {username: email})
       .then(res => res.body)
-      .then(cb)
-      .catch(console.error)
+      .then(successCb)
+      .catch(errCb)
   },
 
   testUrl (url, cb) {

@@ -39,7 +39,8 @@ class AuthController @Inject()(
 )(implicit ec: ExecutionContext)
     extends Controller {
 
-  private val ipRateLimitAction = IpRateLimitAction(new RateLimiter(3, 1f / 5, "test limit by IP address")) {
+  // Allow 10 subsequent requests, the renew token every 5 seconds
+  private val ipRateLimitAction = IpRateLimitAction(new RateLimiter(10, 1f / 5, "test limit by IP address")) {
     implicit r: RequestHeader =>
       TooManyRequests(s"""rate limit for ${r.remoteAddress} exceeded""")
   }
