@@ -73,10 +73,13 @@ import PuzzlePieces from './Puzzle_pieces'
 
 export default {
   mounted () {
-    this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
+    this.togglePut(this.functions.length < this.sizeLimit)
     this.functionDraggableOptions.group.put = true
   },
   computed: {
+    sizeLimit () {
+      return this.editingFunction.sizeLimit < 0 ? 10000 : this.editingFunction.sizeLimit
+    },
     stats () {
       return this.$store.getters.getStats
     },
@@ -208,7 +211,6 @@ export default {
     },
     togglePut (bool) {
       this.functionDraggableOptions.group.put = bool
-      if (!bool) this.fullMessage()
     },
     editFunction (evt, groupInd) {
       if (!evt.hasOwnProperty('removed')) {
