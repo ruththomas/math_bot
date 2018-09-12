@@ -107,6 +107,7 @@
 <script>
 import api from '../services/api'
 import isImageUrl from 'is-image-url'
+import _ from 'underscore'
 
 export default {
   name: 'Signup',
@@ -145,11 +146,16 @@ export default {
         this.auth.signup(this.signupForm)
       }
     },
-    emailExists () {
+    dEmailExists: _.debounce(function (value, resolve, reject) {
+      api.existsCheck(value, (res) => {
+        resolve(!res.exists)
+      }, () => {
+        resolve(true)
+      })
+    }, 500),
+    emailExists (value) {
       return new Promise((resolve, reject) => {
-        api.existsCheck(this.signupForm.email, (res) => {
-          resolve(!res.exists)
-        })
+        this.dEmailExists(value, resolve, reject)
       })
     },
     validImageUrl () {
