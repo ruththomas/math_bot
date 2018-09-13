@@ -3,9 +3,10 @@ package configuration
 import akka.http.scaladsl.model.Uri
 import akka.util.Timeout
 import com.google.inject.Inject
+import email.SendGridConfiguration
 
 import scala.collection.JavaConverters._
-import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.concurrent.duration.{ Duration, FiniteDuration }
 
 object ConfigFactory {
   object mathbot {
@@ -43,12 +44,18 @@ object ConfigFactory {
     object localauth {
       val signupUrl: String = "mathbot.localauth.signupUrl"
       val authUrl: String = "mathbot.localauth.authUrl"
+      val recoveryEmailUrl: String = "mathbot.localauth.recoveryEmailUrl"
       val accountIdByteWidth: String = "mathbot.localauth.accountIdByteWidth"
       val saltByteWidth: String = "mathbot.localauth.saltByteWidth"
       val sessionIdByteWidth: String = "mathbot.localauth.sessionIdByteWidth"
       val scryptIterationExponent: String = "mathbot.localauth.scryptIterationExponent"
       val scryptBlockSize: String = "mathbot.localauth.sessionIdByteWidth"
       val hashByteSize: String = "mathbot.localauth.hashByteSize"
+      val recoveryIdByteWidth : String = "mathbot.localauth.recoveryIdByteWidth"
+    }
+
+    object sendgrid {
+      val secretKey : String = "mathbot.sendgrid.secretKey"
     }
   }
 }
@@ -114,11 +121,18 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
     LocalAuthConfig(
       signupUrl = wrap(mathbot.localauth.signupUrl, Uri(_)),
       authUrl = wrap(mathbot.localauth.authUrl, Uri(_)),
+      recoveryEmailUrl = wrap(mathbot.localauth.recoveryEmailUrl, Uri(_)),
       accountIdByteWidth = wrap(mathbot.localauth.accountIdByteWidth, _.toInt),
       saltByteWidth = wrap(mathbot.localauth.saltByteWidth, _.toInt),
       sessionIdByteWidth = wrap(mathbot.localauth.sessionIdByteWidth, _.toInt),
       scryptIterationExponent = wrap(mathbot.localauth.scryptIterationExponent, _.toInt),
       scryptBlockSize = wrap(mathbot.localauth.scryptBlockSize, _.toInt),
-      hashByteSize = wrap(mathbot.localauth.hashByteSize, _.toInt)
+      hashByteSize = wrap(mathbot.localauth.hashByteSize, _.toInt),
+      recoveryIdByteWidth = wrap(mathbot.localauth.recoveryIdByteWidth, _.toInt)
+    )
+
+  def sendGridConfig : SendGridConfiguration =
+    SendGridConfiguration(
+        secretKey = exWrap(mathbot.sendgrid.secretKey, envGet, playConfig.getString(_))
     )
 }

@@ -2,24 +2,25 @@ package controllers
 
 import actors.ActorTags
 import actors.messages.auth._
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
+import com.digitaltangible.playguard._
 import com.google.inject.name.Named
-import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig}
-import daos.{LocalCredentialDao, SessionCache, SessionDAO}
+import configuration.{ ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig }
+import daos.{ LocalCredentialDao, SessionCache, SessionDAO }
+import email._
 import javax.inject.Inject
 import loggers.SemanticLog
 import models._
-import play.api.libs.json.{JsString, JsValue, Json}
-import play.api.mvc.{Action, AnyContent, Controller, RequestHeader}
-import utils.{JwtTokenParser, SecureIdentifier}
 import org.bouncycastle.crypto.generators.SCrypt
-import com.digitaltangible.playguard._
+import play.api.libs.json.{ JsString, Json }
+import play.api.mvc.{ Action, AnyContent, Controller, RequestHeader }
+import utils.{ JwtTokenParser, SecureIdentifier }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
 class AuthController @Inject()(
@@ -28,6 +29,7 @@ class AuthController @Inject()(
     val localCredential: LocalCredentialDao,
     @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
     @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
+    @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
     val jwtParser: JwtTokenParser,
     val googleConfig: GoogleApiConfig,
     val githubConfig: GithubApiConfig,
@@ -113,12 +115,39 @@ class AuthController @Inject()(
 
   import actors.messages.auth.AuthFormatters._
 
-  // todo - implement password recovery, currently just responds with sent email
   def passwordRecovery(): Action[AnyContent] = Action.async { implicit request =>
     request.body.asJson.flatMap(_.asOpt[PasswordRecovery]) match {
-      case Some(PasswordRecovery(email)) => FastFuture.successful(Ok(Json.obj("email" -> email)))
+      case Some(PasswordRecovery(email)) =>
+        localCredential.find(email) flatMap {
+          case Some(credential) =>
+            val recoveryId = SecureIdentifier(mathbotConfig.recoveryIdByteWidth)
+            localCredential.insertOrUpdate(credential.accountId, credential.copy(recoveryId = Some(recoveryId))) map {
+              _ =>
+                sendGrid ! PasswordRecoveryEmail(email, recoveryId, mathbotConfig)
+                Ok(Json.obj("email" -> email))
+            }
+          case None =>
+            FastFuture.successful(Ok(Json.obj("email" -> email)))
+        }
       case None =>
-        FastFuture.successful(BadRequest(s"Invalid body"))
+        FastFuture.successful(BadRequest("Invalid body"))
+    }
+  }
+
+  def updatePassword(): Action[AnyContent] = Action.async { implicit request =>
+    request.body.asJson.flatMap(_.asOpt[PasswordUpdate]) match {
+      case Some(PasswordUpdate(email, recoveryId, password)) =>
+        localCredential.find(email) flatMap {
+          case Some(credential) if credential.recoveryId.contains(recoveryId) =>
+            val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
+            storeCredential(sessionId, SignUpForm(credential.username, credential.name, credential.picture, password)) map { jwt =>
+              Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+            }
+          case _ =>
+            FastFuture.successful(Unauthorized("Password update rejected"))
+        }
+      case _ =>
+        FastFuture.successful(BadRequest("Invalid body"))
     }
   }
 
@@ -263,52 +292,55 @@ class AuthController @Inject()(
                              hashByteSize: Int): Array[Byte] =
     SCrypt.generate(credential.password.getBytes, salt.toByteArray, iteration, blocksize, 1, hashByteSize)
 
+  private def storeCredential(sessionId : SecureIdentifier, credential: SignUpForm) = {
+    val salt = SecureIdentifier(mathbotConfig.saltByteWidth)
+    val hash = hashCredential(
+      UsernameAndPassword(username = credential.username, password = credential.password),
+      salt,
+      scryptIteration,
+      mathbotConfig.scryptBlockSize,
+      mathbotConfig.hashByteSize
+    )
+    val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
+    val lc = LocalCredential(
+      accountId,
+      None,
+      credential.username,
+      credential.name,
+      credential.picture,
+      salt,
+      hash,
+      scryptIteration,
+      mathbotConfig.scryptBlockSize,
+      mathbotConfig.hashByteSize
+    )
+    localCredential.insertOrUpdate(accountId, lc) map { _ =>
+      val jwt = JwtToken(
+        iss = "https://mathbot.com",
+        sub = lc.accountId.toString,
+        email = lc.username,
+        name = lc.name,
+        picture = lc.picture
+      )
+      sessionCache.put(sessionId, Some(jwt)).get
+    }
+  }
+
   def signupMathbot(): Action[AnyContent] = Action.async { implicit request =>
     val signupFormOpt = for {
       json <- request.body.asJson
       signup <- json.validate[SignUpForm].asOpt
     } yield signup
     signupFormOpt match {
-      case Some(credential) =>
-        localCredential.find(credential.username) flatMap {
+      case Some(signUpForm) =>
+        localCredential.find(signUpForm.username) flatMap {
           case Some(_) =>
             FastFuture.successful(Unauthorized("Username already exists"))
           case None =>
-            val salt = SecureIdentifier(mathbotConfig.saltByteWidth)
-            val hash = hashCredential(
-              UsernameAndPassword(username = credential.username, password = credential.password),
-              salt,
-              scryptIteration,
-              mathbotConfig.scryptBlockSize,
-              mathbotConfig.hashByteSize
-            )
-            val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
-            val lc = LocalCredential(
-              accountId,
-              None,
-              credential.username,
-              credential.name,
-              credential.picture,
-              salt,
-              hash,
-              scryptIteration,
-              mathbotConfig.scryptBlockSize,
-              mathbotConfig.hashByteSize
-            )
             val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
-
-            localCredential.insertOrUpdate(accountId, lc) map { _ =>
-              val jwt = JwtToken(
-                iss = "https://mathbot.com",
-                sub = lc.accountId.toString,
-                email = lc.username,
-                name = lc.name,
-                picture = lc.picture
-              )
-              sessionCache.put(sessionId, Some(jwt))
+            storeCredential(sessionId, signUpForm) map { jwt =>
               Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
             }
-
         }
       case None =>
         FastFuture.successful(BadRequest("Malformed Json"))
