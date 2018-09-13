@@ -5,7 +5,7 @@ import configuration.LocalAuthConfig
 import scalatags.Text.all._
 import utils.SecureIdentifier
 
-class PasswordRecoveryEmail(email: String, recoveryId: SecureIdentifier, localAuthConfig: LocalAuthConfig)
+case class PasswordRecoveryEmail(email: String, recoveryId: SecureIdentifier, localAuthConfig: LocalAuthConfig)
     extends EmailMessage {
   override def asHtml: String = {
     html(
@@ -28,4 +28,6 @@ class PasswordRecoveryEmail(email: String, recoveryId: SecureIdentifier, localAu
   override def from: String = "no-reply@mathbot.com"
 
   override def to : String = email
+
+  override def subject : String = "MATH_BOT Password Recovery"
 }
