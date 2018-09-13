@@ -44,5 +44,7 @@ case class LocalAuthConfig(
     sessionIdByteWidth: Int,
     scryptIterationExponent: Int,
     scryptBlockSize: Int,
-    hashByteSize: Int
+    hashByteSize: Int,
+    recoveryIdByteWidth : Int,
+    recoveryEmailUrl : Uri
 )
