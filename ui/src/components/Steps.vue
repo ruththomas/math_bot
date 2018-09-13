@@ -9,6 +9,7 @@
           v-for="(step, value) in steps"
           type="button"
           class="btn btn-dark btn-lg btn-block"
+          :id="actionClass(step.name)"
           @click="step.active ? goToRobot(level, step.name) : ''"
           :key="step + ':' + value"
           :disabled="!step.active"
@@ -60,6 +61,9 @@ export default {
       }
       return planets[this.level]
     },
+    step () {
+      return this.$store.getters.getStep
+    },
     level () {
       return this.$store.getters.getLevel
     },
@@ -101,6 +105,19 @@ export default {
         this.$store.dispatch('updateStats', res.body)
         this.$router.push({path: '/robot'})
       })
+    },
+    actionClass (step) {
+      if (this.step === step) {
+        const id = 'selected-step' + '-planet-' + this.planetName + '-selected'
+        setTimeout(() => {
+          const $stepsContainer = $('.steps-container')
+          const stepsHeight = $stepsContainer.innerHeight()
+          $stepsContainer.animate({
+            scrollTop: $(`#${id}`).offset().top - stepsHeight / 2
+          })
+        }, 50)
+        return id
+      }
     }
   },
   components: {
@@ -152,6 +169,10 @@ export default {
       .btn-group-vertical {
         min-height: min-content;
         width: 100%;
+
+        #selected-step {
+          border: 2px solid pink;
+        }
       }
 
       .step-info-text {
@@ -189,6 +210,30 @@ export default {
   .step-planet-5 {
     background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, #000);
     box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-5-color;
+  }
+
+  #selected-step-planet-1-selected {
+    border: 2px solid $planet-1-color;
+  }
+
+  #selected-step-planet-2-selected {
+    border: 2px solid $planet-2-color;
+  }
+
+  #selected-step-planet-3-selected {
+    border: 2px solid $planet-3-color;
+  }
+
+  #selected-step-planet-4-selected {
+    border: 2px solid $planet-4-color;
+  }
+
+  #selected-step-planet-5-selected {
+    border: 2px solid $planet-5-color;
+  }
+
+  #selected-step-planet-6-selected {
+    border: 2px solid $planet-6-color;
   }
 
   .step-image-stars {
