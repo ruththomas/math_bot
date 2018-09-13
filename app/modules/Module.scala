@@ -3,6 +3,7 @@ import actors.{ ActorTags, GithubOAuth, GoogleOAuth, SendgridActor }
 import akka.actor.ActorSystem
 import com.google.inject.{ AbstractModule, Provides }
 import configuration._
+import email.SendGridConfiguration
 import loggers.{ AkkaSemanticLog, SemanticLog }
 import models.JwtToken
 import org.bson.codecs.Codec
@@ -13,7 +14,7 @@ import play.api.libs.concurrent.AkkaGuiceSupport
 import utils.SecureIdentifier.SecureIdentifierCodec
 
 class Module extends AbstractModule with AkkaGuiceSupport {
-  override def configure() = {
+  override def configure() : Unit = {
     bindActor[GoogleOAuth](ActorTags.googleOAuth)
     bindActor[GithubOAuth](ActorTags.githubOAuth)
     bindActor[SendgridActor](ActorTags.sendGrid)
@@ -22,8 +23,8 @@ class Module extends AbstractModule with AkkaGuiceSupport {
 
   @Provides
   def provideMongoDatabase(configFactory: ConfigFactory): MongoDatabase = {
-    val name = configFactory.mongoConfig.name
-    val url = configFactory.mongoConfig.url
+    val name = configFactory.mongoConfig().name
+    val url = configFactory.mongoConfig().url
     // To directly connect to the default server localhost on port 27017
     val mongoClient: MongoClient = MongoClient(url)
     mongoClient.getDatabase(name)
@@ -56,4 +57,8 @@ class Module extends AbstractModule with AkkaGuiceSupport {
   @Provides
   def provideLocalAuthConfig(configFactory: ConfigFactory) : LocalAuthConfig =
     configFactory.localAuthConfig
+
+  @Provides
+  def provideSendGridConfig(configFactory: ConfigFactory) : SendGridConfiguration =
+    configFactory.sendGridConfig
 }
