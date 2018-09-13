@@ -2,11 +2,12 @@ package controllers
 
 import actors.ActorTags
 import actors.messages.auth._
-import akka.actor.ActorRef
+import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
+import com.digitaltangible.playguard._
 import com.google.inject.name.Named
 import configuration.{ ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig }
 import daos.{ LocalCredentialDao, SessionCache, SessionDAO }
@@ -16,7 +17,7 @@ import loggers.SemanticLog
 import models._
 import org.bouncycastle.crypto.generators.SCrypt
 import play.api.libs.json.{ JsString, Json }
-import play.api.mvc.{ Action, AnyContent, Controller }
+import play.api.mvc.{ Action, AnyContent, Controller, RequestHeader }
 import utils.{ JwtTokenParser, SecureIdentifier }
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -34,9 +35,17 @@ class AuthController @Inject()(
     val githubConfig: GithubApiConfig,
     val actorConfig: ActorConfig,
     val mathbotConfig: LocalAuthConfig,
-    val logger: SemanticLog
+    val logger: SemanticLog,
+    implicit val system: ActorSystem,
+    implicit val conf: play.api.Configuration
 )(implicit ec: ExecutionContext)
     extends Controller {
+
+  // Allow 10 subsequent requests, the renew token every 5 seconds
+  private val ipRateLimitAction = IpRateLimitAction(new RateLimiter(10, 1f / 5, "test limit by IP address")) {
+    implicit r: RequestHeader =>
+      TooManyRequests(s"""rate limit for ${r.remoteAddress} exceeded""")
+  }
 
   private def generateNeedsAuthorization(sessionId: SecureIdentifier) = {
     NeedsAuthorization(
@@ -142,7 +151,7 @@ class AuthController @Inject()(
     }
   }
 
-  def usernameExists(): Action[AnyContent] = Action.async { implicit request =>
+  def usernameExists(): Action[AnyContent] = (Action andThen ipRateLimitAction).async { implicit request =>
     request.body.asJson.flatMap(_.asOpt[ExistsRequest]) match {
       case Some(ExistsRequest(username)) =>
         for {
