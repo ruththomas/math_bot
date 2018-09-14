@@ -17,6 +17,7 @@
             </li>
           </ul>
         </div>
+        <auth-error :error-message="errorMessage"></auth-error>
         <social-auth :title-prefix="signupShowing ? 'SIGN UP' : 'LOG IN'"></social-auth>
         <div class="or-divider">or</div>
         <signup v-if="signupShowing"></signup>
@@ -35,6 +36,7 @@ import Signup from './Signup'
 import Login from './Login'
 import SocialAuth from './Social_auth'
 import RecoverPassword from './Recover_password'
+import AuthError from './Auth_error'
 
 export default {
   name: 'Auth',
@@ -52,7 +54,8 @@ export default {
   data () {
     return {
       recoverShowing: false,
-      signupShowing: true
+      signupShowing: true,
+      errorMessage: 'This is some sort of error to show'
     }
   },
   methods: {
@@ -64,7 +67,8 @@ export default {
     Signup,
     Login,
     SocialAuth,
-    RecoverPassword
+    RecoverPassword,
+    AuthError
   }
 }
 </script>
