@@ -33,6 +33,10 @@
 <script>
 export default {
   name: 'Recover_password',
+  mounted () {
+    this.auth.clearErrors()
+    localStorage.clear()
+  },
   computed: {
     auth () {
       return this.$store.getters.getAuth
