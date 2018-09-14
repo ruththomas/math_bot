@@ -3,9 +3,14 @@
   <div class="row">
     <div class="card" style="width: 18rem;">
       <img class="dialog-button control-btn close-auth" @click="auth.logout" :src="permanentImages.buttons.xButtonTransparent">
-      <img v-if="recoverShowing" class="dialog-button control-btn back-button" @click="recoverShowing = false" :src="permanentImages.buttons.back"/>
+      <img v-if="updateParams === null && recoverShowing" class="dialog-button control-btn back-button" @click="recoverShowing = false" :src="permanentImages.buttons.back"/>
       <img class="card-img-top" :src="permanentImages.instructionsRobot" alt="Card image cap">
       <div class="card-title">MATH_BOT</div>
+      <div class="auth-errors">
+        <div v-for="(err, ind) in authErrors" :key="'auth-error/' + ind" class="auth-error-msg">
+          {{err}}
+        </div>
+      </div>
       <div class="card-body" v-if="!recoverShowing">
         <div class="card-header">
           <ul class="nav nav-tabs">
@@ -17,14 +22,14 @@
             </li>
           </ul>
         </div>
-        <auth-error :error-message="errorMessage"></auth-error>
         <social-auth :title-prefix="signupShowing ? 'SIGN UP' : 'LOG IN'"></social-auth>
         <div class="or-divider">or</div>
         <signup v-if="signupShowing"></signup>
         <login v-else :show-recover="showRecover"></login>
       </div>
       <div class="card-body" v-else>
-        <recover-password></recover-password>
+        <recover-password v-if="updateParams === null"></recover-password>
+        <update-password v-else :update-params="updateParams"></update-password>
       </div>
     </div>
   </div>
@@ -36,11 +41,13 @@ import Signup from './Signup'
 import Login from './Login'
 import SocialAuth from './Social_auth'
 import RecoverPassword from './Recover_password'
-import AuthError from './Auth_error'
+import UpdatePassword from './Update_password'
 
 export default {
   name: 'Auth',
   mounted () {
+    this.auth.clearErrors()
+    this.showUpdate()
     this.auth.login()
   },
   computed: {
@@ -49,18 +56,28 @@ export default {
     },
     auth () {
       return this.$store.getters.getAuth
+    },
+    authErrors () {
+      return this.$store.getters.getAuthErrors
     }
   },
   data () {
     return {
       recoverShowing: false,
       signupShowing: true,
-      errorMessage: 'This is some sort of error to show'
+      updateParams: null // ?recoveryId=OP_IUxHp7zM%3D
     }
   },
   methods: {
     showRecover () {
       this.recoverShowing = true
+    },
+    showUpdate () {
+      const params = window.location.search
+      if (params.includes('?recoveryId=')) {
+        this.recoverShowing = true
+        this.updateParams = params
+      }
     }
   },
   components: {
@@ -68,7 +85,7 @@ export default {
     Login,
     SocialAuth,
     RecoverPassword,
-    AuthError
+    UpdatePassword
   }
 }
 </script>
@@ -140,6 +157,10 @@ $font-size: 0.75rem;
       color: #5c666f;
       font-size: 1em;
     }
+  }
+  .auth-errors {
+    background-color: rgba(255, 69, 0, 0.8);
+    color: #ffffff;
   }
   .control-btn {
     position: absolute;

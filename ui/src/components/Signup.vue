@@ -111,6 +111,9 @@ import _ from 'underscore'
 
 export default {
   name: 'Signup',
+  mounted () {
+    this.auth.clearErrors()
+  },
   computed: {
     auth () {
       return this.$store.getters.getAuth

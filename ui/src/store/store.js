@@ -82,9 +82,16 @@ export default new Vuex.Store({
       videoURL: ''
     },
     videoTimers: {},
-    editFunctionEvent: {}
+    editFunctionEvent: {},
+    authErrors: []
   },
   mutations: {
+    CLEAR_AUTH_ERRORS (state) {
+      state.authErrors = []
+    },
+    PUSH_AUTH_ERRORS (state, msg) {
+      state.authErrors.push(msg)
+    },
     UPDATE_EDIT_FUNCTION_EVENT (state, evt) {
       state.editFunctionEvent = evt
     },
@@ -203,6 +210,12 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    clearAuthErrors ({commit}) {
+      commit('CLEAR_AUTH_ERRORS')
+    },
+    pushAuthErrors ({commit}, msg) {
+      commit('PUSH_AUTH_ERRORS', msg)
+    },
     updateEditFunctionEvent ({commit}, evt) {
       commit('UPDATE_EDIT_FUNCTION_EVENT', evt)
     },
@@ -319,6 +332,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getAuthErrors: state => state.authErrors,
     getEditFunctionEvent: state => state.editFunctionEvent,
     getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,

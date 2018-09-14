@@ -1,78 +1,81 @@
 <template>
- <div class="login">
-   <vue-form :state="formstate" @submit.prevent="onSubmit">
-     <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.email)">
-       <div class="input-group-prepend">
-         <span class="input-group-text input-icon" id="login-email-icon-sm"><i class="fa fa-at"></i></span>
-       </div>
+<div class="update-password">
+  <vue-form :state="formstate" @submit.prevent="onSubmit">
+    <validate
+      auto-label
+      class="form-group required-field"
+      :class="fieldClassName(formstate.email)"
+    >
+      <div class="input-group-prepend">
+        <span class="input-group-text input-icon" id="update-email-icon-sm"><i class="fa fa-at"></i></span>
+      </div>
 
-       <input
-         aria-describedby="login-email-icon-sm"
-         type="email"
-         name="email"
-         class="form-control required-field"
-         placeholder="yours@example.com"
-         required
-         v-model.lazy="loginForm.email"
-       >
+      <input
+        aria-describedby="update-email-icon-sm"
+        type="email"
+        name="email"
+        class="form-control required-field"
+        placeholder="yours@example.com"
+        required
+        v-model.lazy="updateForm.email"
+      >
 
-       <field-messages name="email" show="$touched || $submitted" class="form-control-feedback">
-         <div slot="required">Required field</div>
-         <div slot="email">Email is invalid</div>
-       </field-messages>
+      <field-messages name="email" show="$touched || $submitted" class="form-control-feedback">
+        <div slot="required">Required field</div>
+        <div slot="email">Email is invalid</div>
+      </field-messages>
 
-     </validate>
+    </validate>
 
-     <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.password)">
-       <div class="input-group-prepend">
-         <span class="input-group-text input-icon" id="login-password-1-icon-sm"><i class="fa fa-lock"></i></span>
-       </div>
+    <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.password)">
+      <div class="input-group-prepend">
+        <span class="input-group-text input-icon" id="update-password-icon-sm"><i class="fa fa-lock"></i></span>
+      </div>
 
-       <input
-         aria-describedby="login-password-icon-sm"
-         type="password"
-         name="password"
-         class="form-control"
-         password-strength
-         placeholder="your password"
-         required
-         v-model.lazy="loginForm.password"
-       >
+      <input
+        aria-describedby="update-password-icon-sm"
+        type="password"
+        autocomplete="off"
+        password-strength
+        name="password"
+        class="form-control"
+        placeholder="your password"
+        required v-model.lazy="updateForm.password"
+      >
 
-       <field-messages auto-label name="password" show="$touched || $submitted" class="form-control-feedback">
-         <div slot="required">Required field</div>
-         <div slot="password-strength">Min length is 8 characters</div>
-       </field-messages>
+      <field-messages auto-label name="password" show="$touched || $submitted" class="form-control-feedback">
+        <div slot="required">Required field</div>
+        <div slot="password-strength">Min length is 5 characters</div>
+      </field-messages>
 
-     </validate>
+    </validate>
 
-     <div class="password-recovery" @click="showRecover()">Don't remember your password?</div>
-
-     <div class="py-2 text-center">
-       <button class="btn btn-primary" type="submit">LOG IN</button>
-     </div>
-   </vue-form>
- </div>
+    <div class="py-2 text-center">
+      <button class="btn btn-primary" type="submit">UPDATE PASSWORD</button>
+    </div>
+  </vue-form>
+</div>
 </template>
 
 <script>
 export default {
-  name: 'Login',
+  name: 'ResetPassword',
   mounted () {
     this.auth.clearErrors()
-  },
-  computed: {
-    auth () {
-      return this.$store.getters.getAuth
-    }
+    localStorage.clear()
   },
   data () {
     return {
       formstate: {},
-      loginForm: {
+      updateForm: {
         email: '',
         password: ''
       }
+    }
+  },
+  computed: {
+    auth () {
+      return this.$store.getters.getAuth
     }
   },
   methods: {
@@ -90,12 +93,10 @@ export default {
       }
     },
     onSubmit () {
-      if (this.formstate.$valid) {
-        this.auth.authorizeMathbot(this.loginForm)
-      }
+      this.auth.updatePassword(this.updateForm, this.updateParams)
     }
   },
-  props: ['showRecover']
+  props: ['updateParams']
 }
 </script>
 
