@@ -77,11 +77,18 @@ export default {
       })
   },
 
-  recoverPassword (email, cb) {
+  recoverPassword (email, successCb, errCb) {
     Vue.http.post('/api/auth/recoverPassword', {email: email})
       .then(res => res.body)
-      .then(cb)
-      .catch(console.error)
+      .then(successCb)
+      .catch(errCb)
+  },
+
+  updatePassword (params, updateForm, successCb, errCb) {
+    Vue.http.post('/api/auth/updatePassword' + params, updateForm)
+      .then(res => res.body)
+      .then(successCb)
+      .catch(errCb)
   },
 
   /*

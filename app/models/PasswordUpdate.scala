@@ -3,7 +3,7 @@ package models
 import play.api.libs.json._
 import utils.SecureIdentifier
 
-case class PasswordUpdate(email: String, recoveryId : SecureIdentifier, password : String)
+case class PasswordUpdate(email: String, password: String)
 
 object PasswordUpdate {
 
