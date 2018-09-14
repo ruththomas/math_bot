@@ -130,8 +130,9 @@ export class AuthService {
 
   updatePassword (updateForm, updateParams) {
     this.clearErrors()
-    api.updatePassword(updateParams, updateForm, (res) => {
-      console.log(res)
+    api.updatePassword(updateParams, updateForm, (profile) => {
+      this.userProfile = profile
+      this._setSession(profile)
     }, this._handleErr)
   }
 }
