@@ -57,12 +57,11 @@ export class AuthService {
   }
 
   _handleErr (err) {
-    const messageBuilder = {
-      type: 'warn',
-      msg: err.body
-    }
-    $store.dispatch('addMessage', messageBuilder)
-    $router.push({path: '/auth'})
+    $store.dispatch('pushAuthErrors', err.body)
+  }
+
+  clearErrors () {
+    $store.dispatch('clearAuthErrors')
   }
 
   handleAuthentication () {
@@ -93,6 +92,7 @@ export class AuthService {
 
   logout () {
     localStorage.clear()
+    this.clearErrors()
     this.authenticated = false
     $router.push({path: '/about'})
   }
@@ -103,6 +103,7 @@ export class AuthService {
     prep.password = form.password
     prep.picture = form.picture
     prep.name = form.name
+    this.clearErrors()
     api.signup(prep, (profile) => {
       this.userProfile = profile
       this._setSession(profile)
@@ -113,6 +114,7 @@ export class AuthService {
     const prep = {}
     prep.username = form.email
     prep.password = form.password
+    this.clearErrors()
     api.login(prep, (profile) => {
       this.userProfile = profile
       this._setSession(profile)
@@ -120,8 +122,17 @@ export class AuthService {
   }
 
   recoverPassword (email) {
+    this.clearErrors()
     api.recoverPassword(email, (res) => {
-      console.log(res) // todo
-    })
+      this._handleErr({body: res})
+    }, this._handleErr)
+  }
+
+  updatePassword (updateForm, updateParams) {
+    this.clearErrors()
+    api.updatePassword(updateParams, updateForm, (profile) => {
+      this.userProfile = profile
+      this._setSession(profile)
+    }, this._handleErr)
   }
 }
