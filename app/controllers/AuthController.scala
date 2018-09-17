@@ -388,7 +388,7 @@ class AuthController @Inject()(
                   name = lc.name,
                   picture = lc.picture
                 )
-                val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
+                val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
                 sessionCache.put(sessionId, Some(jwt))
                 Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
 
@@ -400,5 +400,27 @@ class AuthController @Inject()(
       case None =>
         FastFuture.successful(BadRequest("Malformed Json"))
     }
+  }
+
+  def migrateAuth0(): Action[AnyContent] = Action.async { implicit request =>
+    import Auth0Migrate._
+
+    (for {
+      json <- request.body.asJson
+      migration <- json.validate[Auth0Migrate].asOpt
+      jwt <- jwtParser.parseAndVerify(migration.jwt)
+    } yield {
+      localCredential.find(jwt.email) flatMap {
+        case Some(_) =>
+          FastFuture.successful(Unauthorized("User already migrated"))
+        case None =>
+          val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+          val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
+          storeCredential(sessionId, accountId, SignUpForm(jwt.email, jwt.name, jwt.picture, migration.password)) map {
+            migratedJwt =>
+              Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+          }
+      }
+    }).getOrElse(FastFuture.successful(Unauthorized("Invalid token")))
   }
 }
