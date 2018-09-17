@@ -144,6 +144,7 @@ class AuthController @Inject()(
               case Some(credential) if credential.recoveryId.contains(recoveryId) =>
                 val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
                 storeCredential(sessionId,
+                                credential.accountId,
                                 SignUpForm(credential.username, credential.name, credential.picture, password)) map {
                   jwt =>
                     Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
@@ -299,7 +300,7 @@ class AuthController @Inject()(
                              hashByteSize: Int): Array[Byte] =
     SCrypt.generate(credential.password.getBytes, salt.toByteArray, iteration, blocksize, 1, hashByteSize)
 
-  private def storeCredential(sessionId: SecureIdentifier, credential: SignUpForm) = {
+  private def storeCredential(sessionId: SecureIdentifier, accountId: SecureIdentifier, credential: SignUpForm) = {
     val salt = SecureIdentifier(mathbotConfig.saltByteWidth)
     val hash = hashCredential(
       UsernameAndPassword(username = credential.username, password = credential.password),
@@ -308,7 +309,6 @@ class AuthController @Inject()(
       mathbotConfig.scryptBlockSize,
       mathbotConfig.hashByteSize
     )
-    val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
     val lc = LocalCredential(
       accountId,
       None,
@@ -345,7 +345,8 @@ class AuthController @Inject()(
             FastFuture.successful(Unauthorized("Username already exists"))
           case None =>
             val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
-            storeCredential(sessionId, signUpForm) map { jwt =>
+            val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
+            storeCredential(sessionId, accountId, signUpForm) map { jwt =>
               Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
             }
         }
