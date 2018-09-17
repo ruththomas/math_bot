@@ -135,7 +135,6 @@ class AuthController @Inject()(
   }
 
   def updatePassword(): Action[AnyContent] = Action.async { implicit request =>
-    val body = request.body
     request.getQueryString("recoveryId").map(SecureIdentifier(_)) match {
       case Some(recoveryId) =>
         request.body.asJson.flatMap(_.asOpt[PasswordUpdate]) match {
