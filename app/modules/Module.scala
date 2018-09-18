@@ -3,7 +3,7 @@ import actors.{ ActorTags, GithubOAuth, GoogleOAuth, SendgridActor }
 import akka.actor.ActorSystem
 import com.google.inject.{ AbstractModule, Provides }
 import configuration._
-import email.SendGridConfiguration
+import email.SendGridConfig
 import loggers.{ AkkaSemanticLog, SemanticLog }
 import models.JwtToken
 import org.bson.codecs.Codec
@@ -59,6 +59,10 @@ class Module extends AbstractModule with AkkaGuiceSupport {
     configFactory.localAuthConfig
 
   @Provides
-  def provideSendGridConfig(configFactory: ConfigFactory) : SendGridConfiguration =
+  def provideSendGridConfig(configFactory: ConfigFactory) : SendGridConfig =
     configFactory.sendGridConfig
+
+  @Provides
+  def provideAuth0Config(configFactory: ConfigFactory) : Auth0Config =
+    configFactory.auth0Config
 }

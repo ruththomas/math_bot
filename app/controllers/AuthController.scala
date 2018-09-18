@@ -10,7 +10,7 @@ import akka.util.Timeout
 import com.digitaltangible.playguard._
 import com.google.inject.name.Named
 import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig}
-import daos.{LocalCredentialDao, SessionCache, SessionDAO}
+import daos.{LocalCredentialDao, PlayerTokenDAO, SessionCache, SessionDAO}
 import email._
 import javax.inject.Inject
 import loggers.SemanticLog
@@ -27,6 +27,7 @@ class AuthController @Inject()(
     val sessionDAO: SessionDAO,
     val sessionCache: SessionCache,
     val localCredential: LocalCredentialDao,
+    val playerTokens: PlayerTokenDAO,
     @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
     @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
@@ -58,7 +59,7 @@ class AuthController @Inject()(
               Query(
                 "client_id" -> googleConfig.clientId,
                 "scope" -> googleConfig.scopes.mkString(" "),
-                "redirect_uri" -> googleConfig.authRedirectUri.toString(),
+                "redirect_uri" -> googleConfig.authRedirectUrl.toString(),
                 "state" -> sessionId.toString,
                 "response_type" -> "code"
               )
@@ -72,7 +73,7 @@ class AuthController @Inject()(
               Query(
                 "client_id" -> githubConfig.clientId,
                 "scope" -> githubConfig.scopes.mkString(":"),
-                "redirect_uri" -> githubConfig.authRedirectUri.toString(),
+                "redirect_uri" -> githubConfig.authRedirectUrl.toString(),
                 "state" -> sessionId.toString
               )
             )
@@ -390,6 +391,7 @@ class AuthController @Inject()(
                 )
                 val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
                 sessionCache.put(sessionId, Some(jwt))
+
                 Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
 
               case false =>
@@ -408,19 +410,38 @@ class AuthController @Inject()(
     (for {
       json <- request.body.asJson
       migration <- json.validate[Auth0Migrate].asOpt
-      jwt <- jwtParser.parseAndVerify(migration.jwt)
     } yield {
-      localCredential.find(jwt.email) flatMap {
-        case Some(_) =>
-          FastFuture.successful(Unauthorized("User already migrated"))
-        case None =>
-          val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
-          val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
-          storeCredential(sessionId, accountId, SignUpForm(jwt.email, jwt.name, jwt.picture, migration.password)) map {
-            migratedJwt =>
-              Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+      jwtParser.parseAndVerify(migration.jwt) flatMap {
+        case Some(jwt) =>
+          jwt.getIssuerShortName match {
+            case "auth0" =>
+              val prevTokenId = s"auth0|${jwt.sub}"
+              (for {
+                playerTokenOpt <- playerTokens.getToken(prevTokenId)
+                credentialOpt <- localCredential.find(jwt.email)
+              } yield (playerTokenOpt, credentialOpt)) flatMap {
+                case (_, Some(_)) =>
+                  FastFuture.successful(Unauthorized("User already migrated"))
+                case (None, _) =>
+                  FastFuture.successful(Unauthorized("Player token not found for credentials"))
+                case (Some(playerToken), _) =>
+                  val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+                  val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
+                  for {
+                    migratedJwt <- storeCredential(sessionId,
+                                                   accountId,
+                                                   SignUpForm(jwt.email, jwt.name, jwt.picture, migration.password))
+                    migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
+                    _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
+                    _ <- playerTokens.delete(prevTokenId)
+                  } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+              }
+            case _ =>
+              FastFuture.successful(Unauthorized(s"Can can only migrate Auth0 credentials"))
           }
+        case None =>
+          FastFuture.successful(Unauthorized("Invalid web token"))
       }
-    }).getOrElse(FastFuture.successful(Unauthorized("Invalid token")))
+    }).getOrElse(FastFuture.successful(Unauthorized("Invalid json")))
   }
 }
