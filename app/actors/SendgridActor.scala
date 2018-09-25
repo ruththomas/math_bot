@@ -4,12 +4,12 @@ import actors.messages._
 import akka.actor.Actor
 import com.google.inject.Inject
 import com.sendgrid._
-import email.{ EmailMessage, SendGridConfiguration }
+import email.{EmailMessage, SendGridConfig}
 import play.api.libs.json._
 
-class SendgridActor @Inject()(config: SendGridConfiguration) extends Actor {
+class SendgridActor @Inject()(config: SendGridConfig) extends Actor {
 
-  private implicit val brr : OFormat[BounceRecords] = Json.format[BounceRecords]
+  private implicit val brr: OFormat[BounceRecords] = Json.format[BounceRecords]
 
   override def receive: Receive = {
     case _: EmailBounceCheck =>
@@ -58,6 +58,6 @@ class SendgridActor @Inject()(config: SendGridConfiguration) extends Actor {
       request.setEndpoint(s"suppression/bounces/${deleteBounceMessage.email}")
       //request.addQueryParam("email_address", deleteBounceMessage.email)
       sg.api(request)
-      // Log when response fails
+    // Log when response fails
   }
 }

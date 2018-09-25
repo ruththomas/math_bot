@@ -50,7 +50,7 @@ class GithubOAuth @Inject()(
             "code" -> code,
             "client_id" -> config.clientId,
             "client_secret" -> config.clientSecret,
-            "redirect_uri" -> config.authRedirectUri.toString(),
+            "redirect_uri" -> config.authRedirectUrl.toString(),
             "state" -> sessionId.toString
           ).toEntity
         )
