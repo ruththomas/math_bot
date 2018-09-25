@@ -102,7 +102,15 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
       playerTokenDAO
         .getToken(tokenId)
         .map {
-          case Some(token) => PlayerTokenReceived(token, level, step)
+          case Some(token) =>
+            val verifiedLevelAndStep = levelGenerator.verifyLevelAndStepName(level, step)
+            PlayerTokenReceived(
+              token.copy(
+                stats = Some(token.stats.get.copy(level = verifiedLevelAndStep._1, step = verifiedLevelAndStep._2))
+              ),
+              verifiedLevelAndStep._1,
+              verifiedLevelAndStep._2
+            )
           case None => ActorFailed(s"No token found with token_id $tokenId")
         }
         .pipeTo(self)(sender)

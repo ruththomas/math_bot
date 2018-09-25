@@ -112,6 +112,8 @@ export default new Vuex.Store({
         })
         return stepData
       }
+      state.auth.userToken.stats.level = stepData.level
+      state.auth.userToken.stats.step = stepData.step
       state.stepData = Object.keys(stepData).length ? reverseTools(stepData) : stepData
     },
     UPDATE_SPLASH_SCREEN_SHOWING (state, bool) {
