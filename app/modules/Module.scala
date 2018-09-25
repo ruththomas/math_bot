@@ -5,7 +5,7 @@ import com.google.inject.{ AbstractModule, Provides }
 import configuration._
 import email.SendGridConfig
 import loggers.{ AkkaSemanticLog, SemanticLog }
-import models.JwtToken
+import models.{ Auth0LegacyUser, JwtToken }
 import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecProvider
 import org.mongodb.scala.bson.codecs.Macros
@@ -52,7 +52,7 @@ class Module extends AbstractModule with AkkaGuiceSupport {
   def mongoCodecs(secureIdentifierCodec: SecureIdentifierCodec) : Seq[Codec[_]] = Seq(secureIdentifierCodec)
 
   @Provides
-  def mongoCodecProviders : Seq[CodecProvider] = Seq(Macros.createCodecProvider[JwtToken])
+  def mongoCodecProviders : Seq[CodecProvider] = Seq(Macros.createCodecProvider[JwtToken], Macros.createCodecProvider[Auth0LegacyUser])
 
   @Provides
   def provideLocalAuthConfig(configFactory: ConfigFactory) : LocalAuthConfig =
