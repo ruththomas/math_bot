@@ -5,7 +5,7 @@
 
       <div class="row" style="position: relative;">
         <trash></trash>
-        <grid></grid>
+        <grid v-if="renderGrid"></grid>
       </div>
 
       <div class="row box" style="padding: 0;">
@@ -113,6 +113,11 @@ export default {
       return this.$store.getters.getActiveFunctionGroups
     }
   },
+  data () {
+    return {
+      renderGrid: false
+    }
+  },
   methods: {
     initializeRobot () {
       utils.watcher(() => !this.auth.authenticated, () => {
@@ -121,6 +126,7 @@ export default {
           this.$store.dispatch('updateLambdas', stepData.lambdas)
           stepData.initialRobotState.context = this
           this.$store.dispatch('updateRobot', new Robot(stepData.initialRobotState))
+          this.renderGrid = true
         })
       })
     },

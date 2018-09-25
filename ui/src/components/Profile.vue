@@ -18,8 +18,8 @@ import Space from './Space'
 
 export default {
   mounted () {
-    this.$store.dispatch('updateStepData', {})
-    this.$store.dispatch('updateRobot', {})
+    // this.$store.dispatch('updateStepData', {})
+    // this.$store.dispatch('updateRobot', {})
   },
   computed: {
     auth () {
