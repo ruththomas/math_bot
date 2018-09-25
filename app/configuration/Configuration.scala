@@ -7,12 +7,12 @@ case class CompilerConfiguration(maxProgramSteps: Int, maxEmptyLoopCount: Int)
 
 case class GoogleApiConfig(
     oauthUrl: Uri,
-    authRedirectUri: Uri,
+    authRedirectUrl: Uri,
     authTokenUrl: Uri,
     clientId: String,
     clientSecret: String,
     scopes: Seq[String],
-    oauthPemUri: Uri
+    oauthPemUrl: Uri
 )
 
 case class ActorConfig(
@@ -26,7 +26,7 @@ case class MongoConfig(
 
 case class GithubApiConfig(
     oauthUrl: Uri,
-    authRedirectUri: Uri,
+    authRedirectUrl: Uri,
     authTokenUrl: Uri,
     publicEmailsUrl: Uri,
     userUrl: Uri,
@@ -34,6 +34,10 @@ case class GithubApiConfig(
     clientSecret: String,
     scopes: Seq[String],
     issuer: String
+)
+
+case class Auth0Config(
+    pemUrl: Uri
 )
 
 case class LocalAuthConfig(
@@ -45,6 +49,6 @@ case class LocalAuthConfig(
     scryptIterationExponent: Int,
     scryptBlockSize: Int,
     hashByteSize: Int,
-    recoveryIdByteWidth : Int,
-    recoveryEmailUrl : Uri
+    recoveryIdByteWidth: Int,
+    recoveryEmailUrl: Uri
 )

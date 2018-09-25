@@ -3,7 +3,7 @@ package actors
 import actors.messages.{AssignedFunction, RawLevelData, RawStepData}
 import play.api.Environment
 import play.api.libs.json.Json
-import types.LevelName
+import types.{LevelName, StepName}
 
 import scala.io.Source
 
@@ -58,5 +58,19 @@ class LevelGenerator(environment: Environment) {
       .flatMap(_.steps.values)
       .flatMap(rsd => rsd.assignedStaged ++ rsd.preBuiltActive)
       .toList
+  }
+
+  def verifyLevelAndStepName(levelName: LevelName, stepName: StepName): (LevelName, StepName) = {
+    getRawStepData(levelName, stepName) match {
+      case Some(_) => levelName -> stepName
+      case None =>
+        val allLevels = getAllLevels
+        allLevels.get(levelName) match {
+          case Some(rawLevelData) =>
+            levelName -> rawLevelData.steps.filter(_._2.prevStep == "None").head._1
+          case None =>
+            "BasicProgramming" -> allLevels("BasicProgramming").steps.filter(_._2.prevStep == "None").head._1
+        }
+    }
   }
 }

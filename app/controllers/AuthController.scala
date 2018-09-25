@@ -2,31 +2,33 @@ package controllers
 
 import actors.ActorTags
 import actors.messages.auth._
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
 import com.digitaltangible.playguard._
 import com.google.inject.name.Named
-import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig}
-import daos.{LocalCredentialDao, SessionCache, SessionDAO}
+import configuration.{ ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig }
+import daos._
 import email._
 import javax.inject.Inject
 import loggers.SemanticLog
 import models._
 import org.bouncycastle.crypto.generators.SCrypt
-import play.api.libs.json.{JsString, Json}
-import play.api.mvc.{Action, AnyContent, Controller, RequestHeader}
-import utils.{JwtTokenParser, SecureIdentifier}
+import play.api.libs.json.{ JsString, Json }
+import play.api.mvc.{ Action, AnyContent, Controller, RequestHeader }
+import utils.{ JwtTokenParser, SecureIdentifier }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
 class AuthController @Inject()(
     val sessionDAO: SessionDAO,
     val sessionCache: SessionCache,
     val localCredential: LocalCredentialDao,
+    val playerTokens: PlayerTokenDAO,
+    val auth0legacy: Auth0LegacyDao,
     @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
     @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
@@ -58,7 +60,7 @@ class AuthController @Inject()(
               Query(
                 "client_id" -> googleConfig.clientId,
                 "scope" -> googleConfig.scopes.mkString(" "),
-                "redirect_uri" -> googleConfig.authRedirectUri.toString(),
+                "redirect_uri" -> googleConfig.authRedirectUrl.toString(),
                 "state" -> sessionId.toString,
                 "response_type" -> "code"
               )
@@ -72,7 +74,7 @@ class AuthController @Inject()(
               Query(
                 "client_id" -> githubConfig.clientId,
                 "scope" -> githubConfig.scopes.mkString(":"),
-                "redirect_uri" -> githubConfig.authRedirectUri.toString(),
+                "redirect_uri" -> githubConfig.authRedirectUrl.toString(),
                 "state" -> sessionId.toString
               )
             )
@@ -135,7 +137,6 @@ class AuthController @Inject()(
   }
 
   def updatePassword(): Action[AnyContent] = Action.async { implicit request =>
-    val body = request.body
     request.getQueryString("recoveryId").map(SecureIdentifier(_)) match {
       case Some(recoveryId) =>
         request.body.asJson.flatMap(_.asOpt[PasswordUpdate]) match {
@@ -374,32 +375,86 @@ class AuthController @Inject()(
 
     credentialOpt match {
       case Some(credential) =>
-        localCredential.find(credential.username) map {
+        localCredential.find(credential.username) flatMap  {
           case None =>
-            Unauthorized("Username does not exist")
-          case Some(lc) =>
-            val hash = hashCredential(credential, lc.salt, lc.iterations, lc.blockSize, lc.hashSize)
+            auth0legacy.find(credential.username) map {
+              case Some(legacy) if !(legacy.migrated.getOrElse(false)) =>
+                Ok(Json.toJson(Auth0MigrateNeeded(legacy.email, legacy.user_id)))
 
-            compareWithConstantTime(lc.hash, hash) match {
-              case true =>
-                val jwt = JwtToken(
-                  iss = "https://mathbot.com",
-                  sub = lc.accountId.toString,
-                  email = lc.username,
-                  name = lc.name,
-                  picture = lc.picture
-                )
-                val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
-                sessionCache.put(sessionId, Some(jwt))
-                Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+              case None =>
+                Unauthorized("Username does not exist")
 
-              case false =>
-                Unauthorized("Password did not match")
             }
 
+          case Some(lc) =>
+            FastFuture {
+              Try {
+                val hash = hashCredential(credential, lc.salt, lc.iterations, lc.blockSize, lc.hashSize)
+
+                compareWithConstantTime(lc.hash, hash) match {
+                  case true =>
+                    val jwt = JwtToken(
+                      iss = "https://mathbot.com",
+                      sub = lc.accountId.toString,
+                      email = lc.username,
+                      name = lc.name,
+                      picture = lc.picture
+                    )
+                    val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+                    sessionCache.put(sessionId, Some(jwt))
+
+                    Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+
+                  case false =>
+                    Unauthorized("Password did not match")
+                }
+              }
+            }
         }
       case None =>
         FastFuture.successful(BadRequest("Malformed Json"))
     }
+  }
+
+  def migrateAuth0(): Action[AnyContent] = Action.async { implicit request =>
+    import Auth0Migrate._
+
+    (for {
+      json <- request.body.asJson
+      migration <- json.validate[Auth0Migrate].asOpt
+    } yield {
+      jwtParser.parseAndVerify(migration.jwt) flatMap {
+        case Some(jwt) =>
+          jwt.getIssuerShortName match {
+            case "auth0" =>
+              val prevTokenId = s"auth0|${jwt.sub}"
+              (for {
+                playerTokenOpt <- playerTokens.getToken(prevTokenId)
+                credentialOpt <- localCredential.find(jwt.email)
+              } yield (playerTokenOpt, credentialOpt)) flatMap {
+                case (_, Some(_)) =>
+                  FastFuture.successful(Unauthorized("User already migrated"))
+                case (None, _) =>
+                  FastFuture.successful(Unauthorized("Player token not found for credentials"))
+                case (Some(playerToken), _) =>
+                  val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+                  val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
+                  for {
+                    migratedJwt <- storeCredential(sessionId,
+                                                   accountId,
+                                                   SignUpForm(jwt.email, jwt.name, jwt.picture, migration.password))
+                    _ <- auth0legacy.markMigrated(jwt.email)
+                    migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
+                    _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
+                    _ <- playerTokens.delete(prevTokenId)
+                  } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+              }
+            case _ =>
+              FastFuture.successful(Unauthorized(s"Can can only migrate Auth0 credentials"))
+          }
+        case None =>
+          FastFuture.successful(Unauthorized("Invalid web token"))
+      }
+    }).getOrElse(FastFuture.successful(Unauthorized("Invalid json")))
   }
 }

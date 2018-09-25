@@ -1,5 +1,5 @@
 <template>
-  <div class="col user-profile-controls" style="display: flex;">
+  <div class="col-8 user-profile-controls" style="display: flex;">
     <div class="profile-image">
       <img class="profile-logo" :src="permanentImages.instructionsRobot">
     </div>
