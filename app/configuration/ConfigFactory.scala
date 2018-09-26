@@ -6,7 +6,7 @@ import com.google.inject.Inject
 import email.SendGridConfig
 
 import scala.collection.JavaConverters._
-import scala.concurrent.duration.{ Duration, FiniteDuration }
+import scala.concurrent.duration.{Duration, FiniteDuration}
 
 object ConfigFactory {
   object mathbot {
@@ -34,7 +34,7 @@ object ConfigFactory {
         final val user: String = "mathbot.oauth.github.user"
       }
       object auth0 {
-        final val pemUrl : String = "mathbot.oauth.auth0.pemUrl"
+        final val pemUrl: String = "mathbot.oauth.auth0.pemUrl"
       }
     }
     object actors {
@@ -54,11 +54,19 @@ object ConfigFactory {
       val scryptIterationExponent: String = "mathbot.localauth.scryptIterationExponent"
       val scryptBlockSize: String = "mathbot.localauth.sessionIdByteWidth"
       val hashByteSize: String = "mathbot.localauth.hashByteSize"
-      val recoveryIdByteWidth : String = "mathbot.localauth.recoveryIdByteWidth"
+      val recoveryIdByteWidth: String = "mathbot.localauth.recoveryIdByteWidth"
     }
-
+    object auth0 {
+      val pemUrl: String = "mathbot.auth0.pemUrl"
+      val url: String = "mathbot.auth0.url"
+      val grantType: String = "mathbot.auth0.grantType"
+      val realm: String = "mathbot.auth0.realm"
+      val audience: String = "mathbot.auth0.audience"
+      val clientId: String = "mathbot.auth0.clientId"
+      val clientSecret: String = "mathbot.auth0.clientSecret"
+    }
     object sendgrid {
-      val secretKey : String = "mathbot.sendgrid.secretKey"
+      val secretKey: String = "mathbot.sendgrid.secretKey"
     }
   }
 }
@@ -106,9 +114,15 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
       issuer = exWrap(mathbot.oauth.github.issuer, path => playConfig.getString(path))
     )
 
-  def auth0Config : Auth0Config =
+  def auth0Config: Auth0Config =
     Auth0Config(
-      pemUrl = wrap(mathbot.oauth.auth0.pemUrl, Uri(_))
+      pemUrl = wrap(mathbot.auth0.pemUrl, _.toString),
+      url = wrap(mathbot.auth0.url, _.toString),
+      grantType = wrap(mathbot.auth0.grantType, _.toString),
+      realm = wrap(mathbot.auth0.realm, _.toString),
+      audience = wrap(mathbot.auth0.audience, _.toString),
+      clientId = exWrap(mathbot.auth0.clientId, envGet, playConfig.getString(_)),
+      clientSecret = exWrap(mathbot.auth0.clientSecret, envGet, playConfig.getString(_))
     )
 
   def actorConfig(): ActorConfig = {
@@ -139,8 +153,8 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
       recoveryIdByteWidth = wrap(mathbot.localauth.recoveryIdByteWidth, _.toInt)
     )
 
-  def sendGridConfig : SendGridConfig =
+  def sendGridConfig: SendGridConfig =
     SendGridConfig(
-        secretKey = exWrap(mathbot.sendgrid.secretKey, envGet, playConfig.getString(_))
+      secretKey = exWrap(mathbot.sendgrid.secretKey, envGet, playConfig.getString(_))
     )
 }

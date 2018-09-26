@@ -36,10 +36,6 @@ case class GithubApiConfig(
     issuer: String
 )
 
-case class Auth0Config(
-    pemUrl: Uri
-)
-
 case class LocalAuthConfig(
     signupUrl: Uri,
     authUrl: Uri,
@@ -51,4 +47,14 @@ case class LocalAuthConfig(
     hashByteSize: Int,
     recoveryIdByteWidth: Int,
     recoveryEmailUrl: Uri
+)
+
+case class Auth0Config(
+    pemUrl: Uri,
+    url: String,
+    grantType: String,
+    realm: String,
+    audience: String,
+    clientId: String,
+    clientSecret: String
 )
