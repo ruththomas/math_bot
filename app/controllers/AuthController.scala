@@ -1,26 +1,27 @@
 package controllers
 
 import actors.ActorTags
+import actors.messages.{Auth0Authenticate, Auth0Authorized}
 import actors.messages.auth._
-import akka.actor.{ ActorRef, ActorSystem }
+import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
 import com.digitaltangible.playguard._
 import com.google.inject.name.Named
-import configuration.{ ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig }
+import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig}
 import daos._
 import email._
 import javax.inject.Inject
 import loggers.SemanticLog
 import models._
 import org.bouncycastle.crypto.generators.SCrypt
-import play.api.libs.json.{ JsString, Json }
-import play.api.mvc.{ Action, AnyContent, Controller, RequestHeader }
-import utils.{ JwtTokenParser, SecureIdentifier }
+import play.api.libs.json.{JsString, Json}
+import play.api.mvc.{Action, AnyContent, Controller, RequestHeader}
+import utils.{JwtTokenParser, SecureIdentifier}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 class AuthController @Inject()(
@@ -32,6 +33,7 @@ class AuthController @Inject()(
     @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
     @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
+    @Named(ActorTags.auth0) val auth0: ActorRef,
     val jwtParser: JwtTokenParser,
     val googleConfig: GoogleApiConfig,
     val githubConfig: GithubApiConfig,
@@ -375,15 +377,24 @@ class AuthController @Inject()(
 
     credentialOpt match {
       case Some(credential) =>
-        localCredential.find(credential.username) flatMap  {
+        localCredential.find(credential.username) flatMap {
           case None =>
-            auth0legacy.find(credential.username) map {
-              case Some(legacy) if !(legacy.migrated.getOrElse(false)) =>
-                Ok(Json.toJson(Auth0MigrateNeeded(legacy.email, legacy.user_id)))
-
+            auth0legacy.find(credential.username).flatMap {
+              case Some(legacy) if !legacy.migrated.getOrElse(false) =>
+                (auth0 ? Auth0Authenticate(credential.username, credential.password))
+                  .mapTo[Either[Auth0Authorized, String]]
+                  .map {
+                    case Left(auth0Authorized) =>
+                      // todo - parse jwt (auth0Authorized.id_token)
+                      // todo - update our db with this user
+                      // todo - respond with new session
+                      println(s"Auth0 Response - \n ${Json.prettyPrint(Json.toJson(auth0Authorized))}")
+                      // Respond with unauthorized so client doesn't try to authenticate this user
+                      Unauthorized("Legacy user auth still in development")
+                    case Right(errMsg) => Unauthorized(errMsg)
+                  }
               case None =>
-                Unauthorized("Username does not exist")
-
+                FastFuture.successful(Unauthorized("Username does not exist"))
             }
 
           case Some(lc) =>
