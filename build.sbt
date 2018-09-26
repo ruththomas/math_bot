@@ -33,7 +33,8 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test,
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.5" % Test,
   "io.gatling" % "gatling-test-framework" % "2.2.5" % Test,
-  "org.mockito" % "mockito-all" % "1.9.5" % Test
+  "org.mockito" % "mockito-all" % "1.9.5" % Test,
+  "org.scalaj" %% "scalaj-http" % "2.3.0"
 )
 
 // The Play project itself
