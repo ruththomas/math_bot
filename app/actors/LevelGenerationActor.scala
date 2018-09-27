@@ -133,12 +133,10 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         playerToken.lambdas match {
           case Some(lambdas) =>
             val updatedDefault = lambdas.inactiveStaged.get ::: lambdas.stagedFuncs
-            val defaultIds = DefaultCommands.funcs.map(_.created_id)
-            val filteredDefault = updatedDefault.filter(d => defaultIds.contains(d.created_id))
 
             val r = lambdas.copy(
               stagedFuncs = List.empty[FuncToken],
-              inactiveStaged = Some(filteredDefault)
+              inactiveStaged = Some(updatedDefault)
             )
             UpdateDb(playerToken.copy(lambdas = Some(r)), rawStepData)
           case None =>

@@ -418,11 +418,10 @@ class PlayerActor()(system: ActorSystem,
         playerToken = playerTokenOpt.get
         lambdas = playerToken.lambdas.getOrElse(Lambdas())
         funcToMove = lambdas
-          .stagedFuncs(oldIndex)
+          .activeFuncs(oldIndex)
           .copy(name = Some(""), func = Some(List.empty[FuncToken]), color = "default")
         updatedStagedFuncs = lambdas.stagedFuncs
-          .take(newIndex) ++ List(funcToMove) ++ lambdas.activeFuncs
-          .drop(newIndex)
+          .take(newIndex) ++ List(funcToMove) ++ lambdas.stagedFuncs.drop(newIndex)
         updatedActiveFuncs = lambdas.activeFuncs.take(oldIndex) ++ lambdas.activeFuncs.drop(oldIndex + 1)
         updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
                                       activeFuncs = indexFunctions(updatedActiveFuncs))
