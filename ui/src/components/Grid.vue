@@ -312,9 +312,9 @@ export default {
     background: repeating-linear-gradient(
         45deg,
         rgba(0, 0, 0, 0.2),
-        rgba(0, 0, 0, 0.2) 21px,
-        rgba(74, 74, 74, 0.6) 21px,
-        rgba(74, 74, 74, 0.6) 24px
+        rgba(0, 0, 0, 0.2) calc(25% - 5px),
+        rgba(74, 74, 74, 1) calc(25% + 0.75px),
+        rgba(74, 74, 74, 1) calc(25% - 5px)
     )
   }
 
