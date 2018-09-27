@@ -53,7 +53,7 @@ export default {
   .message-template {
     border: 1px solid $click-color;
     background: $grid-background;
-    border-radius: $grid-border-radius;
+    border-radius: $grid-border-radius 0 $grid-border-radius $grid-border-radius;
     position: relative;
     height: calc(#{$grid-space-size} * 5);
     width: calc(#{$grid-space-size} * 10);
