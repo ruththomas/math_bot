@@ -383,15 +383,40 @@ class AuthController @Inject()(
               case Some(legacy) if !legacy.migrated.getOrElse(false) =>
                 (auth0 ? Auth0Authenticate(credential.username, credential.password))
                   .mapTo[Either[Auth0Authorized, String]]
-                  .map {
+                  .flatMap {
                     case Left(auth0Authorized) =>
-                      // todo - parse jwt (auth0Authorized.id_token)
-                      // todo - update our db with this user
-                      // todo - respond with new session
-                      println(s"Auth0 Response - \n ${Json.prettyPrint(Json.toJson(auth0Authorized))}")
-                      // Respond with unauthorized so client doesn't try to authenticate this user
-                      Unauthorized("Legacy user auth still in development")
-                    case Right(errMsg) => Unauthorized(errMsg)
+                      jwtParser.parse(auth0Authorized.id_token) map {
+                        jwt =>
+                          (for {
+                            playerTokenOpt <- playerTokens.getToken(jwt.sub)
+                            credentialOpt <- localCredential.find(jwt.email)
+                          } yield (playerTokenOpt, credentialOpt)) flatMap {
+                            case (_, Some(_)) =>
+                              FastFuture.successful(Unauthorized("User already migrated"))
+                            case (None, _) =>
+                              FastFuture.successful(Unauthorized("Player data missing for credentials"))
+                            case (Some(playerToken), _) =>
+                              val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+                              val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
+                              for {
+                                migratedJwt <- storeCredential(sessionId,
+                                  accountId,
+                                  SignUpForm(jwt.email, jwt.name, jwt.picture, credential.password)
+                                )
+                                _ <- auth0legacy.markMigrated(jwt.email)
+                                migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
+                                _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
+                                _ <- playerTokens.delete(jwt.sub)
+                              } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+                          }
+                      } match {
+                       case Some(future) =>
+                         future
+                       case None =>
+                         FastFuture.successful(Unauthorized("Invalid json web token"))
+                     }
+                    case Right(errMsg) =>
+                      FastFuture.successful(Unauthorized(errMsg))
                   }
               case None =>
                 FastFuture.successful(Unauthorized("Username does not exist"))
