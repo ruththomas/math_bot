@@ -148,6 +148,9 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         activeFuncs = lambdas.activeFuncs
         inactiveActives = lambdas.inactiveActives
         activesCombined = activeFuncs ++ inactiveActives.getOrElse(List.empty[FuncToken])
+        stagedFuncs = lambdas.stagedFuncs
+        inactiveStaged = lambdas.inactiveStaged.getOrElse(List.empty[FuncToken])
+        stagedCombined = stagedFuncs ++ inactiveStaged
       } yield {
         // Create List[FuncToken] of assigned staged
         val assignedStaged = {
@@ -197,8 +200,11 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
           val inactiveStaged = lambdas.inactiveStaged.getOrElse(List.empty[FuncToken])
           val qty = rawStepData.stagedQty
 
-          val newStaged = assignedStaged ++ inactiveStaged.take(qty)
-          val newDefault = inactiveStaged.filterNot(d => newStaged.exists(_.created_id == d.created_id))
+          val newStaged = (assignedStaged ++ inactiveStaged.take(qty))
+            .filterNot(ft => preBuiltActive.exists(_.created_id == ft.created_id))
+          val newDefault = inactiveStaged
+            .filterNot(d => newStaged.exists(_.created_id == d.created_id))
+            .filterNot(ft => preBuiltActive.exists(_.created_id == ft.created_id))
 
           Map("newStaged" -> newStaged, "newInActives" -> newDefault)
         }

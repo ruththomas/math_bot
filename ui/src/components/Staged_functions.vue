@@ -125,6 +125,7 @@ export default {
       width: min-content;
       min-width: 100%;
       width: -moz-min-content;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: flex-start;
