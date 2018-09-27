@@ -286,6 +286,7 @@ export default {
       position: relative;
       display: flex;
       height: min-content;
+      min-height: $piece-height;
       border: 1px solid transparent;
       width: min-content;
       width: -moz-min-content;
