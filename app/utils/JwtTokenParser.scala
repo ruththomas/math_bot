@@ -14,7 +14,7 @@ import loggers.{ AkkaSemanticLog, SemanticLog }
 import models.JwtToken
 import org.joda.time.{ Duration, Instant }
 import pdi.jwt.JwtAlgorithm.RS256
-import pdi.jwt.JwtJson
+import pdi.jwt.{ JwtJson, JwtOptions }
 import play.api.libs.json.{ JsObject, JsString, Json, OFormat }
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -118,4 +118,8 @@ class JwtTokenParser @Inject() (
       }
     }
   }
+
+  def parse(encodedToken : String) : Option[JwtToken] =
+    JwtJson.decodeJson(encodedToken, JwtOptions(signature = false)).toOption.flatMap(_.asOpt[JwtToken])
+
 }
