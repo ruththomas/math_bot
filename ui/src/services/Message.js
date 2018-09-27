@@ -34,7 +34,7 @@ class Message {
   add () {
     this.runBeforeAppend()
     this.state.messageList.unshift(this)
-    this.state.messageList = this.state.messageList.slice(0, 2)
+    this.state.messageList = this.state.messageList.slice(0, 5)
     this._timedDelete()
   }
 
