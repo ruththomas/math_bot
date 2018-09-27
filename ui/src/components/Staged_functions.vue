@@ -112,6 +112,7 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     width: 100%;
+    z-index: 101;
     .staged-functions {
       width: min-content;
       min-width: 100%;

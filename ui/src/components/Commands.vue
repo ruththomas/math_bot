@@ -49,8 +49,9 @@
       id="open-staged"
       class="dialog-button"
       @click="toggleFunctionAdd"
-      v-if="stagedFunctions.length && stepData.stagedEnabled">
+    >
     </div>
+  <!--v-if="stagedFunctions.length && stepData.stagedEnabled">-->
   </div>
 </template>
 
