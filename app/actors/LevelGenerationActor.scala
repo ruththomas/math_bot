@@ -152,48 +152,42 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         inactiveStaged = lambdas.inactiveStaged.getOrElse(List.empty[FuncToken])
         stagedCombined = stagedFuncs ++ inactiveStaged
       } yield {
-        // Create List[FuncToken] of assigned staged
-        val assignedStaged = {
-          rawStepData.assignedStaged.flatMap { as =>
-            if (activesCombined.exists(_.created_id == as.createdId)) None
-            else {
-              Some(
-                FuncToken(
-                  created_id = as.createdId,
-                  func = Some(List.empty[FuncToken]),
-                  set = Some(false),
-                  name = Some(as.name),
-                  image = Some(as.image),
-                  index = Some(playerToken.lambdas.get.stagedFuncs.length),
-                  `type` = Some("function"),
-                  commandId = Some("function"),
-                  sizeLimit = Some(makeQtyUnlimited(as.sizeLimit))
-                )
-              )
-            }
+        val assignedStaged = levelGenerator
+          .getAllowedStaged(rawStepData.level, rawStepData.step)
+          .filterNot { as =>
+            (activesCombined ++ stagedCombined).exists(_.created_id == as.createdId)
           }
-        }
+          .map { as =>
+            FuncToken(
+              created_id = as.createdId,
+              func = Some(List.empty[FuncToken]),
+              set = Some(false),
+              name = Some(as.name),
+              image = Some(as.image),
+              index = Some(playerToken.lambdas.get.stagedFuncs.length),
+              `type` = Some("function"),
+              commandId = Some("function"),
+              sizeLimit = Some(makeQtyUnlimited(as.sizeLimit))
+            )
+          }
 
-        // Create List[FuncToken] of pre built active functions
-        val preBuiltActive = {
-          rawStepData.preBuiltActive.flatMap { pa =>
-            if (activesCombined.exists(_.created_id == pa.createdId)) None
-            else {
-              Some(
-                FuncToken(
-                  created_id = pa.createdId,
-                  func = Some(pa.func.flatMap(fn => lambdas.cmds.find(_.commandId.contains(fn)))),
-                  name = Some(pa.name),
-                  image = Some(pa.image),
-                  index = Some(playerToken.lambdas.get.activeFuncs.length),
-                  `type` = Some("function"),
-                  commandId = Some("function"),
-                  sizeLimit = Some(pa.sizeLimit)
-                )
-              )
-            }
+        val preBuiltActive = levelGenerator
+          .getAllowedActives(rawStepData.level, rawStepData.step)
+          .filterNot { pa =>
+            (activesCombined ++ stagedCombined).exists(_.created_id == pa.createdId)
           }
-        }
+          .map { pa =>
+            FuncToken(
+              created_id = pa.createdId,
+              func = Some(pa.func.flatMap(fn => lambdas.cmds.find(_.commandId.contains(fn)))),
+              name = Some(pa.name),
+              image = Some(pa.image),
+              index = Some(playerToken.lambdas.get.activeFuncs.length),
+              `type` = Some("function"),
+              commandId = Some("function"),
+              sizeLimit = Some(pa.sizeLimit)
+            )
+          }
 
         // Move staged functions to inactive staged
         val stagedAndInactiveStaged: Map[String, List[FuncToken]] = {
