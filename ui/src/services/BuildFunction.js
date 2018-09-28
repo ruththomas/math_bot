@@ -45,6 +45,10 @@ class BuildFunction {
     api.activateFunction({tokenId: this._tokenId(), stagedIndex, activeIndex}, lambdas => this._updatedLambdas(lambdas))
   }
 
+  _deactivateFunc ({activeIndex, stagedIndex}) {
+    api.deactivateFunction({tokenId: this._tokenId(), activeIndex, stagedIndex}, lambdas => this._updatedLambdas(lambdas))
+  }
+
   _moveFunction ({oldIndex, newIndex}) {
     api.updateActives({tokenId: this._tokenId(), oldIndex, newIndex}, lambdas => this._updatedLambdas(lambdas))
   }
@@ -99,6 +103,10 @@ class BuildFunction {
 
   activateFunction ({stagedIndex, activeIndex}) {
     this._activateFunc({stagedIndex: stagedIndex, activeIndex: activeIndex})
+  }
+
+  deactivateFunction ({activeIndex, stagedIndex}) {
+    this._deactivateFunc({activeIndex: activeIndex, stagedIndex: stagedIndex})
   }
 
   moveFunction ({oldIndex, newIndex}) {

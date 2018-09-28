@@ -13,6 +13,7 @@ PUT         /api/token/editLambdas                                              
 PUT         /api/token/color                                                       controllers.PlayerController.changeFunctionColor
 POST        /api/token                                                             controllers.PlayerController.addToken
 GET         /api/token/activateFunction/:tokenId/:stagedIndex/:activeIndex         controllers.PlayerController.activateFunction(tokenId, stagedIndex, activeIndex)
+GET         /api/token/deactivateFunction/:tokenId/:activeIndex/:stagedIndex       controllers.PlayerController.deactivateFunction(tokenId, activeIndex, stagedIndex)
 POST        /api/token/test                                                        controllers.PlayerController.test
 GET         /api/token/updateActives/:tokenId/:oldIndex/:newIndex                  controllers.PlayerController.moveActiveFunc(tokenId, oldIndex, newIndex)
 
