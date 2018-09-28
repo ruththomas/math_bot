@@ -76,6 +76,16 @@ class PlayerController @Inject()(system: ActorSystem,
         }
     }
 
+  def deactivateFunction(encodedTokenId: String, stagedIndex: String, activeIndex: String): Action[AnyContent] =
+    Action.async { implicit request: Request[AnyContent] =>
+      (playerActor ? DeactivateFunc(URLDecoder.decode(encodedTokenId, "UTF-8"), stagedIndex, activeIndex))
+        .mapTo[Either[PreparedLambdasToken, ActorFailed]]
+        .map {
+          case Left(preparedLambdasToken) => Ok(Json.toJson(preparedLambdasToken.lambdas))
+          case Right(invalidJson) => BadRequest(invalidJson.msg)
+        }
+    }
+
   def test() = Action.async(parse.json) { implicit request: Request[JsValue] =>
     request.body.validate[PlayerToken].asOpt match {
       case Some(playerToken) =>

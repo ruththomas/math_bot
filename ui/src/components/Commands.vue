@@ -49,8 +49,9 @@
       id="open-staged"
       class="dialog-button"
       @click="toggleFunctionAdd"
-      v-if="stagedFunctions.length && stepData.stagedEnabled">
+    >
     </div>
+  <!--v-if="stagedFunctions.length && stepData.stagedEnabled">-->
   </div>
 </template>
 
@@ -285,6 +286,7 @@ export default {
       position: relative;
       display: flex;
       height: min-content;
+      min-height: $piece-height;
       border: 1px solid transparent;
       width: min-content;
       width: -moz-min-content;
