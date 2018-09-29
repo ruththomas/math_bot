@@ -1,23 +1,45 @@
 <template>
-  <div
-    class="row congrats"
+  <b-modal
+    id="congrats-modal"
+    size="large"
+    ref="congrats-modal"
+    :hide-header="true"
   >
-    <div v-if="congrats" class="won message-template">
-      <img class="congrats-icon won-icon" :src="permanentImages.smileyFace" />
-      <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
-      <div class="text-minor">You won!</div>
+    <div class="congrats-icon">
+      <img :src="permanentImages.instructionsRobot">
     </div>
-    <div v-else class="lost message-template">
-      <img class="congrats-icon lost-icon" :src="permanentImages.thinkingFace"/>
-      <div class="text-minor">Try again!</div>
+    <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
+    <div class="text-minor">You won!</div>
+    <div slot="modal-footer" class="row" style="width: 100%; display: flex; justify-content: space-between;">
+      <b-btn
+        size="md"
+        style="width: 40%;"
+        class="float-right"
+        variant="primary"
+        @click="quit"
+      >
+        Quit
+      </b-btn>
+      <b-btn
+        size="md"
+        style="width: 40%"
+        class="float-right"
+        variant="primary"
+        @click="next"
+      >
+        Next
+      </b-btn>
     </div>
-  </div>
+  </b-modal>
 </template>
 
 <script>
 import Stars from './Stars'
 export default {
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
     level () {
       return this.$store.getters.getLevel
     },
@@ -35,55 +57,79 @@ export default {
       return this.$store.getters.getPermanentImages
     }
   },
-  props: ['congrats'],
+  data () {
+    return {
+      show: true
+    }
+  },
+  methods: {
+    quit () {
+      console.log('quit')
+      this.runCompiled.quit()
+    },
+    next () {
+      this.runCompiled.initializeNextStep()
+    }
+  },
   components: {
     Stars
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   $click-color: #B8E986;
-  $grid-background: rgba(0, 0, 0, 0.6);
+  $background-color: rgba(0, 0, 0, 1);
   $grid-border-radius: 4px;
   $icon-size: 50%;
   $text-minor-font-size: 4vmin;
   $grid-space-size: 9vmin;
+  $font-size: 2.5rem;
+  $star-size: 3rem;
 
-  .congrats {
+  #congrats-modal {
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    .message-template {
-      border: 1px solid $click-color;
-      background: $grid-background;
-      border-radius: $grid-border-radius 0 $grid-border-radius $grid-border-radius;
-      position: relative;
-      height: calc(#{$grid-space-size} * 5);
-      width: calc(#{$grid-space-size} * 10);
-      margin: 0 auto;
-      color: #ffffff;
+    color: #ffffff;
 
-      * {
-        height: 100%;
-        width: 100%;
+    .text-minor {
+      font-size: $font-size;
+    }
+
+    .modal-dialog .modal-content {
+      background-color: transparent;
+      .modal-body {
+        background-color: $background-color;
+        .stars .star-spread .star {
+          height: $star-size;
+          width: $star-size;
+          svg image {
+            display: none;
+          }
+        }
+
+        .congrats-icon {
+          background-color: white;
+          display: inline-block;
+          border-radius: 50%;
+          padding: 2rem;
+        }
       }
 
-      .text-minor {
-        font-size: $text-minor-font-size;
-      }
-
-      .congrats-icon {
-        height: $icon-size;
-        width: $icon-size;
-      }
-
-      .stars {
-        height: calc(#{$icon-size} / 2);
-        width: 25%;
-        margin: 0 auto;
+      .modal-footer {
+        background-color: $background-color;
+        border-top: 1px solid $click-color;
+        .row {
+          margin: 0;
+          .btn {
+            background-color: $click-color;
+            color: #000000;
+            border: none;
+          }
+        }
       }
     }
   }
