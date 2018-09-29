@@ -14,11 +14,11 @@
               v-for="(space, sInd) in row"
               :id="`grid-cell-${rInd}-${sInd}`"
               :class="[
-                'grid-space-' + space.name.replace(/ /g, '-'),
                 !rInd ? 'no-border-top': '',
                 rInd === gridMap.length - 1 ? 'no-border-bottom' : '',
                 !sInd ? 'no-border-left' : '',
-                sInd === row.length - 1 ? 'no-border-right' : ''
+                sInd === row.length - 1 ? 'no-border-right' : '',
+                'grid-space-' + space.name.replace(/ /g, '-')
               ]"
               :key="'space:' + rInd + ':' + sInd"
             >
@@ -244,6 +244,17 @@ export default {
         z-index: 9;
       }
 
+      &.grid-space-wall {
+        box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.5);
+        background: repeating-linear-gradient(
+            45deg,
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.3) calc(25% - 5px),
+            rgba(74, 74, 74, 1) calc(25% + 0.75px),
+            rgba(74, 74, 74, 1) calc(25% - 5px)
+        )
+      }
+
       &.no-border-top {
         border-top: none;
       }
@@ -286,17 +297,6 @@ export default {
         width: calc(#{$display-tool-size} / 2);
       }
     }
-  }
-
-  .grid-space-wall {
-    box-shadow: 0 0 30px 0 rgba(0,0,0,0.5);
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(0, 0, 0, 0.2),
-        rgba(0, 0, 0, 0.2) calc(25% - 5px),
-        rgba(74, 74, 74, 1) calc(25% + 0.75px),
-        rgba(74, 74, 74, 1) calc(25% - 5px)
-    )
   }
 
   .robot-shake {
