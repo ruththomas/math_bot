@@ -152,8 +152,9 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
         inactiveStaged = lambdas.inactiveStaged.getOrElse(List.empty[FuncToken])
         stagedCombined = stagedFuncs ++ inactiveStaged
       } yield {
-        val assignedStaged = levelGenerator
-          .getAllowedStaged(rawStepData.level, rawStepData.step)
+        val allowedStaged = levelGenerator.getAllowedStaged(rawStepData.level, rawStepData.step)
+
+        val assignedStaged = allowedStaged
           .filterNot { as =>
             (activesCombined ++ stagedCombined).exists(_.created_id == as.createdId)
           }
@@ -171,8 +172,9 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
             )
           }
 
-        val preBuiltActive = levelGenerator
-          .getAllowedActives(rawStepData.level, rawStepData.step)
+        val allowedActives = levelGenerator.getAllowedActives(rawStepData.level, rawStepData.step)
+
+        val preBuiltActive = allowedActives
           .filterNot { pa =>
             (activesCombined ++ stagedCombined).exists(_.created_id == pa.createdId)
           }
@@ -194,11 +196,13 @@ class LevelGenerationActor()(playerTokenDAO: PlayerTokenDAO, logger: MathBotLogg
           val inactiveStaged = lambdas.inactiveStaged.getOrElse(List.empty[FuncToken])
           val qty = rawStepData.stagedQty
 
-          val newStaged = (assignedStaged ++ inactiveStaged.take(qty))
-            .filterNot(ft => preBuiltActive.exists(_.created_id == ft.created_id))
+          val newStaged = (assignedStaged ++ inactiveStaged.take(qty) ++ inactiveStaged.filter(
+            t => (allowedActives ++ allowedStaged).exists(_.createdId == t.created_id)
+          )).filterNot(ft => preBuiltActive.exists(_.created_id == ft.created_id))
           val newDefault = inactiveStaged
             .filterNot(d => newStaged.exists(_.created_id == d.created_id))
             .filterNot(ft => preBuiltActive.exists(_.created_id == ft.created_id))
+            .filterNot(ft => allowedActives.exists(_.createdId == ft.created_id))
 
           Map("newStaged" -> newStaged, "newInActives" -> newDefault)
         }
