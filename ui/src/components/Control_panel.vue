@@ -15,13 +15,6 @@
         :step-stats="stepStats"></stars>
     </div>
 
-    <div
-      @click="goToProfile()"
-      class="return-to-profile"
-      data-toggle="tooltip" title="Return to profile"
-    >
-      <img :src="handlePicture(userProfile.picture)" />
-    </div>
   </div>
 </template>
 
@@ -33,9 +26,6 @@ import VideoHint from '../services/VideoHint'
 export default {
   name: 'control-panel',
   computed: {
-    userProfile () {
-      return JSON.parse(localStorage.getItem('profile'))
-    },
     tryAgainShowing () {
       return this.$store.getters.getTryAgainShowing
     },
@@ -75,18 +65,7 @@ export default {
     }
   },
   methods: {
-    handlePicture (picture) {
-      if (!picture || picture.match(/gravatar/)) {
-        return this.permanentImages.gravatar
-      } else {
-        return picture
-      }
-    },
-    goToProfile () {
-      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
-      this.$store.dispatch('deleteMessages')
-      this.$router.push({path: 'profile'})
-    }
+
   },
   components: {
     RobotCarrying,
@@ -99,18 +78,20 @@ export default {
   $click-color: #B8E986;
   $instructions-robot-size: 13vmin;
   $grid-space-size: 9vmin;
+  $grid-background: rgba(0, 0, 0, 0.6);
 
   .control-panel {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     position: relative;
-    width: calc(#{$grid-space-size} * 10 + 2px);
+    width: 100%;
+    margin: 0;
 
     .help-button {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
-      border: 1px solid $click-color;
+      background-color: $grid-background;
       display: flex;
       z-index: 100;
     }
@@ -135,25 +116,5 @@ export default {
 
   .instructions-filler-left {
     width: 120px;
-  }
-
-  .return-to-profile {
-    position: fixed;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-    height: 9vmin;
-    width: 9vmin;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-
-    img {
-      border-radius: 50%;
-      height: 80%;
-      width: 80%;
-      box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
-    }
   }
 </style>

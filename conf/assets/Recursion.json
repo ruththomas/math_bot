@@ -213,7 +213,7 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
       "allowedActives": ["51974949138", "53367904610"],
