@@ -1,13 +1,13 @@
 <template>
   <div
-    class="row message-template congrats"
+    class="row congrats"
   >
-    <div v-if="congrats" class="won">
+    <div v-if="congrats" class="won message-template">
       <img class="congrats-icon won-icon" :src="permanentImages.smileyFace" />
       <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
       <div class="text-minor">You won!</div>
     </div>
-    <div v-else class="lost">
+    <div v-else class="lost message-template">
       <img class="congrats-icon lost-icon" :src="permanentImages.thinkingFace"/>
       <div class="text-minor">Try again!</div>
     </div>
@@ -50,34 +50,36 @@ export default {
   $text-minor-font-size: 4vmin;
   $grid-space-size: 9vmin;
 
-  .message-template {
-    border: 1px solid $click-color;
-    background: $grid-background;
-    border-radius: $grid-border-radius 0 $grid-border-radius $grid-border-radius;
-    position: relative;
-    height: calc(#{$grid-space-size} * 5);
-    width: calc(#{$grid-space-size} * 10);
+  .congrats {
+    height: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
-    color: #ffffff;
+    .message-template {
+      border: 1px solid $click-color;
+      background: $grid-background;
+      border-radius: $grid-border-radius 0 $grid-border-radius $grid-border-radius;
+      position: relative;
+      height: calc(#{$grid-space-size} * 5);
+      width: calc(#{$grid-space-size} * 10);
+      margin: 0 auto;
+      color: #ffffff;
 
-    * {
-      height: 100%;
-      width: 100%;
-    }
+      * {
+        height: 100%;
+        width: 100%;
+      }
 
-    .text-minor {
-      font-size: $text-minor-font-size;
-    }
+      .text-minor {
+        font-size: $text-minor-font-size;
+      }
 
-    .congrats-icon {
-      height: $icon-size;
-      width: $icon-size;
-    }
+      .congrats-icon {
+        height: $icon-size;
+        width: $icon-size;
+      }
 
-    .won {
       .stars {
         height: calc(#{$icon-size} / 2);
         width: 25%;
