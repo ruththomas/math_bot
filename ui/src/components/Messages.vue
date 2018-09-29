@@ -32,7 +32,7 @@ export default {
     top: 1vh;
     left: 50%;
     transform: translateX(-50%);
-    width: 30vmin;
+    width: 20vmin;
     z-index: 1001;
     display: flex;
     flex-direction: column;
@@ -46,24 +46,24 @@ export default {
     border-radius: 2px;
     justify-content: center;
     align-items: center;
-    font-size: 2vmin;
-    line-height: 4vmin;
+    font-size: 1.5vmin;
+    line-height: 2.5vmin;
     cursor: pointer;
   }
 
   .info {
     border: 1px solid rgb(0, 0, 255);
-    background-color: rgba(0, 0, 255, 0.5);
+    background-color: rgba(0, 0, 255, 0.3);
   }
 
   .success {
-    background-color: rgba(184,233,134,0.5);
+    background-color: rgba(184,233,134,0.3);
     border: 1px solid rgb(184, 233, 134);
   }
 
   .warn {
     border: 1px solid rgb(255, 0, 0);
-    background-color: rgba(255, 0, 0, 0.5);
+    background-color: rgba(255, 0, 0, 0.3);
   }
 
   .message:nth-child(n+2) {

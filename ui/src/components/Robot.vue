@@ -1,25 +1,41 @@
 <template>
   <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
   <div class="container-fluid robot" data-aos="fade-in" v-else>
-    <div class="container">
-
-      <div class="row" style="position: relative;">
-        <trash></trash>
-        <grid v-if="renderGrid"></grid>
-      </div>
-
-      <messages></messages>
-
-      <div class="row box" style="padding: 0;">
-        <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
-        <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
-      </div>
-
-      <div class="row">
-        <trash></trash>
-        <commands></commands>
-      </div>
+    <div
+      @click="goToProfile()"
+      class="return-to-profile"
+      data-toggle="tooltip" title="Return to profile"
+    >
+      <img :src="handlePicture(userProfile.picture)" />
     </div>
+    <transition
+      mode="out-in"
+      name="grid-transition-group"
+      enter-active-class="animated zoomIn"
+      leave-active-class="animated zoomOut"
+    >
+      <congrats v-if="congratsShowing" :congrats="true" key="congrats-1234"></congrats>
+      <congrats v-else-if="tryAgainShowing" :congrats="false" key="congrats-5678"></congrats>
+      <div v-else class="container">
+
+        <div class="row" style="position: relative;">
+          <trash></trash>
+          <grid v-if="renderGrid"></grid>
+        </div>
+
+        <messages></messages>
+
+        <div class="row box" style="padding: 0;">
+          <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+          <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
+        </div>
+
+        <div class="row">
+          <trash></trash>
+          <commands></commands>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -39,12 +55,16 @@ import utils from '../services/utils'
 import Robot from '../services/RobotState'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
+import Congrats from './Congrats'
 
 export default {
   mounted () {
     this.initializeRobot()
   },
   computed: {
+    userProfile () {
+      return JSON.parse(localStorage.getItem('profile'))
+    },
     tokenId () {
       return this.$store.getters.getTokenId
     },
@@ -137,6 +157,18 @@ export default {
     },
     adjustSpeed () {
       this.speed = this.speed === 500 ? 200 : 500
+    },
+    goToProfile () {
+      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
+      this.$store.dispatch('deleteMessages')
+      this.$router.push({path: 'profile'})
+    },
+    handlePicture (picture) {
+      if (!picture || picture.match(/gravatar/)) {
+        return this.permanentImages.gravatar
+      } else {
+        return picture
+      }
     }
   },
   components: {
@@ -149,7 +181,8 @@ export default {
     ControlPanel,
     SplashScreen,
     RobotCarrying,
-    PopoverBucket
+    PopoverBucket,
+    Congrats
   }
 }
 </script>
@@ -166,6 +199,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      height: 100%;
 
       .row {
         margin: 0;
@@ -176,6 +210,25 @@ export default {
         position: relative;
         height: $box-height;
         z-index: 100;
+      }
+    }
+    .return-to-profile {
+      position: fixed;
+      right: 0;
+      top: 0;
+      cursor: pointer;
+      height: 9vmin;
+      width: 9vmin;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+
+      img {
+        border-radius: 50%;
+        height: 80%;
+        width: 80%;
+        box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
       }
     }
   }
