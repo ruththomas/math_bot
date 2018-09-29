@@ -7,6 +7,7 @@ import AuthService from '../services/AuthService'
 import utils from '../services/utils'
 // import api from '../services/api'
 import VideoTimer from '../services/VideoTimer'
+import RunCompiled from '../services/RunCompiled'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -82,9 +83,13 @@ export default new Vuex.Store({
       videoURL: ''
     },
     videoTimers: {},
-    editFunctionEvent: {}
+    editFunctionEvent: {},
+    runCompiled: {}
   },
   mutations: {
+    UPDATE_RUN_COMPILED (state, context) {
+      state.runCompiled = new RunCompiled(context)
+    },
     UPDATE_EDIT_FUNCTION_EVENT (state, evt) {
       state.editFunctionEvent = evt
     },
@@ -205,6 +210,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateRunCompiled ({commit}, context) {
+      commit('UPDATE_RUN_COMPILED', context)
+    },
     updateEditFunctionEvent ({commit}, evt) {
       commit('UPDATE_EDIT_FUNCTION_EVENT', evt)
     },
@@ -321,6 +329,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getRunCompiled: state => state.runCompiled,
     getEditFunctionEvent: state => state.editFunctionEvent,
     getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,
