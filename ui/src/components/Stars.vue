@@ -88,6 +88,8 @@ $click-color: #B8E986;
   justify-content: center;
   border-radius: 5px;
   cursor: pointer;
+  width: min-content;
+  margin: 0 auto;
 
   .progress {
     position: absolute;
