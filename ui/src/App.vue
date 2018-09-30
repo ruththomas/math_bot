@@ -173,6 +173,10 @@ export default {
     -webkit-transform: rotate(45deg);
   }
 
+  .background-alert {
+    background-color: $click-color!important;
+  }
+
   @keyframes bounce {
     from {
       transform: translateY(0px);
