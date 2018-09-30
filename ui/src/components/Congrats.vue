@@ -3,7 +3,6 @@
     id="congrats-modal"
     size="large"
     ref="congrats-modal"
-    v-model="show"
     :no-close-on-backdrop="true"
     :no-close-on-esc="true"
   >
