@@ -7,10 +7,6 @@
       data-toggle="tooltip" title="Return to profile"
     >
       <img :src="handlePicture(userProfile.picture)" />
-      <div>
-        <div>Planet: Mars</div>
-        <div>Level: 12</div>
-      </div>
     </div>
     <congrats key="congrats-1234"></congrats>
     <div class="container">
