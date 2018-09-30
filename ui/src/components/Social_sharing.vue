@@ -26,14 +26,7 @@
 <script>
 export default {
   name: 'Social_sharing',
-  mounted () {
-    // const $shareButtons = $('.share-button')
-    // $shareButtons.css({
-    //   height: this.size,
-    //   width: this.size
-    // })
-  },
-  props: ['message', 'size']
+  props: ['message']
 }
 </script>
 
