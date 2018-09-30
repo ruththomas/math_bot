@@ -150,6 +150,7 @@ module.exports = {
     playButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342823/buttons/Play_Button.png',
     pauseButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/pauseButton.png',
     stopButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/stopButton.png',
+    resetButton: 'http://res.cloudinary.com/doohickey/image/upload/v1538313442/resetbutton_jy9hvk.png',
     xButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/xButton.png',
     plusButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png',
     emptyButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/Green_Circle.png',

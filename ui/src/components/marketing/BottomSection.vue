@@ -1,8 +1,7 @@
 <template>
   <div id="Marketing-bottom-section">
     <div class="media bottom-info" v-if="showBottomInfo">
-      <p>Right now Mathbot is still in development, but you can sign up and play with the robot for free. Once the site is open, prices will be determined for each class.</p>
-      <a href="#">About</a><a href="#">Pricing</a>
+      <a href="https://github.com/JWWeatherman/math_bot">Contribute</a><a href="#" @click="goToSite">Pricing</a>
     </div>
   </div>
 </template>
@@ -14,7 +13,8 @@ export default {
     return {
       showBottomInfo: false
     }
-  }
+  },
+  props: ['goToSite']
 }
 </script>
 

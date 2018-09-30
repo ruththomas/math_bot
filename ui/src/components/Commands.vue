@@ -49,6 +49,7 @@
       id="open-staged"
       class="dialog-button"
       @click="toggleFunctionAdd"
+      @mousedown="runCompiled.resetIfFailure"
     >
     </div>
   <!--v-if="stagedFunctions.length && stepData.stagedEnabled">-->
@@ -124,6 +125,9 @@ export default {
     },
     swiperSlide () {
       return this.$store.getters.getSwiperSlide
+    },
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
     }
   },
   data () {
@@ -164,7 +168,6 @@ export default {
         type: 'warn',
         msg: 'Can\'t edit'
       }
-
       this.$store.dispatch('addMessage', messageBuilder)
     },
     editingFunctionMessage (func) {

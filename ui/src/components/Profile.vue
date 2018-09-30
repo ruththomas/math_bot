@@ -6,6 +6,7 @@
     </div>
     <div class="row" style="height: 20%;">
       <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
+      <social-sharing :message="'Checkout Mathbot.com!'" :size="'5vmin'"></social-sharing>
     </div>
   </div>
 </template>
@@ -15,6 +16,7 @@ import SplashScreen from './Splash_screen'
 import UserProfileControls from './User_profile_controls'
 import Steps from './Steps'
 import Space from './Space'
+import SocialSharing from './Social_sharing'
 
 export default {
   mounted () {
@@ -53,7 +55,8 @@ export default {
     SplashScreen,
     UserProfileControls,
     Steps,
-    Space
+    Space,
+    SocialSharing
   }
 }
 </script>
@@ -61,5 +64,13 @@ export default {
 <style scoped lang="scss">
   .profile {
     height: 100%;
+    position: relative;
+    .row {
+      display: flex;
+      .social-sharing {
+        height: 50%;
+        align-self: flex-end;
+      }
+    }
   }
 </style>

@@ -54,6 +54,14 @@ export default {
   $logo-width: 20vmin;
   $line-height: 1.2em;
 
+  .profile-text .social-sharing .social-links .share-button {
+    height: $line-height!important;
+    width: $line-height!important;
+    i {
+      font-size: $line-height!important;
+    }
+  }
+
   .user-profile-controls {
     font-size: $profile-font-size;
     color: $text-color;
