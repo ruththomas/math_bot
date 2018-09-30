@@ -2,6 +2,14 @@ import elementResizeEvent from 'element-resize-event'
 import _ from 'underscore'
 
 const utils = {
+  findStepInd (steps, step) {
+    return steps.reduce((ind, s, i) => {
+      if (s.name === step) {
+        ind = i
+      }
+      return ind
+    }, 0)
+  },
   openPopover (targetId) {
     this.$root.$emit('bv::show::popover', targetId)
   },

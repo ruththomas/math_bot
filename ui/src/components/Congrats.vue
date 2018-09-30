@@ -3,13 +3,19 @@
     id="congrats-modal"
     size="large"
     ref="congrats-modal"
-    :hide-header="true"
+    :no-close-on-backdrop="true"
+    :no-close-on-esc="true"
   >
+    <div slot="modal-header">
+      <img class="dialog-button close-congrats" @click="closeCongrats" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
+    </div>
     <div class="congrats-icon">
       <img :src="permanentImages.instructionsRobot">
     </div>
     <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
     <div class="text-minor">You won!</div>
+    <div class="text-social">Share your success with others</div>
+    <social-sharing :message="socialMessage"></social-sharing>
     <div slot="modal-footer" class="row" style="width: 100%; display: flex; justify-content: space-between;">
       <b-btn
         size="md"
@@ -35,6 +41,8 @@
 
 <script>
 import Stars from './Stars'
+import SocialSharing from './Social_sharing'
+import utils from '../services/utils'
 export default {
   computed: {
     runCompiled () {
@@ -55,6 +63,11 @@ export default {
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    socialMessage () {
+      return `
+        I beat planet ${this.level} step ${utils.findStepInd(this.steps, this.step)} on mathbot.com!
+      `
     }
   },
   data () {
@@ -64,15 +77,18 @@ export default {
   },
   methods: {
     quit () {
-      console.log('quit')
       this.runCompiled.quit()
     },
     next () {
       this.runCompiled.initializeNextStep()
+    },
+    closeCongrats () {
+      this.runCompiled.stayOnLevel()
     }
   },
   components: {
-    Stars
+    Stars,
+    SocialSharing
   }
 }
 </script>
@@ -86,6 +102,7 @@ export default {
   $grid-space-size: 9vmin;
   $font-size: 2.5rem;
   $star-size: 3rem;
+  $dialog-button-size: 3.5vmin;
 
   #congrats-modal {
     height: 100%;
@@ -116,6 +133,17 @@ export default {
           display: inline-block;
           border-radius: 50%;
           padding: 2rem;
+        }
+      }
+
+      .modal-header {
+        background-color: $background-color;
+        border: none;
+        position: relative;
+        .close-congrats {
+          position: absolute;
+          bottom: calc(#{$dialog-button-size} / 2);
+          right:  calc(#{-$dialog-button-size} / 2);
         }
       }
 

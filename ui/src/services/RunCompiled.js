@@ -86,6 +86,11 @@ class RunCompiled extends GridAnimator {
     this.$router.push({path: '/profile'})
   }
 
+  stayOnLevel () {
+    this._stopRobot()
+    this._hideCongrats()
+  }
+
   _showCongrats = () => this.context.$root.$emit('bv::show::modal', 'congrats-modal')
 
   _hideCongrats = () => this.context.$root.$emit('bv::hide::modal', 'congrats-modal')
