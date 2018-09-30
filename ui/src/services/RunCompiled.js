@@ -122,6 +122,26 @@ class RunCompiled extends GridAnimator {
     this._addMessage(messageBuilder)
   }
 
+  _failedMessage () {
+    const failedMessage = {
+      type: 'success',
+      msg: 'Not quite, maybe a hint might help',
+      handlers () {
+        const $helpButton = $('.help-button')
+
+        return {
+          runBeforeAppend () {
+            $helpButton.addClass('background-alert')
+          },
+          runOnDelete () {
+            $helpButton.removeClass('background-alert')
+          }
+        }
+      }
+    }
+    this._addMessage(failedMessage)
+  }
+
   _mainEmptyMessage (emptyFuncs) {
     const emptyCount = emptyFuncs.length
 
@@ -181,6 +201,7 @@ class RunCompiled extends GridAnimator {
     return this.initializeAnimation(this.$store, frame, async () => {
       this._updateStats(frame.stats)
       this.initializeNextStep(frame)
+      this._failedMessage()
     })
   }
 

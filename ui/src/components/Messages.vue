@@ -32,7 +32,7 @@ export default {
     top: 1vh;
     left: 50%;
     transform: translateX(-50%);
-    width: 20vmin;
+    width: 30vmin;
     z-index: 1001;
     display: flex;
     flex-direction: column;
@@ -46,7 +46,7 @@ export default {
     border-radius: 2px;
     justify-content: center;
     align-items: center;
-    font-size: 1.5vmin;
+    font-size: 2vmin;
     line-height: 2.5vmin;
     cursor: pointer;
   }
