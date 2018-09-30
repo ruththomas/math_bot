@@ -7,35 +7,31 @@
       data-toggle="tooltip" title="Return to profile"
     >
       <img :src="handlePicture(userProfile.picture)" />
-    </div>
-    <transition
-      mode="out-in"
-      name="grid-transition-group"
-      enter-active-class="animated zoomIn"
-      leave-active-class="animated zoomOut"
-    >
-      <congrats v-if="congratsShowing" :congrats="true" key="congrats-1234"></congrats>
-      <congrats v-else-if="tryAgainShowing" :congrats="false" key="congrats-5678"></congrats>
-      <div v-else class="container">
-
-        <div class="row" style="position: relative;">
-          <trash></trash>
-          <grid v-if="renderGrid"></grid>
-        </div>
-
-        <messages></messages>
-
-        <div class="row box" style="padding: 0;">
-          <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
-          <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
-        </div>
-
-        <div class="row">
-          <trash></trash>
-          <commands></commands>
-        </div>
+      <div>
+        <div>Planet: Mars</div>
+        <div>Level: 12</div>
       </div>
-    </transition>
+    </div>
+    <congrats key="congrats-1234"></congrats>
+    <div class="container">
+
+      <div class="row" style="position: relative;">
+        <trash></trash>
+        <grid v-if="renderGrid"></grid>
+      </div>
+
+      <messages></messages>
+
+      <div class="row box" style="padding: 0;">
+        <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+        <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
+      </div>
+
+      <div class="row">
+        <trash></trash>
+        <commands></commands>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,6 +54,8 @@ import PopoverBucket from './Popover_bucket'
 import Congrats from './Congrats'
 
 export default {
+  beforeMount () {
+  },
   mounted () {
     this.initializeRobot()
   },

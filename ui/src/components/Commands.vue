@@ -1,5 +1,5 @@
 <template>
-  <div class="commands" v-if="commands !== null && activeFunctions !== null && !congratsShowing && !tryAgainShowing">
+  <div class="commands" v-if="commands !== null && activeFunctions !== null">
     <div class="lambdas-container">
       <div class="methods-container">
         <draggable

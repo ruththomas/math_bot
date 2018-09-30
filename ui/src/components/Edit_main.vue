@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!congratsShowing && !tryAgainShowing" class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
+  <div class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
     <function-drop
       :id="'edit-main'"
       :class="'edit-main-drop'"
@@ -46,7 +46,6 @@ import {_} from 'underscore'
 import utils from '../services/utils'
 import buildUtils from '../services/BuildFunction'
 import draggable from 'vuedraggable'
-import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 
@@ -55,6 +54,9 @@ export default {
     this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
   },
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
     mainFunctionFunc () {
       const mainToken = this.$store.getters.getMainFunction
       return mainToken === null ? [] : mainToken.func
@@ -109,6 +111,7 @@ export default {
     }
   },
   data () {
+    this.$store.dispatch('updateRunCompiled', this)
     return {
       buttonSize: $('.commands > button').width() || 70,
       screenSize: $('#robot').width(),
@@ -124,8 +127,7 @@ export default {
         filter: '.noDrag',
         dragClass: 'dragging',
         sort: true
-      },
-      runCompiled: new RunCompiled(this)
+      }
     }
   },
   methods: {
