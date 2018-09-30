@@ -4,9 +4,9 @@
       <space :permanent-images="permanentImages"></space>
       <steps :permanent-images="permanentImages"></steps>
     </div>
-    <div class="row" style="height: 20%;">
+    <div class="col-8 controls" style="height: 20%;">
+      <social-sharing :message="'Checkout Mathbot.com!'" :size="'1vmin'"></social-sharing>
       <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
-      <social-sharing :message="'Checkout Mathbot.com!'" :size="'5vmin'"></social-sharing>
     </div>
   </div>
 </template>
@@ -61,15 +61,20 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   .profile {
     height: 100%;
     position: relative;
-    .row {
+    .controls {
+      padding: 0;
       display: flex;
       .social-sharing {
-        height: 50%;
-        align-self: flex-end;
+        .social-links {
+          display: flex;
+          justify-content: space-evenly;
+          flex-direction: column;
+          height: 100%;
+        }
       }
     }
   }

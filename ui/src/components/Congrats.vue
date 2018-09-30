@@ -3,6 +3,7 @@
     id="congrats-modal"
     size="large"
     ref="congrats-modal"
+    v-model="show"
     :no-close-on-backdrop="true"
     :no-close-on-esc="true"
   >
@@ -102,6 +103,7 @@ export default {
   $font-size: 2.5rem;
   $star-size: 3rem;
   $dialog-button-size: 2rem;
+  $share-btn-size: 2.5rem;
 
   #congrats-modal {
     height: 100%;
@@ -132,6 +134,19 @@ export default {
           display: inline-block;
           border-radius: 50%;
           padding: 2rem;
+        }
+
+        .social-sharing {
+          .social-links {
+            .share-button {
+              height: $share-btn-size;
+              width: $share-btn-size;
+
+              i {
+                font-size: calc(#{$share-btn-size} - 1rem);
+              }
+            }
+          }
         }
       }
 
