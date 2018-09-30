@@ -64,9 +64,6 @@ export default {
       max: 100
     }
   },
-  methods: {
-
-  },
   components: {
     RobotCarrying,
     Stars
