@@ -6,7 +6,7 @@
 
     <div
       class="btn button-effect help-button"
-      @click="[videoHint.getHint(), runCompiled.reset()]"
+      @click="[videoHint.showVideo(), runCompiled.reset()]"
     >
       <stars
         :star-group="'star-spread'"
@@ -21,10 +21,12 @@
 <script>
 import RobotCarrying from './Robot_carrying'
 import Stars from './Stars'
-import VideoHint from '../services/VideoHint'
 
 export default {
   name: 'control-panel',
+  mounted () {
+    this.$store.dispatch('updateVideoHint', this)
+  },
   computed: {
     runCompiled () {
       return this.$store.getters.getRunCompiled
@@ -56,13 +58,15 @@ export default {
     stepStats () {
       const stepName = this.step
       return this.steps.find(s => s.name === stepName)
+    },
+    videoHint () {
+      return this.$store.getters.getVideoHint
     }
   },
   data () {
     return {
       speechBubbleShowing: true,
       getTime: false,
-      videoHint: new VideoHint(this),
       counter: 45,
       max: 100
     }

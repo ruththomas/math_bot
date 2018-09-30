@@ -1,10 +1,8 @@
 <template>
   <b-modal
     id="congrats-modal"
-    size="large"
     ref="congrats-modal"
-    :no-close-on-backdrop="true"
-    :no-close-on-esc="true"
+    @hidden="closeCongrats"
   >
     <div slot="modal-header">
       <img class="dialog-button close-congrats" @click="closeCongrats" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">

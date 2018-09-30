@@ -1,7 +1,7 @@
 <template>
     <div class="container grid">
-      <video-hint v-if="hintShowing.showing" key="video-hint-1234"></video-hint>
-      <div v-else-if="gridMap" class="row" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''" key="grid-map-1234">
+      <video-hint key="video-hint-1234"></video-hint>
+      <div v-if="gridMap" class="row" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''" key="grid-map-1234">
         <div class="grid-map">
           <control-panel></control-panel>
           <div
@@ -77,11 +77,10 @@ import _ from 'underscore'
 import utils from '../services/utils'
 import ControlPanel from './Control_panel'
 import VideoHint from './Video_hint'
-import VideoHintControl from '../services/VideoHint'
 
 export default {
   mounted () {
-    this.startFreeHint(this.freeHint)
+    this.showFreeHint(this.freeHint)
     this.popoverSyncs = _.chain(this.gridMap)
       .map((row) => {
         return row.map(() => false)
@@ -141,27 +140,24 @@ export default {
     },
     hintShowing () {
       return this.$store.getters.getHintShowing
-    }
-  },
-  watch: {
-    stepData (newData) {
-      this.startFreeHint(newData.freeHint)
+    },
+    videoHint () {
+      return this.$store.getters.getVideoHint
     }
   },
   data () {
     return {
       runCompiled: {},
       showSpeech: true,
-      popoverSyncs: null,
-      videoHintControl: new VideoHintControl(this)
+      popoverSyncs: null
+    }
+  },
+  watch: {
+    freeHint (url) {
+      this.showFreeHint(url)
     }
   },
   methods: {
-    startFreeHint (videoUrl) {
-      if (videoUrl) {
-        this.videoHintControl.startFreeHint(videoUrl)
-      }
-    },
     singleDigitProblem (problem) {
       const pNumber = Number(problem)
       if (!isNaN(pNumber) && pNumber > 0) {
@@ -177,6 +173,11 @@ export default {
           return spaceName
         default:
           return 'floor'
+      }
+    },
+    showFreeHint (url) {
+      if (url) {
+        this.videoHint.showVideo(url)
       }
     },
     closePopover: utils.closePopover
