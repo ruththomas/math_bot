@@ -24,9 +24,11 @@ class RunCompiled extends GridAnimator {
       this.start = this.start.bind(this)
       this.pause = this.pause.bind(this)
       this.stop = this.stop.bind(this)
+      this.reset = this.reset.bind(this)
       this._resetStep = this._resetStep.bind(this)
       this._waitForFrames = this._waitForFrames.bind(this)
       this.initializeNextStep = this.initializeNextStep.bind(this)
+      this.resetIfFailure = this.resetIfFailure.bind(this)
     }
   }
 
@@ -47,6 +49,12 @@ class RunCompiled extends GridAnimator {
       .filter(func => func !== null)
       .filter(func => !func.func.length)
       .value()
+  }
+
+  resetIfFailure () {
+    if (this.robot.state === 'failure') {
+      this.reset()
+    }
   }
 
   start () {
@@ -73,6 +81,12 @@ class RunCompiled extends GridAnimator {
   stop () {
     this._stopMessage()
     this.robot.setState('stopped')
+    this._stopRobot()
+  }
+
+  reset () {
+    this.robot.state = 'home'
+    this._stopRobot()
   }
 
   initializeNextStep (frame) {
@@ -122,10 +136,17 @@ class RunCompiled extends GridAnimator {
     this._addMessage(messageBuilder)
   }
 
+  _closeMessageRobotHome () {
+    return () => {
+      return this.robot.state === 'home'
+    }
+  }
+
   _failedMessage () {
+    const dis = this
     const failedMessage = {
       type: 'success',
-      msg: 'Not quite, maybe a hint might help',
+      msg: 'Not quite, a hint might help',
       handlers () {
         const $helpButton = $('.help-button')
 
@@ -135,7 +156,8 @@ class RunCompiled extends GridAnimator {
           },
           runOnDelete () {
             $helpButton.removeClass('background-alert')
-          }
+          },
+          closeControl: dis._closeMessageRobotHome()
         }
       }
     }
@@ -200,7 +222,7 @@ class RunCompiled extends GridAnimator {
     // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
       this._updateStats(frame.stats)
-      this.initializeNextStep(frame)
+      this.robot.setState('failure')
       this._failedMessage()
     })
   }
