@@ -15,7 +15,12 @@
 
     <div class="bar noDrag" v-if="Object.keys(robot).length">
       <img class="trash noDrag dialog-button" :src="permanentImages.buttons.trashButton"  @click="wipeFunction" data-toggle="tooltip" title="Clear main" />
-      <div class="speed dialog-button" @click="adjustSpeed" data-toggle="tooltip" title="Adjust speed"> {{ robotSpeedDisplay }}</div>
+      <div
+        v-if="runCompiled.robot.state !== 'failure'"
+        class="speed dialog-button"
+        @click="adjustSpeed"
+        data-toggle="tooltip"
+        title="Adjust speed"> {{ robotSpeedDisplay }}</div>
 
       <img
         v-if="runCompiled.robot.state === 'home' || runCompiled.robot.state === 'paused'"
@@ -37,6 +42,13 @@
         :src="permanentImages.buttons.stopButton"
         alt="Stop button" @click="runCompiled.stop"
         data-toggle="tooltip" title="Stop program"/>
+
+      <img
+        v-if="runCompiled.robot.state === 'failure'"
+        class="reset play button noDrag dialog-button"
+        :src="permanentImages.buttons.resetButton"
+        alt="Reset button" @click="runCompiled.reset"
+        data-toggle="tooltip" title="Reset program"/>
     </div>
   </div>
 </template>
@@ -143,13 +155,16 @@ export default {
     },
     togglePut (bool) {
       this.mainDraggableOptions.group.put = bool
-      if (!bool) this.fullMessage()
     },
     editFunction (evt) {
       if (!evt.hasOwnProperty('removed')) {
         buildUtils.addToFunction()
       }
-      this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
+      const mainBalance = this.mainFunctionFunc.length < this.stepData.mainMax
+      this.togglePut(mainBalance)
+      if (!mainBalance) {
+        this.fullMessage()
+      }
     },
     toggleFunctionEdit (func, ind) {
       if (func.name) {
@@ -189,6 +204,7 @@ export default {
   $edit-main-side-padding: 16%;
   $edit-main-top-bottom-padding: 0;
   $bar-height: 1px;
+  $click-color: #B8E986;
 
   .edit-main {
     position: relative;
@@ -231,6 +247,9 @@ export default {
   .play {
     border-radius: 50%;
     right: 0;
+  }
+
+  .reset {
   }
 
   .play-border {

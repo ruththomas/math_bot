@@ -26,7 +26,14 @@
 <script>
 export default {
   name: 'Social_sharing',
-  props: ['message']
+  mounted () {
+    // const $shareButtons = $('.share-button')
+    // $shareButtons.css({
+    //   height: this.size,
+    //   width: this.size
+    // })
+  },
+  props: ['message', 'size']
 }
 </script>
 
@@ -35,21 +42,22 @@ $twitter-color: #1da1f2;
 $facebook-color: #3b5998;
 $linkedin-color: #00a0dc;
 $reddit-color: #ff4500;
-$button-size: 3rem;
+$btn-font-size: 2.5vmin;
+$btn-size: 3.3vmin;
 .social-sharing {
   .social-links {
     .share-button {
       display: inline-flex;
-      justify-content: center;
+      justify-content: space-evenly;
       align-items: center;
-      height: $button-size;
-      width: $button-size;
       border-radius: 50%;
       cursor: pointer;
-      margin: 1rem;
+      height: $btn-size;
+      width: $btn-size;
 
       i {
-        font-size: calc(#{$button-size} - 1rem);
+        color: #ffffff;
+        font-size: $btn-font-size;
       }
     }
     .share-twitter {

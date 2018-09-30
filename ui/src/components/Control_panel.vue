@@ -6,7 +6,7 @@
 
     <div
       class="btn button-effect help-button"
-      @click="videoHint.getHint()"
+      @click="[videoHint.getHint(), runCompiled.reset()]"
     >
       <stars
         :star-group="'star-spread'"
@@ -26,6 +26,9 @@ import VideoHint from '../services/VideoHint'
 export default {
   name: 'control-panel',
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
     tryAgainShowing () {
       return this.$store.getters.getTryAgainShowing
     },

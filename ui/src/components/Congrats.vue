@@ -14,8 +14,7 @@
     </div>
     <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
     <div class="text-minor">You won!</div>
-    <div class="text-social">Share your success with others</div>
-    <social-sharing :message="socialMessage"></social-sharing>
+    <social-sharing :message="socialMessage" :size="'3rem'"></social-sharing>
     <div slot="modal-footer" class="row" style="width: 100%; display: flex; justify-content: space-between;">
       <b-btn
         size="md"
@@ -33,7 +32,7 @@
         variant="primary"
         @click="next"
       >
-        Next
+        Next level
       </b-btn>
     </div>
   </b-modal>
@@ -102,7 +101,8 @@ export default {
   $grid-space-size: 9vmin;
   $font-size: 2.5rem;
   $star-size: 3rem;
-  $dialog-button-size: 3.5vmin;
+  $dialog-button-size: 2rem;
+  $share-btn-size: 2.5rem;
 
   #congrats-modal {
     height: 100%;
@@ -134,6 +134,19 @@ export default {
           border-radius: 50%;
           padding: 2rem;
         }
+
+        .social-sharing {
+          .social-links {
+            .share-button {
+              height: $share-btn-size;
+              width: $share-btn-size;
+
+              i {
+                font-size: calc(#{$share-btn-size} - 1rem);
+              }
+            }
+          }
+        }
       }
 
       .modal-header {
@@ -142,8 +155,10 @@ export default {
         position: relative;
         .close-congrats {
           position: absolute;
-          bottom: calc(#{$dialog-button-size} / 2);
-          right:  calc(#{-$dialog-button-size} / 2);
+          height: $dialog-button-size;
+          width: $dialog-button-size;
+          top: 0;
+          right: 0;
         }
       }
 
