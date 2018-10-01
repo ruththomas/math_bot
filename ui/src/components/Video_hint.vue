@@ -5,6 +5,7 @@
     ref="video-modal"
     :hide-header="true"
     :hide-footer="true"
+    :lazy="true"
     @shown="videoHint.startVideo()"
   >
     <img

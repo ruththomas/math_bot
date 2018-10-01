@@ -23,7 +23,7 @@
         :collection="list.concat(placeholders)"
         :origin="origin"
         :data-created-id="func.created_id"
-        @click.native="editFunction($event, func, findIndex(func))"
+        @click.native="func.type === 'function' ? editFunction($event, func, findIndex(func)) : () => {}"
       ></function-box>
     </draggable>
   </div>
