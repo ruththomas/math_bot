@@ -8,6 +8,7 @@ import utils from '../services/utils'
 // import api from '../services/api'
 import VideoTimer from '../services/VideoTimer'
 import RunCompiled from '../services/RunCompiled'
+import VideoHint from '../services/VideoHint'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -84,9 +85,13 @@ export default new Vuex.Store({
     },
     videoTimers: {},
     editFunctionEvent: {},
-    runCompiled: {}
+    runCompiled: {},
+    videoHint: {}
   },
   mutations: {
+    UPDATE_VIDEO_HINT (state, context) {
+      state.videoHint = new VideoHint(context)
+    },
     UPDATE_RUN_COMPILED (state, context) {
       state.runCompiled = new RunCompiled(context)
     },
@@ -210,6 +215,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateVideoHint ({commit}, context) {
+      commit('UPDATE_VIDEO_HINT', context)
+    },
     updateRunCompiled ({commit}, context) {
       commit('UPDATE_RUN_COMPILED', context)
     },
@@ -329,6 +337,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getVideoHint: state => state.videoHint,
     getRunCompiled: state => state.runCompiled,
     getEditFunctionEvent: state => state.editFunctionEvent,
     getVideoTimers: state => state.videoTimers,
