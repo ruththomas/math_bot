@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!congratsShowing && !tryAgainShowing" class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
+  <div class="edit-main" :class="functionAreaShowing === 'editMain' ? '' : 'deactivate-edit-main'">
     <function-drop
       :id="'edit-main'"
       :class="'edit-main-drop'"
@@ -15,7 +15,12 @@
 
     <div class="bar noDrag" v-if="Object.keys(robot).length">
       <img class="trash noDrag dialog-button" :src="permanentImages.buttons.trashButton"  @click="wipeFunction" data-toggle="tooltip" title="Clear main" />
-      <div class="speed dialog-button" @click="adjustSpeed" data-toggle="tooltip" title="Adjust speed"> {{ robotSpeedDisplay }}</div>
+      <div
+        v-if="runCompiled.robot.state !== 'failure'"
+        class="speed dialog-button"
+        @click="adjustSpeed"
+        data-toggle="tooltip"
+        title="Adjust speed"> {{ robotSpeedDisplay }}</div>
 
       <img
         v-if="runCompiled.robot.state === 'home' || runCompiled.robot.state === 'paused'"
@@ -37,6 +42,13 @@
         :src="permanentImages.buttons.stopButton"
         alt="Stop button" @click="runCompiled.stop"
         data-toggle="tooltip" title="Stop program"/>
+
+      <img
+        v-if="runCompiled.robot.state === 'failure'"
+        class="reset play button noDrag dialog-button"
+        :src="permanentImages.buttons.resetButton"
+        alt="Reset button" @click="runCompiled.reset"
+        data-toggle="tooltip" title="Reset program"/>
     </div>
   </div>
 </template>
@@ -46,7 +58,6 @@ import {_} from 'underscore'
 import utils from '../services/utils'
 import buildUtils from '../services/BuildFunction'
 import draggable from 'vuedraggable'
-import RunCompiled from '../services/RunCompiled'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 
@@ -55,6 +66,9 @@ export default {
     this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
   },
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
     mainFunctionFunc () {
       const mainToken = this.$store.getters.getMainFunction
       return mainToken === null ? [] : mainToken.func
@@ -109,6 +123,7 @@ export default {
     }
   },
   data () {
+    this.$store.dispatch('updateRunCompiled', this)
     return {
       buttonSize: $('.commands > button').width() || 70,
       screenSize: $('#robot').width(),
@@ -124,8 +139,7 @@ export default {
         filter: '.noDrag',
         dragClass: 'dragging',
         sort: true
-      },
-      runCompiled: new RunCompiled(this)
+      }
     }
   },
   methods: {
@@ -141,13 +155,16 @@ export default {
     },
     togglePut (bool) {
       this.mainDraggableOptions.group.put = bool
-      if (!bool) this.fullMessage()
     },
     editFunction (evt) {
       if (!evt.hasOwnProperty('removed')) {
         buildUtils.addToFunction()
       }
-      this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
+      const mainBalance = this.mainFunctionFunc.length < this.stepData.mainMax
+      this.togglePut(mainBalance)
+      if (!mainBalance) {
+        this.fullMessage()
+      }
     },
     toggleFunctionEdit (func, ind) {
       if (func.name) {
@@ -187,6 +204,7 @@ export default {
   $edit-main-side-padding: 16%;
   $edit-main-top-bottom-padding: 0;
   $bar-height: 1px;
+  $click-color: #B8E986;
 
   .edit-main {
     position: relative;
@@ -229,6 +247,9 @@ export default {
   .play {
     border-radius: 50%;
     right: 0;
+  }
+
+  .reset {
   }
 
   .play-border {

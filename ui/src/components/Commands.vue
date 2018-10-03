@@ -1,5 +1,5 @@
 <template>
-  <div class="commands" v-if="commands !== null && activeFunctions !== null && !congratsShowing && !tryAgainShowing">
+  <div class="commands" v-if="commands !== null && activeFunctions !== null">
     <div class="lambdas-container">
       <div class="methods-container">
         <draggable
@@ -38,6 +38,7 @@
             :ind="ind"
             :collection="activeFunctions"
             :origin="'functions'"
+            :data-created-id="func.created_id"
             @click.native="editFunction($event, func, ind)"
           ></function-box>
         </draggable>
@@ -48,8 +49,10 @@
       id="open-staged"
       class="dialog-button"
       @click="toggleFunctionAdd"
-      v-if="stagedFunctions.length && stepData.stagedEnabled">
+      @mousedown="runCompiled.resetIfFailure"
+    >
     </div>
+  <!--v-if="stagedFunctions.length && stepData.stagedEnabled">-->
   </div>
 </template>
 
@@ -122,6 +125,9 @@ export default {
     },
     swiperSlide () {
       return this.$store.getters.getSwiperSlide
+    },
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
     }
   },
   data () {
@@ -162,7 +168,6 @@ export default {
         type: 'warn',
         msg: 'Can\'t edit'
       }
-
       this.$store.dispatch('addMessage', messageBuilder)
     },
     editingFunctionMessage (func) {
@@ -284,6 +289,7 @@ export default {
       position: relative;
       display: flex;
       height: min-content;
+      min-height: $piece-height;
       border: 1px solid transparent;
       width: min-content;
       width: -moz-min-content;

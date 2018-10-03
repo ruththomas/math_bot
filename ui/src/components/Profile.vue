@@ -4,7 +4,8 @@
       <space :permanent-images="permanentImages"></space>
       <steps :permanent-images="permanentImages"></steps>
     </div>
-    <div class="row" style="height: 20%;">
+    <div class="col-8 controls" style="height: 20%;">
+      <social-sharing :message="'Checkout Mathbot.com!'" :size="'1vmin'"></social-sharing>
       <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
     </div>
   </div>
@@ -15,11 +16,12 @@ import SplashScreen from './Splash_screen'
 import UserProfileControls from './User_profile_controls'
 import Steps from './Steps'
 import Space from './Space'
+import SocialSharing from './Social_sharing'
 
 export default {
   mounted () {
-    this.$store.dispatch('updateStepData', {})
-    this.$store.dispatch('updateRobot', {})
+    // this.$store.dispatch('updateStepData', {})
+    // this.$store.dispatch('updateRobot', {})
   },
   computed: {
     auth () {
@@ -53,13 +55,27 @@ export default {
     SplashScreen,
     UserProfileControls,
     Steps,
-    Space
+    Space,
+    SocialSharing
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   .profile {
     height: 100%;
+    position: relative;
+    .controls {
+      padding: 0;
+      display: flex;
+      .social-sharing {
+        .social-links {
+          display: flex;
+          justify-content: space-evenly;
+          flex-direction: column;
+          height: 100%;
+        }
+      }
+    }
   }
 </style>

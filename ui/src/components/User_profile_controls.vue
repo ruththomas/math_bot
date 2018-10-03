@@ -1,5 +1,5 @@
 <template>
-  <div class="col user-profile-controls" style="display: flex;">
+  <div class="col-8 user-profile-controls" style="display: flex;">
     <div class="profile-image">
       <img class="profile-logo" :src="permanentImages.instructionsRobot">
     </div>
@@ -53,6 +53,14 @@ export default {
   $font-family: Roboto, Georgia, serif;
   $logo-width: 20vmin;
   $line-height: 1.2em;
+
+  .profile-text .social-sharing .social-links .share-button {
+    height: $line-height!important;
+    width: $line-height!important;
+    i {
+      font-size: $line-height!important;
+    }
+  }
 
   .user-profile-controls {
     font-size: $profile-font-size;

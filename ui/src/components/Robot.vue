@@ -1,11 +1,19 @@
 <template>
   <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
   <div class="container-fluid robot" data-aos="fade-in" v-else>
+    <div
+      @click="goToProfile()"
+      class="return-to-profile"
+      data-toggle="tooltip" title="Return to profile"
+    >
+      <img :src="handlePicture(userProfile.picture)" />
+    </div>
+    <congrats key="congrats-1234"></congrats>
     <div class="container">
 
       <div class="row" style="position: relative;">
         <trash></trash>
-        <grid></grid>
+        <grid v-if="renderGrid"></grid>
       </div>
 
       <messages></messages>
@@ -39,12 +47,18 @@ import utils from '../services/utils'
 import Robot from '../services/RobotState'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
+import Congrats from './Congrats'
 
 export default {
+  beforeMount () {
+  },
   mounted () {
     this.initializeRobot()
   },
   computed: {
+    userProfile () {
+      return JSON.parse(localStorage.getItem('profile'))
+    },
     tokenId () {
       return this.$store.getters.getTokenId
     },
@@ -115,6 +129,11 @@ export default {
       return this.$store.getters.getActiveFunctionGroups
     }
   },
+  data () {
+    return {
+      renderGrid: false
+    }
+  },
   methods: {
     initializeRobot () {
       utils.watcher(() => !this.auth.authenticated, () => {
@@ -123,6 +142,7 @@ export default {
           this.$store.dispatch('updateLambdas', stepData.lambdas)
           stepData.initialRobotState.context = this
           this.$store.dispatch('updateRobot', new Robot(stepData.initialRobotState))
+          this.renderGrid = true
         })
       })
     },
@@ -131,6 +151,18 @@ export default {
     },
     adjustSpeed () {
       this.speed = this.speed === 500 ? 200 : 500
+    },
+    goToProfile () {
+      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
+      this.$store.dispatch('deleteMessages')
+      this.$router.push({path: 'profile'})
+    },
+    handlePicture (picture) {
+      if (!picture || picture.match(/gravatar/)) {
+        return this.permanentImages.gravatar
+      } else {
+        return picture
+      }
     }
   },
   components: {
@@ -143,7 +175,8 @@ export default {
     ControlPanel,
     SplashScreen,
     RobotCarrying,
-    PopoverBucket
+    PopoverBucket,
+    Congrats
   }
 }
 </script>
@@ -160,6 +193,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      height: 100%;
 
       .row {
         margin: 0;
@@ -170,6 +204,25 @@ export default {
         position: relative;
         height: $box-height;
         z-index: 100;
+      }
+    }
+    .return-to-profile {
+      position: fixed;
+      right: 0;
+      top: 0;
+      cursor: pointer;
+      height: 9vmin;
+      width: 9vmin;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+
+      img {
+        border-radius: 50%;
+        height: 80%;
+        width: 80%;
+        box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
       }
     }
   }

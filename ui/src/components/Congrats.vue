@@ -1,23 +1,50 @@
 <template>
-  <div
-    class="row message-template congrats"
+  <b-modal
+    id="congrats-modal"
+    ref="congrats-modal"
+    @hidden="closeCongrats"
   >
-    <div v-if="congrats" class="won">
-      <img class="congrats-icon won-icon" :src="permanentImages.smileyFace" />
-      <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
-      <div class="text-minor">You won!</div>
+    <div slot="modal-header">
+      <img class="dialog-button close-congrats" @click="closeCongrats" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
     </div>
-    <div v-else class="lost">
-      <img class="congrats-icon lost-icon" :src="permanentImages.thinkingFace"/>
-      <div class="text-minor">Try again!</div>
+    <div class="congrats-icon">
+      <img :src="permanentImages.instructionsRobot">
     </div>
-  </div>
+    <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
+    <div class="text-minor">You won!</div>
+    <social-sharing :message="socialMessage" :size="'3rem'"></social-sharing>
+    <div slot="modal-footer" class="row" style="width: 100%; display: flex; justify-content: space-between;">
+      <b-btn
+        size="md"
+        style="width: 40%;"
+        class="float-right"
+        variant="primary"
+        @click="quit"
+      >
+        Quit
+      </b-btn>
+      <b-btn
+        size="md"
+        style="width: 40%"
+        class="float-right"
+        variant="primary"
+        @click="next"
+      >
+        Next level
+      </b-btn>
+    </div>
+  </b-modal>
 </template>
 
 <script>
 import Stars from './Stars'
+import SocialSharing from './Social_sharing'
+import utils from '../services/utils'
 export default {
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
     level () {
       return this.$store.getters.getLevel
     },
@@ -33,55 +60,117 @@ export default {
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    socialMessage () {
+      return `
+        I beat planet ${this.level} step ${utils.findStepInd(this.steps, this.step)} on mathbot.com!
+      `
     }
   },
-  props: ['congrats'],
+  data () {
+    return {
+      show: true
+    }
+  },
+  methods: {
+    quit () {
+      this.runCompiled.quit()
+    },
+    next () {
+      this.runCompiled.initializeNextStep()
+    },
+    closeCongrats () {
+      this.runCompiled.stayOnLevel()
+    }
+  },
   components: {
-    Stars
+    Stars,
+    SocialSharing
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   $click-color: #B8E986;
-  $grid-background: rgba(0, 0, 0, 0.6);
+  $background-color: rgba(0, 0, 0, 1);
   $grid-border-radius: 4px;
   $icon-size: 50%;
   $text-minor-font-size: 4vmin;
   $grid-space-size: 9vmin;
+  $font-size: 2.5rem;
+  $star-size: 3rem;
+  $dialog-button-size: 2rem;
+  $share-btn-size: 2.5rem;
 
-  .message-template {
-    border: 1px solid $click-color;
-    background: $grid-background;
-    border-radius: $grid-border-radius;
-    position: relative;
-    height: calc(#{$grid-space-size} * 5);
-    width: calc(#{$grid-space-size} * 10);
+  #congrats-modal {
+    height: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
     color: #ffffff;
 
-    * {
-      height: 100%;
-      width: 100%;
-    }
-
     .text-minor {
-      font-size: $text-minor-font-size;
+      font-size: $font-size;
     }
 
-    .congrats-icon {
-      height: $icon-size;
-      width: $icon-size;
-    }
+    .modal-dialog .modal-content {
+      background-color: transparent;
+      .modal-body {
+        background-color: $background-color;
+        .stars .star-spread .star {
+          height: $star-size;
+          width: $star-size;
+          svg image {
+            display: none;
+          }
+        }
 
-    .won {
-      .stars {
-        height: calc(#{$icon-size} / 2);
-        width: 25%;
-        margin: 0 auto;
+        .congrats-icon {
+          background-color: white;
+          display: inline-block;
+          border-radius: 50%;
+          padding: 2rem;
+        }
+
+        .social-sharing {
+          .social-links {
+            .share-button {
+              height: $share-btn-size;
+              width: $share-btn-size;
+
+              i {
+                font-size: calc(#{$share-btn-size} - 1rem);
+              }
+            }
+          }
+        }
+      }
+
+      .modal-header {
+        background-color: $background-color;
+        border: none;
+        position: relative;
+        .close-congrats {
+          position: absolute;
+          height: $dialog-button-size;
+          width: $dialog-button-size;
+          top: 0;
+          right: 0;
+        }
+      }
+
+      .modal-footer {
+        background-color: $background-color;
+        border-top: 1px solid $click-color;
+        .row {
+          margin: 0;
+          .btn {
+            background-color: $click-color;
+            color: #000000;
+            border: none;
+          }
+        }
       }
     }
   }
