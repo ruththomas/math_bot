@@ -60,6 +60,10 @@ export class AuthService {
     $store.dispatch('pushAuthErrors', err.body)
   }
 
+  _testLegacy (sub) {
+    return sub.includes('auth0|')
+  }
+
   clearErrors () {
     $store.dispatch('clearAuthErrors')
   }
@@ -81,11 +85,11 @@ export class AuthService {
 
   login () {
     const profile = this._getUserProfile()
-    this._requestSession()
-    if (profile) {
+    if (profile && !this._testLegacy(profile.sub)) {
       this.userProfile = this._getUserProfile()
       this._getUserToken()
     } else {
+      localStorage.clear()
       $router.push({path: '/auth'})
     }
   }
