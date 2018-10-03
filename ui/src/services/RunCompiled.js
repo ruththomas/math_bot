@@ -81,7 +81,6 @@ class RunCompiled extends GridAnimator {
   stop () {
     this._stopMessage()
     this.robot.setState('stopped')
-    this._stopRobot()
   }
 
   reset () {
