@@ -90,8 +90,12 @@ class RunCompiled extends GridAnimator {
   }
 
   initializeNextStep (stepData) {
-    const sd = stepData !== undefined ? stepData : this.lastFrame.stepData
-    this._initializeStep(sd)
+    if (stepData === undefined) {
+      stepData = this.lastFrame.stepData
+      this._updateStats(this.lastFrame.stats)
+      this.$router.push({path: '/robot'})
+    }
+    this._initializeStep(stepData)
     this._hideCongrats()
     this.lastFrame = null
   }
@@ -106,9 +110,18 @@ class RunCompiled extends GridAnimator {
     this._hideCongrats()
   }
 
-  _showCongrats = () => this.context.$root.$emit('bv::show::modal', 'congrats-modal')
+  _hideCongrats () {
+    this._hideLevelCongrats()
+    this._hideStepCongrats()
+  }
 
-  _hideCongrats = () => this.context.$root.$emit('bv::hide::modal', 'congrats-modal')
+  _showStepCongrats = () => this.context.$root.$emit('bv::show::modal', 'step-congrats-modal')
+
+  _hideStepCongrats = () => this.context.$root.$emit('bv::hide::modal', 'step-congrats-modal')
+
+  _showLevelCongrats = () => this.context.$root.$emit('bv::show::modal', 'level-congrats-modal')
+
+  _hideLevelCongrats = () => this.context.$root.$emit('bv::hide::modal', 'level-congrats-modal')
 
   _showFreeHint (url) {
     this.videoHint.showVideo(url)
@@ -119,7 +132,7 @@ class RunCompiled extends GridAnimator {
     this.$store.dispatch('updateStepData', stepData)
     this.$store.dispatch('updateLambdas', stepData.lambdas)
     stepData.initialRobotState.context = this.context
-    const robot = new Robot(stepData.initialRobotState)
+    const robot = new Robot(Object.assign(stepData.initialRobotState, {robotSpeed: this.robot.robotSpeed}))
     this.$store.dispatch('updateRobot', robot)
     this.constructor(this.context)
   }
@@ -218,8 +231,13 @@ class RunCompiled extends GridAnimator {
     return this.initializeAnimation(this.$store, frame, async () => {
       // console.log('[last frame grid]', JSON.parse(JSON.stringify(frame.robotState.grid)))
       // console.log('[grid]', JSON.parse(JSON.stringify(this.grid)))
-      this._showCongrats()
-      this._updateStats(frame.stats)
+      const isLastStep = this.stats.levels[this.stats.level][this.stats.step].nextStep === 'None'
+      if (isLastStep) {
+        this.$router.push({path: '/profile', query: {showCongrats: 'true'}})
+        // this._showLevelCongrats()
+      } else {
+        this._showStepCongrats()
+      }
       this.lastFrame = frame
     })
   }

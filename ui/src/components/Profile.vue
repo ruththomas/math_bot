@@ -1,5 +1,6 @@
 <template>
   <div class="container profile">
+    <level-congrats key="level-congrats"></level-congrats>
     <div class="row" style="height: 80%;">
       <space :permanent-images="permanentImages"></space>
       <steps :permanent-images="permanentImages"></steps>
@@ -17,9 +18,11 @@ import UserProfileControls from './User_profile_controls'
 import Steps from './Steps'
 import Space from './Space'
 import SocialSharing from './Social_sharing'
+import LevelCongrats from './Level_congrats'
 
 export default {
   mounted () {
+    this.handleCongrats()
     // this.$store.dispatch('updateStepData', {})
     // this.$store.dispatch('updateRobot', {})
   },
@@ -51,12 +54,21 @@ export default {
       return this.$store.getters.getStep
     }
   },
+  methods: {
+    handleCongrats () {
+      if (this.$route.query.showCongrats === 'true') {
+        this.$root.$emit('bv::show::modal', 'level-congrats-modal')
+        this.$router.push({query: {}})
+      }
+    }
+  },
   components: {
     SplashScreen,
     UserProfileControls,
     Steps,
     Space,
-    SocialSharing
+    SocialSharing,
+    LevelCongrats
   }
 }
 </script>

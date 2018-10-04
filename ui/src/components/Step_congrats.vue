@@ -1,7 +1,7 @@
 <template>
   <b-modal
-    id="congrats-modal"
-    ref="congrats-modal"
+    id="step-congrats-modal"
+    ref="step-congrats-modal"
     @hidden="closeCongrats"
   >
     <div slot="modal-header">
@@ -102,7 +102,7 @@ export default {
   $dialog-button-size: 2rem;
   $share-btn-size: 2.5rem;
 
-  #congrats-modal {
+  #step-congrats-modal {
     height: 100%;
     width: 100%;
     display: flex;
