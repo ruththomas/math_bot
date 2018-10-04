@@ -9,7 +9,7 @@
     >
       <img :src="handlePicture(userProfile.picture)" />
     </div>
-    <congrats key="congrats-1234"></congrats>
+    <step-congrats key="step-congrats"></step-congrats>
     <div class="container">
 
       <div class="row" style="position: relative;">
@@ -45,12 +45,14 @@ import ControlPanel from './Control_panel'
 import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
-import Congrats from './Congrats'
+import StepCongrats from './Step_congrats'
 import VideoHint from './Video_hint'
 import api from '../services/api'
-
+import LevelCongrats from './Level_congrats'
 export default {
   mounted () {
+    this.$store.dispatch('updateVideoHint', this)
+    this.$store.dispatch('updateRunCompiled', this)
     api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
       this.runCompiled.initializeNextStep(stepData)
     })
@@ -168,7 +170,8 @@ export default {
     SplashScreen,
     RobotCarrying,
     PopoverBucket,
-    Congrats,
+    StepCongrats,
+    LevelCongrats,
     VideoHint
   }
 }
