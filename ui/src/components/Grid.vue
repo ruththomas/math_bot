@@ -1,6 +1,5 @@
 <template>
     <div class="container grid">
-      <video-hint key="video-hint-1234"></video-hint>
       <div v-if="gridMap" class="row" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''" key="grid-map-1234">
         <div class="grid-map">
           <control-panel></control-panel>
@@ -76,11 +75,9 @@ import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
 import utils from '../services/utils'
 import ControlPanel from './Control_panel'
-import VideoHint from './Video_hint'
 
 export default {
   mounted () {
-    this.showFreeHint(this.freeHint)
     this.popoverSyncs = _.chain(this.gridMap)
       .map((row) => {
         return row.map(() => false)
@@ -88,9 +85,6 @@ export default {
       .value()
   },
   computed: {
-    freeHint () {
-      return this.currentStepData.freeHint
-    },
     problem () {
       return this.currentStepData.problem.problem
     },
@@ -140,9 +134,6 @@ export default {
     },
     hintShowing () {
       return this.$store.getters.getHintShowing
-    },
-    videoHint () {
-      return this.$store.getters.getVideoHint
     }
   },
   data () {
@@ -150,11 +141,6 @@ export default {
       runCompiled: {},
       showSpeech: true,
       popoverSyncs: null
-    }
-  },
-  watch: {
-    freeHint (url) {
-      this.showFreeHint(url)
     }
   },
   methods: {
@@ -175,18 +161,12 @@ export default {
           return 'floor'
       }
     },
-    showFreeHint (url) {
-      if (url) {
-        this.videoHint.showVideo(url)
-      }
-    },
     closePopover: utils.closePopover
   },
   components: {
     SplashScreen,
     RobotCarrying,
-    ControlPanel,
-    VideoHint
+    ControlPanel
   }
 }
 </script>
