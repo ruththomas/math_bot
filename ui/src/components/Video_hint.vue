@@ -34,7 +34,6 @@ import SocialSharing from './Social_sharing'
 export default {
   name: 'Video_hint',
   mounted () {
-    this.$store.dispatch('updateVideoHint', this)
   },
   computed: {
     hintShowing () {

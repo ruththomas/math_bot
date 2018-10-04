@@ -1,7 +1,7 @@
 <template>
   <b-modal
-    id="congrats-modal"
-    ref="congrats-modal"
+    id="step-congrats-modal"
+    ref="step-congrats-modal"
     @hidden="closeCongrats"
   >
     <div slot="modal-header">
@@ -12,6 +12,9 @@
     </div>
     <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
     <div class="text-minor">You won!</div>
+    <div class="text-minor">
+      <div>Tell your friends!</div>
+    </div>
     <social-sharing :message="socialMessage" :size="'3rem'"></social-sharing>
     <div slot="modal-footer" class="row" style="width: 100%; display: flex; justify-content: space-between;">
       <b-btn
@@ -102,7 +105,7 @@ export default {
   $dialog-button-size: 2rem;
   $share-btn-size: 2.5rem;
 
-  #congrats-modal {
+  #step-congrats-modal {
     height: 100%;
     width: 100%;
     display: flex;
@@ -112,6 +115,9 @@ export default {
 
     .text-minor {
       font-size: $font-size;
+      *:first-child {
+        font-size: calc(#{$font-size} / 2);
+      }
     }
 
     .modal-dialog .modal-content {
