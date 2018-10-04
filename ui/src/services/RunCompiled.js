@@ -17,6 +17,7 @@ class RunCompiled extends GridAnimator {
       this.stepData = this.$store.getters.getStepData
       this.toolList = this.stepData.toolList
       this.programCreate = true
+      this.videoHint = this.$store.getters.getVideoHint
 
       this._askCompiler = this._askCompiler.bind(this)
       this._processFrames = this._processFrames.bind(this)
@@ -88,10 +89,11 @@ class RunCompiled extends GridAnimator {
     this._stopRobot()
   }
 
-  initializeNextStep (frame) {
-    frame = frame !== undefined ? frame : this.lastFrame
-    this._initializeStep(frame.stepData)
+  initializeNextStep (stepData) {
+    const sd = stepData !== undefined ? stepData : this.lastFrame.stepData
+    this._initializeStep(sd)
     this._hideCongrats()
+    this.lastFrame = null
   }
 
   quit () {
@@ -108,7 +110,12 @@ class RunCompiled extends GridAnimator {
 
   _hideCongrats = () => this.context.$root.$emit('bv::hide::modal', 'congrats-modal')
 
+  _showFreeHint (url) {
+    this.videoHint.showVideo(url)
+  }
+
   _initializeStep (stepData) {
+    if (stepData.freeHint) this._showFreeHint(stepData.freeHint)
     this.$store.dispatch('updateStepData', stepData)
     this.$store.dispatch('updateLambdas', stepData.lambdas)
     stepData.initialRobotState.context = this.context

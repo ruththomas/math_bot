@@ -123,7 +123,6 @@ export default {
     }
   },
   data () {
-    this.$store.dispatch('updateRunCompiled', this)
     return {
       buttonSize: $('.commands > button').width() || 70,
       screenSize: $('#robot').width(),
