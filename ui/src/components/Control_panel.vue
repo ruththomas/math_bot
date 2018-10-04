@@ -24,9 +24,6 @@ import Stars from './Stars'
 
 export default {
   name: 'control-panel',
-  mounted () {
-    this.$store.dispatch('updateVideoHint', this)
-  },
   computed: {
     runCompiled () {
       return this.$store.getters.getRunCompiled

@@ -1,6 +1,7 @@
 <template>
   <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
   <div class="container-fluid robot" data-aos="fade-in" v-else>
+    <video-hint></video-hint>
     <div
       @click="goToProfile()"
       class="return-to-profile"
@@ -13,7 +14,7 @@
 
       <div class="row" style="position: relative;">
         <trash></trash>
-        <grid v-if="renderGrid"></grid>
+        <grid></grid>
       </div>
 
       <messages></messages>
@@ -42,20 +43,22 @@ import Trash from './Trash'
 import Messages from './Messages'
 import ControlPanel from './Control_panel'
 import SplashScreen from './Splash_screen'
-import api from '../services/api'
-import utils from '../services/utils'
-import Robot from '../services/RobotState'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
 import Congrats from './Congrats'
+import VideoHint from './Video_hint'
+import api from '../services/api'
 
 export default {
-  beforeMount () {
-  },
   mounted () {
-    this.initializeRobot()
+    api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
+      this.runCompiled.initializeNextStep(stepData)
+    })
   },
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
     userProfile () {
       return JSON.parse(localStorage.getItem('profile'))
     },
@@ -135,17 +138,6 @@ export default {
     }
   },
   methods: {
-    initializeRobot () {
-      utils.watcher(() => !this.auth.authenticated, () => {
-        api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
-          this.$store.dispatch('updateStepData', stepData)
-          this.$store.dispatch('updateLambdas', stepData.lambdas)
-          stepData.initialRobotState.context = this
-          this.$store.dispatch('updateRobot', new Robot(stepData.initialRobotState))
-          this.renderGrid = true
-        })
-      })
-    },
     showProgramPanel () {
       this.$store.dispatch('controlProgramPanelShowing')
     },
@@ -176,7 +168,8 @@ export default {
     SplashScreen,
     RobotCarrying,
     PopoverBucket,
-    Congrats
+    Congrats,
+    VideoHint
   }
 }
 </script>
