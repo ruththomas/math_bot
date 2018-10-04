@@ -27,6 +27,9 @@
       <div>More coming soon!</div>
     </div>
     <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
+    <div class="text-minor">
+      <div>Tell your friends!</div>
+    </div>
     <social-sharing :message="socialMessage" :size="'3rem'"></social-sharing>
     <div slot="modal-footer" class="row" style="width: 100%; display: flex; justify-content: space-between;">
       <b-btn
@@ -156,7 +159,7 @@ export default {
     .text-minor {
       font-size: $font-size;
       *:first-child {
-        font-size: calc(#{$font-size} / 1.5);
+        font-size: calc(#{$font-size} / 2);
       }
     }
 
