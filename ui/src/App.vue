@@ -12,7 +12,6 @@ export default {
   name: 'app',
   mounted () {
     window.scrollTo(0, 1)
-    this.$store.dispatch('updateRunCompiled', this)
   },
   computed: {
     auth () {
