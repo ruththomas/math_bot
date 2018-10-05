@@ -40,6 +40,10 @@ GET         /api/auth/authorizeGoogle                                           
 GET         /api/auth/authorizeGithub                                              controllers.AuthController.authorizeGithub
 POST        /api/auth/signup                                                       controllers.AuthController.signupMathbot
 POST        /api/auth/authorizeMathbot                                             controllers.AuthController.authMathbot
+POST        /api/auth/existsCheck                                                  controllers.AuthController.usernameExists
+POST        /api/auth/recoverPassword                                              controllers.AuthController.passwordRecovery
+POST        /api/auth/updatePassword                                               controllers.AuthController.updatePassword
+POST        /api/auth/migrate                                                      controllers.AuthController.migrateAuth0
 
 # !! This must be last - and may show an error until prod build !!
 # Map static resources from the /public folder to the file resource path

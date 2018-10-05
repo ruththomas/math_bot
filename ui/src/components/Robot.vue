@@ -17,8 +17,6 @@
         <grid></grid>
       </div>
 
-      <messages></messages>
-
       <div class="row box" style="padding: 0;">
         <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
         <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
