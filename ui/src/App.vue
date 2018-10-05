@@ -13,7 +13,6 @@ export default {
   name: 'app',
   mounted () {
     window.scrollTo(0, 1)
-    // this.auth.login()
   },
   computed: {
     auth () {
@@ -175,6 +174,10 @@ export default {
   .down {
     transform: rotate(145deg);
     -webkit-transform: rotate(45deg);
+  }
+
+  .background-alert {
+    background-color: $click-color!important;
   }
 
   @keyframes bounce {
