@@ -2,7 +2,6 @@
   <b-modal
     id="level-congrats-modal"
     ref="level-congrats-modal"
-    @hidden="closeCongrats"
     v-if="stepStats"
   >
     <div slot="modal-header">
