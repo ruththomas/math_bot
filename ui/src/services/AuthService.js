@@ -1,119 +1,142 @@
-import auth0 from 'auth0-js'
-import { AUTH0_DOMAIN, AUTH0_ID, AUTH_REDIRECT, AUTH_AUDIENCE } from '../keys'
-import router from './../router'
-import api from '../services/api'
+import api from './api'
+import $router from './../router'
 import $store from '../store/store'
 
-class AuthService {
-  authenticated = this.isAuthenticated()
+export class AuthService {
+  authenticated = false
   userToken = {}
   userProfile = {}
+  session = {}
 
   constructor () {
     this.login = this.login.bind(this)
-    this.setSession = this.setSession.bind(this)
+    this._setSession = this._setSession.bind(this)
     this.logout = this.logout.bind(this)
-    this.isAuthenticated = this.isAuthenticated.bind(this)
   }
 
-  auth0 = new auth0.WebAuth({
-    domain: process.env.AUTH0_DOMAIN || AUTH0_DOMAIN,
-    clientID: process.env.AUTH0_ID || AUTH0_ID,
-    redirectUri: process.env.AUTH_REDIRECT || AUTH_REDIRECT,
-    audience: process.env.AUTH_AUDIENCE || AUTH_AUDIENCE,
-    responseType: 'token id_token',
-    scope: 'openid profile'
-  })
-
-  login () {
-    this.auth0.authorize()
-  }
-
-  handleAuthentication () {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        console.log('AUTHENTICATED')
-        this.setSession(authResult)
-      } else if (err) {
-        console.log('NOT AUTHENTICATED')
-        router.push({path: '/about'})
-        console.log(err)
-      }
-    })
-  }
-
-  getUserProfile () {
+  _getUserProfile () {
     return JSON.parse(localStorage.getItem('profile'))
   }
 
-  storeLastRoute () {
-    localStorage.setItem('last_location', router.history.current.fullPath)
+  _storeLastRoute () {
+    localStorage.setItem('last_location', $router.history.current.fullPath)
+  }
+
+  _getUserToken () {
+    const tokenId = this.userProfile.sub || this.userProfile.user_id
+    api.getUserToken({tokenId: tokenId}, token => {
+      this.userToken = token
+      this.authenticated = true
+      window.onbeforeunload = this._storeLastRoute
+      const lastPath = localStorage.getItem('last_location')
+      this._getVideoHints()
+      if (lastPath && lastPath !== '/about' && lastPath !== '/auth') {
+        $router.push({path: lastPath})
+      } else {
+        $router.push({path: '/profile'})
+      }
+    }, this._handleErr)
   }
 
   _getVideoHints () {
     api.videoHintSocket.requestHintsTaken((hints) => {
       $store.dispatch('startExistingTimers', hints.remainingTimes)
-    })
+    }, this._handleErr)
   }
 
-  getUserToken () {
-    this.userProfile = this.getUserProfile()
-    const tokenId = this.userProfile.sub || this.userProfile.user_id
-    api.getUserToken({tokenId: tokenId}, token => {
-      this.userToken = token
-      this.authenticated = true
-      window.onbeforeunload = this.storeLastRoute
-      const lastPath = localStorage.getItem('last_location')
-      this._getVideoHints()
-      if (lastPath && lastPath !== '/about') {
-        router.push({path: lastPath})
-      } else {
-        router.push({path: '/profile'})
-      }
-    })
+  _setSession (profile) {
+    this.userProfile = profile
+    localStorage.setItem('profile', JSON.stringify(profile))
+    this._getUserToken()
   }
 
-  getProfile (accessToken, continueSetSession) {
-    this.auth0.client.userInfo(accessToken, (err, profile) => {
-      if (err) {
-        console.error(err)
-        this.logout()
-      }
-      continueSetSession(profile)
-    })
+  _requestSession () {
+    api.requestSession((session) => {
+      this.session = session
+    }, this._handleErr)
   }
 
-  setSession (authResult) {
-    this.getProfile(authResult.accessToken, profile => {
-      // Set Access Token time limit
-      const expiresAt = JSON.stringify(
-        authResult.expiresIn * 2.592e+9 + new Date().getTime()
-      )
-      localStorage.setItem('access_token', authResult.accessToken)
-      localStorage.setItem('id_token', authResult.idToken)
-      localStorage.setItem('expires_at', expiresAt)
-      localStorage.setItem('profile', JSON.stringify(profile))
-      this.getUserToken()
-    })
+  _handleErr (err) {
+    $store.dispatch('pushAuthErrors', err.body)
+  }
+
+  _testLegacy (sub) {
+    return sub.includes('auth0|')
+  }
+
+  clearErrors () {
+    $store.dispatch('clearAuthErrors')
+  }
+
+  handleAuthentication () {
+    const params = window.location.search
+    const provider = localStorage.getItem('authProvider')
+      .split('')
+      .map((v, i) => {
+        if (i === 0) return v.toUpperCase()
+        else return v
+      })
+      .join('')
+    api.authorize(provider, params, (profile) => {
+      localStorage.removeItem('authProvider')
+      this._setSession(profile)
+    }, this._handleErr)
+  }
+
+  login () {
+    const profile = this._getUserProfile()
+    if (profile && !this._testLegacy(profile.sub)) {
+      this.userProfile = this._getUserProfile()
+      this._getUserToken()
+    } else {
+      localStorage.clear()
+      $router.push({path: '/auth'})
+    }
   }
 
   logout () {
-    // Clear Access Token and ID Token from local storage
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('id_token')
-    localStorage.removeItem('expires_at')
-    localStorage.removeItem('profile')
+    localStorage.clear()
+    this.clearErrors()
     this.authenticated = false
-    router.push({path: '/marketing'})
+    $router.push({path: '/about'})
   }
 
-  isAuthenticated () {
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at'))
-    const notExpired = new Date().getTime() < expiresAt
-    if (notExpired) {
-      this.getUserToken()
-    }
+  signup (form) {
+    const prep = {}
+    prep.username = form.email
+    prep.password = form.password
+    prep.picture = form.picture
+    prep.name = form.name
+    this.clearErrors()
+    api.signup(prep, (profile) => {
+      this.userProfile = profile
+      this._setSession(profile)
+    }, this._handleErr)
+  }
+
+  authorizeMathbot (form) {
+    const prep = {}
+    prep.username = form.email
+    prep.password = form.password
+    this.clearErrors()
+    api.login(prep, (profile) => {
+      this.userProfile = profile
+      this._setSession(profile)
+    }, this._handleErr)
+  }
+
+  recoverPassword (email) {
+    this.clearErrors()
+    api.recoverPassword(email, (res) => {
+      this._handleErr({body: res})
+    }, this._handleErr)
+  }
+
+  updatePassword (updateForm, updateParams) {
+    this.clearErrors()
+    api.updatePassword(updateParams, updateForm, (profile) => {
+      this.userProfile = profile
+      this._setSession(profile)
+    }, this._handleErr)
   }
 }
-
-export default AuthService

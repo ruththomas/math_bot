@@ -1,22 +1,25 @@
 package controllers
 
 import actors.ActorTags
+import actors.messages.{Auth0Authenticate, Auth0Authorized}
 import actors.messages.auth._
-import akka.actor.ActorRef
+import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
+import com.digitaltangible.playguard._
 import com.google.inject.name.Named
 import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig}
-import daos.{LocalCredentialDao, SessionCache, SessionDAO}
+import daos._
+import email._
 import javax.inject.Inject
 import loggers.SemanticLog
-import models.{JwtToken, LocalCredential, UsernameAndPassword}
-import play.api.libs.json.{JsString, Json}
-import play.api.mvc.{Action, AnyContent, Controller}
-import utils.{JwtTokenParser, SecureIdentifier}
+import models._
 import org.bouncycastle.crypto.generators.SCrypt
+import play.api.libs.json.{JsString, Json}
+import play.api.mvc.{Action, AnyContent, Controller, RequestHeader}
+import utils.{JwtTokenParser, SecureIdentifier}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
@@ -44,17 +47,29 @@ class AuthController @Inject()(
     val sessionDAO: SessionDAO,
     val sessionCache: SessionCache,
     val localCredential: LocalCredentialDao,
+    val playerTokens: PlayerTokenDAO,
+    val auth0legacy: Auth0LegacyDao,
     @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
     @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
+    @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
+    @Named(ActorTags.auth0) val auth0: ActorRef,
     val jwtParser: JwtTokenParser,
     val googleConfig: GoogleApiConfig,
     val githubConfig: GithubApiConfig,
     val actorConfig: ActorConfig,
     val mathbotConfig: LocalAuthConfig,
-    val logger: SemanticLog
+    val logger: SemanticLog,
+    implicit val system: ActorSystem,
+    implicit val conf: play.api.Configuration
 )(implicit ec: ExecutionContext)
     extends Controller {
   import AuthController._
+
+  // Allow 10 subsequent requests, the renew token every 5 seconds
+  private val ipRateLimitAction = IpRateLimitAction(new RateLimiter(10, 1f / 5, "test limit by IP address")) {
+    implicit r: RequestHeader =>
+      TooManyRequests(s"""rate limit for ${r.remoteAddress} exceeded""")
+  }
 
   private def generateNeedsAuthorization(sessionId: SecureIdentifier) = {
     NeedsAuthorization(
@@ -67,7 +82,7 @@ class AuthController @Inject()(
               Query(
                 "client_id" -> googleConfig.clientId,
                 "scope" -> googleConfig.scopes.mkString(" "),
-                "redirect_uri" -> googleConfig.authRedirectUri.toString(),
+                "redirect_uri" -> googleConfig.authRedirectUrl.toString(),
                 "state" -> sessionId.toString,
                 "response_type" -> "code"
               )
@@ -81,7 +96,7 @@ class AuthController @Inject()(
               Query(
                 "client_id" -> githubConfig.clientId,
                 "scope" -> githubConfig.scopes.mkString(":"),
-                "redirect_uri" -> githubConfig.authRedirectUri.toString(),
+                "redirect_uri" -> githubConfig.authRedirectUrl.toString(),
                 "state" -> sessionId.toString
               )
             )
@@ -114,7 +129,7 @@ class AuthController @Inject()(
   private def generateSessionAuthorized(sessionId: SecureIdentifier, idToken: JwtToken) =
     SessionAuthorized(sessionId,
                       idToken.name,
-                      idToken.picture,
+                      idToken.picture.getOrElse(""),
                       s"${idToken.getIssuerShortName}|${idToken.sub}",
                       idToken.email)
 
@@ -123,6 +138,63 @@ class AuthController @Inject()(
   private val scryptIteration = Math.pow(2, mathbotConfig.scryptIterationExponent.toDouble).toInt
 
   import actors.messages.auth.AuthFormatters._
+
+  def passwordRecovery(): Action[AnyContent] = Action.async { implicit request =>
+    request.body.asJson.flatMap(_.asOpt[PasswordRecovery]) match {
+      case Some(PasswordRecovery(email)) =>
+        localCredential.find(email) flatMap {
+          case Some(credential) =>
+            val recoveryId = SecureIdentifier(mathbotConfig.recoveryIdByteWidth)
+            localCredential.insertOrUpdate(credential.accountId, credential.copy(recoveryId = Some(recoveryId))) map {
+              _ =>
+                sendGrid ! PasswordRecoveryEmail(email, recoveryId, mathbotConfig)
+                Ok("Check your email for the reset link, be sure to check your spam folder to.")
+            }
+          case None =>
+            FastFuture.successful(NotFound("Email not found in system"))
+        }
+      case None =>
+        FastFuture.successful(BadRequest("Invalid body"))
+    }
+  }
+
+  def updatePassword(): Action[AnyContent] = Action.async { implicit request =>
+    request.getQueryString("recoveryId").map(SecureIdentifier(_)) match {
+      case Some(recoveryId) =>
+        request.body.asJson.flatMap(_.asOpt[PasswordUpdate]) match {
+          case Some(PasswordUpdate(email, password)) =>
+            localCredential.find(email) flatMap {
+              case Some(credential) if credential.recoveryId.contains(recoveryId) =>
+                val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
+                storeCredential(sessionId,
+                                credential.accountId,
+                                SignUpForm(credential.username, credential.name, credential.picture, password)) map {
+                  jwt =>
+                    Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+                }
+              case _ =>
+                FastFuture.successful(Unauthorized("Password update rejected"))
+            }
+          case _ =>
+            FastFuture.successful(BadRequest("Invalid body"))
+        }
+      case _ => FastFuture.successful(BadRequest("Invalid query string"))
+    }
+  }
+
+  def usernameExists(): Action[AnyContent] = (Action andThen ipRateLimitAction).async { implicit request =>
+    request.body.asJson.flatMap(_.asOpt[ExistsRequest]) match {
+      case Some(ExistsRequest(username)) =>
+        for {
+          maybeUser <- localCredential.find(username)
+        } yield
+          Ok(maybeUser match {
+            case Some(_) => Json.obj("exists" -> true)
+            case None => Json.obj("exists" -> false)
+          })
+      case None => FastFuture.successful(BadRequest("Invalid body"))
+    }
+  }
 
   def requestSession(): Action[AnyContent] = Action.async { implicit request =>
     val sid = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
@@ -244,47 +316,62 @@ class AuthController @Inject()(
     }).getOrElse(FastFuture.successful(BadRequest("One or more query parameters are missing")))
   }
 
-  def signupMathbot(): Action[AnyContent] = Action.async { implicit request =>
-    val credentialOpt = for {
-      json <- request.body.asJson
-      signup <- json.validate[UsernameAndPassword].asOpt
-    } yield signup
+  private def hashCredential(credential: UsernameAndPassword,
+                             salt: SecureIdentifier,
+                             iteration: Int,
+                             blocksize: Int,
+                             hashByteSize: Int): Array[Byte] =
+    SCrypt.generate(credential.password.getBytes, salt.toByteArray, iteration, blocksize, 1, hashByteSize)
 
-    credentialOpt match {
-      case Some(credential) =>
-        localCredential.find(credential.username) flatMap {
+  private def storeCredential(sessionId: SecureIdentifier, accountId: SecureIdentifier, credential: SignUpForm) = {
+    val salt = SecureIdentifier(mathbotConfig.saltByteWidth)
+    val hash = hashCredential(
+      UsernameAndPassword(username = credential.username, password = credential.password),
+      salt,
+      scryptIteration,
+      mathbotConfig.scryptBlockSize,
+      mathbotConfig.hashByteSize
+    )
+    val lc = LocalCredential(
+      accountId,
+      None,
+      credential.username,
+      credential.name,
+      credential.picture,
+      salt,
+      hash,
+      scryptIteration,
+      mathbotConfig.scryptBlockSize,
+      mathbotConfig.hashByteSize
+    )
+    localCredential.insertOrUpdate(accountId, lc) map { _ =>
+      val jwt = JwtToken(
+        iss = "https://mathbot.com",
+        sub = lc.accountId.toString,
+        email = lc.username,
+        name = lc.name,
+        picture = lc.picture
+      )
+      sessionCache.put(sessionId, Some(jwt)).get
+    }
+  }
+
+  def signupMathbot(): Action[AnyContent] = Action.async { implicit request =>
+    val signupFormOpt = for {
+      json <- request.body.asJson
+      signup <- json.validate[SignUpForm].asOpt
+    } yield signup
+    signupFormOpt match {
+      case Some(signUpForm) =>
+        localCredential.find(signUpForm.username) flatMap {
           case Some(_) =>
             FastFuture.successful(Unauthorized("Username already exists"))
           case None =>
-            val salt = SecureIdentifier(mathbotConfig.saltByteWidth)
-            val hash = hashCredential(credential,
-                                      salt,
-                                      scryptIteration,
-                                      mathbotConfig.scryptBlockSize,
-                                      mathbotConfig.hashByteSize)
-            val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
-            val lc = LocalCredential(accountId,
-                                     None,
-                                     credential.username,
-                                     salt,
-                                     hash,
-                                     scryptIteration,
-                                     mathbotConfig.scryptBlockSize,
-                                     mathbotConfig.hashByteSize)
             val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
-
-            localCredential.insertOrUpdate(accountId, lc) map { _ =>
-              val jwt = JwtToken(
-                iss = "https://mathbot.com",
-                sub = lc.accountId.toString,
-                email = lc.username,
-                name = lc.username,
-                picture = ""
-              )
-              sessionCache.put(sessionId, Some(jwt))
+            val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
+            storeCredential(sessionId, accountId, signUpForm) map { jwt =>
               Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
             }
-
         }
       case None =>
         FastFuture.successful(BadRequest("Malformed Json"))
@@ -300,32 +387,119 @@ class AuthController @Inject()(
 
     credentialOpt match {
       case Some(credential) =>
-        localCredential.find(credential.username) map {
+        localCredential.find(credential.username) flatMap {
           case None =>
-            Unauthorized("Username does not exist")
-          case Some(lc) =>
-            val hash = hashCredential(credential, lc.salt, lc.iterations, lc.blockSize, lc.hashSize)
-
-            compareWithConstantTime(lc.hash, hash) match {
-              case true =>
-                val jwt = JwtToken(
-                  iss = "https://mathbot.com",
-                  sub = lc.accountId.toString,
-                  email = lc.username,
-                  name = lc.username,
-                  picture = ""
-                )
-                val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
-                sessionCache.put(sessionId, Some(jwt))
-                Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
-              case false =>
-                Unauthorized("Password did not match")
+            auth0legacy.find(credential.username).flatMap {
+              case Some(legacy) if !legacy.migrated.getOrElse(false) =>
+                (auth0 ? Auth0Authenticate(credential.username, credential.password))
+                  .mapTo[Either[Auth0Authorized, String]]
+                  .flatMap {
+                    case Left(auth0Authorized) =>
+                      jwtParser.parse(auth0Authorized.id_token) map { jwt =>
+                        (for {
+                          playerTokenOpt <- playerTokens.getToken(jwt.sub)
+                          credentialOpt <- localCredential.find(jwt.email)
+                        } yield (playerTokenOpt, credentialOpt)) flatMap {
+                          case (_, Some(_)) =>
+                            FastFuture.successful(Unauthorized("User already migrated"))
+                          case (None, _) =>
+                            FastFuture.successful(Unauthorized("Player data missing for credentials"))
+                          case (Some(playerToken), _) =>
+                            val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+                            val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
+                            for {
+                              migratedJwt <- storeCredential(
+                                sessionId,
+                                accountId,
+                                SignUpForm(jwt.email, jwt.name, jwt.picture, credential.password)
+                              )
+                              _ <- auth0legacy.markMigrated(jwt.email)
+                              migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
+                              _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
+                              _ <- playerTokens.delete(jwt.sub)
+                            } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+                        }
+                      } match {
+                        case Some(future) =>
+                          future
+                        case None =>
+                          FastFuture.successful(Unauthorized("Invalid json web token"))
+                      }
+                    case Right(errMsg) =>
+                      FastFuture.successful(Unauthorized(errMsg))
+                  }
+              case None =>
+                FastFuture.successful(Unauthorized("Username does not exist"))
             }
 
+          case Some(lc) =>
+            FastFuture {
+              Try {
+                val hash = hashCredential(credential, lc.salt, lc.iterations, lc.blockSize, lc.hashSize)
+
+                compareWithConstantTime(lc.hash, hash) match {
+                  case true =>
+                    val jwt = JwtToken(
+                      iss = "https://mathbot.com",
+                      sub = lc.accountId.toString,
+                      email = lc.username,
+                      name = lc.name,
+                      picture = lc.picture
+                    )
+                    val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+                    sessionCache.put(sessionId, Some(jwt))
+
+                    Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+                  case false =>
+                    Unauthorized("Password did not match")
+                }
+              }
+            }
         }
       case None =>
         FastFuture.successful(BadRequest("Malformed Json"))
     }
   }
 
+  def migrateAuth0(): Action[AnyContent] = Action.async { implicit request =>
+    import Auth0Migrate._
+
+    (for {
+      json <- request.body.asJson
+      migration <- json.validate[Auth0Migrate].asOpt
+    } yield {
+      jwtParser.parseAndVerify(migration.jwt) flatMap {
+        case Some(jwt) =>
+          jwt.getIssuerShortName match {
+            case "auth0" =>
+              val prevTokenId = s"auth0|${jwt.sub}"
+              (for {
+                playerTokenOpt <- playerTokens.getToken(prevTokenId)
+                credentialOpt <- localCredential.find(jwt.email)
+              } yield (playerTokenOpt, credentialOpt)) flatMap {
+                case (_, Some(_)) =>
+                  FastFuture.successful(Unauthorized("User already migrated"))
+                case (None, _) =>
+                  FastFuture.successful(Unauthorized("Player token not found for credentials"))
+                case (Some(playerToken), _) =>
+                  val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+                  val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
+                  for {
+                    migratedJwt <- storeCredential(sessionId,
+                                                   accountId,
+                                                   SignUpForm(jwt.email, jwt.name, jwt.picture, migration.password))
+                    _ <- auth0legacy.markMigrated(jwt.email)
+                    migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
+                    _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
+                    _ <- playerTokens.delete(prevTokenId)
+                  } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+              }
+            case _ =>
+              FastFuture.successful(Unauthorized(s"Can can only migrate Auth0 credentials"))
+          }
+        case None =>
+          FastFuture.successful(Unauthorized("Invalid web token"))
+      }
+    }).getOrElse(FastFuture.successful(Unauthorized("Invalid json")))
+  }
 }
