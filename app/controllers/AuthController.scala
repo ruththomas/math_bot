@@ -21,6 +21,25 @@ import org.bouncycastle.crypto.generators.SCrypt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
+object AuthController {
+  //noinspection FoldTrueAnd
+  def compareWithConstantTime(a: Array[Byte], b: Array[Byte]): Boolean = {
+    // Do not EVER simplify this code to a forall because security requires all bytes
+    // to be compared to avoid timing attacks.  Intellij will desperately try to simplify
+    // the code but avoid writing anything that can exit early if a byte doesn't match. The
+    // XOR in the middle is just a way to keep the JVM from optimizing the code, which if
+    // it was a boolean compare it just might do something clever.
+    a.zip(b).map(p => p._1 ^ p._2).sum[Int] == 0
+  }
+
+  def hashCredential(credential: UsernameAndPassword,
+                     salt: SecureIdentifier,
+                     iteration: Int,
+                     blocksize: Int,
+                     hashByteSize: Int): Array[Byte] =
+    SCrypt.generate(credential.password.getBytes, salt.toByteArray, iteration, blocksize, 1, hashByteSize)
+}
+
 class AuthController @Inject()(
     val sessionDAO: SessionDAO,
     val sessionCache: SessionCache,
@@ -35,6 +54,7 @@ class AuthController @Inject()(
     val logger: SemanticLog
 )(implicit ec: ExecutionContext)
     extends Controller {
+  import AuthController._
 
   private def generateNeedsAuthorization(sessionId: SecureIdentifier) = {
     NeedsAuthorization(
@@ -224,13 +244,6 @@ class AuthController @Inject()(
     }).getOrElse(FastFuture.successful(BadRequest("One or more query parameters are missing")))
   }
 
-  private def hashCredential(credential: UsernameAndPassword,
-                             salt: SecureIdentifier,
-                             iteration: Int,
-                             blocksize: Int,
-                             hashByteSize: Int): Array[Byte] =
-    SCrypt.generate(credential.password.getBytes, salt.toByteArray, iteration, blocksize, 1, hashByteSize)
-
   def signupMathbot(): Action[AnyContent] = Action.async { implicit request =>
     val credentialOpt = for {
       json <- request.body.asJson
@@ -279,16 +292,6 @@ class AuthController @Inject()(
 
   }
 
-  //noinspection FoldTrueAnd
-  def compareWithConstantTime(a: Array[Byte], b: Array[Byte]): Boolean = {
-    // Do not EVER simplify this code to a forall because security requires all bytes
-    // to be compared to avoid timing attacks.  Intellij will desperately try to simplify
-    // the code but avoid writing anything that can exit early if a byte doesn't match. The
-    // XOR in the middle is just a way to keep the JVM from optimizing the code, which if
-    // it was a boolean compare it just might do something clever.
-    a.zip(b).map(p => p._1 ^ p._2).sum[Int] == 0
-  }
-
   def authMathbot(): Action[AnyContent] = Action.async { implicit request =>
     val credentialOpt = for {
       json <- request.body.asJson
@@ -315,7 +318,6 @@ class AuthController @Inject()(
                 val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
                 sessionCache.put(sessionId, Some(jwt))
                 Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
-
               case false =>
                 Unauthorized("Password did not match")
             }
