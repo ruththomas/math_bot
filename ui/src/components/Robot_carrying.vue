@@ -87,7 +87,7 @@ export default {
 
   .robot-carrying {
     position: absolute;
-    bottom: -1px;
+    bottom: 0;
     left: 100%;
     display: flex;
     flex-direction: column;
@@ -96,10 +96,7 @@ export default {
     z-index: 10000;
     font-size: $carrying-size;
     background: rgba(0, 0, 0, 0.6);
-    border-bottom-right-radius: 0.4vmin;
-    border-top-right-radius: 0.4vmin;
-    border: 1px solid $click-color;
-    border-left: 1.5px solid rgba(0, 0, 0, 0.6);
+    border-left: none;
     cursor: pointer;
     color: #ffffff;
 

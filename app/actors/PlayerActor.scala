@@ -41,6 +41,8 @@ object PlayerActor {
 
   case class DedupFunctions(playerToken: PlayerToken)
 
+  case class DeactivateFunc(tokenId: TokenId, activeIndex: String, stagedIndex: String)
+
   object MakeStats {
     def makeStats(levels: Map[String, RawLevelData]): Stats = {
       val firstLevel = levels.find(rld => rld._2.prevLevel == "None" || !levels.isDefinedAt(rld._2.prevLevel)) match {
@@ -398,6 +400,29 @@ class PlayerActor()(system: ActorSystem,
         updatedActiveFuncs = lambdas.activeFuncs
           .take(activeIndex.toInt) ++ List(funcToMove) ++ lambdas.activeFuncs
           .drop(activeIndex.toInt)
+        updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
+                                      activeFuncs = indexFunctions(updatedActiveFuncs))
+        updatedToken = playerToken.copy(
+          lambdas = Some(updatedLambdas)
+        )
+      } yield {
+        playerTokenDAO.updateToken(updatedToken)
+        updatedLambdas
+      }).map { PreparedLambdasToken.apply }
+        .pipeTo(self)(sender)
+    case DeactivateFunc(tokenId, activeIndex, stagedIndex) =>
+      val oldIndex = activeIndex.toInt
+      val newIndex = stagedIndex.toInt
+      (for {
+        playerTokenOpt <- playerTokenDAO.getToken(tokenId)
+        playerToken = playerTokenOpt.get
+        lambdas = playerToken.lambdas.getOrElse(Lambdas())
+        funcToMove = lambdas
+          .activeFuncs(oldIndex)
+          .copy(name = Some(""), func = Some(List.empty[FuncToken]), color = "default")
+        updatedStagedFuncs = lambdas.stagedFuncs
+          .take(newIndex) ++ List(funcToMove) ++ lambdas.stagedFuncs.drop(newIndex)
+        updatedActiveFuncs = lambdas.activeFuncs.take(oldIndex) ++ lambdas.activeFuncs.drop(oldIndex + 1)
         updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
                                       activeFuncs = indexFunctions(updatedActiveFuncs))
         updatedToken = playerToken.copy(
