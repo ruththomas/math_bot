@@ -9,5 +9,5 @@ case class LocalCredential(accountId: SecureIdentifier,
                            hash: Array[Byte],
                            iterations: Int,
                            blockSize: Int,
-                           hashSize : Int
-                          )
+                           hashSize: Int,
+                           admin: Option[Boolean] = None)
