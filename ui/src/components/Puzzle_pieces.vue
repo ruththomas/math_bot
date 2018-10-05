@@ -6,6 +6,7 @@
       : pieceToShow === 'start' ? 'piece-start'
       : 'piece-middle-or-end']"
     @click="method ? method($event, func, ind) : ''"
+    @mousedown="runCompiled.resetIfFailure"
     data-toggle="tooltip" :title="func.name"
   >
     <svg v-if="pieceToShow === 'closed'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
@@ -86,6 +87,12 @@ export default {
     },
     funcAndCmdImages () {
       return _.extend(this.funcImages, this.commandImages)
+    },
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
+    robotState () {
+      return this.runCompiled.robot.state
     }
   },
   methods: {

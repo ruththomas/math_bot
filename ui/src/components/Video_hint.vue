@@ -1,105 +1,125 @@
 <template>
-  <div class="video-hint">
-    <div class="embedded">
-      <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
-      <div class="hint-spinner">
-        <splash-screen></splash-screen>
-      </div>
-      <youtube
-        class="player"
-        :video-id="videoId"
-        :player-vars="{ autoplay: 1 }"
-        :player-height="'100%'"
-        :player-width="'100%'"
-        @ended="closeHint"
-      ></youtube>
-    </div>
-  </div>
+  <b-modal
+    id="video-modal"
+    size="lg"
+    ref="video-modal"
+    :hide-header="true"
+    :hide-footer="true"
+    :lazy="true"
+    @shown="videoHint.startVideo()"
+  >
+    <img
+      class="dialog-button close-congrats"
+      @click="videoHint.hideVideo()"
+      :src="permanentImages.buttons.xButton"
+      data-toggle="tooltip"
+      title="Close"
+    >
+    <youtube
+      class="player"
+      :video-id="videoHint.currentVideo"
+      :player-vars="{ autoplay: 1 }"
+      :player-height="'100%'"
+      :player-width="'100%'"
+      @ended="videoHint.hideVideo()"
+    ></youtube>
+    <social-sharing :message="`Checkout Mathbot.com!`"></social-sharing>
+  </b-modal>
 </template>
 
 <script>
 import SplashScreen from './Splash_screen'
-import { getIdFromURL } from 'vue-youtube-embed'
+import SocialSharing from './Social_sharing'
 
 export default {
   name: 'Video_hint',
   mounted () {
-    setTimeout(() => {
-      this.splashScreenShowing = false
-    }, 80)
   },
   computed: {
-    videoId () {
-      return getIdFromURL(this.hintShowing.videoURL)
-    },
     hintShowing () {
       return this.$store.getters.getHintShowing
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    videoHint () {
+      return this.$store.getters.getVideoHint
     }
   },
-  methods: {
-    closeHint () {
-      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
+  data () {
+    return {
+      show: true
     }
   },
   components: {
-    SplashScreen
+    SplashScreen,
+    SocialSharing
   }
 }
 </script>
 
-<style scoped lang="scss">
-$grid-space-size: 9vmin;
+<style lang="scss">
 $video-hint-close-top: 0;
 $video-hint-close-left: 100%;
 $dialog-button-size: 3.5vmin;
 $click-color: #B8E986;
 $embedded-background: #1b1e21;
+$dialog-button-size: 2rem;
+$background-color: rgba(0, 0, 0, 1);
+$grid-space-size: 9vmin;
+$share-btn-size: 2.5rem;
 
-.video-hint {
-  border: 1px solid transparent;
-  border-radius: 5px;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000000;
-  z-index: 1000;
-
-  .embedded {
-    height: calc(#{$grid-space-size} * 5);
-    width: calc(#{$grid-space-size} * 10);
+#video-modal {
+  .modal-dialog .modal-content {
+    background-color: pink;
+    left: 0;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: $embedded-background;
-
-    .player {
-      height: 100%;
-      width: 100%;
-      z-index: 1;
+    .modal-header, .modal-body, .modal-footer {
+      background-color: $background-color;
+      border: none;
     }
-
-    .hint-spinner {
+    .close-congrats {
       position: absolute;
-      *:first-child {
-        background: $embedded-background!important;
+      height: $dialog-button-size;
+      width: $dialog-button-size;
+      top: 0;
+      right: 0;
+    }
+    .modal-body {
+      height: 30rem;
+      max-height: 100vh;
+      padding: 0;
+      .player {
+        height: calc(100% - #{$share-btn-size});
+        width: 100%;
+        z-index: 1;
+      }
+
+      .hint-spinner {
+        position: absolute;
+        *:first-child {
+          background: $embedded-background!important;
+        }
+      }
+    }
+    .social-spot {
+      display: flex;
+      justify-content: center;
+      div {
+        .social-sharing {
+          .social-links {
+            .share-button {
+              height: $share-btn-size;
+              width: $share-btn-size;
+
+              i {
+                font-size: calc(#{$share-btn-size} - 1rem);
+              }
+            }
+          }
+        }
       }
     }
   }
-}
-
-.close-video-edit {
-  position: absolute;
-  top: calc(-#{$dialog-button-size} / 2);
-  left: calc(#{$video-hint-close-left} - #{$dialog-button-size} / 2);
-  z-index: 2;
 }
 </style>

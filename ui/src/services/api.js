@@ -103,6 +103,13 @@ export default {
       .then(res => cb(res.body))
       .catch(console.error)
   },
+
+  deactivateFunction ({tokenId, activeIndex, stagedIndex}, cb) {
+    Vue.http.get(`/api/token/deactivateFunction/${urlEncode(tokenId)}/${activeIndex}/${stagedIndex}`)
+      .then(res => cb(res.body))
+      .catch(console.error)
+  },
+
   /*
   * @deprecated
   * putToken replaces JWT with updated JWT

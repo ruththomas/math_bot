@@ -7,6 +7,8 @@ import { AuthService } from '../services/AuthService'
 import utils from '../services/utils'
 // import api from '../services/api'
 import VideoTimer from '../services/VideoTimer'
+import RunCompiled from '../services/RunCompiled'
+import VideoHint from '../services/VideoHint'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -83,7 +85,9 @@ export default new Vuex.Store({
     },
     videoTimers: {},
     editFunctionEvent: {},
-    authErrors: []
+    authErrors: [],
+    runCompiled: {},
+    videoHint: {}
   },
   mutations: {
     CLEAR_AUTH_ERRORS (state) {
@@ -91,6 +95,12 @@ export default new Vuex.Store({
     },
     PUSH_AUTH_ERRORS (state, msg) {
       state.authErrors.push(msg)
+    },
+    UPDATE_VIDEO_HINT (state, context) {
+      state.videoHint = new VideoHint(context)
+    },
+    UPDATE_RUN_COMPILED (state, context) {
+      state.runCompiled = new RunCompiled(context)
     },
     UPDATE_EDIT_FUNCTION_EVENT (state, evt) {
       state.editFunctionEvent = evt
@@ -218,6 +228,12 @@ export default new Vuex.Store({
     pushAuthErrors ({commit}, msg) {
       commit('PUSH_AUTH_ERRORS', msg)
     },
+    updateVideoHint ({commit}, context) {
+      commit('UPDATE_VIDEO_HINT', context)
+    },
+    updateRunCompiled ({commit}, context) {
+      commit('UPDATE_RUN_COMPILED', context)
+    },
     updateEditFunctionEvent ({commit}, evt) {
       commit('UPDATE_EDIT_FUNCTION_EVENT', evt)
     },
@@ -335,6 +351,8 @@ export default new Vuex.Store({
   },
   getters: {
     getAuthErrors: state => state.authErrors,
+    getVideoHint: state => state.videoHint,
+    getRunCompiled: state => state.runCompiled,
     getEditFunctionEvent: state => state.editFunctionEvent,
     getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,
