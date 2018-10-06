@@ -60,7 +60,7 @@ case class Auth0Config(
 )
 
 case class AdminConfig(
-    authIdByteWidth: String,
+    authIdByteWidth: Int,
     approvedUrl: Uri,
     rejectedUrl: Uri,
     custodianEmail: String

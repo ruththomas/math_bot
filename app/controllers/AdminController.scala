@@ -49,10 +49,12 @@ class AdminController @Inject()(
   }
 
   def authenticate(): Action[AnyContent] = Action.async { implicit request =>
-    (for {
+    val usernameAndPasswordOpt = for {
       json <- request.body.asJson
       signUp <- json.validate[UsernameAndPassword].asOpt
-    } yield signUp) match {
+    } yield signUp
+
+    usernameAndPasswordOpt match {
       case Some(usernameAndPassword) =>
         localCredentialDAO.find(usernameAndPassword.username).flatMap {
           case Some(localCredential) =>
