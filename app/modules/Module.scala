@@ -66,4 +66,8 @@ class Module extends AbstractModule with AkkaGuiceSupport {
   @Provides
   def provideAuth0Config(configFactory: ConfigFactory): Auth0Config =
     configFactory.auth0Config
+
+  @Provides
+  def provideAdminConfig(configFactory: ConfigFactory): AdminConfig =
+    configFactory.adminConfig
 }
