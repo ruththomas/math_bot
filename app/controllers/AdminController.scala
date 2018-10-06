@@ -7,20 +7,21 @@ import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture
 import akka.stream.Materializer
 import com.google.inject.Inject
-import configuration.AdminConfig
+import configuration.{AdminConfig, LocalAuthConfig}
 import com.google.inject.name.Named
 import daos.{LocalCredentialDao, PlayerTokenDAO}
 import email.{AdminApprovedEmail, AdminVerificationEmail}
-import models.UsernameAndPassword
+import models.{JwtToken, UsernameAndPassword}
 import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.streams.ActorFlow
 import play.api.libs.ws._
 import play.api.mvc.{Action, AnyContent, Controller, WebSocket}
 import utils.SecureIdentifier
-import scalatags.Text.all._
+import play.api.mvc.{Cookie, DiscardingCookie}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.util.Try
 
 class AdminController @Inject()(
     implicit val mat: Materializer,
@@ -32,6 +33,7 @@ class AdminController @Inject()(
     ws: WSClient,
     environment: Environment,
     adminConfig: AdminConfig,
+    mathbotConfig: LocalAuthConfig,
     implicit val ec: ExecutionContext
 ) extends Controller {
 
@@ -40,9 +42,9 @@ class AdminController @Inject()(
   private type WSMessage = JsValue
 
   def adminSocket: WebSocket = WebSocket.acceptOrResult[WSMessage, WSMessage] { request =>
-    request.getQueryString("tokenId") match {
-      case Some(tokenId) =>
-        localCredentialDAO.findByAccountId(tokenId).map {
+    request.cookies.get("account-id").map(c => SecureIdentifier(c.value)) match {
+      case Some(secureIdentifier) =>
+        localCredentialDAO.findByAccountId(secureIdentifier.toString).map {
           case Some(localCredential) =>
             if (localCredential.admin.getOrElse(false)) {
               Right(
@@ -55,16 +57,60 @@ class AdminController @Inject()(
                   .via(AdminResponseConvertFlow())
               )
             } else {
-              Left(Unauthorized("Not an admin user."))
+              Left(Unauthorized("No admin privileges"))
             }
-
-          case None => Left(Unauthorized("No session found."))
+          case None => Left(Unauthorized("Account id not found"))
         }
-      case None => FastFuture.successful(Left(BadRequest("Missing account-id header field.")))
+      case None =>
+        FastFuture.successful(Left(Unauthorized("No cookie present")))
     }
   }
 
-  def authenticate(): Action[AnyContent] = Action.async { implicit request =>
+  def signOut(): Action[AnyContent] = Action { implicit request =>
+    Ok("Signed out successfully")
+      .discardingCookies(DiscardingCookie("account-id"))
+  }
+
+  def login(): Action[AnyContent] = Action.async { implicit request =>
+    val usernameAndPasswordOpt = for {
+      json <- request.body.asJson
+      login <- json.validate[UsernameAndPassword].asOpt
+    } yield login
+
+    usernameAndPasswordOpt match {
+      case Some(usernameAndPassword) =>
+        localCredentialDAO.find(usernameAndPassword.username).flatMap {
+          case Some(localCredential) =>
+            FastFuture {
+              Try {
+                if (localCredential.admin.getOrElse(false)) {
+                  val hash = hashCredential(usernameAndPassword,
+                                            localCredential.salt,
+                                            localCredential.iterations,
+                                            localCredential.blockSize,
+                                            localCredential.hashSize)
+
+                  compareWithConstantTime(localCredential.hash, hash) match {
+                    case true =>
+                      Ok("Login successful")
+                        .withCookies(Cookie("account-id", localCredential.accountId.toString))
+                    case false =>
+                      Unauthorized("Password did not match")
+                        .discardingCookies(DiscardingCookie("account-id"))
+                  }
+                } else {
+                  Unauthorized("No admin privileges")
+                    .discardingCookies(DiscardingCookie("account-id"))
+                }
+              }
+            }
+          case None => FastFuture.successful(Unauthorized("Password did not match"))
+        }
+      case None => FastFuture.successful(BadRequest("Invalid json"))
+    }
+  }
+
+  def signUp(): Action[AnyContent] = Action.async { implicit request =>
     val usernameAndPasswordOpt = for {
       json <- request.body.asJson
       signUp <- json.validate[UsernameAndPassword].asOpt
@@ -74,24 +120,28 @@ class AdminController @Inject()(
       case Some(usernameAndPassword) =>
         localCredentialDAO.find(usernameAndPassword.username).flatMap {
           case Some(localCredential) =>
-            val hash = hashCredential(usernameAndPassword,
-                                      localCredential.salt,
-                                      localCredential.iterations,
-                                      localCredential.blockSize,
-                                      localCredential.hashSize)
-            val authenticated = compareWithConstantTime(localCredential.hash, hash)
-            if (authenticated) {
-              val adminAuthId = SecureIdentifier(adminConfig.authIdByteWidth)
-              localCredentialDAO
-                .insertOrUpdate(localCredential.accountId, localCredential.copy(adminAuthId = Some(adminAuthId))) map {
-                _ =>
-                  sendGrid ! AdminVerificationEmail(usernameAndPassword.username, adminAuthId, adminConfig)
-                  Ok(
-                    s"Your request is under review, an email will be sent to ${usernameAndPassword.username} if you are approved."
-                  )
-              }
+            if (localCredential.admin.getOrElse(false)) {
+              FastFuture.successful(Conflict("Already admin"))
             } else {
-              FastFuture.successful(Unauthorized("Password did not match"))
+              val hash = hashCredential(usernameAndPassword,
+                                        localCredential.salt,
+                                        localCredential.iterations,
+                                        localCredential.blockSize,
+                                        localCredential.hashSize)
+              val authenticated = compareWithConstantTime(localCredential.hash, hash)
+              if (authenticated) {
+                val adminAuthId = SecureIdentifier(adminConfig.authIdByteWidth)
+                localCredentialDAO
+                  .insertOrUpdate(localCredential.accountId, localCredential.copy(adminAuthId = Some(adminAuthId))) map {
+                  _ =>
+                    sendGrid ! AdminVerificationEmail(usernameAndPassword.username, adminAuthId, adminConfig)
+                    Ok(
+                      s"Your request is under review, an email will be sent to ${usernameAndPassword.username} if you are approved."
+                    )
+                }
+              } else {
+                FastFuture.successful(Unauthorized("Password did not match"))
+              }
             }
           case None =>
             FastFuture.successful(
