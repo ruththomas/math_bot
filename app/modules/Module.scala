@@ -19,6 +19,7 @@ class Module extends AbstractModule with AkkaGuiceSupport {
     bindActor[GithubOAuth](ActorTags.githubOAuth)
     bindActor[SendgridActor](ActorTags.sendGrid)
     bindActor[Auth0Actor](ActorTags.auth0)
+    bindActor[AdminActor](ActorTags.admin)
   }
 
   @Provides
@@ -66,4 +67,8 @@ class Module extends AbstractModule with AkkaGuiceSupport {
   @Provides
   def provideAuth0Config(configFactory: ConfigFactory): Auth0Config =
     configFactory.auth0Config
+
+  @Provides
+  def provideAdminConfig(configFactory: ConfigFactory): AdminConfig =
+    configFactory.adminConfig
 }

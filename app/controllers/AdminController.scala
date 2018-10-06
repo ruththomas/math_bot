@@ -1,28 +1,38 @@
 package controllers
 
-import actors.AdminActor
+import actors.{ActorTags, AdminActor}
 import actors.convert_flow.{AdminRequestConvertFlow, AdminResponseConvertFlow}
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem}
+import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture
 import akka.stream.Materializer
 import com.google.inject.Inject
+import configuration.AdminConfig
+import com.google.inject.name.Named
 import daos.{LocalCredentialDao, PlayerTokenDAO}
+import email.AdminVerificationEmail
 import models.UsernameAndPassword
 import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.streams.ActorFlow
 import play.api.libs.ws._
 import play.api.mvc.{Action, AnyContent, Controller, WebSocket}
+import utils.SecureIdentifier
+
 import scala.concurrent.{ExecutionContext, Future}
 
-class AdminController @Inject()(implicit val system: ActorSystem,
-                                implicit val mat: Materializer,
-                                val localCredential: LocalCredentialDao,
-                                playerTokenDAO: PlayerTokenDAO,
-                                ws: WSClient,
-                                environment: Environment,
-                                implicit val ec: ExecutionContext)
-    extends Controller {
+class AdminController @Inject()(
+    implicit val mat: Materializer,
+    val localCredentialDAO: LocalCredentialDao,
+    @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
+    implicit val system: ActorSystem,
+    implicit val conf: play.api.Configuration,
+    playerTokenDAO: PlayerTokenDAO,
+    ws: WSClient,
+    environment: Environment,
+    adminConfig: AdminConfig,
+    implicit val ec: ExecutionContext
+) extends Controller {
 
   import AuthController._
 
@@ -43,15 +53,25 @@ class AdminController @Inject()(implicit val system: ActorSystem,
       json <- request.body.asJson
       signUp <- json.validate[UsernameAndPassword].asOpt
     } yield signUp) match {
-      case Some(credential) =>
-        localCredential.find(credential.username).map {
-          case Some(lc) =>
-            val hash = hashCredential(credential, lc.salt, lc.iterations, lc.blockSize, lc.hashSize)
-            val authenticated = compareWithConstantTime(lc.hash, hash)
+      case Some(usernameAndPassword) =>
+        localCredentialDAO.find(usernameAndPassword.username).flatMap {
+          case Some(localCredential) =>
+            val hash = hashCredential(usernameAndPassword,
+                                      localCredential.salt,
+                                      localCredential.iterations,
+                                      localCredential.blockSize,
+                                      localCredential.hashSize)
+            val authenticated = compareWithConstantTime(localCredential.hash, hash)
             if (authenticated) {
-              ???
+              val adminAuthId = SecureIdentifier(adminConfig.authIdByteWidth)
+              localCredentialDAO
+                .insertOrUpdate(localCredential.accountId, localCredential.copy(adminAuthId = Some(adminAuthId))) map {
+                _ =>
+                  sendGrid ! AdminVerificationEmail(usernameAndPassword.username, adminAuthId, adminConfig)
+                  Ok("Your request is under review, an email will be sent regarding your approval/rejection.")
+              }
             } else {
-              Unauthorized("Password did not match")
+              FastFuture.successful(Unauthorized("Password did not match"))
             }
           case None =>
             FastFuture.successful(
@@ -67,7 +87,5 @@ class AdminController @Inject()(implicit val system: ActorSystem,
           )
         )
     }
-
-    FastFuture.successful(Ok)
   }
 }
