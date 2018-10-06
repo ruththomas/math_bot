@@ -5,8 +5,8 @@ import java.time.Instant
 import actors.messages.{ActorFailed, RawStepData}
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
-import model.models._
-import model.{PlayerTokenDAO, VideoHintDAO}
+import models._
+import daos.{PlayerTokenDAO, VideoHintDAO}
 import play.api.Environment
 import play.api.libs.json.{Json, OFormat}
 import play.api.libs.ws.WSClient
@@ -46,6 +46,8 @@ object VideoHintActor {
   final case class ResetStars(tokenId: TokenId, hintsTaken: HintsTaken, level: LevelName, step: StepName)
 
   final case class NoVideos(tokenId: TokenId, level: LevelName, step: StepName)
+
+  def embedURL(videoId: String): URL = s"https://www.youtube.com/embed/$videoId?rel=0"
 
   def generateTimestamp: Long = Instant.now.getEpochSecond
 
@@ -92,8 +94,6 @@ class VideoHintActor @Inject()(out: ActorRef,
   private val CHANNEL_ID: String = "UCCRrOAkZKCMB3wEIGEmdMEQ"
   private val KEY: String = sys.env.getOrElse("MB_YOUTUBE_KEY", "none")
   private val YOUTUBE_URL: URL = "https://www.googleapis.com/youtube/v3/"
-
-  private def embedURL(videoId: String): URL = s"https://www.youtube.com/embed/$videoId"
 
   override def receive: Receive = {
     /*

@@ -11,7 +11,7 @@ import akka.util.Timeout
 import com.google.inject.Inject
 import javax.inject.Singleton
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
+import daos.PlayerTokenDAO
 import play.api.Environment
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}

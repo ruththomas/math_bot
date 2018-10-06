@@ -10,8 +10,8 @@ import akka.pattern.ask
 import akka.util.Timeout
 import javax.inject.Inject
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models.Stats
+import daos.PlayerTokenDAO
+import models.Stats
 import play.api.libs.json._
 import play.api.mvc._
 

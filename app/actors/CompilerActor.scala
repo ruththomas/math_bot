@@ -1,24 +1,23 @@
 package actors
 
-import actors.LevelGenerationActor.{GetGridMap, GetStep}
-import actors.StatsActor.{StatsDoneUpdating, UpdateStats}
+import actors.LevelGenerationActor.{ GetGridMap, GetStep }
+import actors.StatsActor.{ StatsDoneUpdating, UpdateStats }
 import actors.messages._
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{ Actor, ActorRef, Props }
 import akka.pattern.ask
 import akka.util.Timeout
 import compiler.operations.NoOperation
-import compiler.processor.{Frame, Processor, Register, RobotLocation}
-import compiler.{Compiler, GridAndProgram, Point}
+import compiler.processor.{ Frame, Processor, Register }
+import compiler.{ Compiler, GridAndProgram, Point }
+import configuration.CompilerConfiguration
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models.{FuncToken, GridMap, Problem, Stats}
+import daos.PlayerTokenDAO
+import models.{ FuncToken, GridMap, Problem, Stats }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
-import utils.CompilerConfiguration
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
@@ -94,7 +93,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     }
   }
 
-  def clientFramePrint(frame: ClientFrame) = {
+  private def clientFramePrint(frame: ClientFrame) = {
     s"location: ${frame.robotState.location}\n" +
     s"register: ${frame.robotState.holding.mkString(", ")}\n" +
     "grid: \n" +
@@ -128,7 +127,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           commands = token.lambdas.head.cmds
           program <- Compiler.compile(main, funcs, commands, grid, problem)
         } yield {
-          val processor = Processor(program)
+          val processor = Processor(program, config)
           val stream = processor.execute()
           context.become(
             compileContinue(
@@ -235,7 +234,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           // It's an empty program, or one that consists of only empty functions
           for {
             lastFrame <- createLastFrame(currentCompiler,
-                                         Frame(NoOperation(), Register(), currentCompiler.program.grid, None, None))
+                                         Frame(NoOperation, Register(), currentCompiler.program.grid, None, None))
           } yield sendFrames(currentCompiler, lastFrame)
           context.become(createCompile())
       }
@@ -255,7 +254,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     case _ => out ! ActorFailed("Unknown command submitted to compiler")
   }
 
-  override def postStop() = {
+  override def postStop() : Unit = {
     logger.LogInfo(className, "Actor Stopped")
   }
 }

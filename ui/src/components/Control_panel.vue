@@ -1,28 +1,33 @@
 <template>
-  <div class="control-panel">
-
-    <img @click="goToProfile()"
-         class="return-to-profile"
-         :src="permanentImages.returnToProfile"
-         data-toggle="tooltip" title="Return to profile"
-    />
-
-    <div class="instructions" :style="congratsShowing || tryAgainShowing ? {opacity: 0} : {}">
-      <div class="instructions-filler-left"></div>
-      <div class="instructions-robot-container">
-        <img :src="permanentImages.instructionsRobot" class="instructions-robot" data-toggle="tooltip" title="Toggle speech bubble">
-      </div>
-      <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
+  <div class="row control-panel">
+    <div class="" style="padding: 0;">
+      <img :src="permanentImages.instructionsRobot" class="instructions-robot">
     </div>
+
+    <div
+      class="btn button-effect help-button"
+      @click="[videoHint.showVideo(), runCompiled.reset()]"
+    >
+      <stars
+        :star-group="'star-spread'"
+        :level="level"
+        :step="step"
+        :step-stats="stepStats"></stars>
+    </div>
+
   </div>
 </template>
 
 <script>
-import SpeechBubble from './Speech_bubble'
+import RobotCarrying from './Robot_carrying'
+import Stars from './Stars'
 
 export default {
   name: 'control-panel',
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
     tryAgainShowing () {
       return this.$store.getters.getTryAgainShowing
     },
@@ -37,32 +42,65 @@ export default {
     },
     description () {
       return this.currentStepData.description
+    },
+    steps () {
+      return this.$store.getters.getSteps
+    },
+    step () {
+      return this.$store.getters.getStep
+    },
+    level () {
+      return this.$store.getters.getLevel
+    },
+    stepStats () {
+      const stepName = this.step
+      return this.steps.find(s => s.name === stepName)
+    },
+    videoHint () {
+      return this.$store.getters.getVideoHint
     }
   },
   data () {
     return {
-      speechBubbleShowing: true
-    }
-  },
-  methods: {
-    goToProfile () {
-      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
-      this.$store.dispatch('deleteMessages')
-      this.$router.push({path: 'profile'})
+      speechBubbleShowing: true,
+      getTime: false,
+      counter: 45,
+      max: 100
     }
   },
   components: {
-    SpeechBubble
+    RobotCarrying,
+    Stars
   }
 }
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
+  $instructions-robot-size: 13vmin;
+  $grid-space-size: 9vmin;
+  $grid-background: rgba(0, 0, 0, 0.6);
+
   .control-panel {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    margin: 0;
+
+    .help-button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background-color: $grid-background;
+      display: flex;
+      z-index: 100;
+    }
   }
 
   .instructions {
     display: flex;
+    align-items: flex-end;
     width: 100%;
   }
 
@@ -70,124 +108,14 @@ export default {
     height: 150px;
     display: flex;
     align-items: flex-end;
-    margin-right: 20px;
   }
 
   .instructions-robot {
-    height: 100%;
-    cursor: pointer;
+    height: $instructions-robot-size;
+    margin-left: calc(#{$grid-space-size} / 3);
   }
 
   .instructions-filler-left {
-    width: 100px;
+    width: 120px;
   }
-
-  .return-to-profile {
-    position: fixed;
-    left: 0;
-    top: 0;
-    cursor: pointer;
-  }
-
-  .fade-in-speech {
-    opacity: 1;
-    transition: all 0.4s ease-out;
-  }
-
-  .fade-out-speech {
-    opacity: 0;
-    transition: all 0.4s ease-in;
-  }
-
-  @media only screen and (max-width : 1280px) {
-    .instructions-robot-container {
-      height: 90px;
-    }
-
-    .return-to-profile {
-      height: 120px;
-    }
-
-    .instructions-filler-left {
-      width: 250px;
-    }
-  }
-
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    .instructions-robot-container {
-      height: 75px;
-    }
-
-    .return-to-profile {
-      height: 65px;
-    }
-
-    .instructions-filler-left {
-      width: 120px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    .instructions-robot-container {
-      height: 50px;
-    }
-
-    .instructions-filler-left {
-      width: 170px;
-    }
-  }
-
-  @media only screen and (max-width: 569px) {
-    .instructions-filler-left {
-      width: 125px;
-    }
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-    .return-to-profile {
-      height: 60px;
-    }
-
-    .instructions-robot-container {
-      height: 50px;
-    }
-
-    .instructions-filler-left {
-      width: 40px;
-    }
-  }
-
-  /* Custom, iPhone 5 Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    .instructions-robot-container {
-      height: 150px;
-    }
-
-    .return-to-profile {
-      height: 100px;
-    }
-
-    .instructions-filler-left {
-      width: 75px;
-    }
-  }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-    .return-to-profile {
-      height: 150px;
-    }
-
-    .instructions-filler-left {
-      width: 180px;
-    }
-  }
-
 </style>

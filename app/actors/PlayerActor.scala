@@ -1,14 +1,14 @@
 package actors
 
 import actors.LevelGenerationActor.makeQtyUnlimited
-import actors.PolyfillActor.ApplyPolyfills
+import actors.UpdatePlayerTokenActor.ApplyPolyfills
 import actors.messages.{ActorFailed, PreparedStepData, RawLevelData, ResponsePlayerToken}
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.pattern.{ask, pipe}
 import akka.util.Timeout
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models._
+import daos.PlayerTokenDAO
+import models._
 import play.api.Environment
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -33,11 +33,15 @@ object PlayerActor {
 
   case class MoveFunc(playerToken: PlayerToken, stagedIndex: String, activeIndex: String)
 
+  case class ReorginizeActiveFunctions(tokenId: TokenId, oldIndex: String, newIndex: String)
+
   case class AddDefaultFuncsField(playerToken: PlayerToken)
 
   case class AddNamesToCommands(playerToken: PlayerToken)
 
   case class DedupFunctions(playerToken: PlayerToken)
+
+  case class DeactivateFunc(tokenId: TokenId, activeIndex: String, stagedIndex: String)
 
   object MakeStats {
     def makeStats(levels: Map[String, RawLevelData]): Stats = {
@@ -163,15 +167,11 @@ object PlayerActor {
 
   case class PreparedPlayerToken(playerToken: PlayerToken)
 
-  case class UpdateActives(body: JsValue)
-
-  object ChangeActives {
-    implicit val changeActivesFormat: OFormat[ChangeActives] = Json.format[ChangeActives]
-  }
-
   case class ChangeActives(tokenId: TokenId, actives: List[FuncToken])
 
   case class UpdatedActives(actives: List[FuncToken])
+
+  case class ChangeFunctionColor(jsValue: JsValue)
 
   object PrepareLambdas {
     implicit val prepareLambdasReads: Reads[PrepareLambdas] = (
@@ -212,8 +212,9 @@ class PlayerActor()(system: ActorSystem,
 
   override def receive: Receive = {
     case addToken: AddToken =>
-      Future { addToken.body.validate[PlayerToken].asOpt }
-        .map {
+      Future {
+        addToken.body.validate[PlayerToken].asOpt
+      }.map {
           case Some(playerToken) => GetPlayerToken(playerToken)
           case None =>
             ActorFailed(
@@ -221,24 +222,6 @@ class PlayerActor()(system: ActorSystem,
             )
         }
         .pipeTo(self)(sender)
-    case UpdateActives(jsValue) =>
-      jsValue.validate[ChangeActives].asOpt match {
-        case Some(changeActives) =>
-          playerTokenDAO
-            .getToken(changeActives.tokenId)
-            .map {
-              case Some(playerToken) =>
-                val updatedPlayerToken =
-                  playerToken.copy(
-                    lambdas = Some(playerToken.lambdas.get.copy(activeFuncs = indexFunctions(changeActives.actives)))
-                  )
-                playerTokenDAO.updateToken(updatedPlayerToken)
-                UpdatedActives(updatedPlayerToken.lambdas.get.activeFuncs)
-              case None => ActorFailed("No player token")
-            }
-            .pipeTo(self)(sender)
-        case None => Future { "Invalid json" }.map { ActorFailed.apply }.pipeTo(self)(sender)
-      }
     case getPlayerToken: GetPlayerToken =>
       playerTokenDAO
         .getToken(getPlayerToken.playerToken.token_id)
@@ -267,15 +250,19 @@ class PlayerActor()(system: ActorSystem,
         .pipeTo(self)(sender)
     case gatherLevel: GatherLevel =>
       val allLevels = levelGenerator.getAllLevels
-      Future { (gatherLevel.playerToken, allLevels) }
-        .map {
+      Future {
+        (gatherLevel.playerToken, allLevels)
+      }.map {
           case (playerToken, levels) if levels.nonEmpty => MakeStats(playerToken, levels)
           case _ => ActorFailed("No levels found.")
         }
         .pipeTo(self)(sender)
     case updateStats: MakeStats =>
-      Future { updateStats.playerToken }
-        .map { ApplyPolyfills.apply }
+      Future {
+        updateStats.playerToken
+      }.map {
+          ApplyPolyfills.apply
+        }
         .pipeTo(self)(sender)
     case applyPolyfills: ApplyPolyfills =>
       (polyfillActor ? applyPolyfills)
@@ -302,7 +289,60 @@ class PlayerActor()(system: ActorSystem,
               case None => ActorFailed("Unable to find player token")
             }
             .pipeTo(self)(sender)
-        case None => Future { "Invalid json input" }.map { ActorFailed.apply }.pipeTo(self)(sender)
+        case None =>
+          Future {
+            "Invalid json input"
+          }.map {
+              ActorFailed.apply
+            }
+            .pipeTo(self)(sender)
+      }
+    case ChangeFunctionColor(jsValue: JsValue) =>
+      def changeAllInstancesColor(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] = funcList.map {
+        ft =>
+          val func = ft.func.getOrElse(List.empty[FuncToken])
+          ft.copy(color = if (ft.created_id == funcToken.created_id) funcToken.color else ft.color,
+                  func = Some(changeAllInstancesColor(func, funcToken)))
+      }
+      jsValue.validate[PrepareLambdas].asOpt match {
+        case Some(prepareLambdas) =>
+          playerTokenDAO
+            .getToken(prepareLambdas.tokenId)
+            .map {
+              case Some(playerToken) =>
+                playerToken.stats match {
+                  case Some(stats) =>
+                    val noColorLevels = List("BasicProgramming", "Counting", "Numbers", "Recursion")
+                    if (!noColorLevels.contains(stats.level)) {
+                      val lambdas = playerToken.lambdas.getOrElse(Lambdas())
+                      val updatedActives = changeAllInstancesColor(lambdas.activeFuncs, prepareLambdas.funcToken)
+                      val updatedInactives =
+                        changeAllInstancesColor(lambdas.inactiveActives.getOrElse(List.empty[FuncToken]),
+                                                prepareLambdas.funcToken)
+                      val updatedMainFunc =
+                        changeAllInstancesColor(lambdas.main.func.getOrElse(List.empty[FuncToken]),
+                                                prepareLambdas.funcToken)
+                      val updatedLambdas =
+                        lambdas.copy(main = lambdas.main.copy(func = Some(updatedMainFunc)),
+                                     activeFuncs = updatedActives,
+                                     inactiveActives = Some(updatedInactives))
+                      playerTokenDAO.updateToken(playerToken.copy(lambdas = Some(updatedLambdas)))
+                      PreparedLambdasToken(updatedLambdas)
+                    } else {
+                      PreparedLambdasToken(playerToken.lambdas.getOrElse(Lambdas()))
+                    }
+                  case None => PreparedLambdasToken(playerToken.lambdas.getOrElse(Lambdas()))
+                }
+              case None => ActorFailed("Unable to find player token")
+            }
+            .pipeTo(self)(sender)
+        case None =>
+          Future {
+            "Invalid json input"
+          }.map {
+              ActorFailed.apply
+            }
+            .pipeTo(self)(sender)
       }
     case UpdateFunc(funcToken, playerToken, overrideBool) =>
       for {
@@ -319,7 +359,9 @@ class PlayerActor()(system: ActorSystem,
           val funcTokenLengthInBounds = funcType == "function" && funcToken.func.get.length <= makeQtyUnlimited(
             funcToken.sizeLimit.getOrElse(-1)
           )
-          val mainFuncLengthInBounds = funcType == "main-function" && mainFunc.length < rawStepData.mainMax
+          val mainFuncLengthInBounds = funcType == "main-function" && mainFunc.length <= makeQtyUnlimited(
+            rawStepData.mainMax
+          )
 
           if (funcTokenLengthInBounds || mainFuncLengthInBounds || overrideBool) {
             playerToken.copy(lambdas = Some(if (funcType == "function") {
@@ -348,51 +390,67 @@ class PlayerActor()(system: ActorSystem,
           .pipeTo(self)(sender)
       }
     case ActivateFunc(tokenId, stagedIndex, activeIndex) =>
-      playerTokenDAO
-        .getToken(tokenId)
-        .map {
-          case Some(playerToken) => MoveFunc(playerToken, stagedIndex, activeIndex)
-          case None => ActorFailed("Unable to update lambdas.")
-        }
+      (for {
+        playerTokenOpt <- playerTokenDAO.getToken(tokenId)
+        playerToken = playerTokenOpt.get
+        lambdas = playerToken.lambdas.getOrElse(Lambdas())
+        funcToMove = lambdas.stagedFuncs(stagedIndex.toInt)
+        updatedStagedFuncs = lambdas.stagedFuncs
+          .filterNot(_.index.contains(stagedIndex.toInt))
+        updatedActiveFuncs = lambdas.activeFuncs
+          .take(activeIndex.toInt) ++ List(funcToMove) ++ lambdas.activeFuncs
+          .drop(activeIndex.toInt)
+        updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
+                                      activeFuncs = indexFunctions(updatedActiveFuncs))
+        updatedToken = playerToken.copy(
+          lambdas = Some(updatedLambdas)
+        )
+      } yield {
+        playerTokenDAO.updateToken(updatedToken)
+        updatedLambdas
+      }).map { PreparedLambdasToken.apply }
         .pipeTo(self)(sender)
-    case MoveFunc(playerToken, stagedIndex, activeIndex) =>
-      for {
-        stats <- playerToken.stats
-        rawStepData <- levelGenerator.getRawStepData(stats.level, stats.step)
-        lambdas <- playerToken.lambdas
-      } yield
-        if (rawStepData.activeEnabled) {
-          for {
-            lambdas <- playerToken.lambdas
-            funcToMove <- lambdas.stagedFuncs.lift(stagedIndex.toInt)
-
-            updatedStagedFuncs = lambdas.stagedFuncs
-              .filterNot(_.index.contains(stagedIndex.toInt))
-
-            updatedActiveFuncs = lambdas.activeFuncs
-              .take(activeIndex.toInt) ++ List(funcToMove) ++ lambdas.activeFuncs
-              .drop(activeIndex.toInt)
-
-            updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
-                                          activeFuncs = indexFunctions(updatedActiveFuncs))
-
-            updatedToken = playerToken.copy(
-              lambdas = Some(updatedLambdas)
-            )
-          } yield {
-            playerTokenDAO
-              .updateToken(updatedToken)
-              .map { _ =>
-                PreparedLambdasToken(updatedLambdas)
-              }
-              .pipeTo(self)(sender)
-          }
-        } else {
-          Future { lambdas }
-            .map { PreparedLambdasToken.apply }
-            .pipeTo(self)(sender)
-        }
-
+    case DeactivateFunc(tokenId, activeIndex, stagedIndex) =>
+      val oldIndex = activeIndex.toInt
+      val newIndex = stagedIndex.toInt
+      (for {
+        playerTokenOpt <- playerTokenDAO.getToken(tokenId)
+        playerToken = playerTokenOpt.get
+        lambdas = playerToken.lambdas.getOrElse(Lambdas())
+        funcToMove = lambdas
+          .activeFuncs(oldIndex)
+          .copy(name = Some(""), func = Some(List.empty[FuncToken]), color = "default")
+        updatedStagedFuncs = lambdas.stagedFuncs
+          .take(newIndex) ++ List(funcToMove) ++ lambdas.stagedFuncs.drop(newIndex)
+        updatedActiveFuncs = lambdas.activeFuncs.take(oldIndex) ++ lambdas.activeFuncs.drop(oldIndex + 1)
+        updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
+                                      activeFuncs = indexFunctions(updatedActiveFuncs))
+        updatedToken = playerToken.copy(
+          lambdas = Some(updatedLambdas)
+        )
+      } yield {
+        playerTokenDAO.updateToken(updatedToken)
+        updatedLambdas
+      }).map { PreparedLambdasToken.apply }
+        .pipeTo(self)(sender)
+    case ReorginizeActiveFunctions(tokenId, oldInd, newInd) =>
+      val oldIndex = oldInd.toInt
+      val newIndex = newInd.toInt
+      (for {
+        playerTokenOpt <- playerTokenDAO.getToken(tokenId)
+        playerToken = playerTokenOpt.get
+        lambdas = playerToken.lambdas.getOrElse(Lambdas())
+        activeFuncs = lambdas.activeFuncs
+        funcToMove = activeFuncs(oldIndex)
+        dropOld = activeFuncs.take(oldIndex) ++ activeFuncs.drop(oldIndex + 1)
+        updatedActives = (dropOld.take(newIndex) :+ funcToMove) ++ dropOld.drop(newIndex)
+        updatedLambdas = lambdas.copy(activeFuncs = indexFunctions(updatedActives))
+        updatedPlayerToken = playerToken.copy(lambdas = Some(updatedLambdas))
+      } yield {
+        playerTokenDAO.updateToken(updatedPlayerToken)
+        updatedLambdas
+      }).map { PreparedLambdasToken.apply }
+        .pipeTo(self)(sender)
     case updatedActives: UpdatedActives =>
       logger.LogDebug(className, "Actives updated.")
       sender ! Left(updatedActives)

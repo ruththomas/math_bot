@@ -1,7 +1,7 @@
 package compiler.operations
 
-class UserFunction(var operations: Seq[Operation] = Seq.empty[Operation], val color: String) extends OperationWithColor {
-  override def toString = s"UserFunction($color)"
+class UserFunction(var operations: Seq[Operation] = Seq.empty[Operation]) extends OperationWithColor {
+  override def toString = s"UserFunction"
 }
 
 object UserFunction {

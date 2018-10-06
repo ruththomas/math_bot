@@ -1,24 +1,30 @@
 <template>
-  <div class="function-drop" :class="showMesh ? 'mesh-background' : ''">
+  <div class="function-drop">
     <draggable
       class="function-drop-drop-zone"
+      :class="[showMesh ? 'mesh-background' : '', origin + '-drop-zone']"
       :list="list"
       :options="options"
-      @change="change"
+      @add="add($event)"
+      @change="[change($event), showIndicator = true, centerDropped($event, true)]"
       @start="start"
-      @add="functionAreaShowing === 'editMain' ? adjustJustify() : ''"
-      @remove="functionAreaShowing === 'editMain' ? adjustJustify() : ''"
       @end="end"
+      @remove="removed"
     >
-        <function-box
-          v-for="(func, ind) in list"
-          :key="'function-drop/' + ind"
-          :func="func"
-          :ind="ind"
-          :collection="list"
-          :origin="origin"
-        ></function-box>
-
+      <function-box
+        v-for="(func, ind) in list.concat(placeholders)"
+        :class="[
+          func.placeholder ? 'placeholder-piece noDrag' : 'actual-piece',
+          ind === sizeLimit - 1 && sizeLimit < 100 && !placeholders.length ? 'full-indicator' : ''
+        ]"
+        :key="origin + '-drop/' + ind"
+        :func="func"
+        :ind="ind"
+        :collection="list.concat(placeholders)"
+        :origin="origin"
+        :data-created-id="func.created_id"
+        @click.native="func.type === 'function' ? editFunction($event, func, findIndex(func)) : () => {}"
+      ></function-box>
     </draggable>
   </div>
 </template>
@@ -26,45 +32,141 @@
 <script>
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
+import _ from 'underscore'
 
 export default {
   name: 'function_drop',
   mounted () {
-    this.adjustJustify()
-    window.addEventListener('resize', () => {
-      if (window.location.hash === '#/robot') this.adjustJustify()
-    })
-  },
-  updated () {
-    this.$nextTick(this.adjustJustify)
+    document.querySelector(`.${this.origin}-drop-zone`).addEventListener('dragover', this.hideFirstPlaceholder)
+    this.centerDropped({added: {newIndex: this.list.length - 1}})
   },
   computed: {
+    placeholders () {
+      if (this.sizeLimit < 100 && this.sizeLimit > 0) {
+        return this.createPlaceHolders(this.sizeLimit).slice(this.list.length)
+      } else {
+        return []
+      }
+    },
     showMesh () {
       return this.$store.getters.getShowMesh
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
+    editingIndex () {
+      return this.$store.getters.getEditingIndex
+    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
+    },
+    activeFunctions () {
+      return this.$store.getters.getActiveFunctions
+    }
+  },
+  data () {
+    return {
+      showIndicator: true
     }
   },
   methods: {
-    adjustJustify () {
-      const $dropZone = document.querySelector('.function-drop-drop-zone')
-      if (this.list.length && this.functionAreaShowing === 'editMain' && $dropZone !== null) {
-        const dropZoneWidth = $dropZone.offsetWidth
-        const $lastButton = $dropZone.lastChild
-        const lastButtonWidth = $lastButton.offsetWidth
-        const lastButtonLeft = $lastButton.offsetLeft
+    findIndex (func, _currentInd) {
+      _currentInd = !_currentInd ? 0 : _currentInd
+      const currentFunc = this.activeFunctions[_currentInd]
+      if (func.created_id === currentFunc.created_id) {
+        return _currentInd
+      } else if (Number(func.created_id) < 2000 || _currentInd > func.length) {
+        return undefined
+      }
+      return this.findIndex(func, _currentInd + 1)
+    },
+    toggleEditFunction (ind) {
+      this.$store.dispatch('updateEditingIndex', ind)
+      this.$store.dispatch('updateFunctionAreaShowing', ind === null ? 'editMain' : 'editFunction')
+    },
+    editingFunctionMessage (func) {
+      const messageBuilder = {
+        type: 'success',
+        msg: `${func.name ? `Edit: ${func.name}` : 'Edit: Function'}`
+      }
+      this.$store.dispatch('addMessage', messageBuilder)
+    },
+    handleEditFunctionEvent (evt) {
+      this.$store.dispatch('updateEditFunctionEvent', evt.target)
+    },
+    editFunction (evt, func, ind) {
+      if (ind !== undefined) {
+        $('#open-staged').show()
+        this.handleEditFunctionEvent(evt)
+        const i = ind === this.editingIndex ? null : ind
+        if (i !== null) this.editingFunctionMessage(func)
+        this.toggleEditFunction(i)
+      }
+    },
+    createPlaceHolders (size) {
+      return _.chain(size)
+        .range()
+        .map((_val, ind) => {
+          return {index: ind, placeholder: true}
+        })
+        .value()
+    },
+    removed () {
+      const $dropZone = $(`.${this.origin}-drop-zone`)
+      const $placeholders = $dropZone.children('.placeholder-piece')
+      $placeholders.each((index, piece) => {
+        const $ele = $(piece)
+        $ele.removeClass('hide-piece')
+      })
+    },
+    hideFirstPlaceholder () {
+      if (this.origin === this.functionAreaShowing) {
+        const $dropZone = $(`.${this.origin}-drop-zone`)
+        const $placeholders = $dropZone.children('.placeholder-piece')
+        this.showIndicator = false
+        $placeholders.each((index, piece) => {
+          const $ele = $(piece)
+          if (index === 0) {
+            $ele.addClass('hide-piece')
+          } else {
+            $ele.removeClass('hide-piece')
+          }
+        })
+      }
+    },
+    centerDropped (evt) {
+      const $dropZone = $(`.${this.origin}-drop-zone`)
+      const $functionDrop = $dropZone.parent()
+      const dropWidth = $functionDrop.width()
+      let scrollTooIndex = evt.moved ? evt.moved.newIndex : evt.added ? evt.added.newIndex : evt.removed.oldIndex
+      const dropZoneChildren = $dropZone.children('.actual-piece')
+      if (scrollTooIndex > dropZoneChildren.length - 1) {
+        scrollTooIndex = dropZoneChildren.length - 1
+      }
+      const $dropped = $(dropZoneChildren[scrollTooIndex])
+      const droppedWidth = $dropped.width()
+      let childrenWidthSum = 0
 
-        if ((dropZoneWidth + lastButtonWidth) < lastButtonLeft) {
-          $dropZone.style['justify-content'] = 'flex-start'
+      if (scrollTooIndex > -1 && $dropZone.find('.actual-piece').length) {
+        dropZoneChildren.each(function () {
+          const $ele = $(this)
+          childrenWidthSum += $ele.outerWidth()
+          $ele.removeClass('dropped-indicator')
+          $ele.find('.piece').removeClass('dropped-indicator')
+        })
+
+        $dropped.addClass('dropped-indicator')
+        $dropped.find('.piece').addClass('dropped-indicator')
+
+        if ((childrenWidthSum * 2) > dropWidth) {
+          $dropZone.animate({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`}, 200)
         } else {
-          $dropZone.style['justify-content'] = 'center'
+          $dropZone.animate({'padding-right': 0}, 200)
         }
-      } else {
-        $dropZone.style['justify-content'] = 'center'
+
+        $functionDrop.animate({
+          scrollLeft: $dropped.position().left - (dropWidth / 2) + (droppedWidth / 2)
+        }, 800)
       }
     }
   },
@@ -72,64 +174,79 @@ export default {
     draggable,
     FunctionBox
   },
-  props: ['origin', 'list', 'options', 'change', 'start', 'end']
+  props: ['id', 'className', 'origin', 'list', 'options', 'add', 'change', 'start', 'end', 'groupSize', 'sizeLimit']
 }
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
+  $danger-color: #F25C5C;
+  $piece-height: 7.5vmin;
+
   .function-drop {
-    width: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
     height: 100%;
-    z-index: 2001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
+    width: 100%;
+    z-index: 999;
+    margin: 0;
+    .function-drop-drop-zone {
+      position: relative;
+      width: min-content;
+      width: -moz-min-content;
+      min-width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 100%;
+    }
+
+    .editMain-drop-zone {
+      justify-content: center;
+    }
   }
 
-  .function-drop-drop-zone {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    overflow-x: scroll;
-    overflow-y: visible;
-    height: 100%;
-    width: 99%;
+  .hide-piece {
+    opacity: 0!important;
   }
 
   .mesh-background {
-    background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522345998/misc/grid-mesh_auu3wh.svg") top center no-repeat;
-    background-size: contain;
-    background-position: 0 -10px;
-    z-index: 1;
+    border-radius: 3px;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 5px,
+        rgba(74, 74, 74, 0.4) 7px,
+        rgba(74, 74, 74, 0.4) 9px
+    ), repeating-linear-gradient(
+        -45deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 5px,
+        rgba(74, 74, 74, 0.4) 7px,
+        rgba(74, 74, 74, 0.4) 9px
+    );
   }
 
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-
+  .piece-shake {
+    animation: shake 0.8s;
+    animation-iteration-count: infinite;
   }
 
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
+  .dropped-indicator {
+    position: relative;
 
+    &::before {
+      content: url("../assets/next-arrow.svg");
+      height: 2vmin;
+      width: 2vmin;
+      position: absolute;
+      transform: rotate(90deg);
+      top: -2vmin;
+      left: 50%;
+    }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-
+  .full-indicator {
+    box-shadow: 0.5vmin 0 0 0 $danger-color;
   }
-
-  /* Custom, iPhone 5 Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-
-  }
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
-  }
-
 </style>

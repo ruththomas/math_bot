@@ -54,7 +54,7 @@ class Robot {
 
   /*
   * While robot is animating use this function
-  * 'initialRobotState' and 'robotState' can be desctructured into this app
+  * 'initialRobotState' and 'robotState' can be de-structured into this app
   * */
   updateRobot (robotState) {
     this.robotLocation = robotState.location

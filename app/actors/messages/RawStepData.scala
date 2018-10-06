@@ -14,8 +14,8 @@ case class RawStepData(
     stagedEnabled: Boolean,
     activeEnabled: Boolean,
     stagedQty: Int,
-    assignedStaged: List[AssignedFunctionModel],
-    preBuiltActive: List[AssignedFunctionModel],
+    assignedStaged: List[AssignedFunction],
+    preBuiltActive: List[AssignedFunction],
     allowedActives: Option[List[String]],
     cmdsAvailable: List[String],
     specialParameters: List[String],
@@ -24,6 +24,7 @@ case class RawStepData(
     initFocus: List[String],
     evalEachFrame: Option[Boolean] = None,
     videoHints: List[String],
+    freeHint: Option[String],
     prevStep: String,
     nextStep: String
 )
@@ -39,8 +40,8 @@ object RawStepData {
     (JsPath \ "stagedEnabled").read[Boolean] and
     (JsPath \ "activeEnabled").read[Boolean] and
     (JsPath \ "stagedQty").read[Int] and
-    (JsPath \ "assignedStaged").read[List[AssignedFunctionModel]] and
-    (JsPath \ "preBuiltActive").read[List[AssignedFunctionModel]] and
+    (JsPath \ "assignedStaged").read[List[AssignedFunction]] and
+    (JsPath \ "preBuiltActive").read[List[AssignedFunction]] and
     (JsPath \ "allowedActives").readNullable[List[String]] and
     (JsPath \ "cmdsAvailable").read[List[String]] and
     (JsPath \ "specialParameters").read[List[String]] and
@@ -49,6 +50,7 @@ object RawStepData {
     (JsPath \ "initFocus").read[List[String]] and
     (JsPath \ "evalEachFrame").readNullable[Boolean] and
     (JsPath \ "videoHints").read[List[String]] and
+    (JsPath \ "freeHint").readNullable[String] and
     (JsPath \ "prevStep").read[String] and
     (JsPath \ "nextStep").read[String]
   )(RawStepData.apply _)
@@ -63,8 +65,8 @@ object RawStepData {
     (JsPath \ "stagedEnabled").write[Boolean] and
     (JsPath \ "activeEnabled").write[Boolean] and
     (JsPath \ "stagedQty").write[Int] and
-    (JsPath \ "assignedStaged").write[List[AssignedFunctionModel]] and
-    (JsPath \ "preBuiltActive").write[List[AssignedFunctionModel]] and
+    (JsPath \ "assignedStaged").write[List[AssignedFunction]] and
+    (JsPath \ "preBuiltActive").write[List[AssignedFunction]] and
     (JsPath \ "allowedActives").writeNullable[List[String]] and
     (JsPath \ "cmdsAvailable").write[List[String]] and
     (JsPath \ "specialParameters").write[List[String]] and
@@ -73,6 +75,7 @@ object RawStepData {
     (JsPath \ "initFocus").write[List[String]] and
     (JsPath \ "evalEachFrame").writeNullable[Boolean] and
     (JsPath \ "videoHints").write[List[String]] and
+    (JsPath \ "freeHint").writeNullable[String] and
     (JsPath \ "prevStep").write[String] and
     (JsPath \ "nextStep").write[String]
   )(unlift(RawStepData.unapply))

@@ -3,25 +3,25 @@ package controllers
 import java.net.URLDecoder
 
 import actors._
-import actors.convert_flow.{CompilerRequestConvertFlow, CompilerResponseConvertFlow}
-import actors.messages.{ClientRobotState, PreparedStepData}
-import akka.actor.{Actor, ActorSystem, Props}
+import actors.convert_flow.{ CompilerRequestConvertFlow, CompilerResponseConvertFlow }
+import actors.messages.{ ClientRobotState, PreparedStepData }
+import akka.actor.{ Actor, ActorSystem, Props }
 import akka.pattern.ask
 import akka.stream.Materializer
 import akka.util.Timeout
 import compiler.processor.Frame
-import compiler.{Cell, Point}
+import compiler.{ Cell, Point }
+import configuration.CompilerConfiguration
 import javax.inject.Inject
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models._
+import daos.PlayerTokenDAO
+import models._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
-import play.api.{Configuration, Environment}
+import play.api.{ Configuration, Environment }
 import types.TokenId
-import utils.CompilerConfiguration
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -95,7 +95,8 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
   val statsActor = system.actorOf(StatsActor.props(system, playerTokenDAO, mathBotLogger), "stats-compiler-actor")
 
   val compilerConfiguration = CompilerConfiguration(
-    maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000)
+    maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000),
+    maxEmptyLoopCount = configuration.getInt("mathbot.maxEmptyLoopCount").getOrElse(100)
   )
 
   def wsPath(tokenId: TokenId, connection: String): Action[AnyContent] = Action { implicit request: RequestHeader =>

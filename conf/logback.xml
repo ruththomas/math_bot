@@ -48,7 +48,7 @@
   <logger name="akka.actor" level="INFO" />
   <logger name="org.mongodb.driver" level="INFO" />
 
-  <root level="DEBUG">
+  <root level="INFO">
     <appender-ref ref="ASYNCFILE" />
     <appender-ref ref="ASYNCSTDOUT" />
   </root>

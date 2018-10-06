@@ -1,23 +1,35 @@
 import sbt.Keys._
 
+lazy val akkaHttpVersion = "10.1.1"
+lazy val akkaVersion = "2.5.11"
 lazy val GatlingTest = config("gatling") extend Test
 
 scalaVersion := "2.11.11"
 
-libraryDependencies += "com.netaporter" %% "scala-uri" % "0.4.14"
-libraryDependencies += "net.codingwell" %% "scala-guice" % "4.1.0"
-
-// test dependencies
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test
-libraryDependencies += "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.5" % Test
-libraryDependencies += "io.gatling" % "gatling-test-framework" % "2.2.5" % Test
-libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
-libraryDependencies += filters
-libraryDependencies += "com.github.pdorobisz" %% "math-expression-evaluator" % "1.0.0"
 resolvers += "dl-john-ky" at "http://dl.john-ky.io/maven/releases"
-libraryDependencies += "io.john-ky" %% "hashids-scala" % "1.1.2-2974446"
-libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0"
-libraryDependencies += ws
+
+libraryDependencies ++= Seq(
+  "com.netaporter" %% "scala-uri" % "0.4.14",
+  "net.codingwell" %% "scala-guice" % "4.1.0",
+  "org.reactivemongo" %% "play2-reactivemongo" % "0.12.5-play25",
+  "com.github.pdorobisz" %% "math-expression-evaluator" % "1.0.0",
+  "io.john-ky" %% "hashids-scala" % "1.1.2-2974446",
+  filters,
+  "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0",
+  ws,
+
+  "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-http-xml" % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+  "com.pauldijou" %% "jwt-play-json" % "0.16.0",
+
+  // Test
+  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test,
+  "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.5" % Test,
+  "io.gatling" % "gatling-test-framework" % "2.2.5" % Test,
+  "org.mockito" % "mockito-all" % "1.9.5" % Test
+)
 
 // The Play project itself
 lazy val root = (project in file("."))
@@ -37,11 +49,3 @@ lazy val docs = (project in file("docs")).enablePlugins(ParadoxPlugin).
   settings(
     paradoxProperties += ("download_url" -> "https://example.lightbend.com/v1/download/play-rest-api")
   )
-
-/*
-// Pre - Prod deploy comment out for development, or uncomment if deploying
- herokuAppName in Compile := HerokuDeployKeys.NAME
- herokuJdkVersion in Compile := "1.8"
- herokuConfigVars in Compile := HerokuDeployKeys.CONFIG_VARS
- herokuProcessTypes in Compile := HerokuDeployKeys.PROCESS_TYPES
-*/

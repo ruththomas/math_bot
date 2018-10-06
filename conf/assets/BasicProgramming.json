@@ -31,6 +31,7 @@
       "clearMain": false,
       "initFocus": ["Walk"],
       "videoHints": ["u5BqiML0q70"],
+      "freeHint": "q9V-TnU-0Yw",
       "prevStep": "None",
       "nextStep": "WalkThree"
     },
@@ -61,6 +62,7 @@
       "clearMain": false,
       "initFocus": ["Walk"],
       "videoHints": ["aGRc1MR91Fk", "hAOSQnzbVLY", "CUbBgS7llOI"],
+      "freeHint": "RUxCBeJx-Bg",
       "prevStep": "WalkOne",
       "nextStep": "WalkFour"
     },
@@ -107,10 +109,11 @@
       "description": "Walk to the portal using the rocket function.",
       "mainMax": 1,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
       "preBuiltActive": [
         {
+          "createdId": "50246629508",
           "name": "Rocket",
           "image": "rocket",
           "sizeLimit": -1,
@@ -122,6 +125,7 @@
           ]
         }
       ],
+      "allowedActives": ["50246629508"],
       "stagedQty": 0,
       "assignedStaged": [],
       "cmdsAvailable": [
@@ -134,6 +138,7 @@
       "clearMain": false,
       "initFocus": ["rocket"],
       "videoHints": ["NvEIoXrjc0A"],
+      "freeHint": "WBMNlpX_VqE",
       "prevStep": "WalkFour",
       "nextStep": "EditFirstFunction"
     },
@@ -150,11 +155,12 @@
       "description": "Add another walk command to the rocket function.",
       "mainMax": 1,
       "robotOrientation": 90,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["50246629508"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot"
       ],
@@ -181,11 +187,12 @@
       "description": "Turn right and walk to the portal using rocket.",
       "mainMax": 2,
       "robotOrientation": 0,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["50246629508"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -216,6 +223,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "58071679485",
           "name": "U Turn",
           "image": "uTurn",
           "sizeLimit": 2,
@@ -223,6 +231,7 @@
         }
       ],
       "preBuiltActive": [],
+      "allowedActives": ["50246629508", "58071679485"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -255,6 +264,7 @@
       "stagedQty": 0,
       "assignedStaged": [
         {
+          "createdId": "53367904610",
           "name": "Turn Left",
           "image": "turnLeft",
           "sizeLimit": 3,
@@ -262,6 +272,7 @@
         }
       ],
       "preBuiltActive": [],
+      "allowedActives": ["53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -289,11 +300,12 @@
       "description": "Get to the portal.",
       "mainMax": -1,
       "robotOrientation": 0,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": [],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"
@@ -319,11 +331,12 @@
       "description": "Get to the portal using only 3 commands.",
       "mainMax": 3,
       "robotOrientation": 0,
-      "stagedEnabled": false,
+      "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["50246629508"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection"

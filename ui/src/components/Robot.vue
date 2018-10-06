@@ -1,31 +1,33 @@
 <template>
-  <div class="robot-container" data-aos="fade-in" v-if="auth.authenticated">
-    <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
-    <div  v-else id="robot" class="row animated">
+  <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
+  <div class="container-fluid robot" data-aos="fade-in" v-else>
+    <video-hint></video-hint>
+    <div
+      @click="goToProfile()"
+      class="return-to-profile"
+      data-toggle="tooltip" title="Return to profile"
+    >
+      <img :src="handlePicture(userProfile.picture)" />
+    </div>
+    <step-congrats key="step-congrats"></step-congrats>
+    <div class="container">
 
-      <div id="control-panel-box">
-        <control-panel></control-panel>
-      </div>
-
-      <div id="grid-box">
-        <grid></grid>
+      <div class="row" style="position: relative;">
         <trash></trash>
+        <grid></grid>
       </div>
 
       <messages></messages>
 
-      <div
-        id="edit-main-box">
-        <trash></trash>
-        <editmain></editmain>
+      <div class="row box" style="padding: 0;">
+        <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+        <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
       </div>
 
-      <div id="commands-box">
+      <div class="row">
+        <trash></trash>
         <commands></commands>
-        <trash></trash>
       </div>
-
-      <!--<div class="filler-box"></div>-->
     </div>
   </div>
 </template>
@@ -41,15 +43,27 @@ import Trash from './Trash'
 import Messages from './Messages'
 import ControlPanel from './Control_panel'
 import SplashScreen from './Splash_screen'
+import RobotCarrying from './Robot_carrying'
+import PopoverBucket from './Popover_bucket'
+import StepCongrats from './Step_congrats'
+import VideoHint from './Video_hint'
 import api from '../services/api'
-import utils from '../services/utils'
-import Robot from '../services/RobotState'
-
+import LevelCongrats from './Level_congrats'
 export default {
   mounted () {
-    this.initializeRobot()
+    this.$store.dispatch('updateVideoHint', this)
+    this.$store.dispatch('updateRunCompiled', this)
+    api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
+      this.runCompiled.initializeNextStep(stepData)
+    })
   },
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
+    userProfile () {
+      return JSON.parse(localStorage.getItem('profile'))
+    },
     tokenId () {
       return this.$store.getters.getTokenId
     },
@@ -66,7 +80,7 @@ export default {
       return this.$store.getters.getSplashScreenShowing
     },
     gridMap () {
-      return this.currentStepData.gridMap
+      return this.stepData.gridMap
     },
     Functions () {
       return this.$store.getters.getFunctions
@@ -118,27 +132,31 @@ export default {
     },
     activeFunctionGroups () {
       return this.$store.getters.getActiveFunctionGroups
-    },
-    currentStepData () {
-      return this.$store.getters.getStepData
+    }
+  },
+  data () {
+    return {
+      renderGrid: false
     }
   },
   methods: {
-    initializeRobot () {
-      utils.watcher(() => !this.auth.authenticated, () => {
-        api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
-          this.$store.dispatch('updateStepData', stepData)
-          this.$store.dispatch('updateLambdas', stepData.lambdas)
-          stepData.initialRobotState.context = this
-          this.$store.dispatch('updateRobot', new Robot(stepData.initialRobotState))
-        })
-      })
-    },
     showProgramPanel () {
       this.$store.dispatch('controlProgramPanelShowing')
     },
     adjustSpeed () {
       this.speed = this.speed === 500 ? 200 : 500
+    },
+    goToProfile () {
+      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
+      this.$store.dispatch('deleteMessages')
+      this.$router.push({path: 'profile'})
+    },
+    handlePicture (picture) {
+      if (!picture || picture.match(/gravatar/)) {
+        return this.permanentImages.gravatar
+      } else {
+        return picture
+      }
     }
   },
   components: {
@@ -149,110 +167,59 @@ export default {
     Editmain,
     Messages,
     ControlPanel,
-    SplashScreen
+    SplashScreen,
+    RobotCarrying,
+    PopoverBucket,
+    StepCongrats,
+    LevelCongrats,
+    VideoHint
   }
 }
 </script>
 
 <style scoped lang="scss">
-  .robot-container {
-    height: 100%;
-    width: 100%;
+  $box-height: 18vmin;
+
+  .robot {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
     background-size: cover;
-  }
-
-  #robot {
-    position: relative;
-    width: 100%;
     height: 100%;
-    max-width: 1200px;
-    overflow: visible;
-    margin: 0 auto;
-    padding: 1vh 20px 0 20px;
-    display: flex;
-    flex-direction: column;
-  }
 
-  #control-panel-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-
-  #grid-box {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    align-items: center;
-    justify-content: flex-start;
-    /*border: 1px solid yellowgreen;*/
-  }
-
-  #edit-main-box {
-    display: flex;
-    /*border: 1px solid mediumvioletred;*/
-  }
-
-  #commands-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /*border: 1px solid firebrick;*/
-  }
-
-  .filler-box {
-    display: flex;
-  }
-
-  .grow {
-    height: 40%;
-    -webkit-transition: height 1s; /* For Safari 3.1 to 6.0 */
-    transition: height 1s;
-  }
-
-  /* Medium Devices, Desktops */
-  @media only screen and (max-width : 992px) {
-    #robot {
-      width: 80vw;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    #control-panel-box {
-    }
-
-    #grid-box {
+    .container {
+      display: flex;
+      flex-direction: column;
       justify-content: flex-start;
+      height: 100%;
+
+      .row {
+        margin: 0;
+      }
+
+      .box {
+        background: transparent;
+        position: relative;
+        height: $box-height;
+        z-index: 100;
+      }
     }
+    .return-to-profile {
+      position: fixed;
+      right: 0;
+      top: 0;
+      cursor: pointer;
+      height: 9vmin;
+      width: 9vmin;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
 
-    #edit-main-box {
-    }
-
-    #robot {
-      width: 100vw;
-    }
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-  }
-
-  /* Custom, iPhone Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
-  /* iPad */
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-    #robot {
-      width: 100vw;
+      img {
+        border-radius: 50%;
+        height: 80%;
+        width: 80%;
+        box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
+      }
     }
   }
-
-  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
-
-  }
-
 </style>

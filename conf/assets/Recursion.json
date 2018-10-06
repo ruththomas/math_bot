@@ -19,9 +19,18 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": [],
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "createdId": "54709789996",
+          "name": "Walk Forever",
+          "image": "walkForever",
+          "sizeLimit": 2,
+          "func": []
+        }
+      ],
       "preBuiltActive": [],
+      "allowedActives": ["54709789996"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -33,7 +42,7 @@
       "clearMain": true,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["74tUfeuLEg8"],
+      "videoHints": ["ro0V_ov9xPg", "8wYuS7APWKQ"],
       "prevStep": "None",
       "nextStep": "WalkAround"
     },
@@ -52,9 +61,18 @@
       "robotOrientation": 270,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": [],
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "createdId": "52128941453",
+          "name": "Spiral",
+          "image": "spiral",
+          "sizeLimit": 11,
+          "func": []
+        }
+      ],
       "preBuiltActive": [],
+      "allowedActives": ["52128941453"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -66,7 +84,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["iZL0xwsXGT4", "muzWKrXK1cU", "lPX2d666xhc"],
+      "videoHints": ["a8PdMGZgeRY", "VupAbRPKvoc", "L-EMZv5YBRk"],
       "prevStep": "RecurForward",
       "nextStep": "SmallSpiral"
     },
@@ -85,9 +103,10 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["52128941453"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -99,7 +118,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["orA768io-sM"],
+      "videoHints": ["46p_GJz8vDU"],
       "prevStep": "WalkAround",
       "nextStep": "BigSpiral"
     },
@@ -118,9 +137,10 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["52128941453"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -132,7 +152,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": [],
+      "videoHints": ["yGMEdd_UoUQ"],
       "prevStep": "SmallSpiral",
       "nextStep": "Stairs"
     },
@@ -151,9 +171,18 @@
       "robotOrientation": 180,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": [],
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "createdId": "51974949138",
+          "name": "Stairs",
+          "image": "stairs",
+          "sizeLimit": 6,
+          "func": []
+        }
+      ],
       "preBuiltActive": [],
+      "allowedActives": ["51974949138", "53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -165,7 +194,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["AfZpAmvrSf0", "cDTFBfdrR5I"],
+      "videoHints": ["OmTwwYGLvkc", "FrwGNObfH00"],
       "prevStep": "BigSpiral",
       "nextStep": "LongStairs"
     },
@@ -184,10 +213,10 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
-      "allowedActives": ["stairs", "turnLeft"],
+      "allowedActives": ["51974949138", "53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -199,7 +228,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["iSGLCrv9YkQ"],
+      "videoHints": ["4X9m0M39Ruw", "_OHKFB54kds"],
       "prevStep": "Stairs",
       "nextStep": "Snake"
     },
@@ -218,9 +247,18 @@
       "robotOrientation": 0,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": [],
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "createdId": "57634311012",
+          "name": "Snake",
+          "image": "snake",
+          "sizeLimit": 17,
+          "func": []
+        }
+      ],
       "preBuiltActive": [],
+      "allowedActives": ["57634311012", "53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -232,7 +270,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["tbTcCSPODZw", "ohTSwV29tOk", "aMcAgpFzSUY"],
+      "videoHints": ["oq_yTn0c8HY", "dSK-wHfY5I4", "hufLnseGBeE"],
       "prevStep": "LongStairs",
       "nextStep": "ZigZag"
     },
@@ -251,9 +289,10 @@
       "robotOrientation": 0,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["57634311012", "53367904610"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -265,7 +304,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["Vr54qVFP5dE"],
+      "videoHints": ["hHoG4K25CGg"],
       "prevStep": "LongStairs",
       "nextStep": "CleanUp"
     },
@@ -280,13 +319,22 @@
         "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
       "description": "Pickup all kitties and place them on the portal.",
-      "mainMax": 2,
+      "mainMax": 1,
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": [],
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "createdId": "50555483574",
+          "name": "Cleanup",
+          "image": "cleanup",
+          "sizeLimit": 18,
+          "func": []
+        }
+      ],
       "preBuiltActive": [],
+      "allowedActives": ["50555483574"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -298,7 +346,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["Le5w3d8ZsX8", "Sba-RuRtXPM", "81lPIL9WQbU"],
+      "videoHints": ["LLV9JS7LYKE", "u-Zq0mpxq3E", "hvp6pvnlqZY"],
       "prevStep": "ZigZag",
       "nextStep": "CleanUpMore"
     },
@@ -313,13 +361,36 @@
         "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
       "description": "Pickup all kitties and place them on the portal.",
-      "mainMax": 2,
+      "mainMax": 1,
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": [],
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "createdId": "53165523148",
+          "name": "Cleanup More",
+          "image": "cleanupMore",
+          "sizeLimit": 4,
+          "func": []
+        },
+        {
+          "createdId": "57688072155",
+          "name": "PickupN",
+          "image": "pickupN",
+          "sizeLimit": 9,
+          "func": []
+        },
+        {
+          "createdId": "54191328403",
+          "name": "DropN",
+          "image": "dropN",
+          "sizeLimit": 9,
+          "func": []
+        }
+      ],
       "preBuiltActive": [],
+      "allowedActives": ["53165523148", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -331,7 +402,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["EP6QjYL3aFk"],
+      "videoHints": ["JMvBt7WWqQ4"],
       "prevStep": "CleanUp",
       "nextStep": "PickupPile"
     },
@@ -346,13 +417,14 @@
         "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
       "description": "Pickup stack of kitties and place them on the portal.",
-      "mainMax": 2,
+      "mainMax": 1,
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
       "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["53165523148", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -364,7 +436,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["4ruzychwloY"],
+      "videoHints": ["9kiV6T4Oxrc"],
       "prevStep": "CleanUpMore",
       "nextStep": "CleanComb"
     },
@@ -379,13 +451,22 @@
         "(R) |E| |E| |E| |E| |E| |E| |E| |E| |E|"
       ],
       "description": "Pickup all kitties and place them on the portal.",
-      "mainMax": 2,
+      "mainMax": 1,
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
-      "assignedStaged": [],
+      "stagedQty": 0,
+      "assignedStaged": [
+        {
+          "createdId": "59033416266",
+          "name": "Clean Comb",
+          "image": "cleanComb",
+          "sizeLimit": 30,
+          "func": []
+        }
+      ],
       "preBuiltActive": [],
+      "allowedActives": ["59033416266", "53367904610", "58071679485", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -397,7 +478,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["6BtxMYaTHZI", "fj6NAFFpi4E", "WRrcc4EU344"],
+      "videoHints": ["XittjRWOp7M", "m3aFQypd8FA"],
       "prevStep": "PickupPile",
       "nextStep": "CleanComb2"
     },
@@ -416,9 +497,10 @@
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["59033416266", "53367904610", "58071679485", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -430,7 +512,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["HkZpxXXGx0w", "vSUc3cIb184"],
+      "videoHints": ["-wPiyMf5Fe4", "8EdQe8izE3c", "3VzjyIq-2EY"],
       "prevStep": "CleanComb",
       "nextStep": "CleanComb3"
     },
@@ -438,20 +520,21 @@
       "level": "Recursion",
       "step": "CleanComb3",
       "gridMap": [
-        "|W| |E| |E| |E|     |W| |E| |E| |E|     |W| |W|",
-        "|W| |E| |W| [TS(1)] |W| |E| |W| [TS(1)] |W| |W|",
-        "|W| |E| |W| |W|     |W| |E| |W| |W|     |W| |W|",
-        "|W| |E| |W| |W|     |W| |E| |W| |W|     |W| |W|",
+        "|W| |E| |E| |E|     |W| |W| |E| |E| |E|     |W|",
+        "|W| |E| |W| [TS(1)] |W| |W| |E| |W| [TS(1)] |W|",
+        "|W| |E| |W| |W|     |W| |W| |E| |W| |W|     |W|",
+        "|W| |E| |W| |W|     |W| |W| |E| |W| |W|     |W|",
         "(R) |E| |E| |E|     |E| |E| |E| |E|     |E| ($)"
       ],
       "description": "Pickup all kitties and place them on the portal.",
-      "mainMax": 2,
+      "mainMax": 1,
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["59033416266", "53367904610", "58071679485", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -463,7 +546,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["MgJMW6VSkj8", "Imvvc6sWP4U"],
+      "videoHints": ["Y8DCXlnBhRo", "CntzuVR13mM"],
       "prevStep": "CleanComb2",
       "nextStep": "CleanZigZags"
     },
@@ -478,13 +561,14 @@
         "(R) |E| |E| |E| |E| |E| |E| |E| |E| ($)"
       ],
       "description": "Pickup all kitties and place them on the portal.",
-      "mainMax": 2,
+      "mainMax": 1,
       "robotOrientation": 90,
       "stagedEnabled": true,
       "activeEnabled": true,
-      "stagedQty": -1,
+      "stagedQty": 0,
       "assignedStaged": [],
       "preBuiltActive": [],
+      "allowedActives": ["59033416266", "53367904610", "58071679485", "57688072155", "54191328403"],
       "cmdsAvailable": [
         "moveRobotForwardOneSpot",
         "changeRobotDirection",
@@ -496,7 +580,7 @@
       "clearMain": false,
       "initFocus": [],
       "evalEachFrame": true,
-      "videoHints": ["pn53eWiqibk"],
+      "videoHints": ["Hy5Yj8Bzjzs"],
       "prevStep": "CleanComb3",
       "nextStep": "None"
     }
