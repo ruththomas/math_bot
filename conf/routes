@@ -32,6 +32,7 @@ GET         /api/gameStats/getTokenCount                                        
 
 # Admin
 GET         /ws/admin                                                              controllers.AdminController.adminSocket
+POST        /api/admin/auth                                                        controllers.AdminController.authenticate
 
 # Auth !! Not being used yet !!
 GET         /api/auth/requestSession                                               controllers.AuthController.requestSession

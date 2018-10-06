@@ -122,7 +122,7 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
 
   def adminConfig: AdminConfig =
     AdminConfig(
-      authIdByteWidth = wrap(mathbot.admin.authIdByteWidth, _.toString),
+      authIdByteWidth = wrap(mathbot.admin.authIdByteWidth, _.toInt),
       rejectedUrl = wrap(mathbot.admin.rejectedUrl, Uri(_)),
       approvedUrl = wrap(mathbot.admin.approvedUrl, Uri(_)),
       custodianEmail = exWrap(mathbot.admin.custodianEmail, envGet, playConfig.getString(_))
