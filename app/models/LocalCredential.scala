@@ -13,4 +13,5 @@ case class LocalCredential(accountId: SecureIdentifier,
                            blockSize: Int,
                            hashSize: Int,
                            admin: Option[Boolean] = None,
-                           recoveryId: Option[SecureIdentifier] = None)
+                           recoveryId: Option[SecureIdentifier] = None,
+                           adminAuthId: Option[SecureIdentifier] = None)
