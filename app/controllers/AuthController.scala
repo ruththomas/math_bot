@@ -20,6 +20,8 @@ import org.bouncycastle.crypto.generators.SCrypt
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{Action, AnyContent, Controller, RequestHeader}
 import utils.{JwtTokenParser, SecureIdentifier}
+import play.api.mvc.Cookie
+import play.api.mvc.DiscardingCookie
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
