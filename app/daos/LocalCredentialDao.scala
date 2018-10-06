@@ -43,19 +43,19 @@ class LocalCredentialDao @Inject()(
     collection.createIndex(ascending(usernameField))
   }
 
-  def approveAdmin(authenticationId: String) =
+  def approveAdmin(authenticationId: String): Future[Option[LocalCredential]] =
     for {
       result <- collection
         .findOneAndUpdate(equal(adminAuthId, authenticationId), combine(set(adminField, true), set(adminAuthId, null)))
         .toFutureOption()
-    } yield result
+    } yield result.map(_.value)
 
-  def rejectAdmin(authenticationId: String) =
+  def rejectAdmin(authenticationId: String): Future[Option[LocalCredential]] =
     for {
       result <- collection
         .findOneAndUpdate(equal(adminAuthId, authenticationId), combine(set(adminField, false), set(adminAuthId, null)))
         .toFutureOption()
-    } yield result
+    } yield result.map(_.value)
 
   def find(username: String): Future[Option[LocalCredential]] =
     for {

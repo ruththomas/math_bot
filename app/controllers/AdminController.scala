@@ -10,7 +10,7 @@ import com.google.inject.Inject
 import configuration.AdminConfig
 import com.google.inject.name.Named
 import daos.{LocalCredentialDao, PlayerTokenDAO}
-import email.AdminVerificationEmail
+import email.{AdminApprovedEmail, AdminVerificationEmail}
 import models.UsernameAndPassword
 import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
@@ -18,6 +18,7 @@ import play.api.libs.streams.ActorFlow
 import play.api.libs.ws._
 import play.api.mvc.{Action, AnyContent, Controller, WebSocket}
 import utils.SecureIdentifier
+import scalatags.Text.all._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -70,7 +71,9 @@ class AdminController @Inject()(
                 .insertOrUpdate(localCredential.accountId, localCredential.copy(adminAuthId = Some(adminAuthId))) map {
                 _ =>
                   sendGrid ! AdminVerificationEmail(usernameAndPassword.username, adminAuthId, adminConfig)
-                  Ok("Your request is under review, an email will be sent regarding your approval/rejection.")
+                  Ok(
+                    s"Your request is under review, an email will be sent to ${usernameAndPassword.username} if you are approved."
+                  )
               }
             } else {
               FastFuture.successful(Unauthorized("Password did not match"))
@@ -95,8 +98,11 @@ class AdminController @Inject()(
     request.getQueryString("authenticationId").map(SecureIdentifier(_)) match {
       case Some(authenticationId) =>
         localCredentialDAO.approveAdmin(authenticationId.toString).map {
-          case Some(_) => Ok("Approved") // todo - send email to new admin
-          case None => BadRequest("Authentication id is not registered")
+          case Some(localCredential) =>
+            val response = s"${localCredential.username} is approved as an admin user and can access the admin console."
+            sendGrid ! AdminApprovedEmail(localCredential.username)
+            Ok(response)
+          case None => BadRequest("Authentication id is no longer valid")
         }
       case _ => FastFuture.successful(BadRequest("Invalid query parameters"))
     }
@@ -106,8 +112,11 @@ class AdminController @Inject()(
     request.getQueryString("authenticationId").map(SecureIdentifier(_)) match {
       case Some(authenticationId) =>
         localCredentialDAO.rejectAdmin(authenticationId.toString).map {
-          case Some(_) => Ok("Rejected") // don't send email to requester in case someone is fishing
-          case None => BadRequest("Authentication id is not registered")
+          case Some(localCredential) =>
+            val response =
+              s"${localCredential.username} has been rejected and will not be able to access the admin console."
+            Ok(response) // don't send email to requester in case someone is fishing
+          case None => BadRequest("Authentication id is no longer valid")
         }
       case _ => FastFuture.successful(BadRequest("Invalid query parameters"))
     }
