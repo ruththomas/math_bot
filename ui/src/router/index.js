@@ -6,9 +6,19 @@ import Robot from '@/components/Robot'
 import Profile from '@/components/Profile'
 import Marketing from '@/components/marketing/Marketing'
 import Callback from '@/components/Callback'
+import BootstrapVue from 'bootstrap-vue'
+import VueYouTubeEmbed from 'vue-youtube-embed'
+import VueSocialSharing from 'vue-social-sharing'
 
 import $store from '../store/store'
 
+// require styles
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+Vue.use(VueSocialSharing)
+Vue.use(VueYouTubeEmbed)
+Vue.use(BootstrapVue)
 Vue.use(Router)
 Vue.use(VueResource)
 Vue.use(Sortable)
@@ -18,7 +28,7 @@ const router = new Router({
   routes: [
     {
       path: '/robot',
-      name: 'Robot Counter',
+      name: 'Robot',
       secure: true,
       component: Robot
     },
@@ -55,11 +65,11 @@ router.beforeEach((to, from, next) => {
   router.options.routes.forEach((route) => {
     // If this is the current route and it's secure
     if (to.matched[0].path === route.path && route.secure && !$store.state.auth.authenticated) {
-      next('/about')
+      return next('/about')
     }
   })
   // Proceed as normal
-  next()
+  return next()
 })
 
 export default router

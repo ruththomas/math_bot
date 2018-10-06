@@ -1,11 +1,12 @@
 <template>
-  <div class="profile-container">
-    <!--<splash-screen v-if="!auth.authenticated"></splash-screen>-->
-    <div class="profile" data-aos="fade-in">
-      <div v-if="auth.authenticated" class="profile-action">
-        <space :permanent-images="permanentImages"></space>
-        <steps :permanent-images="permanentImages"></steps>
-      </div>
+  <div class="container profile">
+    <level-congrats key="level-congrats"></level-congrats>
+    <div class="row" style="height: 80%;">
+      <space :permanent-images="permanentImages"></space>
+      <steps :permanent-images="permanentImages"></steps>
+    </div>
+    <div class="col-8 controls" style="height: 20%;">
+      <social-sharing :message="'Checkout Mathbot.com!'" :size="'1vmin'"></social-sharing>
       <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
     </div>
   </div>
@@ -16,11 +17,14 @@ import SplashScreen from './Splash_screen'
 import UserProfileControls from './User_profile_controls'
 import Steps from './Steps'
 import Space from './Space'
+import SocialSharing from './Social_sharing'
+import LevelCongrats from './Level_congrats'
 
 export default {
   mounted () {
-    this.$store.dispatch('updateStepData', {})
-    this.$store.dispatch('updateRobot', {})
+    this.handleCongrats()
+    // this.$store.dispatch('updateStepData', {})
+    // this.$store.dispatch('updateRobot', {})
   },
   computed: {
     auth () {
@@ -50,42 +54,40 @@ export default {
       return this.$store.getters.getStep
     }
   },
+  methods: {
+    handleCongrats () {
+      if (this.$route.query.showCongrats === 'true') {
+        this.$root.$emit('bv::show::modal', 'level-congrats-modal')
+        this.$router.push({query: {}})
+      }
+    }
+  },
   components: {
     SplashScreen,
     UserProfileControls,
     Steps,
-    Space
+    Space,
+    SocialSharing,
+    LevelCongrats
   }
 }
 </script>
 
-<style scoped lang="scss">
-  .profile-container {
-    background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522347137/misc/profileSpace.png");
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-  }
-
-  .profile-main {
-    height: 100%;
-  }
-
+<style lang="scss">
   .profile {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
     height: 100%;
-    overflow: hidden;
-    max-width: 1200px;
-    margin: 0 auto;
+    position: relative;
+    .controls {
+      padding: 0;
+      display: flex;
+      .social-sharing {
+        .social-links {
+          display: flex;
+          justify-content: space-evenly;
+          flex-direction: column;
+          height: 100%;
+        }
+      }
+    }
   }
-
-  .profile-action {
-    display: flex;
-    flex-grow: 2;
-    justify-content: space-between;
-    align-items: center;
-  }
-
 </style>

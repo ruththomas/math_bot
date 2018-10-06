@@ -1,118 +1,136 @@
 <template>
-  <div v-if="robotCarrying" class="robot-carrying" :style="robotCarrying.length ? {'background-color': 'rgba(0, 0, 0, 0.5)'} : ''">
-    <!--<p v-if="totalValueCarried">sum: {{totalValueCarried}}</p>-->
-    <img
-        class="animated zoomIn"
-        v-for="(image, ind) in robotCarrying"
-        :key="'robot-carrying' + ind"
-        :src="toolImages[image]"
+  <div>
+    <div id="robot-carrying-id" class="robot-carrying" :class="!organizeCarrying.length ? 'hide-carrying' : ''" @click="openPopover('robot-carrying-id')">
+      <span
+        v-for="(tool, ind) in organizeCarrying"
+        :key="'carrying-' + ind"
       >
+        <b-img class="tool-display-image" :src="toolImages[tool[0]]" /> <span>x</span> <span>{{tool[1]}}</span>
+      </span>
+    </div>
+    <b-popover
+      v-if="robotCarrying.length"
+      target="robot-carrying-id"
+      triggers="click"
+      placement="left"
+    >
+      <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover('robot-carrying-id')" />
+      <b-img
+        v-for="(imageName, iInd) in displayCarrying"
+        :key="'carrying-popover-image/' + iInd"
+        class="tool-display-image"
+        :src="toolImages[imageName]"
+      ></b-img>
+      <span class="tool-display-text" @click="adjustShowAmount"><strong>. . .</strong></span>
+    </b-popover>
   </div>
 </template>
 
 <script>
 import uid from 'uid'
-import assets from '../assets/assets'
+import _ from 'underscore'
+import utils from '../services/utils'
 
 export default {
   computed: {
-    totalValueCarried () {
-      return this.robotCarrying.reduce((acc, tool) => {
-        switch (tool) {
-          case 'kitty':
-            acc += 1
-            break
-          case 'ten':
-            acc += 10
-            break
-          case 'oneHundred':
-            acc += 100
-            break
-          case 'oneThousand':
-            acc += 1000
-            break
-          case 'tenHundred':
-            acc += 10000
-            break
-          default:
-            acc += 0
-        }
-        return acc
-      }, 0)
+    organizeCarrying () {
+      return _.chain(this.robotCarrying)
+        .reduce((organized, tool) => {
+          organized[tool] = organized[tool] + 1 || 1
+          return organized
+        }, {})
+        .pairs()
+        .sortBy((tup) => {
+          const values = {kitty: 1, ten: 10, oneHundred: 100, oneThousand: 1000, tenThousand: 10000}
+          return values[tup[0]]
+        })
+        .value()
     },
     toolImages () {
-      return assets.tools
+      return this.permanentImages.tools
+    },
+    displayAmt () {
+      return this.amountToShow
+    },
+    displayCarrying () {
+      return this.robotCarrying.slice(0, this.displayAmt)
     },
     robotCarrying () {
       return this.$store.getters.getRobotCarrying
     },
-    game () {
-      return this.$store.getters.getGame
-    },
-    level () {
-      return this.$store.getters.getLevel
-    },
-    equation () {
-      return this.$store.getters.getCurrentEquation
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
+    }
+  },
+  data () {
+    return {
+      amountToShow: 48
     }
   },
   methods: {
     uID () {
       return uid(7)
-    }
+    },
+    adjustShowAmount () {
+      this.amountToShow = this.amountToShow === 1000 ? 48 : 1000
+    },
+    closePopover: utils.closePopover,
+    openPopover: utils.openPopover
   }
 }
 </script>
 
 <style scoped lang="scss">
+  $carrying-size: 2vmin;
+  $click-color: #B8E986;
+  $popover-btn-size: 2vmin;
+
   .robot-carrying {
-    min-height: 20px;
-    min-width: 20px;
-    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    margin: 0 auto;
     flex-wrap: wrap;
-  }
+    z-index: 10000;
+    font-size: $carrying-size;
+    background: rgba(0, 0, 0, 0.6);
+    border-left: none;
+    cursor: pointer;
+    color: #ffffff;
 
-  .robot-carrying img {
-    height: 20px;
-    width: 20px;
-  }
-
-  .robot-carrying p {
-    height: 20px;
-    font-size: 20px;
-  }
-
-  /* Large Phones, landscape*/
-  @media only screen and (max-width : 992px) {
-
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-    .robot-carrying {
-      min-height: 20px;
-    }
-
-    .robot-carrying img {
-      height: 10px;
-      width: 10px;
-    }
-
-    .robot-carrying p {
-      height: 10px;
-      font-size: 10px;
+    span {
+      display: flex;
+      align-items: center;
+      margin: 0 0.3em 0 0.3em;
     }
   }
 
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
+  .hide-carrying {
+    opacity: 0;
   }
 
-  /* Custom, iPhone 5 Retina */
-  @media only screen and (max-width : 320px) {
-
+  .tool-display-image {
+    height: $carrying-size;
+    width: $carrying-size;
   }
 
+  .tool-display-text {
+    color: #ffffff;
+    cursor: pointer;
+    display: block;
+  }
+
+  .close-popover {
+    float: right;
+    display: flex;
+    position: absolute;
+    height: $popover-btn-size;
+    width: auto;
+    bottom: calc(100% - #{$popover-btn-size} / 2);
+    right:  calc(#{-$popover-btn-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
+  }
 </style>

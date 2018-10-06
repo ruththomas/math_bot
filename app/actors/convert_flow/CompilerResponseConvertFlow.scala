@@ -6,7 +6,7 @@ import akka.stream.scaladsl.Flow
 import compiler.Point
 import compiler.processor.AnimationType
 import controllers.MathBotCompiler._
-import model.models.Problem
+import models.Problem
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsString, JsValue, Writes, _}
 
@@ -48,7 +48,7 @@ object CompilerResponseConvertFlow extends SocketResponseConvertFlow {
     val cr = msg match {
       case CompilerOutput(frames, problem) => CompilerResponse(frames, Some(problem))
       case _: CompilerHalted => CompilerResponse(halted = Some(true))
-      case ActorFailed(msg) => CompilerResponse(error = Some(msg))
+      case ActorFailed(m) => CompilerResponse(error = Some(m))
       case _ => CompilerResponse(error = Some("Unknown response from compiler"))
     }
     Json.toJson[CompilerResponse](cr)

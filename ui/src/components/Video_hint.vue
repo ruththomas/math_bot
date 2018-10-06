@@ -1,140 +1,125 @@
 <template>
-  <div class="video-hint">
-    <img class="close-video-edit dialog-button" @click="closeHint" :src="permanentImages.buttons.xButton">
-    <iframe class="embedded" :src="hintShowing.videoURL" scrolling="no" frameborder="0"></iframe>
-  </div>
+  <b-modal
+    id="video-modal"
+    size="lg"
+    ref="video-modal"
+    :hide-header="true"
+    :hide-footer="true"
+    :lazy="true"
+    @shown="videoHint.startVideo()"
+  >
+    <img
+      class="dialog-button close-congrats"
+      @click="videoHint.hideVideo()"
+      :src="permanentImages.buttons.xButton"
+      data-toggle="tooltip"
+      title="Close"
+    >
+    <youtube
+      class="player"
+      :video-id="videoHint.currentVideo"
+      :player-vars="{ autoplay: 1 }"
+      :player-height="'100%'"
+      :player-width="'100%'"
+      @ended="videoHint.hideVideo()"
+    ></youtube>
+    <social-sharing :message="`Checkout Mathbot.com!`"></social-sharing>
+  </b-modal>
 </template>
 
 <script>
+import SplashScreen from './Splash_screen'
+import SocialSharing from './Social_sharing'
+
 export default {
   name: 'Video_hint',
+  mounted () {
+  },
   computed: {
     hintShowing () {
       return this.$store.getters.getHintShowing
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    videoHint () {
+      return this.$store.getters.getVideoHint
     }
   },
-  methods: {
-    closeHint () {
-      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
+  data () {
+    return {
+      show: true
     }
+  },
+  components: {
+    SplashScreen,
+    SocialSharing
   }
 }
 </script>
 
-<style scoped lang="scss">
-$video-hint-height: 500px;
-$video-hint-width: 1000px;
-$video-hint-shadow: inset 0 0 200px #000;
-$video-hint-close-top: -20px;
-$video-hint-close-right: -20px;
-.video-hint {
-  height: $video-hint-height;
-  width: $video-hint-width;
-  margin: 0 auto;
-  border-radius: 5px;
-  box-shadow: $video-hint-shadow;
-  position: relative;
+<style lang="scss">
+$video-hint-close-top: 0;
+$video-hint-close-left: 100%;
+$dialog-button-size: 3.5vmin;
+$click-color: #B8E986;
+$embedded-background: #1b1e21;
+$dialog-button-size: 2rem;
+$background-color: rgba(0, 0, 0, 1);
+$grid-space-size: 9vmin;
+$share-btn-size: 2.5rem;
 
-  .embedded {
-    height: 100%;
-    width: 100%;
+#video-modal {
+  .modal-dialog .modal-content {
+    background-color: pink;
+    left: 0;
+    position: relative;
+    .modal-header, .modal-body, .modal-footer {
+      background-color: $background-color;
+      border: none;
+    }
+    .close-congrats {
+      position: absolute;
+      height: $dialog-button-size;
+      width: $dialog-button-size;
+      top: 0;
+      right: 0;
+    }
+    .modal-body {
+      height: 30rem;
+      max-height: 100vh;
+      padding: 0;
+      .player {
+        height: calc(100% - #{$share-btn-size});
+        width: 100%;
+        z-index: 1;
+      }
+
+      .hint-spinner {
+        position: absolute;
+        *:first-child {
+          background: $embedded-background!important;
+        }
+      }
+    }
+    .social-spot {
+      display: flex;
+      justify-content: center;
+      div {
+        .social-sharing {
+          .social-links {
+            .share-button {
+              height: $share-btn-size;
+              width: $share-btn-size;
+
+              i {
+                font-size: calc(#{$share-btn-size} - 1rem);
+              }
+            }
+          }
+        }
+      }
+    }
   }
-}
-
-.close-video-edit {
-  position: absolute;
-  top: $video-hint-close-top;
-  right: $video-hint-close-right;
-}
-
-@media only screen and (max-width : 1280px) and (max-height: 900px) {
-}
-
-@media only screen and (max-width: 1280px) {
-  $video-hint-height: 350px;
-  $video-hint-width: 100%;
-  $video-hint-max-width: 700px;
-
-  .video-hint {
-    height: $video-hint-height;
-    width: $video-hint-width;
-    max-width: $video-hint-max-width;
-  }
-
-  .close-video-edit {
-  }
-}
-
-@media only screen and (max-width : 992px) {
-  $video-hint-height: 175px;
-  $video-hint-width: 100%;
-  $video-hint-max-width: 350px;
-  $video-hint-close-top: -10px;
-  $video-hint-close-right: -10px;
-
-  .video-hint {
-    height: $video-hint-height;
-    width: $video-hint-width;
-    max-width: $video-hint-max-width;
-  }
-
-  .close-video-edit {
-    top: $video-hint-close-top;
-    right: $video-hint-close-right;
-    z-index: 1000;
-  }
-}
-
-/* Small Devices */
-@media only screen and (max-width : 736px) {
-}
-
-/* Small Devices */
-@media only screen and (max-width : 667px) {
-  $video-hint-height: 150px;
-  $video-hint-width: 100%;
-  $video-hint-max-width: 300px;
-  $video-hint-close-top: -10px;
-  $video-hint-close-right: -10px;
-
-  .video-hint {
-    height: $video-hint-height;
-    width: $video-hint-width;
-    max-width: $video-hint-max-width;
-  }
-
-  .close-video-edit {
-    top: $video-hint-close-top;
-    right: $video-hint-close-right;
-  }
-}
-
-@media only screen and (max-width: 568px) {
-}
-
-/* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px) {
-}
-
-/* iPad */
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
-  $video-hint-height: 350px;
-  $video-hint-width: 100%;
-  $video-hint-max-width: 700px;
-
-  .video-hint {
-    height: $video-hint-height;
-    width: $video-hint-width;
-    max-width: $video-hint-max-width;
-  }
-
-  .close-video-edit {
-  }
-}
-
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
 }
 </style>

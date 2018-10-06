@@ -1,6 +1,6 @@
 package compiler
 
 import compiler.operations.Operation
-import model.models.Problem
+import models.Problem
 
 case class GridAndProgram(grid: Grid, program: Operation, problem: Problem)

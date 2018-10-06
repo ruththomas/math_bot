@@ -1,21 +1,59 @@
 package modules
-import com.google.inject.{AbstractModule, Inject, Provides}
-import org.mongodb.scala.{MongoClient, MongoDatabase}
+import actors.{ ActorTags, GithubOAuth, GoogleOAuth }
+import akka.actor.ActorSystem
+import com.google.inject.{ AbstractModule, Provides }
+import configuration._
+import loggers.{ AkkaSemanticLog, SemanticLog }
+import models.JwtToken
+import org.bson.codecs.Codec
+import org.bson.codecs.configuration.CodecProvider
+import org.mongodb.scala.bson.codecs.Macros
+import org.mongodb.scala.{ MongoClient, MongoDatabase }
 import play.api.libs.concurrent.AkkaGuiceSupport
-
-import com.typesafe.config.ConfigFactory
-import play.api.Configuration
+import utils.SecureIdentifier
+import utils.SecureIdentifier.SecureIdentifierCodec
 
 class Module extends AbstractModule with AkkaGuiceSupport {
-  override def configure(): Unit = {}
-  val config: Configuration = new Configuration(ConfigFactory.load())
+  override def configure() = {
+    bindActor[GoogleOAuth](ActorTags.googleOAuth)
+    bindActor[GithubOAuth](ActorTags.githubOAuth)
+
+  }
 
   @Provides
-  def provideMongoDatabase(): MongoDatabase = {
-    val DB_NAME = config.underlying.getString("mongodb.name")
-    val MONGO_URL = config.underlying.getString("mongodb.url")
+  def provideMongoDatabase(configFactory: ConfigFactory): MongoDatabase = {
+    val name = configFactory.mongoConfig.name
+    val url = configFactory.mongoConfig.url
     // To directly connect to the default server localhost on port 27017
-    val mongoClient: MongoClient = MongoClient(MONGO_URL)
-    mongoClient.getDatabase(DB_NAME)
+    val mongoClient: MongoClient = MongoClient(url)
+    mongoClient.getDatabase(name)
   }
+
+  @Provides
+  def provideGoogleApiConfig(configFactory: ConfigFactory) : GoogleApiConfig = {
+    configFactory.googleApiConfig()
+  }
+
+  @Provides
+  def provideGithubApiConfig(configFactory: ConfigFactory) : GithubApiConfig = {
+    configFactory.githubApiConfig()
+  }
+
+  @Provides
+  def provideActorConfig(configFactory: ConfigFactory) : ActorConfig = {
+    configFactory.actorConfig()
+  }
+
+  @Provides
+  def provideSemanticLog(system : ActorSystem) : SemanticLog = new AkkaSemanticLog[String](system, "global")
+
+  @Provides
+  def mongoCodecs(secureIdentifierCodec: SecureIdentifierCodec) : Seq[Codec[_]] = Seq(secureIdentifierCodec)
+
+  @Provides
+  def mongoCodecProviders : Seq[CodecProvider] = Seq(Macros.createCodecProvider[JwtToken])
+
+  @Provides
+  def provideLocalAuthConfig(configFactory: ConfigFactory) : LocalAuthConfig =
+    configFactory.localAuthConfig
 }

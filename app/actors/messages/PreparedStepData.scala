@@ -1,8 +1,7 @@
 package actors.messages
 
-import actors.LevelGenerationActor.createdIdGen
 import actors.messages.PreparedStepData.InitialRobotState
-import model.models.{ToolList, _}
+import models.{ToolList, _}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import types.{LevelName, StepName, TokenId}
@@ -24,11 +23,13 @@ case class PreparedStepData(
     prevStep: String,
     nextStep: String,
     initFocus: List[String],
+    freeHint: Option[String],
     stepControl: StepControl
 )
 
 object PreparedStepData {
-  import model.models.Problem._
+  import models.Problem._
+  import actors.VideoHintActor.embedURL
 
   def apply(playerToken: PlayerToken, rawStepData: RawStepData): PreparedStepData = {
     new PreparedStepData(
@@ -48,13 +49,19 @@ object PreparedStepData {
       prevStep = rawStepData.prevStep,
       nextStep = rawStepData.nextStep,
       initFocus = createInitFocus(rawStepData.initFocus),
+      freeHint = freeHintUrl(rawStepData.freeHint),
       stepControl = new StepControl(rawStepData, playerToken.lambdas.getOrElse(Lambdas()))
     )
   }
 
   case class InitialRobotState(location: Map[String, Int], orientation: String, holding: List[String])
 
-  import model.DefaultCommands._
+  import daos.DefaultCommands._
+
+  def freeHintUrl(idOpt: Option[String]): Option[String] = idOpt match {
+    case Some(id) => Some(embedURL(id))
+    case None => None
+  }
 
   def findRobotCoords(grid: List[String], coords: Map[String, Int] = Map("x" -> 0, "y" -> 0)): Map[String, Int] =
     grid match {
@@ -72,8 +79,8 @@ object PreparedStepData {
       case Some(token) => token.created_id
       case None =>
         a match {
-          case a if a == "open-staged" => "open-staged"
-          case a => createdIdGen(a)
+          case id if id == "open-staged" => "open-staged"
+          case id => id
         }
     }
   }
@@ -143,6 +150,7 @@ object PreparedStepData {
     (JsPath \ "prevStep").write[String] and
     (JsPath \ "nextStep").write[String] and
     (JsPath \ "initFocus").write[List[String]] and
+    (JsPath \ "freeHint").writeNullable[String] and
     OWrites[StepControl](_ => Json.obj())
   )(unlift(PreparedStepData.unapply))
 

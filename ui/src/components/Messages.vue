@@ -1,8 +1,22 @@
 <template>
   <div class="message-container">
-    <div v-for="(message, ind) in messageList" class="message" :class="message.type" :id="'message-' + ind" :key="message.id" @click="removeMessage(ind)">
-      {{ message.msg }}
-    </div>
+    <transition-group
+      name="message-list"
+      v-bind:css="false"
+      v-on:before-enter="beforeEnter"
+      v-on:enter="enter"
+      v-on:leave="leave"
+    >
+      <div v-for="(message, ind) in messageList"
+           class="message"
+           :class="message.type"
+           :id="'message-' + ind"
+           :key="message.id"
+           @click="removeMessage(ind)"
+      >
+        {{ message.msg }}
+      </div>
+    </transition-group>
   </div>
 </template>
 
@@ -16,114 +30,109 @@ export default {
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
     }
   },
   methods: {
     removeMessage (message) {
+      if (this.runCompiled.robot.state === 'failure') {
+        this.runCompiled.reset()
+      }
       this.$store.dispatch('removeMessage', message)
+    },
+    beforeEnter (el) {
+      el.style.opacity = 0
+      el.style.height = 0
+    },
+    enter (el, done) {
+      const delay = el.dataset.index * 150
+      setTimeout(function () {
+        $(el).animate(
+          { opacity: 1, height: '1.6em' },
+          done
+        )
+      }, delay)
+    },
+    leave (el, done) {
+      const delay = el.dataset.index * 150
+      setTimeout(function () {
+        $(el).animate(
+          { opacity: 0, height: 0 },
+          done
+        )
+      }, delay)
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+  .message-list-move {
+    transition: transform 1s;
+  }
+
   .message-container {
     position: fixed;
-    right: 5px;
-    top: 10px;
-    min-height: 42px;
-    width: 181px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30vmin;
     z-index: 1001;
     display: flex;
     flex-direction: column;
+    color: #ffffff;
   }
 
   .message {
     display: flex;
     width: 99%;
     margin-top: 8px;
-    min-height: 50px;
     border-radius: 2px;
     justify-content: center;
     align-items: center;
-    font-size: 14px;
-    line-height: 16px;
+    font-size: 2vmin;
+    line-height: 2.5vmin;
     cursor: pointer;
-    padding: 20px;
+  }
+
+  .message:first-child {
+    margin-top: 0;
   }
 
   .info {
     border: 1px solid rgb(0, 0, 255);
-    background-color: rgba(0, 0, 255, 0.2);
+    background-color: rgba(0, 0, 255, 0.3);
   }
 
   .success {
-    background-color: rgba(184,233,134,0.2);
+    background-color: rgba(184,233,134,0.3);
     border: 1px solid rgb(184, 233, 134);
   }
 
   .warn {
     border: 1px solid rgb(255, 0, 0);
-    background-color: rgba(255, 0, 0, 0.2);
+    background-color: rgba(255, 0, 0, 0.3);
   }
 
   .message:nth-child(n+2) {
-    opacity: 0.5;
+    opacity: 0.8!important;
   }
 
-  .close-message {
-    width: 20px;
-    height: 20px;
-    position: relative;
-    border-radius: 2px;
-    float: left;
+  .message:nth-child(n+3) {
+    opacity: 0.6!important;
   }
 
-  .close-message::after, .close-message::before{
-    position: absolute;
-    top: 9px;
-    left: 0px;
-    content: '';
-    display: block;
-    width: 20px;
-    height: 2px;
-    background-color: #FFFFFF;
+  .message:nth-child(n+4) {
+    opacity: 0.4!important;
   }
 
-  .close-message::after {
-    transform: rotate(45deg);
+  .message:nth-child(n+5) {
+    opacity: 0.2!important;
   }
 
-  .close-message::before {
-    transform: rotate(-45deg);
+  .message:nth-child(n+6) {
+    display: none;
   }
-
-  /* Large Phones, landscape*/
-  @media only screen and (max-width : 992px) {
-    .message-container {
-      width: 200px;
-      right: 10px;
-    }
-
-    .message {
-      height: 20px;
-      font-size: 10px;
-    }
-  }
-
-  /* Small Devices */
-  @media only screen and (max-width : 667px) {
-
-  }
-
-  /* Extra Small Devices, Phones */
-  @media only screen and (max-width : 480px) {
-
-  }
-
-  /* Custom, iPhone 5 Retina */
-  @media only screen and (max-width : 320px) {
-
-  }
-
 </style>

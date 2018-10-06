@@ -17,18 +17,23 @@ class RunCompiled extends GridAnimator {
       this.stepData = this.$store.getters.getStepData
       this.toolList = this.stepData.toolList
       this.programCreate = true
+      this.videoHint = this.$store.getters.getVideoHint
 
       this._askCompiler = this._askCompiler.bind(this)
       this._processFrames = this._processFrames.bind(this)
       this._initializeStep = this._initializeStep.bind(this)
-      this._showBridgeScreen = this._showBridgeScreen.bind(this)
       this.start = this.start.bind(this)
       this.pause = this.pause.bind(this)
       this.stop = this.stop.bind(this)
+      this.reset = this.reset.bind(this)
       this._resetStep = this._resetStep.bind(this)
       this._waitForFrames = this._waitForFrames.bind(this)
+      this.initializeNextStep = this.initializeNextStep.bind(this)
+      this.resetIfFailure = this.resetIfFailure.bind(this)
     }
   }
+
+  lastFrame = null
 
   _testForEmptyFunctions () {
     const mainFunction = this.$store.getters.getMainFunction.func
@@ -45,6 +50,12 @@ class RunCompiled extends GridAnimator {
       .filter(func => func !== null)
       .filter(func => !func.func.length)
       .value()
+  }
+
+  resetIfFailure () {
+    if (this.robot.state === 'failure') {
+      this.reset()
+    }
   }
 
   start () {
@@ -73,6 +84,59 @@ class RunCompiled extends GridAnimator {
     this.robot.setState('stopped')
   }
 
+  reset () {
+    this.robot.state = 'home'
+    this._stopRobot()
+  }
+
+  initializeNextStep (stepData) {
+    if (stepData === undefined) {
+      stepData = this.lastFrame.stepData
+      this._updateStats(this.lastFrame.stats)
+      this.$router.push({path: '/robot'})
+    }
+    this._initializeStep(stepData)
+    this._hideCongrats()
+    this.lastFrame = null
+  }
+
+  quit () {
+    this.initializeNextStep()
+    this.$router.push({path: '/profile'})
+  }
+
+  stayOnLevel () {
+    this._stopRobot()
+    this._hideCongrats()
+  }
+
+  _hideCongrats () {
+    this._hideLevelCongrats()
+    this._hideStepCongrats()
+  }
+
+  _showStepCongrats = () => this.context.$root.$emit('bv::show::modal', 'step-congrats-modal')
+
+  _hideStepCongrats = () => this.context.$root.$emit('bv::hide::modal', 'step-congrats-modal')
+
+  _showLevelCongrats = () => this.context.$root.$emit('bv::show::modal', 'level-congrats-modal')
+
+  _hideLevelCongrats = () => this.context.$root.$emit('bv::hide::modal', 'level-congrats-modal')
+
+  _showFreeHint (url) {
+    this.videoHint.showVideo(url)
+  }
+
+  _initializeStep (stepData) {
+    if (stepData.freeHint) this._showFreeHint(stepData.freeHint)
+    this.$store.dispatch('updateStepData', stepData)
+    this.$store.dispatch('updateLambdas', stepData.lambdas)
+    stepData.initialRobotState.context = this.context
+    const robot = new Robot(Object.assign(stepData.initialRobotState, {robotSpeed: this.robot.robotSpeed}))
+    this.$store.dispatch('updateRobot', robot)
+    this.constructor(this.context)
+  }
+
   _stopMessage () {
     const messageBuilder = {
       type: 'warn',
@@ -89,6 +153,34 @@ class RunCompiled extends GridAnimator {
     }
 
     this._addMessage(messageBuilder)
+  }
+
+  _closeMessageRobotHome () {
+    return () => {
+      return this.robot.state === 'home'
+    }
+  }
+
+  _failedMessage () {
+    const dis = this
+    const failedMessage = {
+      type: 'success',
+      msg: 'Not quite, a hint might help',
+      handlers () {
+        const $helpButton = $('.help-button')
+
+        return {
+          runBeforeAppend () {
+            $helpButton.addClass('background-alert')
+          },
+          runOnDelete () {
+            $helpButton.removeClass('background-alert')
+          },
+          closeControl: dis._closeMessageRobotHome()
+        }
+      }
+    }
+    this._addMessage(failedMessage)
   }
 
   _mainEmptyMessage (emptyFuncs) {
@@ -118,61 +210,44 @@ class RunCompiled extends GridAnimator {
     this.$store.dispatch('addMessage', messageBuilder)
   }
 
-  _initializeStep (stepData) {
-    this.$store.dispatch('updateStepData', stepData)
-    this.$store.dispatch('updateLambdas', stepData.lambdas)
-    stepData.initialRobotState.context = this.context
-    this.$store.dispatch('updateRobot', new Robot(stepData.initialRobotState))
-    this.constructor(this.context)
-  }
-
   _updateStats (stats) {
     this.$store.dispatch('updateStats', stats)
   }
 
-  _initializeOnLastFrame (frame) {
-    this._updateStats(frame.stats)
-    this._initializeStep(frame.stepData)
-  }
-
-  _resetStep (res) {
+  _resetStep () {
     api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
       this._initializeStep(stepData)
     })
   }
 
   _stopRobot () {
-    api.compilerWebSocket.haltProgram(this._resetStep)
+    api.compilerWebSocket.haltProgram(() => {})
+    this._resetStep()
   }
 
   _toggleBridge = (which, bool) => this.$store.dispatch(`toggle${which}`, bool)
-
-  _showBridgeScreen (frame) {
-    return new Promise(resolve => {
-      if (frame.programState === 'failure') this._toggleBridge('TryAgain', true)
-      else this._toggleBridge('Congrats', true)
-      setTimeout(() => {
-        this._toggleBridge('Congrats', false)
-        this._toggleBridge('TryAgain', false)
-        resolve()
-      }, 3000)
-    })
-  }
 
   _success (frame) {
     return this.initializeAnimation(this.$store, frame, async () => {
       // console.log('[last frame grid]', JSON.parse(JSON.stringify(frame.robotState.grid)))
       // console.log('[grid]', JSON.parse(JSON.stringify(this.grid)))
-      await this._showBridgeScreen(frame)
-      this._initializeOnLastFrame(frame)
+      const isLastStep = this.stats.levels[this.stats.level][this.stats.step].nextStep === 'None'
+      if (isLastStep) {
+        this.$router.push({path: '/profile', query: {showCongrats: 'true'}})
+        // this._showLevelCongrats()
+      } else {
+        this._showStepCongrats()
+      }
+      this.lastFrame = frame
     })
   }
 
   _failure (frame) {
     // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(this.$store, frame, async () => {
-      await this._showBridgeScreen(frame)
-      this._initializeOnLastFrame(frame)
+      this._updateStats(frame.stats)
+      this.robot.setState('failure')
+      this._failedMessage()
     })
   }
 
@@ -208,9 +283,9 @@ class RunCompiled extends GridAnimator {
   }
 
   _controlAsk () {
-    if (this.robotFrames.length && this.robotFrames.length < 8) {
+    if (this.robotFrames.length > 0 && this.robotFrames.length < 20) {
       const last = this.robotFrames[this.robotFrames.length - 1]
-      if (this.robotFrames.length < 8 && last.programState === 'running') {
+      if (this.robotFrames.length < 20 && last.programState === 'running') {
         this._askCompiler()
       }
     }

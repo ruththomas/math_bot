@@ -6,7 +6,6 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -50,7 +49,7 @@ module.exports = {
   },
 
   build: {
-    version: '0.02-alpha',
+    version: '0.03-beta-6815053638',
     // Template for index.html
     index: path.resolve(__dirname, '../../public/index.html'),
 

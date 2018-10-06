@@ -6,8 +6,8 @@ import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.pipe
 import com.google.inject.Inject
 import loggers.MathBotLogger
-import model.PlayerTokenDAO
-import model.models.{Stats, StepToken}
+import daos.PlayerTokenDAO
+import models.{Stats, StepToken}
 import types.{LevelName, StepName, TokenId}
 
 object StatsActor {
