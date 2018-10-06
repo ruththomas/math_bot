@@ -90,4 +90,26 @@ class AdminController @Inject()(
         )
     }
   }
+
+  def approved(): Action[AnyContent] = Action.async { implicit request =>
+    request.getQueryString("authenticationId").map(SecureIdentifier(_)) match {
+      case Some(authenticationId) =>
+        localCredentialDAO.approveAdmin(authenticationId.toString).map {
+          case Some(_) => Ok("Approved") // todo - send email to new admin
+          case None => BadRequest("Authentication id is not registered")
+        }
+      case _ => FastFuture.successful(BadRequest("Invalid query parameters"))
+    }
+  }
+
+  def rejected(): Action[AnyContent] = Action.async { implicit request =>
+    request.getQueryString("authenticationId").map(SecureIdentifier(_)) match {
+      case Some(authenticationId) =>
+        localCredentialDAO.rejectAdmin(authenticationId.toString).map {
+          case Some(_) => Ok("Rejected") // don't send email to requester in case someone is fishing
+          case None => BadRequest("Authentication id is not registered")
+        }
+      case _ => FastFuture.successful(BadRequest("Invalid query parameters"))
+    }
+  }
 }
