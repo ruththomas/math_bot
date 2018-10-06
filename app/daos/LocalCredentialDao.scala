@@ -32,6 +32,7 @@ class LocalCredentialDao @Inject()(
       aCodecs
     ) {
 
+  final val accountIdField = s"${valueField.name}.accountId"
   final val usernameField = s"${valueField.name}.username"
   final val adminAuthId = s"${valueField.name}.adminAuthId"
   final val adminField = s"${valueField.name}.admin"
@@ -56,6 +57,20 @@ class LocalCredentialDao @Inject()(
         .findOneAndUpdate(equal(adminAuthId, authenticationId), combine(set(adminField, false), set(adminAuthId, null)))
         .toFutureOption()
     } yield result.map(_.value)
+
+  def revokeAdmin(email: String): Future[Option[LocalCredential]] =
+    for {
+      result <- collection
+        .findOneAndUpdate(equal(usernameField, email), set(adminField, false))
+        .toFutureOption()
+    } yield result.map(_.value)
+
+  def findByAccountId(accountId: String): Future[Option[LocalCredential]] =
+    for {
+      result <- collection
+        .find(equal(accountIdField, accountId.substring(accountId.indexOf("|") + 1)))
+        .toFuture
+    } yield result.map(_.value).headOption
 
   def find(username: String): Future[Option[LocalCredential]] =
     for {

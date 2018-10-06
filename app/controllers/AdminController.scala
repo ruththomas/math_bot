@@ -39,14 +39,29 @@ class AdminController @Inject()(
 
   private type WSMessage = JsValue
 
-  def adminSocket: WebSocket = WebSocket.accept[WSMessage, WSMessage] { _ =>
-    AdminRequestConvertFlow()
-      .via(
-        ActorFlow.actorRef { out =>
-          AdminActor.props(out, playerTokenDAO, ws, environment)
+  def adminSocket: WebSocket = WebSocket.acceptOrResult[WSMessage, WSMessage] { request =>
+    request.getQueryString("tokenId") match {
+      case Some(tokenId) =>
+        localCredentialDAO.findByAccountId(tokenId).map {
+          case Some(localCredential) =>
+            if (localCredential.admin.getOrElse(false)) {
+              Right(
+                AdminRequestConvertFlow()
+                  .via(
+                    ActorFlow.actorRef { out =>
+                      AdminActor.props(out, playerTokenDAO, ws, environment)
+                    }
+                  )
+                  .via(AdminResponseConvertFlow())
+              )
+            } else {
+              Left(Unauthorized("Not an admin user."))
+            }
+
+          case None => Left(Unauthorized("No session found."))
         }
-      )
-      .via(AdminResponseConvertFlow())
+      case None => FastFuture.successful(Left(BadRequest("Missing account-id header field.")))
+    }
   }
 
   def authenticate(): Action[AnyContent] = Action.async { implicit request =>
@@ -119,6 +134,18 @@ class AdminController @Inject()(
           case None => BadRequest("Authentication id is no longer valid")
         }
       case _ => FastFuture.successful(BadRequest("Invalid query parameters"))
+    }
+  }
+
+  def revoke(): Action[AnyContent] = Action.async { implicit request =>
+    request.getQueryString("username") match {
+      case Some(username) =>
+        localCredentialDAO.revokeAdmin(username).map {
+          case Some(_) =>
+            Ok("Users admin privileges have been revoked")
+          case None => BadRequest("No one with that username has admin access")
+        }
+      case None => FastFuture.successful(BadRequest("Query string missing username field"))
     }
   }
 }
