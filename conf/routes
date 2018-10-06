@@ -30,6 +30,13 @@ GET         /ws/videohint                                                       
 # Get game stats
 GET         /api/gameStats/getTokenCount                                           controllers.GameStatsController.getCount
 
+# Admin
+GET         /ws/admin                                                              controllers.AdminController.adminSocket
+POST        /api/admin/auth                                                        controllers.AdminController.authenticate
+GET         /api/admin/approved                                                    controllers.AdminController.approved
+GET         /api/admin/rejected                                                    controllers.AdminController.rejected
+GET         /api/admin/revoke                                                      controllers.AdminController.revoke
+
 # Auth !! Not being used yet !!
 GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
 POST        /api/auth/resumeSession                                                controllers.AuthController.resumeSession

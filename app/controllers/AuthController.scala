@@ -20,9 +20,30 @@ import org.bouncycastle.crypto.generators.SCrypt
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{Action, AnyContent, Controller, RequestHeader}
 import utils.{JwtTokenParser, SecureIdentifier}
+import play.api.mvc.Cookie
+import play.api.mvc.DiscardingCookie
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
+
+object AuthController {
+  //noinspection FoldTrueAnd
+  def compareWithConstantTime(a: Array[Byte], b: Array[Byte]): Boolean = {
+    // Do not EVER simplify this code to a forall because security requires all bytes
+    // to be compared to avoid timing attacks.  Intellij will desperately try to simplify
+    // the code but avoid writing anything that can exit early if a byte doesn't match. The
+    // XOR in the middle is just a way to keep the JVM from optimizing the code, which if
+    // it was a boolean compare it just might do something clever.
+    a.zip(b).map(p => p._1 ^ p._2).sum[Int] == 0
+  }
+
+  def hashCredential(credential: UsernameAndPassword,
+                     salt: SecureIdentifier,
+                     iteration: Int,
+                     blocksize: Int,
+                     hashByteSize: Int): Array[Byte] =
+    SCrypt.generate(credential.password.getBytes, salt.toByteArray, iteration, blocksize, 1, hashByteSize)
+}
 
 class AuthController @Inject()(
     val sessionDAO: SessionDAO,
@@ -44,6 +65,7 @@ class AuthController @Inject()(
     implicit val conf: play.api.Configuration
 )(implicit ec: ExecutionContext)
     extends Controller {
+  import AuthController._
 
   // Allow 10 subsequent requests, the renew token every 5 seconds
   private val ipRateLimitAction = IpRateLimitAction(new RateLimiter(10, 1f / 5, "test limit by IP address")) {
@@ -359,16 +381,6 @@ class AuthController @Inject()(
 
   }
 
-  //noinspection FoldTrueAnd
-  def compareWithConstantTime(a: Array[Byte], b: Array[Byte]): Boolean = {
-    // Do not EVER simplify this code to a forall because security requires all bytes
-    // to be compared to avoid timing attacks.  Intellij will desperately try to simplify
-    // the code but avoid writing anything that can exit early if a byte doesn't match. The
-    // XOR in the middle is just a way to keep the JVM from optimizing the code, which if
-    // it was a boolean compare it just might do something clever.
-    a.zip(b).map(p => p._1 ^ p._2).sum[Int] == 0
-  }
-
   def authMathbot(): Action[AnyContent] = Action.async { implicit request =>
     val credentialOpt = for {
       json <- request.body.asJson
@@ -385,36 +397,36 @@ class AuthController @Inject()(
                   .mapTo[Either[Auth0Authorized, String]]
                   .flatMap {
                     case Left(auth0Authorized) =>
-                      jwtParser.parse(auth0Authorized.id_token) map {
-                        jwt =>
-                          (for {
-                            playerTokenOpt <- playerTokens.getToken(jwt.sub)
-                            credentialOpt <- localCredential.find(jwt.email)
-                          } yield (playerTokenOpt, credentialOpt)) flatMap {
-                            case (_, Some(_)) =>
-                              FastFuture.successful(Unauthorized("User already migrated"))
-                            case (None, _) =>
-                              FastFuture.successful(Unauthorized("Player data missing for credentials"))
-                            case (Some(playerToken), _) =>
-                              val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
-                              val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
-                              for {
-                                migratedJwt <- storeCredential(sessionId,
-                                  accountId,
-                                  SignUpForm(jwt.email, jwt.name, jwt.picture, credential.password)
-                                )
-                                _ <- auth0legacy.markMigrated(jwt.email)
-                                migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
-                                _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
-                                _ <- playerTokens.delete(jwt.sub)
-                              } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
-                          }
+                      jwtParser.parse(auth0Authorized.id_token) map { jwt =>
+                        (for {
+                          playerTokenOpt <- playerTokens.getToken(jwt.sub)
+                          credentialOpt <- localCredential.find(jwt.email)
+                        } yield (playerTokenOpt, credentialOpt)) flatMap {
+                          case (_, Some(_)) =>
+                            FastFuture.successful(Unauthorized("User already migrated"))
+                          case (None, _) =>
+                            FastFuture.successful(Unauthorized("Player data missing for credentials"))
+                          case (Some(playerToken), _) =>
+                            val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
+                            val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
+                            for {
+                              migratedJwt <- storeCredential(
+                                sessionId,
+                                accountId,
+                                SignUpForm(jwt.email, jwt.name, jwt.picture, credential.password)
+                              )
+                              _ <- auth0legacy.markMigrated(jwt.email)
+                              migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
+                              _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
+                              _ <- playerTokens.delete(jwt.sub)
+                            } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+                        }
                       } match {
-                       case Some(future) =>
-                         future
-                       case None =>
-                         FastFuture.successful(Unauthorized("Invalid json web token"))
-                     }
+                        case Some(future) =>
+                          future
+                        case None =>
+                          FastFuture.successful(Unauthorized("Invalid json web token"))
+                      }
                     case Right(errMsg) =>
                       FastFuture.successful(Unauthorized(errMsg))
                   }
@@ -440,7 +452,6 @@ class AuthController @Inject()(
                     sessionCache.put(sessionId, Some(jwt))
 
                     Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
-
                   case false =>
                     Unauthorized("Password did not match")
                 }

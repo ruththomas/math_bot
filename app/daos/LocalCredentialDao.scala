@@ -11,34 +11,68 @@ import org.mongodb.scala.bson.codecs.Macros
 import utils.SecureIdentifier
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Indexes.ascending
+import org.mongodb.scala.model.Updates.{combine, set}
+import org.mongodb.scala.result.UpdateResult
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 class LocalCredentialDao @Inject()(
-                            override val db: MongoDatabase,
-                            aLogger : SemanticLog,
-                            aCodecs: Seq[Codec[_]] = Seq.empty[Codec[_]],
-                            aProviders: Seq[CodecProvider]
-                          )(override implicit val ec : ExecutionContext) extends Storage[SecureIdentifier, LocalCredential](
-  'localCredential,
-  'accountId,
-  valueField = 'credential,
-  _ => new SecureIdentifierCodec,
-  registry => Macros.createCodec[LocalCredential](registry),
-  aProviders,
-  aCodecs
-) {
+    override val db: MongoDatabase,
+    aLogger: SemanticLog,
+    aCodecs: Seq[Codec[_]] = Seq.empty[Codec[_]],
+    aProviders: Seq[CodecProvider]
+)(override implicit val ec: ExecutionContext)
+    extends Storage[SecureIdentifier, LocalCredential](
+      'localCredential,
+      'accountId,
+      valueField = 'credential,
+      _ => new SecureIdentifierCodec,
+      registry => Macros.createCodec[LocalCredential](registry),
+      aProviders,
+      aCodecs
+    ) {
 
+  final val accountIdField = s"${valueField.name}.accountId"
   final val usernameField = s"${valueField.name}.username"
+  final val adminAuthId = s"${valueField.name}.adminAuthId"
+  final val adminField = s"${valueField.name}.admin"
 
-  override protected val logger : SemanticLog = aLogger.withClass[LocalCredentialDao]()
+  override protected val logger: SemanticLog = aLogger.withClass[LocalCredentialDao]()
 
   override def prepare() = {
     super.prepare()
     collection.createIndex(ascending(usernameField))
   }
 
-  def find(username : String) : Future[Option[LocalCredential]] =
+  def approveAdmin(authenticationId: String): Future[Option[LocalCredential]] =
+    for {
+      result <- collection
+        .findOneAndUpdate(equal(adminAuthId, authenticationId), combine(set(adminField, true), set(adminAuthId, null)))
+        .toFutureOption()
+    } yield result.map(_.value)
+
+  def rejectAdmin(authenticationId: String): Future[Option[LocalCredential]] =
+    for {
+      result <- collection
+        .findOneAndUpdate(equal(adminAuthId, authenticationId), combine(set(adminField, false), set(adminAuthId, null)))
+        .toFutureOption()
+    } yield result.map(_.value)
+
+  def revokeAdmin(email: String): Future[Option[LocalCredential]] =
+    for {
+      result <- collection
+        .findOneAndUpdate(equal(usernameField, email), set(adminField, false))
+        .toFutureOption()
+    } yield result.map(_.value)
+
+  def findByAccountId(accountId: String): Future[Option[LocalCredential]] =
+    for {
+      result <- collection
+        .find(equal(accountIdField, accountId.substring(accountId.indexOf("|") + 1)))
+        .toFuture
+    } yield result.map(_.value).headOption
+
+  def find(username: String): Future[Option[LocalCredential]] =
     for {
       result <- collection.find(equal(usernameField, username)).toFuture
     } yield {

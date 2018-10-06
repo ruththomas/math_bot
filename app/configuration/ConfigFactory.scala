@@ -68,6 +68,12 @@ object ConfigFactory {
     object sendgrid {
       val secretKey: String = "mathbot.sendgrid.secretKey"
     }
+    object admin {
+      val authIdByteWidth: String = "mathbot.admin.authIdByteWidth"
+      val approvedUrl: String = "mathbot.admin.approvedUrl"
+      val rejectedUrl: String = "mathbot.admin.rejectedUrl"
+      val custodianEmail: String = "mathbot.admin.custodianEmail"
+    }
   }
 }
 
@@ -112,6 +118,14 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
       clientSecret = exWrap(mathbot.oauth.github.clientSecret, envGet, playConfig.getString(_)),
       scopes = exWrap(mathbot.oauth.github.scopes, playConfig.getStringList(_).map(s => s.asScala)),
       issuer = exWrap(mathbot.oauth.github.issuer, path => playConfig.getString(path))
+    )
+
+  def adminConfig: AdminConfig =
+    AdminConfig(
+      authIdByteWidth = wrap(mathbot.admin.authIdByteWidth, _.toInt),
+      rejectedUrl = wrap(mathbot.admin.rejectedUrl, Uri(_)),
+      approvedUrl = wrap(mathbot.admin.approvedUrl, Uri(_)),
+      custodianEmail = exWrap(mathbot.admin.custodianEmail, envGet, playConfig.getString(_))
     )
 
   def auth0Config: Auth0Config =

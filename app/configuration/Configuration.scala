@@ -58,3 +58,10 @@ case class Auth0Config(
     clientId: String,
     clientSecret: String
 )
+
+case class AdminConfig(
+    authIdByteWidth: Int,
+    approvedUrl: Uri,
+    rejectedUrl: Uri,
+    custodianEmail: String
+)

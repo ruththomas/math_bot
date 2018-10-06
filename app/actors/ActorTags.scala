@@ -5,4 +5,5 @@ object ActorTags {
   final val googleOAuth = "googleOauth"
   final val sendGrid = "sendGrid"
   final val auth0 = "auth0"
+  final val admin = "admin"
 }
