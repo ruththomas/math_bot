@@ -1,5 +1,6 @@
 package actors.convert_flow
 
+import actors.AdminActor.GetUserCount
 import actors.messages.ActorFailed
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
@@ -15,6 +16,7 @@ object AdminRequestConvertFlow extends SocketRequestConvertFlow {
 
   def jsonToCompilerCommand(msg: JsValue): Any = {
     Json.fromJson[AdminRequest](msg).asOpt match {
+      case Some(AdminRequest(action)) if action == "user-count" => GetUserCount()
       case _ => ActorFailed("Bad json input")
     }
   }
