@@ -16,9 +16,9 @@ import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.streams.ActorFlow
 import play.api.libs.ws._
-import play.api.mvc.{Action, AnyContent, Controller, WebSocket}
+import play.api.mvc._
+import types.TokenId
 import utils.SecureIdentifier
-import play.api.mvc.{Cookie, DiscardingCookie}
 
 import scala.concurrent.ExecutionContext
 import scala.util.Try
@@ -66,6 +66,13 @@ class AdminController @Inject()(
     }
   }
 
+  def wsLocation(): Action[AnyContent] = Action { implicit request: RequestHeader =>
+    val url = routes.AdminController.adminSocket().webSocketURL()
+    val changeSsl =
+      if (url.contains("localhost")) url else url.replaceFirst("ws", "wss")
+    Ok(changeSsl)
+  }
+
   def signOut(): Action[AnyContent] = Action { implicit request =>
     Ok("Signed out successfully")
       .discardingCookies(DiscardingCookie("account-id"))
@@ -99,12 +106,12 @@ class AdminController @Inject()(
                         .discardingCookies(DiscardingCookie("account-id"))
                   }
                 } else {
-                  Unauthorized("No admin privileges")
+                  Forbidden("No admin privileges")
                     .discardingCookies(DiscardingCookie("account-id"))
                 }
               }
             }
-          case None => FastFuture.successful(Unauthorized("Password did not match"))
+          case None => FastFuture.successful(BadRequest("User not found"))
         }
       case None => FastFuture.successful(BadRequest("Invalid json"))
     }
@@ -152,9 +159,7 @@ class AdminController @Inject()(
         }
       case None =>
         FastFuture.successful(
-          BadRequest(
-            s"Json input should look like ${Json.toJson(UsernameAndPassword("your-mathbot@address", "your-mathbot-password"))}."
-          )
+          BadRequest("Invalid json")
         )
     }
   }
