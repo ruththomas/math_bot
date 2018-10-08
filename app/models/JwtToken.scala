@@ -9,4 +9,5 @@ case class JwtToken(iss: String, sub: String, email: String, name: String, pictu
       case "https://auth0.mathbot.com" => "auth0"
     }
   }
+  def playerTokenId = s"${getIssuerShortName}|$sub"
 }
