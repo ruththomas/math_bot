@@ -23,7 +23,7 @@ class Auth0LegacyDao @Inject()(val db : MongoDatabase,
 
   private val collectionLabel = 'auth0legacy
   private val emailColumnLabel = 'email
-  private val migratedColumnLable = 'migrated
+  private val migratedColumnLabel = 'migrated
 
   private val codecRegistry = fromRegistries(
     fromProviders(aProviders :_*),
@@ -36,7 +36,7 @@ class Auth0LegacyDao @Inject()(val db : MongoDatabase,
 
   def find(email : String) : Future[Option[Auth0LegacyUser]] = collection.find(equal(emailColumnLabel.name, email)).toFuture().map(_.headOption)
 
-  def markMigrated(email : String) : Future[Option[Auth0LegacyUser]] = collection.findOneAndUpdate(equal(emailColumnLabel.name, email), set(migratedColumnLable.name, true) ).toFutureOption()
+  def markMigrated(email : String) : Future[Option[Auth0LegacyUser]] = collection.findOneAndUpdate(equal(emailColumnLabel.name, email), set(migratedColumnLabel.name, true) ).toFutureOption()
 
   collection.createIndex(ascending(emailColumnLabel.name)).toFuture()
 }
