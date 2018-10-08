@@ -1,30 +1,30 @@
 package controllers
 
 import actors.ActorTags
-import actors.messages.{Auth0Authenticate, Auth0Authorized}
+import actors.messages.{ Auth0Authenticate, Auth0Authorized }
 import actors.messages.auth._
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
 import com.digitaltangible.playguard._
 import com.google.inject.name.Named
-import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig}
+import configuration.{ ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig }
 import daos._
 import email._
 import javax.inject.Inject
 import loggers.SemanticLog
 import models._
 import org.bouncycastle.crypto.generators.SCrypt
-import play.api.libs.json.{JsString, Json}
-import play.api.mvc.{Action, AnyContent, Controller, RequestHeader}
-import utils.{JwtTokenParser, SecureIdentifier}
+import play.api.libs.json.{ JsString, Json }
+import play.api.mvc.{ Action, AnyContent, Controller, RequestHeader }
+import utils.{ JwtTokenParser, SecureIdentifier }
 import play.api.mvc.Cookie
 import play.api.mvc.DiscardingCookie
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.concurrent.{ ExecutionContext, Future }
+import scala.util.{ Failure, Success, Try }
 
 object AuthController {
   //noinspection FoldTrueAnd
@@ -51,6 +51,7 @@ class AuthController @Inject()(
     val localCredential: LocalCredentialDao,
     val playerTokens: PlayerTokenDAO,
     val auth0legacy: Auth0LegacyDao,
+    val playerAccount: PlayerAccountDAO,
     @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
     @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
@@ -242,9 +243,19 @@ class AuthController @Inject()(
         }
         storedResult <- tokenResult match {
           case GoogleTokensFromCodeSuccess(aSessionId, tokens) =>
-            sessionDAO.insertOrUpdate(aSessionId, tokens.id_token) map { _ =>
-              Left[JwtToken, String](tokens.id_token)
-            }
+              for {
+                _ <- sessionDAO.insertOrUpdate(aSessionId, tokens.id_token)
+                _ <- playerAccount.put(
+                  PlayerAccount(tokens.id_token.playerTokenId,
+                                tokens.id_token.iss,
+                                tokens.id_token.sub,
+                                tokens.id_token.email,
+                                tokens.id_token.name,
+                                tokens.id_token.picture)
+                )
+              } yield Left[JwtToken, String](tokens.id_token)
+
+
           case TokensFromCodeFailure(_, _, reason) =>
             FastFuture.successful(
               Right[JwtToken, String](s"Could not verify authorization because of '$reason'")
@@ -289,9 +300,18 @@ class AuthController @Inject()(
         }
         storedResult <- tokenResult match {
           case GithubTokensFromCodeSuccess(_, tokens) =>
-            FastFuture.successful(
-              Left[JwtToken, String](tokens.id_token)
-            )
+              for {
+                _ <- sessionDAO.insertOrUpdate(sessionId, tokens.id_token)
+                _ <- playerAccount.put(
+                  PlayerAccount(tokens.id_token.playerTokenId,
+                                tokens.id_token.iss,
+                                tokens.id_token.sub,
+                                tokens.id_token.email,
+                                tokens.id_token.name,
+                                tokens.id_token.picture)
+                )
+              } yield Left[JwtToken, String](tokens.id_token)
+
           case TokensFromCodeFailure(_, _, reason) =>
             FastFuture.successful(
               Right[JwtToken, String](s"Could not verify authorization because of '$reason'")
@@ -463,45 +483,4 @@ class AuthController @Inject()(
     }
   }
 
-  def migrateAuth0(): Action[AnyContent] = Action.async { implicit request =>
-    import Auth0Migrate._
-
-    (for {
-      json <- request.body.asJson
-      migration <- json.validate[Auth0Migrate].asOpt
-    } yield {
-      jwtParser.parseAndVerify(migration.jwt) flatMap {
-        case Some(jwt) =>
-          jwt.getIssuerShortName match {
-            case "auth0" =>
-              val prevTokenId = s"auth0|${jwt.sub}"
-              (for {
-                playerTokenOpt <- playerTokens.getToken(prevTokenId)
-                credentialOpt <- localCredential.find(jwt.email)
-              } yield (playerTokenOpt, credentialOpt)) flatMap {
-                case (_, Some(_)) =>
-                  FastFuture.successful(Unauthorized("User already migrated"))
-                case (None, _) =>
-                  FastFuture.successful(Unauthorized("Player token not found for credentials"))
-                case (Some(playerToken), _) =>
-                  val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
-                  val accountId = SecureIdentifier(mathbotConfig.accountIdByteWidth)
-                  for {
-                    migratedJwt <- storeCredential(sessionId,
-                                                   accountId,
-                                                   SignUpForm(jwt.email, jwt.name, jwt.picture, migration.password))
-                    _ <- auth0legacy.markMigrated(jwt.email)
-                    migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
-                    _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
-                    _ <- playerTokens.delete(prevTokenId)
-                  } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
-              }
-            case _ =>
-              FastFuture.successful(Unauthorized(s"Can can only migrate Auth0 credentials"))
-          }
-        case None =>
-          FastFuture.successful(Unauthorized("Invalid web token"))
-      }
-    }).getOrElse(FastFuture.successful(Unauthorized("Invalid json")))
-  }
 }
