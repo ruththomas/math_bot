@@ -53,10 +53,10 @@ class GoogleOAuth @Inject()(
         )
       )
       tokensOrError <- AkkaToPlayMarshaller.unmarshalToPlayJson(response)
-      validatedOrError <- tokensOrError match {
+      validatedOrError = tokensOrError match {
         case Left(Some(t)) =>
           val tokens = t.asInstanceOf[JsObject]
-          jwtTokenParser.parseAndVerify(tokens("id_token").as[String]) map {
+          jwtTokenParser.parseAndVerify(tokens("id_token").as[String]) match {
             case Some(idToken) =>   Left(GoogleTokens(
               access_token = tokens("access_token").as[String],
               expires_in = tokens("expires_in").as[Long],
@@ -64,12 +64,13 @@ class GoogleOAuth @Inject()(
               refresh_token = tokens.value.get("refresh_token").map(_.as[String]),
               id_token = idToken
             ))
-            case _ => Right("Unable to verify jwt")
+            case _ =>
+              Right("Unable to verify jwt")
           }
         case Left(None) =>
-          FastFuture.successful(Right("Unable to verity jwt"))
+          Right("Unable to verity jwt")
         case Right(reason) =>
-          FastFuture.successful(Right(s"Status: ${reason._1} reason: ${reason._2}"))
+          Right(s"Status: ${reason._1} reason: ${reason._2}")
       }
     } yield validatedOrError
 

@@ -1,15 +1,15 @@
 package modules
 import actors._
 import akka.actor.ActorSystem
-import com.google.inject.{AbstractModule, Provides}
+import com.google.inject.{ AbstractModule, Provides }
 import configuration._
 import email.SendGridConfig
-import loggers.{AkkaSemanticLog, SemanticLog}
-import models.{Auth0LegacyUser, JwtToken}
+import loggers.{ AkkaSemanticLog, SemanticLog }
+import models.{ Auth0LegacyUser, JwtToken, PlayerAccount }
 import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecProvider
 import org.mongodb.scala.bson.codecs.Macros
-import org.mongodb.scala.{MongoClient, MongoDatabase}
+import org.mongodb.scala.{ MongoClient, MongoDatabase }
 import play.api.libs.concurrent.AkkaGuiceSupport
 import utils.SecureIdentifier.SecureIdentifierCodec
 
@@ -53,7 +53,7 @@ class Module extends AbstractModule with AkkaGuiceSupport {
 
   @Provides
   def mongoCodecProviders: Seq[CodecProvider] =
-    Seq(Macros.createCodecProvider[JwtToken], Macros.createCodecProvider[Auth0LegacyUser])
+    Seq(Macros.createCodecProvider[JwtToken], Macros.createCodecProvider[Auth0LegacyUser], Macros.createCodecProvider[PlayerAccount])
 
   @Provides
   def provideLocalAuthConfig(configFactory: ConfigFactory): LocalAuthConfig =
