@@ -12,6 +12,7 @@ export class AuthService {
     this.login = this.login.bind(this)
     this._setSession = this._setSession.bind(this)
     this.logout = this.logout.bind(this)
+    this._requestSession()
   }
 
   _getUserProfile () {
