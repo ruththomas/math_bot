@@ -1,6 +1,8 @@
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import java.util.Date
+
+import play.api.libs.json.{ Json, OFormat }
 import types.TokenId
 
 object PlayerAccount {
@@ -12,5 +14,10 @@ case class PlayerAccount(tokenId: TokenId,
                          sub: String,
                          email: String,
                          name: String,
+                         created: Date,
+                         lastAccess : Date,
+                         timesAccessed : Long,
+                         maxLevel : String,
+                         maxStep : String,
                          picture: Option[String] = None,
                          isAdmin: Boolean = false)
