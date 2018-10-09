@@ -32,13 +32,6 @@ GET         /api/gameStats/getTokenCount                                        
 
 # Admin
 GET         /ws/admin                                                              controllers.AdminController.adminSocket
-POST        /api/admin/auth/signUp                                                 controllers.AdminController.signUp
-POST        /api/admin/auth/login                                                  controllers.AdminController.login
-GET         /api/admin/auth/signOut                                                controllers.AdminController.signOut
-GET         /api/admin/approved                                                    controllers.AdminController.approved
-GET         /api/admin/rejected                                                    controllers.AdminController.rejected
-GET         /api/admin/revoke                                                      controllers.AdminController.revoke
-GET         /api/admin/wsLocation                                                  controllers.AdminController.wsLocation
 
 # Auth !! Not being used yet !!
 GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
