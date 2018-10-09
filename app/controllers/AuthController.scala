@@ -391,7 +391,17 @@ class AuthController @Inject()(
           case None =>
             val sessionId = SecureIdentifier.apply(mathbotConfig.sessionIdByteWidth)
             val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
-            storeCredential(sessionId, accountId, signUpForm) map { jwt =>
+            for {
+              jwt <- storeCredential(sessionId, accountId, signUpForm)
+              _ <- playerAccount.put(
+                PlayerAccount(jwt.playerTokenId,
+                  jwt.iss,
+                  jwt.sub,
+                  jwt.email,
+                  jwt.name,
+                  jwt.picture)
+              )
+            } yield {
               Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
             }
         }
