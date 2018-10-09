@@ -22,11 +22,14 @@ class PlayerAccountDAO @Inject()(
     aCodecs: Seq[Codec[_]] = Seq.empty[Codec[_]],
     aProviders: Seq[CodecProvider]
 )(implicit val ec: ExecutionContext) {
-
   private val collectionLabel = 'playeraccount
   private val tokenIdLabel = 'tokenId
   private val emailLabel = 'email
   private val isAdminLabel = 'isAdmin
+  private val lastAccess = 'lastAccess
+  private val timesAccessed = 'timesAccessed
+  private val maxLevel = 'maxLevel
+  private val maxStep = 'maxStep
 
   private val codecRegistry = fromRegistries(
     fromProviders(aProviders: _*),
@@ -46,6 +49,17 @@ class PlayerAccountDAO @Inject()(
       result <- collection
         .findOneAndUpdate(equal(tokenIdLabel.name, tokenId), set(isAdminLabel.name, isAdmin))
         .toFutureOption()
+    } yield result
+
+  def updateAccess(tokenId : TokenId) : Future[Option[PlayerAccount]] =
+    for {
+      result <- collection.findOneAndUpdate(equal(tokenIdLabel.name, tokenId), combine(currentDate(lastAccess.name), inc(timesAccessed.name, 1)))
+          .toFutureOption()
+    } yield result
+
+  def updateMaxLevelAndStep(tokenId: TokenId, ml : String, ms: String) : Future[Option[PlayerAccount]] =
+    for {
+      result <- collection.findOneAndUpdate(equal(tokenIdLabel.name, tokenId), combine(set(maxLevel.name, ml), set(maxStep.name, ms))).toFutureOption()
     } yield result
 
   collection.createIndex(ascending(tokenIdLabel.name)).toFuture().onComplete {

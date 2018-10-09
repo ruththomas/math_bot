@@ -19,6 +19,7 @@ class Module extends AbstractModule with AkkaGuiceSupport {
     bindActor[GithubOAuth](ActorTags.githubOAuth)
     bindActor[SendgridActor](ActorTags.sendGrid)
     bindActor[Auth0Actor](ActorTags.auth0)
+    bindActor[PlayerAccountActor](ActorTags.playerAccount)
   }
 
   @Provides

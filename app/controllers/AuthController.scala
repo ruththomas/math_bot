@@ -1,8 +1,9 @@
 package controllers
 
 import actors.ActorTags
-import actors.messages.{ Auth0Authenticate, Auth0Authorized }
 import actors.messages.auth._
+import actors.messages.playeraccount.CreateAccount
+import actors.messages.{ Auth0Authenticate, Auth0Authorized }
 import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
@@ -20,11 +21,9 @@ import org.bouncycastle.crypto.generators.SCrypt
 import play.api.libs.json.{ JsString, Json }
 import play.api.mvc.{ Action, AnyContent, Controller, RequestHeader }
 import utils.{ JwtTokenParser, SecureIdentifier }
-import play.api.mvc.Cookie
-import play.api.mvc.DiscardingCookie
 
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success, Try }
+import scala.util.Try
 
 object AuthController {
   //noinspection FoldTrueAnd
@@ -51,11 +50,11 @@ class AuthController @Inject()(
     val localCredential: LocalCredentialDao,
     val playerTokens: PlayerTokenDAO,
     val auth0legacy: Auth0LegacyDao,
-    val playerAccount: PlayerAccountDAO,
     @Named(ActorTags.googleOAuth) val googleOauth: ActorRef,
     @Named(ActorTags.githubOAuth) val githubOAuth: ActorRef,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
     @Named(ActorTags.auth0) val auth0: ActorRef,
+    @Named(ActorTags.playerAccount) val playerAccount: ActorRef,
     val jwtParser: JwtTokenParser,
     val googleConfig: GoogleApiConfig,
     val githubConfig: GithubApiConfig,
@@ -245,14 +244,7 @@ class AuthController @Inject()(
           case GoogleTokensFromCodeSuccess(aSessionId, tokens) =>
               for {
                 _ <- sessionDAO.insertOrUpdate(aSessionId, tokens.id_token)
-                _ <- playerAccount.put(
-                  PlayerAccount(tokens.id_token.playerTokenId,
-                                tokens.id_token.iss,
-                                tokens.id_token.sub,
-                                tokens.id_token.email,
-                                tokens.id_token.name,
-                                tokens.id_token.picture)
-                )
+                _ <- playerAccount ? CreateAccount(tokens.id_token)
               } yield Left[JwtToken, String](tokens.id_token)
 
 
@@ -302,14 +294,7 @@ class AuthController @Inject()(
           case GithubTokensFromCodeSuccess(_, tokens) =>
               for {
                 _ <- sessionDAO.insertOrUpdate(sessionId, tokens.id_token)
-                _ <- playerAccount.put(
-                  PlayerAccount(tokens.id_token.playerTokenId,
-                                tokens.id_token.iss,
-                                tokens.id_token.sub,
-                                tokens.id_token.email,
-                                tokens.id_token.name,
-                                tokens.id_token.picture)
-                )
+                _ <- playerAccount ? CreateAccount(tokens.id_token)
               } yield Left[JwtToken, String](tokens.id_token)
 
           case TokensFromCodeFailure(_, _, reason) =>
@@ -393,14 +378,7 @@ class AuthController @Inject()(
             val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
             for {
               jwt <- storeCredential(sessionId, accountId, signUpForm)
-              _ <- playerAccount.put(
-                PlayerAccount(jwt.playerTokenId,
-                  jwt.iss,
-                  jwt.sub,
-                  jwt.email,
-                  jwt.name,
-                  jwt.picture)
-              )
+              _ <- playerAccount ? CreateAccount(jwt)
             } yield {
               Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
             }
@@ -408,7 +386,6 @@ class AuthController @Inject()(
       case None =>
         FastFuture.successful(BadRequest("Malformed Json"))
     }
-
   }
 
   def authMathbot(): Action[AnyContent] = Action.async { implicit request =>

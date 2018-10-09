@@ -3,12 +3,13 @@ package controllers
 import java.net.URLDecoder
 
 import actors._
-import actors.convert_flow.{ CompilerRequestConvertFlow, CompilerResponseConvertFlow }
+import actors.convert_flow.{ CompilerRequestConvertFlow, CompilerResponseConvertFlow, UpdateAccessFlow }
 import actors.messages.{ ClientRobotState, PreparedStepData }
-import akka.actor.{ Actor, ActorSystem, Props }
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
 import akka.pattern.ask
 import akka.stream.Materializer
 import akka.util.Timeout
+import com.google.inject.name.Named
 import compiler.processor.Frame
 import compiler.{ Cell, Point }
 import configuration.CompilerConfiguration
@@ -86,7 +87,8 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                                   mathBotLogger: MathBotLogger,
                                   environment: Environment,
                                   configuration: Configuration,
-                                  playerTokenDAO: PlayerTokenDAO)
+                                  playerTokenDAO: PlayerTokenDAO,
+                                  @Named(ActorTags.playerAccount) playerAccountActor: ActorRef)
     extends Controller
     with utils.SameOriginCheck {
 
@@ -125,6 +127,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                                     compilerConfiguration)
             )
           )
+          .alsoTo(UpdateAccessFlow(URLDecoder.decode(encodedTokenId, "UTF-8"), playerAccountActor))
           .via(
             CompilerResponseConvertFlow()
           )
