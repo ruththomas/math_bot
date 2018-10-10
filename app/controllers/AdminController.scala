@@ -80,9 +80,9 @@ class AdminController @Inject()(
                     Ok("Already is an admin")
                   case _ =>
                     val adminAuthId = SecureIdentifier(adminConfig.authIdByteWidth)
-                    val adminAuth = AdminAuth(jwt.sub, adminAuthId, generateTimestamp)
+                    val adminAuth = AdminAuth(jwt.sub, adminAuthId.toString, generateTimestamp)
                     val verificationEmail = AdminVerificationEmail(jwt.email, adminAuthId, adminConfig)
-                    adminAuthDAO.createOrUpdate(adminAuth)
+                    adminAuthDAO.insert(adminAuth)
                     sendGrid ! verificationEmail
                     Ok("Request sent successfully, you will receive an email if you are accepted")
                 }
@@ -94,4 +94,7 @@ class AdminController @Inject()(
         FastFuture.successful(BadRequest("No cookie"))
     }
   }
+
+//  def acceptAdmin(): Action[AnyContent] = Action.async { implicit request =>
+//    }
 }
