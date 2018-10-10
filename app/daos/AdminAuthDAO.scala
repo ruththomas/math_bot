@@ -1,13 +1,12 @@
 package daos
 
 import com.google.inject.Inject
-import models.{AdminAuth, HintTaken, HintsTaken}
+import models.AdminAuth
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.result.{DeleteResult, UpdateResult}
+import org.mongodb.scala.result.DeleteResult
 import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase, _}
 import types.TokenId
 
@@ -18,6 +17,7 @@ case class AdminAuthDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: Executi
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(
+      Macros.createCodecProvider[AdminAuth](),
       Macros.createCodecProvider[AdminAuth]()
     ),
     DEFAULT_CODEC_REGISTRY
@@ -28,10 +28,6 @@ case class AdminAuthDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: Executi
 
   def insert(adminAuth: AdminAuth): Future[Option[Completed]] = {
     collection.insertOne(adminAuth).toFutureOption()
-  }
-
-  def createOrUpdate(adminAuth: AdminAuth) = {
-    collection.updateOne(equal("adminAuthId", adminAuth.adminAuthId.toString), set("createdAt", adminAuth.createdAt))
   }
 
   def find(adminAuthId: String): Future[Option[AdminAuth]] = {
