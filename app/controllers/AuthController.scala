@@ -3,26 +3,26 @@ package controllers
 import actors.ActorTags
 import actors.messages.auth._
 import actors.messages.playeraccount.CreateAccount
-import actors.messages.{ Auth0Authenticate, Auth0Authorized }
-import akka.actor.{ ActorRef, ActorSystem }
+import actors.messages.{Auth0Authenticate, Auth0Authorized}
+import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
 import com.digitaltangible.playguard._
 import com.google.inject.name.Named
-import configuration.{ ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig }
+import configuration.{ActorConfig, GithubApiConfig, GoogleApiConfig, LocalAuthConfig}
 import daos._
 import email._
 import javax.inject.Inject
 import loggers.SemanticLog
 import models._
 import org.bouncycastle.crypto.generators.SCrypt
-import play.api.libs.json.{ JsString, Json }
-import play.api.mvc.{ Action, AnyContent, Controller, RequestHeader }
-import utils.{ JwtTokenParser, SecureIdentifier }
+import play.api.libs.json.{JsString, Json}
+import play.api.mvc._
+import utils.{JwtTokenParser, SecureIdentifier}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 object AuthController {
@@ -172,7 +172,8 @@ class AuthController @Inject()(
                                 credential.accountId,
                                 SignUpForm(credential.username, credential.name, credential.picture, password)) map {
                   jwt =>
-                    Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+                    val sessionAuthorized = generateSessionAuthorized(sessionId, jwt)
+                    Ok(Json.toJson(sessionAuthorized)).withCookies(Cookie("player-session", sessionId.toString))
                 }
               case _ =>
                 FastFuture.successful(Unauthorized("Password update rejected"))
@@ -213,10 +214,8 @@ class AuthController @Inject()(
         } yield
           token match {
             case Some(idToken) =>
-              Ok(
-                Json
-                  .toJson(generateSessionAuthorized(sessionId, idToken))
-              )
+              val sessionAuthorized = generateSessionAuthorized(sessionId, idToken)
+              Ok(Json.toJson(sessionAuthorized)).withCookies(Cookie("player-session", sessionId.toString))
             case _ => Ok(Json.toJson(generateNeedsAuthorization(sessionId)))
           }
       case _ =>
@@ -242,11 +241,10 @@ class AuthController @Inject()(
         }
         storedResult <- tokenResult match {
           case GoogleTokensFromCodeSuccess(aSessionId, tokens) =>
-              for {
-                _ <- sessionDAO.insertOrUpdate(aSessionId, tokens.id_token)
-                _ <- playerAccount ? CreateAccount(tokens.id_token)
-              } yield Left[JwtToken, String](tokens.id_token)
-
+            for {
+              _ <- sessionDAO.insertOrUpdate(aSessionId, tokens.id_token)
+              _ <- playerAccount ? CreateAccount(tokens.id_token)
+            } yield Left[JwtToken, String](tokens.id_token)
 
           case TokensFromCodeFailure(_, _, reason) =>
             FastFuture.successful(
@@ -265,10 +263,8 @@ class AuthController @Inject()(
       } yield
         storedResult match {
           case Left(idToken) =>
-            Ok(
-              Json
-                .toJson(generateSessionAuthorized(sessionId, idToken))
-            )
+            val sessionAuthorized = generateSessionAuthorized(sessionId, idToken)
+            Ok(Json.toJson(sessionAuthorized)).withCookies(Cookie("player-session", sessionId.toString))
           case Right(reason) => Unauthorized(JsString(reason))
         }
     }).getOrElse(FastFuture.successful(BadRequest("One or more query parameters are missing")))
@@ -292,10 +288,10 @@ class AuthController @Inject()(
         }
         storedResult <- tokenResult match {
           case GithubTokensFromCodeSuccess(_, tokens) =>
-              for {
-                _ <- sessionDAO.insertOrUpdate(sessionId, tokens.id_token)
-                _ <- playerAccount ? CreateAccount(tokens.id_token)
-              } yield Left[JwtToken, String](tokens.id_token)
+            for {
+              _ <- sessionDAO.insertOrUpdate(sessionId, tokens.id_token)
+              _ <- playerAccount ? CreateAccount(tokens.id_token)
+            } yield Left[JwtToken, String](tokens.id_token)
 
           case TokensFromCodeFailure(_, _, reason) =>
             FastFuture.successful(
@@ -314,10 +310,8 @@ class AuthController @Inject()(
       } yield
         storedResult match {
           case Left(idToken) =>
-            Ok(
-              Json
-                .toJson(generateSessionAuthorized(sessionId, idToken))
-            )
+            val sessionAuthorized = generateSessionAuthorized(sessionId, idToken)
+            Ok(Json.toJson(sessionAuthorized)).withCookies(Cookie("player-session", sessionId.toString))
           case Right(reason) => Unauthorized(JsString(reason.toString))
         }
     }).getOrElse(FastFuture.successful(BadRequest("One or more query parameters are missing")))
@@ -378,9 +372,11 @@ class AuthController @Inject()(
             val accountId = SecureIdentifier.apply(mathbotConfig.accountIdByteWidth)
             for {
               jwt <- storeCredential(sessionId, accountId, signUpForm)
+              _ <- sessionDAO.insertOrUpdate(sessionId, jwt)
               _ <- playerAccount ? CreateAccount(jwt)
             } yield {
-              Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+              val sessionAuthorized = generateSessionAuthorized(sessionId, jwt)
+              Ok(Json.toJson(sessionAuthorized)).withCookies(Cookie("player-session", sessionId.toString))
             }
         }
       case None =>
@@ -426,7 +422,12 @@ class AuthController @Inject()(
                               migratedTokenId = s"${migratedJwt.getIssuerShortName}|${migratedJwt.sub}"
                               _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
                               _ <- playerTokens.delete(jwt.sub)
-                            } yield Ok(Json.toJson(generateSessionAuthorized(sessionId, migratedJwt)))
+                              _ <- sessionDAO.insertOrUpdate(sessionId, jwt)
+                            } yield {
+                              val sessionAuthorized = generateSessionAuthorized(sessionId, jwt)
+                              Ok(Json.toJson(sessionAuthorized))
+                                .withCookies(Cookie("player-session", sessionId.toString))
+                            }
                         }
                       } match {
                         case Some(future) =>
@@ -457,8 +458,9 @@ class AuthController @Inject()(
                     )
                     val sessionId = SecureIdentifier(mathbotConfig.sessionIdByteWidth)
                     sessionCache.put(sessionId, Some(jwt))
-
-                    Ok(Json.toJson(generateSessionAuthorized(sessionId, jwt)))
+                    val sessionAuthorized = generateSessionAuthorized(sessionId, jwt)
+                    sessionDAO.insertOrUpdate(sessionId, jwt)
+                    Ok(Json.toJson(sessionAuthorized)).withCookies(Cookie("player-session", sessionId.toString))
                   case false =>
                     Unauthorized("Password did not match")
                 }
