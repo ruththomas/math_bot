@@ -17,10 +17,6 @@ export class AuthService {
     this._resumeSession()
   }
 
-  _getUserProfile () {
-    return this.userProfile
-  }
-
   _storeLastRoute () {
     localStorage.setItem('last_location', $router.history.current.fullPath)
   }
@@ -75,12 +71,13 @@ export class AuthService {
     $store.dispatch('pushAuthErrors', err.body)
   }
 
-  _testLegacy (sub) {
-    return sub.includes('auth0|')
-  }
-
   clearErrors () {
     $store.dispatch('clearAuthErrors')
+  }
+
+  cookiesEnabled () {
+    const cookiesEnabled = navigator.cookieEnabled
+    console.log(cookiesEnabled)
   }
 
   handleAuthentication () {

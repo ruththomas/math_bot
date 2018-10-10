@@ -48,6 +48,7 @@ export default {
   mounted () {
     this.auth.clearErrors()
     this.showUpdate()
+    if (this.auth.authenticated) this.$router.push('/profile')
   },
   computed: {
     permanentImages () {
