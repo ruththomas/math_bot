@@ -1,5 +1,5 @@
 <template>
-  <div class="container profile">
+  <div class="container profile" v-shortkey.once="['ctrl', 'alt', 's']" @shortkey="goToSandbox()">
     <level-congrats key="level-congrats"></level-congrats>
     <div class="row" style="height: 80%;">
       <space :permanent-images="permanentImages"></space>
@@ -19,12 +19,11 @@ import Steps from './Steps'
 import Space from './Space'
 import SocialSharing from './Social_sharing'
 import LevelCongrats from './Level_congrats'
+import api from '../services/api'
 
 export default {
   mounted () {
     this.handleCongrats()
-    // this.$store.dispatch('updateStepData', {})
-    // this.$store.dispatch('updateRobot', {})
   },
   computed: {
     auth () {
@@ -52,6 +51,9 @@ export default {
     },
     step () {
       return this.$store.getters.getStep
+    },
+    tokenId () {
+      return this.$store.getters.getTokenId
     }
   },
   methods: {
@@ -60,6 +62,13 @@ export default {
         this.$root.$emit('bv::show::modal', 'level-congrats-modal')
         this.$router.push({query: {}})
       }
+    },
+    goToSandbox () {
+      this.$store.dispatch('updateRunCompiled', this)
+      api.switchLevel({tokenId: this.tokenId, level: 'Sandbox', step: '1'}, (res) => {
+        this.$store.dispatch('updateStats', res.body)
+        this.$router.push({path: '/robot'})
+      })
     }
   },
   components: {
