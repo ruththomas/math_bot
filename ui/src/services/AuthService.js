@@ -7,6 +7,7 @@ export class AuthService {
   userToken = {}
   userProfile = {}
   requestSession = {}
+  cookiesEnabled = !navigator.cookieEnabled
 
   constructor () {
     this._setProfile = this._setProfile.bind(this)
@@ -73,11 +74,6 @@ export class AuthService {
 
   clearErrors () {
     $store.dispatch('clearAuthErrors')
-  }
-
-  cookiesEnabled () {
-    const cookiesEnabled = navigator.cookieEnabled
-    console.log(cookiesEnabled)
   }
 
   handleAuthentication () {
