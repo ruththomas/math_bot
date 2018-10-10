@@ -6,7 +6,6 @@ import actors.messages.playeraccount.CreateAccount
 import actors.messages.{Auth0Authenticate, Auth0Authorized}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.model.Uri.Query
-import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout

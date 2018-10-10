@@ -64,9 +64,10 @@ export class AuthService {
     }, this._requestSession)
   }
 
-  _requestSession () {
+  _requestSession (cb) {
     api.requestSession((requestSession) => {
       this.requestSession = requestSession
+      if (cb) cb()
     }, this._handleErr)
   }
 

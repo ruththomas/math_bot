@@ -1,21 +1,18 @@
 package controllers
 
-import actors.{ActorTags, AdminActor}
 import actors.convert_flow.{AdminRequestConvertFlow, AdminResponseConvertFlow}
-import actors.messages.auth.SessionAuthorized
+import actors.{ActorTags, AdminActor}
 import akka.actor.{ActorRef, ActorSystem}
-import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture
-import akka.japi.Option
 import akka.stream.Materializer
 import com.google.inject.Inject
-import configuration.{AdminConfig, LocalAuthConfig}
 import com.google.inject.name.Named
+import configuration.AdminConfig
 import daos._
-import email.AdminVerificationEmail
-import models.{AdminAuth, PlayerAccount}
+import email.{AdminApprovedEmail, AdminVerificationEmail}
+import models.AdminAuth
 import play.api.Environment
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import play.api.libs.streams.ActorFlow
 import play.api.libs.ws._
 import play.api.mvc._
@@ -108,6 +105,9 @@ class AdminController @Inject()(
             playerAccountDAO.setAdmin(Some(adminAuth.tokenId), None, isAdmin = isAccepted).flatMap {
               case Some(playerAccount) =>
                 adminAuthDAO.delete(secureIdentifier.toString).map { _ =>
+                  if (isAccepted) {
+                    sendGrid ! AdminApprovedEmail(playerAccount.email)
+                  }
                   Ok(
                     if (isAccepted) {
                       s"${playerAccount.email} now has admin privileges."
