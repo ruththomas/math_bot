@@ -1,20 +1,21 @@
 package daos
 
 import com.google.inject.Inject
+import com.sendgrid.Email
 import loggers.SemanticLog
 import models.PlayerAccount
 import org.bson.codecs.Codec
-import org.bson.codecs.configuration.{ CodecProvider, CodecRegistries }
-import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
-import org.mongodb.scala.{ Completed, MongoCollection, MongoDatabase }
+import org.bson.codecs.configuration.{CodecProvider, CodecRegistries}
+import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
+import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase}
 import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Indexes._
 import org.mongodb.scala.model.Updates._
 import types.TokenId
 
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success }
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 class PlayerAccountDAO @Inject()(
     db: MongoDatabase,
@@ -40,26 +41,34 @@ class PlayerAccountDAO @Inject()(
   val collection: MongoCollection[PlayerAccount] =
     db.getCollection[PlayerAccount](collectionLabel.name).withCodecRegistry(codecRegistry)
 
-  def put(pa: PlayerAccount) : Future[Completed] = collection.insertOne(pa).toFuture()
+  def put(pa: PlayerAccount): Future[Completed] = collection.insertOne(pa).toFuture()
 
-  def find(tokenId : TokenId) : Future[Option[PlayerAccount]] = collection.find(equal(tokenIdLabel.name, tokenId)).headOption()
+  def find(tokenId: TokenId): Future[Option[PlayerAccount]] =
+    collection.find(equal(tokenIdLabel.name, tokenId)).headOption()
 
-  def setAdmin(tokenId : String, isAdmin : Boolean): Future[Option[PlayerAccount]] =
+  def setAdmin(tokenId: Option[String], email: Option[String], isAdmin: Boolean): Future[Option[PlayerAccount]] =
     for {
       result <- collection
-        .findOneAndUpdate(equal(tokenIdLabel.name, tokenId), set(isAdminLabel.name, isAdmin))
+        .findOneAndUpdate(tokenId match {
+          case Some(id) => equal(tokenIdLabel.name, id)
+          case None => equal(emailLabel.name, email.getOrElse(""))
+        }, set(isAdminLabel.name, isAdmin))
         .toFutureOption()
     } yield result
 
-  def updateAccess(tokenId : TokenId) : Future[Option[PlayerAccount]] =
+  def updateAccess(tokenId: TokenId): Future[Option[PlayerAccount]] =
     for {
-      result <- collection.findOneAndUpdate(equal(tokenIdLabel.name, tokenId), combine(currentDate(lastAccess.name), inc(timesAccessed.name, 1)))
-          .toFutureOption()
+      result <- collection
+        .findOneAndUpdate(equal(tokenIdLabel.name, tokenId),
+                          combine(currentDate(lastAccess.name), inc(timesAccessed.name, 1)))
+        .toFutureOption()
     } yield result
 
-  def updateMaxLevelAndStep(tokenId: TokenId, ml : String, ms: String) : Future[Option[PlayerAccount]] =
+  def updateMaxLevelAndStep(tokenId: TokenId, ml: String, ms: String): Future[Option[PlayerAccount]] =
     for {
-      result <- collection.findOneAndUpdate(equal(tokenIdLabel.name, tokenId), combine(set(maxLevel.name, ml), set(maxStep.name, ms))).toFutureOption()
+      result <- collection
+        .findOneAndUpdate(equal(tokenIdLabel.name, tokenId), combine(set(maxLevel.name, ml), set(maxStep.name, ms)))
+        .toFutureOption()
     } yield result
 
   collection.createIndex(ascending(tokenIdLabel.name)).toFuture().onComplete {

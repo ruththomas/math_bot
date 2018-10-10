@@ -6,6 +6,7 @@ import actors.messages.auth.SessionAuthorized
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture
+import akka.japi.Option
 import akka.stream.Materializer
 import com.google.inject.Inject
 import configuration.{AdminConfig, LocalAuthConfig}
@@ -61,7 +62,7 @@ class AdminController @Inject()(
                 Left(Unauthorized("No admin privileges"))
             }
           case None =>
-            ???
+            FastFuture.successful(Left(Unauthorized("No player token found")))
         }
       case _ =>
         FastFuture.successful(Left(Unauthorized("Cookie missing")))
@@ -84,7 +85,7 @@ class AdminController @Inject()(
                     Ok("Already is an admin")
                   case _ =>
                     val adminAuthId = SecureIdentifier(adminConfig.authIdByteWidth)
-                    val adminAuth = AdminAuth(jwt.sub, adminAuthId.toString, generateTimestamp)
+                    val adminAuth = AdminAuth(jwt.playerTokenId, adminAuthId.toString, generateTimestamp)
                     val verificationEmail = AdminVerificationEmail(jwt.email, adminAuthId, adminConfig)
                     adminAuthDAO.insert(adminAuth)
                     sendGrid ! verificationEmail
@@ -99,6 +100,37 @@ class AdminController @Inject()(
     }
   }
 
-//  def acceptAdmin(): Action[AnyContent] = Action.async { implicit request =>
-//    }
+  def acceptOrDeny(isAccepted: Boolean): Action[AnyContent] = Action.async { implicit request =>
+    request.getQueryString("authenticationId").map(SecureIdentifier(_)) match {
+      case Some(secureIdentifier) =>
+        adminAuthDAO.find(secureIdentifier.toString).flatMap {
+          case Some(adminAuth) =>
+            playerAccountDAO.setAdmin(Some(adminAuth.tokenId), None, isAdmin = isAccepted).flatMap {
+              case Some(playerAccount) =>
+                adminAuthDAO.delete(secureIdentifier.toString).map { _ =>
+                  Ok(
+                    if (isAccepted) {
+                      s"${playerAccount.email} now has admin privileges."
+                    } else {
+                      s"${playerAccount.email} has been rejected from admin status."
+                    }
+                  )
+                }
+              case _ => FastFuture.successful(BadRequest("Unable to locate player account"))
+            }
+          case None => FastFuture.successful(BadRequest("Unable to locate a request with that id."))
+        }
+      case None => FastFuture.successful(BadRequest("Missing authenticationId query parameter."))
+    }
+  }
+
+  def revokeAdmin(): Action[AnyContent] = Action.async { implicit request =>
+    request.getQueryString("email") match {
+      case Some(email) =>
+        playerAccountDAO.setAdmin(None, Some(email), isAdmin = false).map { _ =>
+          Ok(s"Admin privileges have been revoked for $email.")
+        }
+      case None => FastFuture.successful(BadRequest("Missing email query parameter"))
+    }
+  }
 }
