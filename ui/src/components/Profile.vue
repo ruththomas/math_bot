@@ -1,5 +1,5 @@
 <template>
-  <div class="container profile" v-shortkey.once="['ctrl', 'alt', 's']" @shortkey="goToSandbox()">
+  <div class="container profile" v-shortkey.once="['ctrl', 'alt', 'space']" @shortkey="goToSandbox()">
     <level-congrats key="level-congrats"></level-congrats>
     <div class="row" style="height: 80%;">
       <space :permanent-images="permanentImages"></space>
