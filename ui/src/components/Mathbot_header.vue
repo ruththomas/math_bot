@@ -19,8 +19,12 @@ export default {
     if (this.lineHeight) {
       $mathbotHeader.css({'line-height': `${this.lineHeight}px`})
     }
+
+    if (this.color) {
+      $mathbotHeader.css({color: this.color})
+    }
   },
-  props: ['fontSize', 'lineHeight']
+  props: ['fontSize', 'lineHeight', 'color']
 }
 </script>
 
