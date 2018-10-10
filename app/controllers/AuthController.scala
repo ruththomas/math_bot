@@ -208,7 +208,7 @@ class AuthController @Inject()(
   }
 
   def resumeSession(): Action[AnyContent] = Action.async { implicit request =>
-    request.body.asJson.flatMap(_.asOpt[ResumeSession]) match {
+    request.cookies.get("player-session").map(c => ResumeSession(SecureIdentifier(c.value))) match {
       case Some(ResumeSession(sessionId, _)) =>
         for {
           token <- sessionDAO.find(sessionId)
@@ -220,7 +220,7 @@ class AuthController @Inject()(
             case _ => Ok(Json.toJson(generateNeedsAuthorization(sessionId)))
           }
       case _ =>
-        Future(BadRequest(JsString("Invalid or missing resume session json")))
+        Future(BadRequest(JsString("No session cookie")))
     }
   }
 
@@ -253,7 +253,7 @@ class AuthController @Inject()(
             )
           case SessionNotAuthorized(_, reason, _) =>
             FastFuture.successful {
-              Right[JwtToken, String](s"Unable to authorize session $sessionId because of $reason")
+              Right[JwtToken, String](s"Unable to authorize requestSession $sessionId because of $reason")
             }
           case msg: Any =>
             logger.error(SemanticLog.tags.message(msg))
@@ -300,7 +300,7 @@ class AuthController @Inject()(
             )
           case SessionNotAuthorized(_, reason, _) =>
             FastFuture.successful {
-              Right[JwtToken, String](s"Unable to authorize session $sessionId because of $reason")
+              Right[JwtToken, String](s"Unable to authorize requestSession $sessionId because of $reason")
             }
           case msg: Any =>
             logger.error(SemanticLog.tags.message(msg))
@@ -424,6 +424,7 @@ class AuthController @Inject()(
                               _ <- playerTokens.insert(playerToken.copy(token_id = migratedTokenId))
                               _ <- playerTokens.delete(jwt.sub)
                               _ <- sessionDAO.insertOrUpdate(sessionId, jwt)
+                              _ <- playerAccount ? CreateAccount(jwt)
                             } yield {
                               val sessionAuthorized = generateSessionAuthorized(sessionId, jwt)
                               Ok(Json.toJson(sessionAuthorized))
@@ -461,6 +462,7 @@ class AuthController @Inject()(
                     sessionCache.put(sessionId, Some(jwt))
                     val sessionAuthorized = generateSessionAuthorized(sessionId, jwt)
                     sessionDAO.insertOrUpdate(sessionId, jwt)
+                    playerAccount ! CreateAccount(jwt)
                     Ok(Json.toJson(sessionAuthorized)).withCookies(Cookie("player-session", sessionId.toString))
                   case false =>
                     Unauthorized("Password did not match")
@@ -474,9 +476,9 @@ class AuthController @Inject()(
   }
 
   def logout(): Action[AnyContent] = Action.async { implicit request =>
-    request.cookies.get("player-session").map(_.value) match {
-      case Some(sessionId) =>
-        sessionDAO.delete(SecureIdentifier(sessionId)).map { _ =>
+    request.cookies.get("player-session").map(c => SecureIdentifier(c.value)) match {
+      case Some(secureIdentifier) =>
+        sessionDAO.delete(secureIdentifier).map { _ =>
           Ok("Logged out").discardingCookies(DiscardingCookie("player-session"))
         }
       case None => FastFuture.successful(Ok("Logged out"))

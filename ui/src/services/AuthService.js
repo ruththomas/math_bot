@@ -6,17 +6,19 @@ export class AuthService {
   authenticated = false
   userToken = {}
   userProfile = {}
-  session = {}
+  requestSession = {}
 
   constructor () {
-    this.login = this.login.bind(this)
-    this._setSession = this._setSession.bind(this)
+    this._setProfile = this._setProfile.bind(this)
     this.logout = this.logout.bind(this)
-    this._requestSession()
+    this._handleErr = this._handleErr.bind(this)
+    this._resumeSession = this._resumeSession.bind(this)
+    this._requestSession = this._requestSession.bind(this)
+    this._resumeSession()
   }
 
   _getUserProfile () {
-    return JSON.parse(localStorage.getItem('profile'))
+    return this.userProfile
   }
 
   _storeLastRoute () {
@@ -45,15 +47,26 @@ export class AuthService {
     }, this._handleErr)
   }
 
-  _setSession (profile) {
+  _setProfile (profile) {
     this.userProfile = profile
-    localStorage.setItem('profile', JSON.stringify(profile))
     this._getUserToken()
   }
 
+  _resumeSession () {
+    api.resumeSession((profileOrRequestSession) => {
+      if (profileOrRequestSession.action && profileOrRequestSession.action === 'needsAuthorization') {
+        this.requestSession = profileOrRequestSession
+      } else {
+        this.userProfile = profileOrRequestSession
+        this.authenticated = true
+        this._getUserToken()
+      }
+    }, this._requestSession)
+  }
+
   _requestSession () {
-    api.requestSession((session) => {
-      this.session = session
+    api.requestSession((requestSession) => {
+      this.requestSession = requestSession
     }, this._handleErr)
   }
 
@@ -80,26 +93,16 @@ export class AuthService {
       .join('')
     api.authorize(provider, params, (profile) => {
       localStorage.removeItem('authProvider')
-      this._setSession(profile)
+      this._setProfile(profile)
     }, this._handleErr)
   }
 
-  login () {
-    const profile = this._getUserProfile()
-    if (profile && !this._testLegacy(profile.sub)) {
-      this.userProfile = this._getUserProfile()
-      this._getUserToken()
-    } else {
-      localStorage.clear()
-      $router.push({path: '/auth'})
-    }
-  }
-
   logout () {
-    localStorage.clear()
-    this.clearErrors()
-    this.authenticated = false
-    $router.push({path: '/about'})
+    api.logout(() => {
+      this.clearErrors()
+      this.authenticated = false
+      $router.push({path: '/about'})
+    })
   }
 
   signup (form) {
@@ -111,7 +114,7 @@ export class AuthService {
     this.clearErrors()
     api.signup(prep, (profile) => {
       this.userProfile = profile
-      this._setSession(profile)
+      this._setProfile(profile)
     }, this._handleErr)
   }
 
@@ -122,7 +125,7 @@ export class AuthService {
     this.clearErrors()
     api.login(prep, (profile) => {
       this.userProfile = profile
-      this._setSession(profile)
+      this._setProfile(profile)
     }, this._handleErr)
   }
 
@@ -137,7 +140,7 @@ export class AuthService {
     this.clearErrors()
     api.updatePassword(updateParams, updateForm, (profile) => {
       this.userProfile = profile
-      this._setSession(profile)
+      this._setProfile(profile)
     }, this._handleErr)
   }
 }
