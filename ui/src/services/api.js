@@ -30,8 +30,8 @@ export default {
       .catch(errCb)
   },
 
-  resumeSession (sessionId, successCb, errCb) {
-    Vue.http.post('/api/auth/resumeSession', {sessionId, action: 'resumeSession'})
+  resumeSession (successCb, errCb) {
+    Vue.http.post('/api/auth/resumeSession', {})
       .then(res => res.body)
       .then(successCb)
       .catch(errCb)
@@ -56,6 +56,13 @@ export default {
       .then(res => res.body)
       .then(successCb)
       .catch(errCb)
+  },
+
+  logout (cb) {
+    Vue.http.get('/api/auth/logout')
+      .then(res => res.body)
+      .then(cb)
+      .catch(console.error)
   },
 
   existsCheck (email, successCb, errCb) {

@@ -27,7 +27,7 @@ export default {
   methods: {
     onSubmit (provider) {
       localStorage.setItem('authProvider', provider)
-      const url = this.auth.session.authUrls.find(p => p.provider === provider).url
+      const url = this.auth.requestSession.authUrls.find(p => p.provider === provider).url
       window.location = url
     }
   },
