@@ -38,26 +38,30 @@ class AdminController @Inject()(
     implicit val ec: ExecutionContext
 ) extends Controller {
   import actors.VideoHintActor.{calculateRemainingTime, generateTimestamp}
-  import actors.messages.auth.AuthFormatters._
 
   private type WSMessage = JsValue
 
   def adminSocket: WebSocket = WebSocket.acceptOrResult[WSMessage, WSMessage] { request =>
-    request.cookies.get("player-session").map(c => Json.parse(c.value).as[SessionAuthorized]) match {
-      case Some(sessionAuthorized) =>
-        playerAccountDAO.find(sessionAuthorized.sub).map {
-          case Some(vPlayerAccount) if vPlayerAccount.isAdmin =>
-            Right(
-              AdminRequestConvertFlow()
-                .via(
-                  ActorFlow.actorRef { out =>
-                    AdminActor.props(out, playerTokenDAO, ws, environment)
-                  }
+    request.cookies.get("player-session").map(c => SecureIdentifier(c.value)) match {
+      case Some(secureIdentifier) =>
+        sessionDAO.find(secureIdentifier).flatMap {
+          case Some(jwtToken) =>
+            playerAccountDAO.find(jwtToken.playerTokenId).map {
+              case Some(vPlayerAccount) if vPlayerAccount.isAdmin =>
+                Right(
+                  AdminRequestConvertFlow()
+                    .via(
+                      ActorFlow.actorRef { out =>
+                        AdminActor.props(out, playerTokenDAO, ws, environment)
+                      }
+                    )
+                    .via(AdminResponseConvertFlow())
                 )
-                .via(AdminResponseConvertFlow())
-            )
-          case _ =>
-            Left(Unauthorized("No admin privileges"))
+              case _ =>
+                Left(Unauthorized("No admin privileges"))
+            }
+          case None =>
+            ???
         }
       case _ =>
         FastFuture.successful(Left(Unauthorized("Cookie missing")))
