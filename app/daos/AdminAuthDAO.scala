@@ -13,7 +13,7 @@ import types.TokenId
 import scala.concurrent.{ExecutionContext, Future}
 
 case class AdminAuthDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
-  final val collectionLabel = "admin-auth"
+  final val collectionLabel = "adminauth"
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(
@@ -38,7 +38,7 @@ case class AdminAuthDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: Executi
     collection.find(equal("tokenId", tokenId)).first().toFutureOption()
   }
 
-  def delete(adminAuthId: String): SingleObservable[DeleteResult] = {
-    collection.deleteOne(equal("adminAuthId", adminAuthId))
+  def delete(adminAuthId: String): Future[Option[DeleteResult]] = {
+    collection.deleteOne(equal("adminAuthId", adminAuthId)).toFutureOption()
   }
 }
