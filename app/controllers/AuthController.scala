@@ -6,6 +6,7 @@ import actors.messages.playeraccount.CreateAccount
 import actors.messages.{Auth0Authenticate, Auth0Authorized}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.model.Uri.Query
+import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.util.Timeout
@@ -472,4 +473,13 @@ class AuthController @Inject()(
     }
   }
 
+  def logout(): Action[AnyContent] = Action.async { implicit request =>
+    request.cookies.get("player-session").map(_.value) match {
+      case Some(sessionId) =>
+        sessionDAO.delete(SecureIdentifier(sessionId)).map { _ =>
+          Ok("Logged out").discardingCookies(DiscardingCookie("player-session"))
+        }
+      case None => FastFuture.successful(Ok("Logged out"))
+    }
+  }
 }
