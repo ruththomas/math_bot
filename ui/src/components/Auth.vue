@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid auth" v-if="auth.session !== null" data-aos="zoom-in">
+<div class="container-fluid auth" v-if="auth.requestSession !== null" data-aos="zoom-in">
   <div class="row">
     <div class="card" style="width: 18rem;">
       <img class="dialog-button control-btn close-auth" @click="auth.logout" :src="permanentImages.buttons.xButtonTransparent">
@@ -48,7 +48,6 @@ export default {
   mounted () {
     this.auth.clearErrors()
     this.showUpdate()
-    this.auth.login()
   },
   computed: {
     permanentImages () {

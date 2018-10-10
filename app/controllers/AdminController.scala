@@ -88,7 +88,7 @@ class AdminController @Inject()(
                 }
             }
           case None =>
-            FastFuture.successful(BadRequest("No session found"))
+            FastFuture.successful(BadRequest("No requestSession found"))
         }
       case None =>
         FastFuture.successful(BadRequest("No cookie"))
