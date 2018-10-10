@@ -60,7 +60,7 @@ export default {
       return this.$store.getters.getRunCompiled
     },
     userProfile () {
-      return JSON.parse(localStorage.getItem('profile'))
+      return this.auth.userProfile
     },
     tokenId () {
       return this.$store.getters.getTokenId
