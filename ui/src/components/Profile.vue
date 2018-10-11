@@ -6,7 +6,7 @@
       <steps :permanent-images="permanentImages"></steps>
     </div>
     <div class="col-8 controls" style="height: 20%;">
-      <social-sharing :message="'Checkout Mathbot.com!'" :size="'1vmin'"></social-sharing>
+      <social-sharing :size="'1vmin'"></social-sharing>
       <user-profile-controls :permanent-images="permanentImages"></user-profile-controls>
     </div>
   </div>
