@@ -1,5 +1,7 @@
 <template>
-  <div class="mathbot-header">
+  <div class="mathbot-header"
+    :class="color ? color.split('#').pop() + '-mathbot-header' : ''"
+  >
     MATH<span class="line">_</span>BOT
   </div>
 </template>
@@ -21,7 +23,7 @@ export default {
     }
 
     if (this.color) {
-      $mathbotHeader.css({color: this.color})
+      $(`.${this.color.split('#').pop()}-mathbot-header`).css({color: this.color})
     }
   },
   props: ['fontSize', 'lineHeight', 'color']
