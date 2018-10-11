@@ -88,6 +88,7 @@ Add the following to your environment, then restart your OS
  mathbot_oauth_github_clientId="your_id"
  mathbot_oauth_github_clientSecret="your_secret"
  mathbot_admin_custodianEmail="your_email"
+ mathbot_sendgrid_secretKey="your_sendgrid_secret"
 ```
 
 FYI - if you are using Intellij be sure to do a full restart of your system after you set theses env variables.
