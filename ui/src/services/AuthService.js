@@ -104,7 +104,7 @@ export class AuthService {
     prep.username = form.email
     prep.password = form.password
     prep.picture = form.picture
-    prep.name = form.name
+    prep.name = form.email
     this.clearErrors()
     api.signup(prep, (profile) => {
       this.userProfile = profile
