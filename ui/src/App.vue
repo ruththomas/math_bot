@@ -20,7 +20,7 @@
         <p class="my-4">Cookies must be enabled to use Mathbot</p>
       </div>
       <ul
-        style="list-style: none;"
+        style="list-style: none; margin: 0 auto; display: inline-block; text-align: left;"
       >
         <li><a href="https://support.google.com/accounts/answer/61416?co=GENIE.Platform%3DDesktop&hl=en" target="_blank">Chrome Instructions</a></li>
         <li><a href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences" target="_blank">FireFox Instructions</a></li>
