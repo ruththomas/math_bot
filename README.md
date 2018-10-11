@@ -75,14 +75,22 @@ The project has been built thus far with Intellij
 ### Getting started
 
 #### Github and Google api keys
+You will need keys and secrets for these services
 
-Add the following to your environment, then restart you OS
+- Google API w/Google+ enabled
+- Github
+- SendGrid
+
+Add the following to your environment, then restart your OS
 ```
  mathbot_oauth_google_clientId="your_id"
  mathbot_oauth_google_clientSecret="your_secret"
  mathbot_oauth_github_clientId="your_id"
  mathbot_oauth_github_clientSecret="your_secret"
+ mathbot_admin_custodianEmail="your_email"
 ```
+
+FYI - if you are using Intellij be sure to do a full restart of your system after you set theses env variables.
 
 #### Starting and build app
 
