@@ -7,6 +7,7 @@ export class AuthService {
   userToken = {}
   userProfile = {}
   requestSession = {}
+  cookiesEnabled = !navigator.cookieEnabled
 
   constructor () {
     this._setProfile = this._setProfile.bind(this)
@@ -15,10 +16,6 @@ export class AuthService {
     this._resumeSession = this._resumeSession.bind(this)
     this._requestSession = this._requestSession.bind(this)
     this._resumeSession()
-  }
-
-  _getUserProfile () {
-    return this.userProfile
   }
 
   _storeLastRoute () {
@@ -64,18 +61,15 @@ export class AuthService {
     }, this._requestSession)
   }
 
-  _requestSession () {
+  _requestSession (cb) {
     api.requestSession((requestSession) => {
       this.requestSession = requestSession
+      if (cb) cb()
     }, this._handleErr)
   }
 
   _handleErr (err) {
     $store.dispatch('pushAuthErrors', err.body)
-  }
-
-  _testLegacy (sub) {
-    return sub.includes('auth0|')
   }
 
   clearErrors () {

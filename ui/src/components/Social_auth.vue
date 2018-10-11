@@ -26,9 +26,11 @@ export default {
   },
   methods: {
     onSubmit (provider) {
-      localStorage.setItem('authProvider', provider)
-      const url = this.auth.requestSession.authUrls.find(p => p.provider === provider).url
-      window.location = url
+      this.auth._requestSession(() => {
+        localStorage.setItem('authProvider', provider)
+        const url = this.auth.requestSession.authUrls.find(p => p.provider === provider).url
+        window.location = url
+      })
     }
   },
   props: ['titlePrefix']
