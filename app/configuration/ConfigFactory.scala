@@ -98,7 +98,7 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
   def googleApiConfig(): GoogleApiConfig = {
     GoogleApiConfig(
       oauthUrl = exWrap(mathbot.oauth.google.authUrl, path => playConfig.getString(path).map(Uri(_))),
-      authRedirectUrl = exWrap(mathbot.oauth.google.redirectUrl, envGet, playConfig.getString(_)),
+      authRedirectUrl = exWrap(mathbot.oauth.google.redirectUrl, path => playConfig.getString(path).map(Uri(_))),
       authTokenUrl = exWrap(mathbot.oauth.google.tokenUrl, path => playConfig.getString(path).map(Uri(_))),
       clientId = exWrap(mathbot.oauth.google.clientId, envGet, playConfig.getString(_)),
       clientSecret = exWrap(mathbot.oauth.google.clientSecret, envGet, playConfig.getString(_)),
@@ -110,7 +110,7 @@ class ConfigFactory @Inject()(playConfig: play.api.Configuration) {
   def githubApiConfig(): GithubApiConfig =
     GithubApiConfig(
       oauthUrl = exWrap(mathbot.oauth.github.authUrl, path => playConfig.getString(path).map(Uri(_))),
-      authRedirectUrl = exWrap(mathbot.oauth.github.redirectUrl, envGet, playConfig.getString(_)),
+      authRedirectUrl = exWrap(mathbot.oauth.github.redirectUrl, path => playConfig.getString(path).map(Uri(_))),
       authTokenUrl = exWrap(mathbot.oauth.github.tokenUrl, path => playConfig.getString(path).map(Uri(_))),
       publicEmailsUrl = exWrap(mathbot.oauth.github.publicEmails, path => playConfig.getString(path).map(Uri(_))),
       userUrl = exWrap(mathbot.oauth.github.user, path => playConfig.getString(path).map(Uri(_))),
