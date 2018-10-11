@@ -29,51 +29,6 @@
 
       </validate>
 
-      <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.name)">
-        <div class="input-group-prepend">
-          <span class="input-group-text input-icon" id="name-icon-sm"><i class="fa fa-user"></i></span>
-        </div>
-
-        <input
-          aria-describedby="name-icon-sm"
-          type="text"
-          name="name"
-          class="form-control required-field"
-          required
-          placeholder="Samantha Smith"
-          v-model.lazy="signupForm.name"
-        >
-
-        <field-messages auto-label name="name" show="$touched || $submitted" class="form-control-feedback">
-          <div slot="required">Required field</div>
-        </field-messages>
-
-      </validate>
-
-      <validate
-        auto-label
-        class="form-group"
-        :class="fieldClassName(formstate.picture)"
-        :custom="{validImageUrl: validImageUrl}"
-      >
-        <div class="input-group-prepend">
-          <span class="input-group-text input-icon" id="picture-icon-sm"><i class="fa fa-image"></i></span>
-        </div>
-
-        <input
-          aria-describedby="picture-icon-sm"
-          type="text"
-          name="picture"
-          class="form-control"
-          placeholder="https://link/to/image.png"
-          v-model.lazy="signupForm.picture"
-        >
-
-        <field-messages auto-label name="picture" show="$touched || $submitted" class="form-control-feedback">
-          <div slot="validImageUrl">Not a valid image</div>
-        </field-messages>
-      </validate>
-
       <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.password)">
         <div class="input-group-prepend">
           <span class="input-group-text input-icon" id="password-1-icon-sm"><i class="fa fa-lock"></i></span>
