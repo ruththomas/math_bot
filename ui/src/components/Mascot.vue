@@ -1,5 +1,5 @@
 <template>
-<div class ="splash-screen">
+<div class ="mascot">
 
 <svg width="146px" height="213px" viewBox="0 0 146 213" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <g class="InstructionRobot" fill-rule="evenodd" stroke="none" stroke-width="1" fill="#000000">
@@ -88,7 +88,7 @@ setTimeout(function () {
 
 <style scoped lang="scss">
 
-.splash-screen {
+.mascot {
     position: relative;
     display: flex;
     justify-content: center;
