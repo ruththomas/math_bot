@@ -14,7 +14,6 @@
         :step="step"
         :step-stats="stepStats"></stars>
     </div>
-
   </div>
 </template>
 
