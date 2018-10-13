@@ -161,7 +161,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
 
     request.body.asJson match {
       case Some(json) =>
-        val sr = CompilerRequestConvertFlow.jsonToCompilerCommand(json)
+        val sr = CompilerRequestConvertFlow.jsonToCommand(json)
 
         val compilerProps =
           CompilerActor.props(fakeActor,
