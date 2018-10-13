@@ -2,6 +2,7 @@ GET         /                                                                   
 # Levels
 GET         /api/levels/getStep/:level/:step                                      controllers.LevelController.getStep(level, step, tokenId: Option[String])
 GET         /api/levels/getLevel/:level                                           controllers.LevelController.getLevel(level, tokenId: Option[String])
+GET         /ws/levels                                                            controllers.LevelController.levelSocket
 
 # Compiler
 POST        /api/compile/:tokenId                                                  controllers.MathBotCompiler.compile(tokenId)

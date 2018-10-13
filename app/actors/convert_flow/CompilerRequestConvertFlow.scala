@@ -8,7 +8,7 @@ import play.api.libs.json._
 
 object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
 
-  def jsonToCompilerCommand(msg: JsValue): Any = {
+  def jsonToCommand(msg: JsValue): Any = {
     Json.fromJson[CompilerRequest](msg).asOpt match {
       case Some(CompilerRequest(_, _, Some(true), _)) =>
         CompilerHalt()
@@ -22,6 +22,6 @@ object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
   }
 
   def apply(): Flow[JsValue, Any, NotUsed] = {
-    Flow[JsValue].map(jsonToCompilerCommand)
+    Flow[JsValue].map(jsonToCommand)
   }
 }

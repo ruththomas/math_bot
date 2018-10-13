@@ -1,7 +1,7 @@
 package controllers
 
 import actors.convert_flow.{AdminRequestConvertFlow, AdminResponseConvertFlow}
-import actors.{ActorTags, AdminActor}
+import actors.{ActorTags, LevelActor}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
 import akka.stream.Materializer
@@ -50,7 +50,7 @@ class AdminController @Inject()(
                   AdminRequestConvertFlow()
                     .via(
                       ActorFlow.actorRef { out =>
-                        AdminActor.props(out, playerTokenDAO, ws, environment)
+                        LevelActor.props(out, playerTokenDAO, ws, environment)
                       }
                     )
                     .via(AdminResponseConvertFlow())

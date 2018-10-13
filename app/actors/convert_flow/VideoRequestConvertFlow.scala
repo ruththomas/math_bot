@@ -15,7 +15,7 @@ object VideoRequestConvertFlow extends SocketRequestConvertFlow {
 
   implicit val videoRequestFormat: Reads[VideoRequest] = Json.format[VideoRequest]
 
-  def jsonToCompilerCommand(msg: JsValue): Any = {
+  def jsonToCommand(msg: JsValue): Any = {
     Json.fromJson[VideoRequest](msg).asOpt match {
       case Some(VideoRequest(action, Some(tokenId), None, None)) if action == "get-hint" =>
         GetVideo(tokenId)
@@ -28,6 +28,6 @@ object VideoRequestConvertFlow extends SocketRequestConvertFlow {
   }
 
   def apply(): Flow[JsValue, Any, NotUsed] = {
-    Flow[JsValue].map(jsonToCompilerCommand)
+    Flow[JsValue].map(jsonToCommand)
   }
 }
