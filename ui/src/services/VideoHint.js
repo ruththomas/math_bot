@@ -1,4 +1,5 @@
 import api from './api'
+import { getIdFromURL } from 'vue-youtube-embed'
 /*
 * VideoHintControls - controls video hints
 * */
@@ -9,15 +10,23 @@ class VideoHint {
     this.socket = api.videoHintSocket
   }
 
-  _startVideo (videoURL) {
-    this.$store.dispatch('toggleHintShowing', {showing: true, videoURL: videoURL})
+  freeHintsShown = []
+  currentVideo = null
+
+  showFreeHint (url) {
+    if (!this.freeHintsShown.includes(url)) {
+      this.freeHintsShown.push(url)
+      this.setCurrentVideo(url)
+      this.showVideo()
+    }
   }
 
-  getHint () {
+  showHint () {
     this.socket.getHint(res => {
       if (res.status !== 'no-videos') {
         this.$store.dispatch('addVideoTimer', res.remainingTime)
-        this._startVideo(res.videoURL)
+        this.setCurrentVideo(res.videoURL)
+        this.showVideo()
       } else {
         const messageBuilder = {
           type: 'warn',
@@ -26,6 +35,19 @@ class VideoHint {
         this.$store.dispatch('addMessage', messageBuilder)
       }
     })
+  }
+
+  showVideo () {
+    this.context.$root.$emit('bv::show::modal', 'video-modal')
+  }
+
+  hideVideo () {
+    this.currentVideo = null
+    this.context.$root.$emit('bv::hide::modal', 'video-modal')
+  }
+
+  setCurrentVideo (url) {
+    this.currentVideo = getIdFromURL(url)
   }
 }
 

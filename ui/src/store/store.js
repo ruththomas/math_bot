@@ -3,10 +3,12 @@ import Vuex from 'vuex'
 import VueDefaultValue from 'vue-default-value/dist/vue-default-value'
 import permanentImages from '../assets/assets'
 import Message from '../services/Message'
-import AuthService from '../services/AuthService'
+import { AuthService } from '../services/AuthService'
 import utils from '../services/utils'
 // import api from '../services/api'
 import VideoTimer from '../services/VideoTimer'
+import RunCompiled from '../services/RunCompiled'
+import VideoHint from '../services/VideoHint'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -55,7 +57,6 @@ export default new Vuex.Store({
     currentFunction: 'main',
     programPanelShowing: false,
     editFunctionShowing: false,
-    currentUser: JSON.parse(localStorage.getItem('profile')),
     fullscreen: false,
     robotDeactivated: false,
     lock: {},
@@ -82,9 +83,24 @@ export default new Vuex.Store({
       videoURL: ''
     },
     videoTimers: {},
-    editFunctionEvent: {}
+    editFunctionEvent: {},
+    authErrors: [],
+    runCompiled: {},
+    videoHint: {}
   },
   mutations: {
+    CLEAR_AUTH_ERRORS (state) {
+      state.authErrors = []
+    },
+    PUSH_AUTH_ERRORS (state, msg) {
+      state.authErrors.push(msg)
+    },
+    UPDATE_VIDEO_HINT (state, context) {
+      state.videoHint = new VideoHint(context)
+    },
+    UPDATE_RUN_COMPILED (state, context) {
+      state.runCompiled = new RunCompiled(context)
+    },
     UPDATE_EDIT_FUNCTION_EVENT (state, evt) {
       state.editFunctionEvent = evt
     },
@@ -112,6 +128,8 @@ export default new Vuex.Store({
         })
         return stepData
       }
+      state.auth.userToken.stats.level = stepData.level
+      state.auth.userToken.stats.step = stepData.step
       state.stepData = Object.keys(stepData).length ? reverseTools(stepData) : stepData
     },
     UPDATE_SPLASH_SCREEN_SHOWING (state, bool) {
@@ -203,6 +221,18 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    clearAuthErrors ({commit}) {
+      commit('CLEAR_AUTH_ERRORS')
+    },
+    pushAuthErrors ({commit}, msg) {
+      commit('PUSH_AUTH_ERRORS', msg)
+    },
+    updateVideoHint ({commit}, context) {
+      commit('UPDATE_VIDEO_HINT', context)
+    },
+    updateRunCompiled ({commit}, context) {
+      commit('UPDATE_RUN_COMPILED', context)
+    },
     updateEditFunctionEvent ({commit}, evt) {
       commit('UPDATE_EDIT_FUNCTION_EVENT', evt)
     },
@@ -319,10 +349,13 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getAuthErrors: state => state.authErrors,
+    getVideoHint: state => state.videoHint,
+    getRunCompiled: state => state.runCompiled,
     getEditFunctionEvent: state => state.editFunctionEvent,
     getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,
-    getCurrentUser: state => state.currentUser,
+    getCurrentUser: state => state.auth.userToken,
     getStepData: state => state.stepData,
     getSplashScreenShowing: state => state.splashScreenShowing,
     getPointerPosition: state => state.pointerPosition,

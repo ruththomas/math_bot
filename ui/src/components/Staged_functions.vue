@@ -1,5 +1,6 @@
 <template>
   <div class="staged-functions-container">
+    <active-drop></active-drop>
     <div class="staged-functions-header">
       <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
     </div>
@@ -8,6 +9,7 @@
         class="staged-functions"
         :list="stagedFunctions"
         :options="draggableOptions"
+        @add="deactivateFunction"
       >
         <function-box
           v-for="(func, ind) in stagedFunctions"
@@ -27,6 +29,8 @@
 import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
 import PuzzlePieces from './Puzzle_pieces'
+import ActiveDrop from './Activate_drop'
+import BuildUtils from '../services/BuildFunction'
 
 export default {
   mounted () {
@@ -51,7 +55,7 @@ export default {
         group: {
           name: 'commands-staged',
           pull: true,
-          put: false,
+          put: ['commands-slide'],
           revertClone: true
         },
         animation: 100,
@@ -66,12 +70,19 @@ export default {
     closeStagedFunctions () {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
       this.$store.dispatch('updateEditingIndex', null)
+    },
+    deactivateFunction (evt) {
+      BuildUtils.deactivateFunction({
+        activeIndex: evt.oldIndex,
+        stagedIndex: evt.newIndex
+      })
     }
   },
   components: {
     draggable,
     FunctionBox,
-    PuzzlePieces
+    PuzzlePieces,
+    ActiveDrop
   }
 }
 </script>
@@ -109,10 +120,12 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     width: 100%;
+    z-index: 101;
     .staged-functions {
       width: min-content;
       min-width: 100%;
       width: -moz-min-content;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: flex-start;

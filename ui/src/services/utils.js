@@ -2,6 +2,14 @@ import elementResizeEvent from 'element-resize-event'
 import _ from 'underscore'
 
 const utils = {
+  findStepInd (steps, step) {
+    return steps.reduce((ind, s, i) => {
+      if (s.name === step) {
+        ind = i
+      }
+      return ind
+    }, 0)
+  },
   openPopover (targetId) {
     this.$root.$emit('bv::show::popover', targetId)
   },
@@ -37,8 +45,10 @@ const utils = {
     return stepsInOrder
   },
 
-  parseCamelCase: str => str.split('')
-    .map(l => l === l.toUpperCase() ? ` ${l}` : l).join(''),
+  parseCamelCase (str) {
+    return str.split('')
+      .map(l => l === l.toUpperCase() ? ` ${l}` : l).join('')
+  },
 
   /*
     watcher is a watcher function that uses trampolining to watch a value in the store to change. example use case is to watch for an item to be added to a function in order to trigger the next step of the tutorial.

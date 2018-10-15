@@ -22,6 +22,8 @@
         :ind="ind"
         :collection="list.concat(placeholders)"
         :origin="origin"
+        :data-created-id="func.created_id"
+        @click.native="func.type === 'function' ? editFunction($event, func, findIndex(func)) : () => {}"
       ></function-box>
     </draggable>
   </div>
@@ -52,8 +54,14 @@ export default {
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
+    editingIndex () {
+      return this.$store.getters.getEditingIndex
+    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
+    },
+    activeFunctions () {
+      return this.$store.getters.getActiveFunctions
     }
   },
   data () {
@@ -62,6 +70,39 @@ export default {
     }
   },
   methods: {
+    findIndex (func, _currentInd) {
+      _currentInd = !_currentInd ? 0 : _currentInd
+      const currentFunc = this.activeFunctions[_currentInd]
+      if (func.created_id === currentFunc.created_id) {
+        return _currentInd
+      } else if (Number(func.created_id) < 2000 || _currentInd > func.length) {
+        return undefined
+      }
+      return this.findIndex(func, _currentInd + 1)
+    },
+    toggleEditFunction (ind) {
+      this.$store.dispatch('updateEditingIndex', ind)
+      this.$store.dispatch('updateFunctionAreaShowing', ind === null ? 'editMain' : 'editFunction')
+    },
+    editingFunctionMessage (func) {
+      const messageBuilder = {
+        type: 'success',
+        msg: `${func.name ? `Edit: ${func.name}` : 'Edit: Function'}`
+      }
+      this.$store.dispatch('addMessage', messageBuilder)
+    },
+    handleEditFunctionEvent (evt) {
+      this.$store.dispatch('updateEditFunctionEvent', evt.target)
+    },
+    editFunction (evt, func, ind) {
+      if (ind !== undefined) {
+        $('#open-staged').show()
+        this.handleEditFunctionEvent(evt)
+        const i = ind === this.editingIndex ? null : ind
+        if (i !== null) this.editingFunctionMessage(func)
+        this.toggleEditFunction(i)
+      }
+    },
     createPlaceHolders (size) {
       return _.chain(size)
         .range()
