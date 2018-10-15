@@ -12,7 +12,7 @@ object AdminActor {
   case class UserCount(count: String)
 
   def props(out: ActorRef, playerTokenDAO: PlayerTokenDAO, ws: WSClient, environment: Environment) =
-    Props(new LevelActor(out, playerTokenDAO, ws, environment))
+    Props(new AdminActor(out, playerTokenDAO, ws, environment))
 }
 
 class AdminActor @Inject()(out: ActorRef, playerTokenDAO: PlayerTokenDAO, ws: WSClient, environment: Environment)

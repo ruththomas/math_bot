@@ -26,6 +26,7 @@ export class AuthService {
     const tokenId = this.userProfile.sub || this.userProfile.user_id
     api.getUserToken({tokenId: tokenId}, token => {
       this.userToken = token
+      console.log(token)
       this.authenticated = true
       window.onbeforeunload = this._storeLastRoute
       const lastPath = localStorage.getItem('last_location')
