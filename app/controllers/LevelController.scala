@@ -31,13 +31,15 @@ class LevelController @Inject()(
     val playerAccountDAO: PlayerAccountDAO,
     val adminAuthDAO: AdminAuthDAO,
     val sessionDAO: SessionDAO,
+    val playerTokenDAO: PlayerTokenDAO,
+    val statsDAO: StatsDAO,
+    val lambdasDAO: LambdasDAO,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
     implicit val system: ActorSystem,
     implicit val conf: play.api.Configuration,
     ws: WSClient,
     adminConfig: AdminConfig,
     implicit val ec: ExecutionContext,
-    playerTokenDAO: PlayerTokenDAO,
     logger: MathBotLogger,
     environment: Environment
 ) extends Controller {
@@ -51,7 +53,7 @@ class LevelController @Inject()(
         LevelRequestConvertFlow()
           .via(
             ActorFlow.actorRef { out =>
-              LevelActor.props(out, playerTokenDAO, ws, environment)
+              LevelActor.props(out, statsDAO, lambdasDAO, playerTokenDAO, ws, environment)
             }
           )
           .via(LevelResponseConvertFlow())
