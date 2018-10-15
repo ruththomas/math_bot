@@ -41,6 +41,8 @@ object PlayerActor {
 
   case class DedupFunctions(playerToken: PlayerToken)
 
+  case class DeactivateFunc(tokenId: TokenId, activeIndex: String, stagedIndex: String)
+
   object MakeStats {
     def makeStats(levels: Map[String, RawLevelData]): Stats = {
       val firstLevel = levels.find(rld => rld._2.prevLevel == "None" || !levels.isDefinedAt(rld._2.prevLevel)) match {
@@ -400,6 +402,39 @@ class PlayerActor()(system: ActorSystem,
           .drop(activeIndex.toInt)
         updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
                                       activeFuncs = indexFunctions(updatedActiveFuncs))
+        updatedToken = playerToken.copy(
+          lambdas = Some(updatedLambdas)
+        )
+      } yield {
+        playerTokenDAO.updateToken(updatedToken)
+        updatedLambdas
+      }).map { PreparedLambdasToken.apply }
+        .pipeTo(self)(sender)
+    case DeactivateFunc(tokenId, activeIndex, stagedIndex) =>
+      val oldIndex = activeIndex.toInt
+      val newIndex = stagedIndex.toInt
+
+      def deleteAllInstances(createdId: String, funcList: List[FuncToken]): List[FuncToken] = funcList map { ft =>
+        ft.copy(func = ft.func.map(p => p.filterNot(_.created_id == createdId)))
+      }
+
+      (for {
+        playerTokenOpt <- playerTokenDAO.getToken(tokenId)
+        playerToken = playerTokenOpt.get
+        lambdas = playerToken.lambdas.getOrElse(Lambdas())
+        funcToMove = lambdas
+          .activeFuncs(oldIndex)
+          .copy(name = Some(""), func = Some(List.empty[FuncToken]), color = "default")
+        updatedStagedFuncs = lambdas.stagedFuncs
+          .take(newIndex) ++ List(funcToMove) ++ lambdas.stagedFuncs.drop(newIndex)
+        updatedActiveFuncs = deleteAllInstances(
+          funcToMove.created_id,
+          lambdas.activeFuncs.take(oldIndex) ++ lambdas.activeFuncs.drop(oldIndex + 1)
+        )
+        updatedMainFunc = lambdas.main.func.map(_.filterNot(_.created_id == funcToMove.created_id))
+        updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
+                                      activeFuncs = indexFunctions(updatedActiveFuncs),
+                                      main = lambdas.main.copy(func = updatedMainFunc))
         updatedToken = playerToken.copy(
           lambdas = Some(updatedLambdas)
         )

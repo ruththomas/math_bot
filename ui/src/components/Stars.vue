@@ -1,9 +1,19 @@
 <template>
-  <div v-if="stepStats.active" class="stars star-spread">
-    <star class="star-one" :star-group="starGroup" :success="success(1)"></star>
-    <star class="star-two" :star-group="starGroup" :success="success(2)"></star>
-    <star class="star-three" :star-group="starGroup" :success="success(3)"></star>
-    <span v-if="timer.stars < 3" class="star-timer" :class="'star-timer-' + starGroup">{{ convertTime(remainingTime) }}</span>
+  <div v-if="stepStats.active" class="stars">
+    <div class="star-spread">
+      <star class="star-one" :star-group="starGroup" :active="isActive(1)"></star>
+      <star class="star-two" :star-group="starGroup" :active="isActive(2)"></star>
+      <star class="star-three" :star-group="starGroup" :active="isActive(3)"></star>
+    </div>
+    <div v-if="timer.stars < 3" class="progress">
+      <div class="progress-bar progress-bar-striped progress-bar-animated"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           :style="{width: `${timeSpent}%`, 'background-color': 'rgba(0, 0, 0, 0.5)'}"
+      ></div>
+    </div>
   </div>
   <div v-else class="stars">
     <img :src="permanentImages.lock" style="height: 1.5em;" />
@@ -12,16 +22,15 @@
 
 <script>
 import Star from './Star'
-import _ from 'underscore'
 
 export default {
   name: 'Timer',
-  mounted () {
-    // console.log(this.stepStats)
-  },
   computed: {
     timer () {
       return this.videoTimers[`${this.level}/${this.step}`] || {stars: 3}
+    },
+    timeSpent () {
+      return 100 - this.remainingTime * 100 / 3600
     },
     remainingTime () {
       if (this.timer) return this.timer.remainingTime
@@ -34,20 +43,14 @@ export default {
       return this.$store.getters.getPermanentImages
     }
   },
+  data () {
+    return {
+      counter: 45,
+      max: 100
+    }
+  },
   methods: {
-    convertTime (totalSeconds) {
-      const minutes = Math.floor(totalSeconds / 60)
-      const seconds = Math.floor(totalSeconds - minutes * 60)
-      return _.chain([minutes, seconds])
-        .map(t => {
-          if (t < 10) return '0' + t
-          else if (t === 0) return '00'
-          else return t
-        })
-        .value()
-        .join(':')
-    },
-    success (starNumber) {
+    isActive (starNumber) {
       if (starNumber === 1) {
         return this.timer.stars >= 3
       } else if (starNumber === 2) {
@@ -70,25 +73,34 @@ $star-cluster-star-two-three-size: 30px;
 $star-spread-star-size: 40px;
 $stars-shadow: inset 0 0 100px #778899;
 $star-congrats-star-size: 70px;
-$star-timer-right: 100%;
-$star-timer-bottom: -85%;
+$star-timer-right: 0;
+$star-timer-top: 100%;
+$star-timer-left: 0;
 $star-timer-font-size: 1.5vmin;
 $star-timer-margin-right: 5px;
+$click-color: #B8E986;
 
 .stars {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
   cursor: pointer;
-}
+  width: min-content;
+  margin: 0 auto;
 
-.star-timer {
-  position: absolute;
-  bottom: $star-timer-bottom;
-  font-size: $star-timer-font-size;
-  color: #ffffff;
+  .progress {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+
+    .progress-bar {
+      min-width: 3px;
+    }
+  }
 }
 
 .help-button {
@@ -97,20 +109,9 @@ $star-timer-margin-right: 5px;
   }
 }
 
-.star-cluster {
-  color: #ffffff;
-  .star-one {
-    align-self: flex-start;
-    margin-top: -10px;
-  }
-
-  .star-two, .star-three {
-    align-self: flex-end;
-    margin-bottom: -10px;
-  }
-}
-
 .star-spread {
+  display: flex;
+  z-index: 101;
   .star-one, .star-two, .star-three {
     align-self: center;
   }

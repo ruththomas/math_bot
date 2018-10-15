@@ -1,26 +1,32 @@
 <template>
   <div class="row control-panel">
-    <img @click="goToProfile()"
-         class="return-to-profile"
-         :src="permanentImages.returnToProfile"
-         data-toggle="tooltip" title="Return to profile"
-    />
-    <div class="col" style="padding: 0;">
+    <div class="" style="padding: 0;">
       <img :src="permanentImages.instructionsRobot" class="instructions-robot">
     </div>
-    <div class="col" style="padding: 0;">
-      <speech-bubble :html="description" :showing="speechBubbleShowing"></speech-bubble>
+
+    <div
+      class="btn button-effect help-button"
+      @click="[videoHint.showHint()]"
+    >
+      <stars
+        :star-group="'star-spread'"
+        :level="level"
+        :step="step"
+        :step-stats="stepStats"></stars>
     </div>
   </div>
 </template>
 
 <script>
-import SpeechBubble from './Speech_bubble'
 import RobotCarrying from './Robot_carrying'
+import Stars from './Stars'
 
 export default {
   name: 'control-panel',
   computed: {
+    runCompiled () {
+      return this.$store.getters.getRunCompiled
+    },
     tryAgainShowing () {
       return this.$store.getters.getTryAgainShowing
     },
@@ -40,38 +46,55 @@ export default {
       return this.$store.getters.getSteps
     },
     step () {
-      const stepName = this.$store.getters.getStep
+      return this.$store.getters.getStep
+    },
+    level () {
+      return this.$store.getters.getLevel
+    },
+    stepStats () {
+      const stepName = this.step
       return this.steps.find(s => s.name === stepName)
+    },
+    videoHint () {
+      return this.$store.getters.getVideoHint
     }
   },
   data () {
     return {
-      speechBubbleShowing: true
-    }
-  },
-  methods: {
-    goToProfile () {
-      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
-      this.$store.dispatch('deleteMessages')
-      this.$router.push({path: 'profile'})
+      speechBubbleShowing: true,
+      getTime: false,
+      counter: 45,
+      max: 100
     }
   },
   components: {
-    SpeechBubble,
-    RobotCarrying
+    RobotCarrying,
+    Stars
   }
 }
 </script>
 
 <style scoped lang="scss">
+  $click-color: #B8E986;
   $instructions-robot-size: 13vmin;
   $grid-space-size: 9vmin;
+  $grid-background: rgba(0, 0, 0, 0.6);
 
   .control-panel {
     display: flex;
     align-items: flex-end;
+    justify-content: space-between;
     position: relative;
-    right: calc(#{$grid-space-size} * 0.75);
+    width: 100%;
+    margin: 0;
+
+    .help-button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background-color: $grid-background;
+      display: flex;
+      z-index: 100;
+    }
   }
 
   .instructions {
@@ -88,26 +111,10 @@ export default {
 
   .instructions-robot {
     height: $instructions-robot-size;
+    margin-left: calc(#{$grid-space-size} / 3);
   }
 
   .instructions-filler-left {
     width: 120px;
-  }
-
-  .return-to-profile {
-    position: fixed;
-    left: auto;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-    height: 15vmin;
-    width: 15vmin;
-  }
-
-  @media only screen and (max-width: 902px) {
-    .return-to-profile {
-      left: auto;
-      right: 0;
-    }
   }
 </style>
