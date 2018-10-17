@@ -9,4 +9,10 @@ package object types {
   type StarSystemName = String
   type PlanetName = String
   type ContinentName = String
+  type LayerId = String
+  type PlanetId = String
+  type GalaxyId = String
+  type SuperClusterId = String
+  type StarSystemId = String
+  type ContinentId = String
 }

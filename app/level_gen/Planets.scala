@@ -1,27 +1,32 @@
 package level_gen
-import level_gen.models.Planet
+import level_gen.models.CelestialSystem
 
-trait Planets extends Continents {
+trait Planets extends Continents with LevelGenTags {
   val programming = List(
-    Planet(
+    CelestialSystem(
       name = "BasicProgramming",
-      continents = basicProgramming
+      kind = planet,
+      children = basicProgramming
     ),
-    Planet(
+    CelestialSystem(
       name = "Counting",
-      continents = counting
+      kind = planet,
+      children = counting
     ),
-    Planet(
+    CelestialSystem(
       name = "Numbers",
-      continents = numbers
+      kind = planet,
+      children = numbers
     ),
-    Planet(
+    CelestialSystem(
       name = "Recursion",
-      continents = recursion
+      kind = planet,
+      children = recursion
     ),
-    Planet(
+    CelestialSystem(
       name = "Conditionals",
-      continents = conditionals
+      kind = planet,
+      children = conditionals
     )
   )
 }
