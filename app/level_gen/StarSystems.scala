@@ -1,11 +1,12 @@
 package level_gen
-import level_gen.models.{Planet, StarSystem}
+import level_gen.models.CelestialSystem
 
-trait StarSystems extends Planets {
+trait StarSystems extends Planets with LevelGenTags {
   val galaxy1 = List(
-    StarSystem(
+    CelestialSystem(
       name = "Programming",
-      planets = programming
+      kind = starSystem,
+      children = programming
     )
   )
 }

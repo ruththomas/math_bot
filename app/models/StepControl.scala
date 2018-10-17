@@ -54,15 +54,11 @@ object StepControl {
   }
 }
 
-class StepControl(rawStepData: RawStepData, lambdas: Lambdas) {
+class StepControl(parameters: List[String], description: String, lambdas: Lambdas) {
 
   import StepControl._
 
-  val parameters: List[String] = rawStepData.specialParameters
-  val description: String = rawStepData.description
-  val activeFuncs: List[FuncToken] = lambdas.activeFuncs
-
   def success(frame: Frame, problem: Problem): Boolean = {
-    isFinalSpot(frame) && totalDropped(frame, problem) && checkParams(parameters, activeFuncs, lambdas)
+    isFinalSpot(frame) && totalDropped(frame, problem) && checkParams(parameters, lambdas.activeFuncs, lambdas)
   }
 }

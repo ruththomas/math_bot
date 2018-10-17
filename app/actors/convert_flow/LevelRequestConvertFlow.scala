@@ -15,13 +15,22 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
   )
   override def jsonToCommand(msg: JsValue): Any = {
     Json.fromJson[LevelRequest](msg).asOpt match {
-      case Some(LevelRequest(action, None)) if action == "get-super-cluster" =>
+      case Some(LevelRequest(action, None))
+          if action == "get-raw-super-cluster" => // was used for testing, is probably garbage
         GetSuperCluster("SuperCluster1")
       case Some(LevelRequest(action, None)) if action == "get-stats" =>
         GetStats("mathbot|xa5skmltsyyqsRGgW3JA6A==") // todo - tokenId needs to come from cookie
 //        GetStats("somecrazymofo")
+      case Some(LevelRequest(action, None)) if action == "get-super-cluster" =>
+        GetSuperClusterData("somecrazymofo")
+      case Some(LevelRequest(action, None)) if action == "get-galaxy" =>
+        GetGalaxyData("somecrazymofo")
+      case Some(LevelRequest(action, None)) if action == "get-star-system" =>
+        GetStarSystemData("somecrazymofo", "000")
+      case Some(LevelRequest(action, None)) if action == "get-planet" =>
+        GetPlanetData("somecrazymofo")
       case Some(LevelRequest(action, None)) if action == "get-continent" =>
-        GetContinent("somecrazymofo")
+        GetContinentData("mathbot|xa5skmltsyyqsRGgW3JA6A==", "00000")
       case Some(LevelRequest(action, Some(LevelUpdateRequest(starSystem, planet, continent))))
           if action == "change-level" =>
         ChangeLevel("somecrazymofo", starSystem, planet, continent)

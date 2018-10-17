@@ -1,22 +1,24 @@
 package actors
 
 import actors.messages.ActorFailed
+import actors.messages.level._
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
 import daos.{LambdasDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
-import level_gen.models.SuperCluster
 import play.api.Environment
 import play.api.libs.ws.WSClient
 import types._
-import messages.level._
-import scala.collection.mutable
 
 object LevelActor {
   final case class GetSuperCluster(name: String)
   final case class GetLambdas(tokenId: TokenId)
   final case class GetStats(tokenId: TokenId)
-  final case class GetContinent(tokenId: TokenId)
+  final case class GetSuperClusterData(tokenId: TokenId)
+  final case class GetGalaxyData(tokenId: TokenId)
+  final case class GetStarSystemData(tokenId: TokenId, key: StarSystemId)
+  final case class GetPlanetData(tokenId: TokenId)
+  final case class GetContinentData(tokenId: TokenId, key: ContinentId)
   final case class ChangeLevel(tokenId: TokenId, starSystemInd: Int, planetInd: Int, continentInd: Int)
   final case class HandleWin(tokenId: TokenId)
   final case class HandleLoss(tokenId: TokenId)
@@ -58,7 +60,7 @@ class LevelActor @Inject()(out: ActorRef,
      * Get users stats
      * */
     case GetStats(tokenId) =>
-      statsDAO.find(tokenId).map {
+      statsDAO.findStats(tokenId).map {
         case Some(stats) => // if the user already has new stats
           out ! stats
         case None => // else
@@ -77,27 +79,59 @@ class LevelActor @Inject()(out: ActorRef,
             }
             .map(out ! _)
       }
-    /*
-     * Get the current (from stats table) continent step data
-     * */
-    case GetContinent(tokenId) => // todo - make this return step data
-      statsDAO.find(tokenId).map {
-        case Some(stats) =>
-          out ! SuperClusters
-            .getCluster("SuperCluster1")
+    case GetGalaxyData(tokenId) =>
+      statsDAO.gatherGalaxy(tokenId, "00").map {
+        case Some(data) =>
+          val galaxy = data("galaxy").head
+          out ! GalaxyData(
+            id = galaxy._1,
+            starSystems = data("starSystems").toList.sortBy(_._1.substring(3)).map { s =>
+              StarSystemData(s._1, s._2, None)
+            }
+          )
         case None => self ! ActorFailed(s"Unable to locate stats for $tokenId")
       }
-    /*
-     * Change the current level and return the step data for the current continent
-     * */
-    case ChangeLevel(tokenId, starSystemInd, planetInd, continentInd) => // todo - make this return step data
-      statsDAO.updateLevel(tokenId, starSystemInd, planetInd, continentInd).map {
-        case Some(_) =>
-          out ! SuperClusters
-            .getCluster("SuperCluster1")
-        case None => self ! ActorFailed(s"Unable to update $tokenId's level.")
+    case GetStarSystemData(tokenId, key) =>
+      statsDAO.gatherStarSystem(tokenId, key).map {
+        case Some(data) =>
+          val continents = data("continents")
+          val planets = data("planets").toList.sortBy(_._1.last.toInt).map { p =>
+            PlanetData(
+              id = p._1,
+              stats = p._2,
+              continents =
+                continents.filterKeys(_.take(4).contains(p._1)).toList.sortBy(_._1.substring(4).toInt).map { c =>
+                  ContinentData(c._1, c._2)
+                }
+            )
+          }
+          val starSystem = data("starSystem").head
+          out ! StarSystemData(
+            starSystem._1,
+            starSystem._2,
+            Some(planets)
+          )
+        case None => self ! ActorFailed(s"Unable to locate stats for $tokenId")
       }
-    case HandleWin(tokenId) => ??? // todo - make this return step data
+    case GetContinentData(tokenId, key) =>
+      for {
+        playerToken <- playerTokenDAO.getToken(tokenId)
+      } yield {
+        val superCluster = SuperClusters.getCluster("SuperCluster1")
+        val path = Stats.makePath(key)
+        val struct = superCluster
+          .children(path(0))
+          .children(path(1))
+          .children(path(2))
+          .children(path(3))
+          .continentStruct
+          .get
+        out ! BuiltContinent(
+          lambdas = playerToken.get.lambdas.get,
+          continentStruct = struct
+        )
+      }
+    case HandleWin(tokenId) => ???
     case HandleLoss(tokenId) => ???
     case actorFailed: ActorFailed => out ! actorFailed
   }

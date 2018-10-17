@@ -1,12 +1,13 @@
 package level_gen
 import actors.messages.AssignedFunction
-import level_gen.models.{Continent, ContinentStruct}
+import level_gen.models.{CelestialSystem, ContinentStruct}
 
-trait Continents {
+trait Continents extends LevelGenTags {
   val basicProgramming = List(
-    Continent(
+    CelestialSystem(
       name = "WalkOne",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -36,9 +37,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "WalkThree",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| ($) |E| |E| |E| |E|",
@@ -68,9 +70,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "WalkThree",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| ($) |E| |E| |E| |E|",
@@ -100,9 +103,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "WalkFour",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -132,9 +136,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "WalkFourWithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -179,9 +184,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "EditFirstFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -212,9 +218,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "TurnRight",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -244,9 +251,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "CreateNewFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -286,9 +294,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "TurnLeft",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -328,9 +337,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "WalkAndTurn",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| ($) |E| |E| |E| |E|",
@@ -360,9 +370,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "WalkAndTurnWithFunctions",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| ($) |E| |E| |E| |E|",
@@ -394,9 +405,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Maze1",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |W| |E| |W| |E| |E|",
@@ -427,9 +439,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Maze2",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| |W| |W| |W| |W| |E| |E|",
@@ -460,9 +473,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Maze3",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
@@ -496,9 +510,10 @@ trait Continents {
   )
 
   val counting = List(
-    Continent(
+    CelestialSystem(
       name = "Pickup",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -529,9 +544,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup3",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E|             |E| |E| |E| |E| |E| |E|",
@@ -562,9 +578,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup5",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -595,9 +612,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup4",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -628,9 +646,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Navigate",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "($) |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -661,9 +680,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup2WithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -694,9 +714,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup1WithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -727,9 +748,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup5WithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -760,9 +782,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup9WithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -793,9 +816,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup4WithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -826,9 +850,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup6WithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -859,9 +884,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup8WithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -892,9 +918,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Pickup3WithFunction",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -928,9 +955,10 @@ trait Continents {
   )
 
   val numbers = List(
-    Continent(
+    CelestialSystem(
       name = "Number7",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -961,9 +989,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Number8",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -994,9 +1023,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "SevenAgain",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -1027,9 +1057,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Number2",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -1060,9 +1091,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "SevenAgainAgain",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -1093,9 +1125,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Number3",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -1126,9 +1159,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Reuse7",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -1159,9 +1193,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Number5",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -1192,9 +1227,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "ReuseCode",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
@@ -1228,9 +1264,10 @@ trait Continents {
   )
 
   val recursion = List(
-    Continent(
+    CelestialSystem(
       name = "RecurForward",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -1271,9 +1308,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "WalkAround",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |E| |E| |E| |E| |E| |W| |W|",
@@ -1314,9 +1352,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "SmallSpiral",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| (R) |E| |E| |E| |W| |W|",
@@ -1349,9 +1388,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "BigSpiral",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "(R) |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -1384,9 +1424,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Stairs",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "(R) |W| |W| |W| |W| |W| |W| |W| |W| |W|",
@@ -1427,9 +1468,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "LongStairs",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "(R) |E| |E| |W| |W| |W| |W| |W| |W| |W|",
@@ -1462,9 +1504,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "Snake",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |W| |E| |E| |E| |W| |E| |E|",
@@ -1505,9 +1548,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "ZigZag",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |W| |E| |E| |E| |W| |E| ($)",
@@ -1540,9 +1584,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "CleanUp",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -1583,9 +1628,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "CleanUpMore",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -1640,9 +1686,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "PickupPile",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -1675,9 +1722,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "CleanComb",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| [TS(1)] |W| [TS(1)] |W| [TS(1)] |W| [TS(1)] |W| ($)",
@@ -1718,9 +1766,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "CleanComb2",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |E| [TS(1)] |W| |E| [TS(1)] |W| |E| [TS(1)] |W|",
@@ -1753,9 +1802,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "CleanComb3",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |E| |E| |E|     |W| |W| |E| |E| |E|     |W|",
@@ -1788,9 +1838,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "CleanZigZags",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
@@ -1826,9 +1877,10 @@ trait Continents {
   )
 
   val conditionals = List(
-    Continent(
+    CelestialSystem(
       name = "1",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| |W| |W| |W| |W| ($) |W|",
@@ -1883,9 +1935,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "2",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| ($) |W| |W| |W| |W| |W|",
@@ -1924,9 +1977,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "3",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "($) |E| |E| |E| |E| |E| |E| |E| |E| [TS(1g)]",
@@ -1965,9 +2019,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "4",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| (R) |W| |W| |W| |W| |W|",
@@ -2013,9 +2068,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "5",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "(R) |E| |E| |E| |E| |E| |E| |E| |E| [TS(10)]",
@@ -2053,9 +2109,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "6",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "(R) |E| |E| |E| [TS(1)] |E| |E| |E| |E| [TS(10g)]",
@@ -2093,9 +2150,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "7",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "($) |E| [TS(10)] |E| [TS(1g)] [TS(10g)] [TS(1)] |E| |E| [TS(100)]",
@@ -2134,9 +2192,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "8",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
@@ -2176,9 +2235,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "9",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
@@ -2218,9 +2278,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "10",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W| [TS(100) |E| [TS(10g)] |W| ($)     |W| |W| |W| |W|",
@@ -2277,9 +2338,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "11",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|W|     |W| |W|       [TS(1)] |E|       [TS(10)]  |W| |W|      ($) [TS(100)]",
@@ -2330,9 +2392,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "12",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -2387,9 +2450,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "13",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -2446,9 +2510,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "14",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -2490,9 +2555,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "15",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
@@ -2534,9 +2600,10 @@ trait Continents {
         )
       )
     ),
-    Continent(
+    CelestialSystem(
       name = "16",
-      struct = Some(
+      kind = continent,
+      continentStruct = Some(
         ContinentStruct(
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
