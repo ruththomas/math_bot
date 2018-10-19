@@ -4,7 +4,7 @@ import actors.messages.ActorFailed
 import actors.messages.level._
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
-import daos.{LambdasDAO, PlayerTokenDAO, StatsDAO}
+import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
 import play.api.Environment
 import play.api.libs.ws.WSClient
@@ -22,6 +22,7 @@ object LevelActor {
   final case class ChangeLevel(tokenId: TokenId, starSystemInd: Int, planetInd: Int, continentInd: Int)
   final case class HandleWin(tokenId: TokenId)
   final case class HandleLoss(tokenId: TokenId)
+  final case class CreateContinentData(functions: Functions, key: String)
 
   private final val galaxyLabel: String = "galaxy"
   private final val starSystemLabel: String = "starSystem"
@@ -30,7 +31,7 @@ object LevelActor {
 
   def props(out: ActorRef,
             statsDAO: StatsDAO,
-            lambdasDAO: LambdasDAO,
+            lambdasDAO: FunctionsDAO,
             playerTokenDAO: PlayerTokenDAO,
             ws: WSClient,
             environment: Environment) =
@@ -39,7 +40,7 @@ object LevelActor {
 
 class LevelActor @Inject()(out: ActorRef,
                            statsDAO: StatsDAO,
-                           lambdasDAO: LambdasDAO,
+                           lambdasDAO: FunctionsDAO,
                            playerTokenDAO: PlayerTokenDAO,
                            ws: WSClient,
                            environment: Environment)
@@ -51,11 +52,10 @@ class LevelActor @Inject()(out: ActorRef,
 
   override def receive: Receive = {
     /*
-     * Gets entire game layout
+     * Gets entire game layout, not actually useful for the game, just for testing.
      * */
     case GetSuperCluster(name) =>
       out ! SuperClusters.getCluster("SuperCluster1")
-    case GetLambdas(tokenId) => ???
     /*
      * Get users stats
      * */
@@ -79,6 +79,10 @@ class LevelActor @Inject()(out: ActorRef,
             }
             .map(out ! _)
       }
+    /*
+     * Get galaxy data, children is a list of the star system data without the continents.
+     * Use the star system id to get the star system and all its children
+     * */
     case GetGalaxyData(tokenId) =>
       statsDAO.gatherGalaxy(tokenId, "00").map {
         case Some(data) =>
@@ -91,6 +95,10 @@ class LevelActor @Inject()(out: ActorRef,
           )
         case None => self ! ActorFailed(s"Unable to locate stats for $tokenId")
       }
+    /*
+     * Get star system data and all of its children.
+     * Planets data child's contain the continents stats and id for rendering in the profile page.
+     * */
     case GetStarSystemData(tokenId, key) =>
       statsDAO.gatherStarSystem(tokenId, key).map {
         case Some(data) =>
@@ -113,24 +121,39 @@ class LevelActor @Inject()(out: ActorRef,
           )
         case None => self ! ActorFailed(s"Unable to locate stats for $tokenId")
       }
+    /*
+     * Gets the built continent data for loading a continent.
+     * */
     case GetContinentData(tokenId, key) =>
-      for {
-        playerToken <- playerTokenDAO.getToken(tokenId)
-      } yield {
-        val superCluster = SuperClusters.getCluster("SuperCluster1")
-        val path = Stats.makePath(key)
-        val struct = superCluster
-          .children(path(0))
-          .children(path(1))
-          .children(path(2))
-          .children(path(3))
-          .continentStruct
-          .get
-        out ! BuiltContinent(
-          lambdas = playerToken.get.lambdas.get,
-          continentStruct = struct
-        )
+      lambdasDAO.find(tokenId).map {
+        case Some(functions) => // already in new system
+          self ! CreateContinentData(functions, key)
+        case None =>
+          playerTokenDAO.getToken(tokenId).map {
+            case Some(models.PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
+              val swappedFunctions: Functions = Functions(tokenId, lambdas.get)
+              lambdasDAO.insert(swappedFunctions)
+              self ! CreateContinentData(swappedFunctions, key)
+            case _ => // new account
+              val functions: Functions = Functions(tokenId)
+              lambdasDAO.insert(functions)
+              self ! CreateContinentData(functions, key)
+          }
       }
+    case CreateContinentData(functions, key) =>
+      val superCluster = SuperClusters.getCluster("SuperCluster1")
+      val path = Stats.makePath(key)
+      val struct = superCluster
+        .children(path(0))
+        .children(path(1))
+        .children(path(2))
+        .children(path(3))
+        .continentStruct
+        .get
+      out ! BuiltContinent(
+        functions = functions,
+        continentStruct = struct
+      )
     case HandleWin(tokenId) => ???
     case HandleLoss(tokenId) => ???
     case actorFailed: ActorFailed => out ! actorFailed

@@ -1,7 +1,6 @@
 package actors.messages.level
 
 import actors.VideoHintActor.embedURL
-import actors.messages.ResponseLambdas
 import level_gen.models.ContinentStruct
 import models.Problem.makeProblem
 import models._
@@ -9,7 +8,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 object BuiltContinent {
-  def apply(lambdas: Lambdas, continentStruct: ContinentStruct): BuiltContinent =
+  def apply(functions: Functions, continentStruct: ContinentStruct): BuiltContinent =
     new BuiltContinent(
       gridMap = buildGrid(continentStruct.gridMap),
       description = makeDescription(continentStruct),
@@ -17,13 +16,13 @@ object BuiltContinent {
       initialRobotState = setInitialRobot(continentStruct),
       stagedEnabled = continentStruct.stagedEnabled,
       activeEnabled = continentStruct.activeEnabled,
-      lambdas = ResponseLambdas(lambdas),
+      lambdas = PreparedFunctions(functions, continentStruct),
       toolList = ToolList(),
       specialParameters = continentStruct.specialParameters,
       problem = problemGen(continentStruct.problem),
       initFocus = createInitFocus(continentStruct.initFocus),
       freeHint = freeHintUrl(continentStruct.freeHint),
-      stepControl = new StepControl(continentStruct.specialParameters, continentStruct.description, lambdas)
+      stepControl = new ContinentControl(continentStruct.specialParameters, continentStruct.description, functions)
     )
 
   case class InitialRobotState(location: Map[String, Int], orientation: String, holding: List[String])
@@ -99,7 +98,7 @@ object BuiltContinent {
   )(unlift(InitialRobotState.unapply))
 
   val stepDataReads: Reads[BuiltContinent] = (
-    (JsPath \ "lambdas").read[Lambdas] and
+    (JsPath \ "functions").read[Functions] and
     (JsPath \ "continentStruct").read[ContinentStruct]
   )(BuiltContinent(_, _))
 
@@ -110,13 +109,13 @@ object BuiltContinent {
     (JsPath \ "initialRobotState").write[InitialRobotState] and
     (JsPath \ "stagedEnabled").write[Boolean] and
     (JsPath \ "activeEnabled").write[Boolean] and
-    (JsPath \ "lambdas").write[ResponseLambdas] and
+    (JsPath \ "lambdas").write[PreparedFunctions] and
     (JsPath \ "toolList").write[ToolList] and
     (JsPath \ "specialParameters").write[List[String]] and
     (JsPath \ "problem").write[Problem] and
     (JsPath \ "initFocus").write[List[String]] and
     (JsPath \ "freeHint").writeNullable[String] and
-    OWrites[StepControl](_ => Json.obj())
+    OWrites[ContinentControl](_ => Json.obj())
   )(unlift(BuiltContinent.unapply))
 
   implicit val stepDataFormat: Format[BuiltContinent] =
@@ -130,11 +129,11 @@ case class BuiltContinent(
     initialRobotState: BuiltContinent.InitialRobotState,
     stagedEnabled: Boolean,
     activeEnabled: Boolean,
-    lambdas: ResponseLambdas,
+    lambdas: PreparedFunctions,
     toolList: ToolList,
     specialParameters: List[String],
     problem: Problem,
     initFocus: List[String],
     freeHint: Option[String],
-    stepControl: StepControl
+    stepControl: ContinentControl
 )

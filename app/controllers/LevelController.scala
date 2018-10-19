@@ -33,7 +33,7 @@ class LevelController @Inject()(
     val sessionDAO: SessionDAO,
     val playerTokenDAO: PlayerTokenDAO,
     val statsDAO: StatsDAO,
-    val lambdasDAO: LambdasDAO,
+    val lambdasDAO: FunctionsDAO,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
     implicit val system: ActorSystem,
     implicit val conf: play.api.Configuration,
