@@ -4,9 +4,10 @@
       <div class="func-param-form">
         <puzzle-pieces
           :id="'edit-function-displayed-func'"
-          :func="{name: '', image: editingFunction.image, color: editingFunction.color}"
+          :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayImage: editingFunction.displayImage}"
           :piece-to-show="'closed'"
           :show-name="false"
+          @click.native="toggleImage"
         ></puzzle-pieces>
         <div
           class='function-control'
@@ -201,6 +202,9 @@ export default {
           $ele.addClass(animationClass)
         }
       })
+    },
+    toggleImage () {
+      buildUtils.toggleImage()
     },
     fullMessage () {
       const messageBuilder = {
