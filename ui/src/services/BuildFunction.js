@@ -112,6 +112,12 @@ class BuildFunction {
   moveFunction ({oldIndex, newIndex}) {
     this._moveFunction({oldIndex: oldIndex, newIndex: newIndex})
   }
+
+  toggleImage () {
+    const currentFunc = this._getCurrentFunction()
+    currentFunc.displayImage = !currentFunc.displayImage
+    this._putFunc({funcToken: currentFunc, override: true})
+  }
 }
 
 const buildUtils = new BuildFunction()
