@@ -34,6 +34,10 @@ class Robot {
     {
       display: '3x',
       speed: 100
+    },
+    {
+      display: 'l',
+      speed: 10
     }
   ]
 
