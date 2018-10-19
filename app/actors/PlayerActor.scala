@@ -298,12 +298,12 @@ class PlayerActor()(system: ActorSystem,
             .pipeTo(self)(sender)
       }
     case ChangeFunctionColor(jsValue: JsValue) =>
-      def changeAllInstancesColor(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] = funcList.map {
-        ft =>
+      def changeAllInstancesColor(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] =
+        funcList.map { ft =>
           val func = ft.func.getOrElse(List.empty[FuncToken])
           ft.copy(color = if (ft.created_id == funcToken.created_id) funcToken.color else ft.color,
                   func = Some(changeAllInstancesColor(func, funcToken)))
-      }
+        }
       jsValue.validate[PrepareLambdas].asOpt match {
         case Some(prepareLambdas) =>
           playerTokenDAO
@@ -345,6 +345,13 @@ class PlayerActor()(system: ActorSystem,
             .pipeTo(self)(sender)
       }
     case UpdateFunc(funcToken, playerToken, overrideBool) =>
+      // this is just temporary until level refactor is complete
+      def changeAllDisplayImages(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] =
+        funcList.map { ft =>
+          val func = ft.func.getOrElse(List.empty[FuncToken])
+          ft.copy(displayImage = if (ft.created_id == funcToken.created_id) funcToken.displayImage else ft.displayImage,
+                  func = Some(changeAllDisplayImages(func, funcToken)))
+        }
       for {
         stats <- playerToken.stats
         lambdas <- playerToken.lambdas
@@ -366,8 +373,14 @@ class PlayerActor()(system: ActorSystem,
           if (funcTokenLengthInBounds || mainFuncLengthInBounds || overrideBool) {
             playerToken.copy(lambdas = Some(if (funcType == "function") {
               lambdas.copy(
-                activeFuncs = indexFunctions(
-                  lambdas.activeFuncs.map(f => if (f.created_id == funcToken.created_id) funcToken else f)
+                main = lambdas.main.copy(
+                  func = lambdas.main.func.map(changeAllDisplayImages(_, funcToken))
+                ),
+                activeFuncs = changeAllDisplayImages(
+                  indexFunctions(
+                    lambdas.activeFuncs.map(f => if (f.created_id == funcToken.created_id) funcToken else f)
+                  ),
+                  funcToken
                 )
               )
             } else {

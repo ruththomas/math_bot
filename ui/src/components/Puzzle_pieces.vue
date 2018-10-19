@@ -56,7 +56,8 @@
         </g>
       </g>
     </svg>
-    <img :src="funcAndCmdImages[func.image]" />
+    <img v-if="func.displayImage === undefined || func.displayImage" :src="funcAndCmdImages[func.image]" />
+    <span class="text" v-else> {{ func.name }}</span>
     <div
       v-if="pieceToShow === 'closed' && showName  "
       class="piece-name"
@@ -130,6 +131,19 @@ export default {
     width: -moz-min-content;
     cursor: grab;
     border-radius: 3px;
+
+    .text {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5vmin;
+      line-height: 1.6vmin;
+    }
 
     img {
       height: 50%;
