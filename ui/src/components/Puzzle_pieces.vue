@@ -141,8 +141,8 @@ export default {
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 1.5vmin;
-      line-height: 1.6vmin;
+      font-size: 2vmin;
+      line-height: 2.1vmin;
     }
 
     img {
