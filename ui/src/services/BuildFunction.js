@@ -115,7 +115,7 @@ class BuildFunction {
 
   toggleImage () {
     const currentFunc = this._getCurrentFunction()
-    currentFunc.displayImage = !currentFunc.displayImage
+    currentFunc.displayImage = currentFunc.displayImage === undefined ? false : !currentFunc.displayImage
     this._putFunc({funcToken: currentFunc, override: true})
   }
 }
