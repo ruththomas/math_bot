@@ -4,16 +4,19 @@ import actors.messages.level.{Function, Functions}
 import com.google.inject.Inject
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
-import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase}
+import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase, SingleObservable}
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
+import org.mongodb.scala.bson.collection.mutable.Document
 import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Updates._
+import org.mongodb.scala.result.UpdateResult
 import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class FunctionsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
-  final val collectionLabel = "lambdas"
-  final val tokenIdLabel = "tokenId"
+  import Function._
+  final val collectionLabel = "functions"
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(
@@ -31,4 +34,15 @@ class FunctionsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
 
   def insert(functions: Functions): Future[Option[Completed]] =
     collection.insertOne(functions).toFutureOption()
+
+  def updateFunction(tokenId: TokenId, function: Function) =
+    collection
+      .updateOne(
+        equal(tokenIdLabel, tokenId),
+        set(
+          s"list.${function.created_id}",
+          function
+        )
+      )
+      .toFutureOption()
 }

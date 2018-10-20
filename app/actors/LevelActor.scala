@@ -23,6 +23,7 @@ object LevelActor {
   final case class HandleWin(tokenId: TokenId)
   final case class HandleLoss(tokenId: TokenId)
   final case class CreateContinentData(functions: Functions, key: String)
+  final case class UpdateFunction(tokenId: TokenId, function: Function)
 
   private final val galaxyLabel: String = "galaxy"
   private final val starSystemLabel: String = "starSystem"
@@ -40,7 +41,7 @@ object LevelActor {
 
 class LevelActor @Inject()(out: ActorRef,
                            statsDAO: StatsDAO,
-                           lambdasDAO: FunctionsDAO,
+                           functionsDAO: FunctionsDAO,
                            playerTokenDAO: PlayerTokenDAO,
                            ws: WSClient,
                            environment: Environment)
@@ -125,18 +126,18 @@ class LevelActor @Inject()(out: ActorRef,
      * Gets the built continent data for loading a continent.
      * */
     case GetContinentData(tokenId, key) =>
-      lambdasDAO.find(tokenId).map {
+      functionsDAO.find(tokenId).map {
         case Some(functions) => // already in new system
           self ! CreateContinentData(functions, key)
         case None =>
           playerTokenDAO.getToken(tokenId).map {
             case Some(models.PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
               val swappedFunctions: Functions = Functions(tokenId, lambdas.get)
-              lambdasDAO.insert(swappedFunctions)
+              functionsDAO.insert(swappedFunctions)
               self ! CreateContinentData(swappedFunctions, key)
             case _ => // new account
               val functions: Functions = Functions(tokenId)
-              lambdasDAO.insert(functions)
+              functionsDAO.insert(functions)
               self ! CreateContinentData(functions, key)
           }
       }
@@ -154,6 +155,13 @@ class LevelActor @Inject()(out: ActorRef,
         functions = functions,
         continentStruct = struct
       )
+    case UpdateFunction(tokenId, function) =>
+      functionsDAO.updateFunction(tokenId, function).map {
+        case Some(_) =>
+          val p = 0
+          out ! function
+        case None => self ! ActorFailed(s"Unable to locate functions for $tokenId")
+      }
     case HandleWin(tokenId) => ???
     case HandleLoss(tokenId) => ???
     case actorFailed: ActorFailed => out ! actorFailed

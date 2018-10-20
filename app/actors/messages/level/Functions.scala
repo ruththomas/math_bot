@@ -25,17 +25,18 @@ object Functions {
   }
 
   def apply(tokenId: TokenId, lambdas: Lambdas): Functions = { // Legacy account, swap from lambdas to functions
+    val transferred: List[Function] = convertFuncList(
+      List(lambdas.main.copy(`type` = Some(Categories.main)))
+      ++ (lambdas.activeFuncs ++ lambdas.inactiveActives.getOrElse(List.empty[FuncToken]))
+        .map(v => v.copy(`type` = Some(Categories.function)))
+      ++ (lambdas.cmds ++ lambdas.inactiveCmds.getOrElse(List.empty[FuncToken]))
+        .map(v => v.copy(`type` = Some(Categories.command)))
+      ++ (lambdas.stagedFuncs ++ lambdas.inactiveStaged.getOrElse(List.empty[FuncToken]))
+        .map(v => v.copy(`type` = Some(Categories.staged)))
+    )
     new Functions(
       tokenId = tokenId,
-      list = convertFuncList(
-        List(lambdas.main.copy(`type` = Some(Categories.main)))
-        ++ (lambdas.activeFuncs ++ lambdas.inactiveActives.getOrElse(List.empty[FuncToken]))
-          .map(v => v.copy(`type` = Some(Categories.function)))
-        ++ (lambdas.cmds ++ lambdas.inactiveCmds.getOrElse(List.empty[FuncToken]))
-          .map(v => v.copy(`type` = Some(Categories.command)))
-        ++ (lambdas.stagedFuncs ++ lambdas.inactiveStaged.getOrElse(List.empty[FuncToken]))
-          .map(v => v.copy(`type` = Some(Categories.staged)))
-      )
+      list = transferred.map(f => (f.created_id, f)).toMap
     )
   }
 
@@ -46,5 +47,6 @@ object Functions {
 
 case class Functions(
     tokenId: TokenId,
-    list: List[Function] = (main :: cmds ::: funcs).zipWithIndex.map(f => f._1.copy(index = f._2))
+    list: Map[String, Function] =
+      (main :: cmds ::: funcs).zipWithIndex.map(f => f._1.copy(index = f._2)).map(f => (f.created_id, f)).toMap
 )
