@@ -349,8 +349,11 @@ class PlayerActor()(system: ActorSystem,
       def changeAllDisplayImages(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] =
         funcList.map { ft =>
           val func = ft.func.getOrElse(List.empty[FuncToken])
-          ft.copy(displayImage = if (ft.created_id == funcToken.created_id) funcToken.displayImage else ft.displayImage,
-                  func = Some(changeAllDisplayImages(func, funcToken)))
+          ft.copy(
+            name = if (ft.created_id == funcToken.created_id) funcToken.name else ft.name,
+            displayImage = if (ft.created_id == funcToken.created_id) funcToken.displayImage else ft.displayImage,
+            func = Some(changeAllDisplayImages(func, funcToken))
+          )
         }
       for {
         stats <- playerToken.stats
