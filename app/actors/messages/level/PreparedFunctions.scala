@@ -6,11 +6,9 @@ import models.FuncToken
 import play.api.libs.json.{Json, OFormat}
 
 object PreparedFunctions {
-  import Categories._
-
   implicit val format: OFormat[PreparedFunctions] = Json.format[PreparedFunctions]
 
-  private def getFunctionIds(functions: Functions): List[String] = functions.list.map(_.created_id)
+  private def getFunctionIds(listedFunctions: List[Function]): List[String] = listedFunctions.map(_.created_id)
 
   def makeAssignedStaged(assignedStaged: List[AssignedFunction], functionIds: List[String]): List[Function] = {
     assignedStaged
@@ -51,13 +49,14 @@ object PreparedFunctions {
   }
 
   def apply(functions: Functions, continentStruct: ContinentStruct): PreparedFunctions = {
-    val functionIds = getFunctionIds(functions)
+    val listedFunctions = functions.list.values.toList
+    val functionIds = getFunctionIds(listedFunctions)
     val allowedActivesIds = continentStruct.allowedActives.getOrElse(List.empty[String])
     val preBuildActivesIds = continentStruct.preBuiltActive.map(_.createdId)
     val assignedStagedIds = continentStruct.assignedStaged.map(_.createdId)
 
     new PreparedFunctions(
-      main = functions.list
+      main = listedFunctions
         .filter(f => f.category == Categories.main)
         .map { m =>
           m.copy(
@@ -73,13 +72,13 @@ object PreparedFunctions {
         }
         .take(continentStruct.mainMax)
         .head,
-      cmds = functions.list
+      cmds = listedFunctions
         .filter(c => c.category == Categories.command)
         .filter(c => continentStruct.cmdsAvailable.contains(c.commandId)),
-      activeFuncs = makePrebuiltActives(continentStruct.preBuiltActive, functionIds) ::: functions.list
+      activeFuncs = makePrebuiltActives(continentStruct.preBuiltActive, functionIds) ::: listedFunctions
         .filter(_.category == Categories.function)
         .filter(a => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(a.created_id) else false),
-      stagedFunctions = makeAssignedStaged(continentStruct.assignedStaged, functionIds) ::: functions.list
+      stagedFunctions = makeAssignedStaged(continentStruct.assignedStaged, functionIds) ::: listedFunctions
         .filter(_.category == Categories.staged)
         .filter(s => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(s.created_id) else false)
         .take(continentStruct.stagedQty)

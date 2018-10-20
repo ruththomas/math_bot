@@ -27,9 +27,9 @@ object ContinentControl {
     }
   }
 
-  def checkParams(parameters: List[String], functions: Functions): Boolean = {
-    val main: Function = functions.list.filter(_.category == Categories.main).head
-    val actives: List[Function] = functions.list.filter(_.category == Categories.function)
+  def checkParams(parameters: List[String], functions: List[Function]): Boolean = {
+    val main: Function = functions.filter(_.category == Categories.main).head
+    val actives: List[Function] = functions.filter(_.category == Categories.function)
     parameters.foldLeft(true) { (bool, param) =>
       if (bool) {
         param match {
@@ -51,8 +51,9 @@ object ContinentControl {
 
 class ContinentControl(parameters: List[String], description: String, functions: Functions) {
   import ContinentControl._
+  val listedFunctions = functions.list.values.toList
 
   def success(frame: Frame, problem: Problem): Boolean = {
-    isFinalSpot(frame) && totalDropped(frame, problem) && checkParams(parameters, functions)
+    isFinalSpot(frame) && totalDropped(frame, problem) && checkParams(parameters, listedFunctions)
   }
 }

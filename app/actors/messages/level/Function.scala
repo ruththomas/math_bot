@@ -5,8 +5,19 @@ import play.api.libs.json.{Json, OFormat}
 object Function {
   implicit val format: OFormat[Function] = Json.format[Function]
 
-  final val active = "active"
-  final val inactive = "inactive"
+  final val activeLabel = "active"
+  final val inactiveLabel = "inactive"
+  final val tokenIdLabel = "tokenId"
+  final val funcLabel = "func"
+  final val colorLabel = "color"
+  final val createdIdLabel = "created_id"
+  final val setLabel = "set"
+  final val nameLabel = "name"
+  final val imageLabel = "image"
+  final val indexLabel = "index"
+  final val categoryLabel = "category"
+  final val commandIdLabel = "commandId"
+  final val sizeLimitLabel = "sizeLimit"
 }
 
 case class Function(
