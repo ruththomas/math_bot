@@ -75,6 +75,7 @@ import _ from 'underscore'
 export default {
   name: 'puzzle_pieces',
   mounted () {
+    this.nameHtml = this.makeNameHtml(this.name)
   },
   computed: {
     permanentImages () {
@@ -95,11 +96,26 @@ export default {
     robotState () {
       return this.runCompiled.robot.state
     },
-    nameHtml () {
+    name () {
+      return this.func.name
+    }
+  },
+  watch: {
+    name (n) {
+      this.nameHtml = this.makeNameHtml(n)
+    }
+  },
+  data () {
+    return {
+      nameHtml: this.name
+    }
+  },
+  methods: {
+    makeNameHtml (name) {
       const $text = $(`#${this.id} > .text`)
       const width = $text.width()
       const height = $text.height()
-      const text = this.func.name.trim()
+      const text = name.trim()
       return text.split(' ').map((w, _, words) => {
         if (words.length === 1 || w.length > 7) {
           const amtToIncrease = w.length === 1 ? '-20px' : '3px'
@@ -110,9 +126,7 @@ export default {
           return `<p style="margin: 0; font-size: 2vmin">${w}</p>`
         }
       }).join('')
-    }
-  },
-  methods: {
+    },
     convertColor (color) {
       const hexCodes = {
         default: '#FFFFFF',
