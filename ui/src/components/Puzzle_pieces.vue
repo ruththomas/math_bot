@@ -57,7 +57,7 @@
       </g>
     </svg>
     <img v-if="func.displayImage === undefined || func.displayImage" :src="funcAndCmdImages[func.image]" />
-    <span class="text" v-else> {{ func.name }}</span>
+    <span class="text" v-else v-html="nameHtml"></span>
     <div
       v-if="pieceToShow === 'closed' && showName  "
       class="piece-name"
@@ -75,8 +75,6 @@ import _ from 'underscore'
 export default {
   name: 'puzzle_pieces',
   mounted () {
-    $(window).on('keyup resize', this.handleTextFontSize)
-    this.handleTextFontSize()
   },
   computed: {
     permanentImages () {
@@ -96,6 +94,22 @@ export default {
     },
     robotState () {
       return this.runCompiled.robot.state
+    },
+    nameHtml () {
+      const $text = $(`#${this.id} > .text`)
+      const width = $text.width()
+      const height = $text.height()
+      const text = this.func.name.trim()
+      return text.split(' ').map((w, _, words) => {
+        if (words.length === 1 || w.length > 7) {
+          const amtToIncrease = w.length === 1 ? '-20px' : '3px'
+          return `<p style="margin: 0; font-size: calc(${width / w.length}px + ${amtToIncrease});">${w}</p>`
+        } else if (words.length > 3) {
+          return `<p style="margin: 0; font-size: calc(${height / words.length}px);">${w}</p>`
+        } else {
+          return `<p style="margin: 0; font-size: 2vmin">${w}</p>`
+        }
+      }).join('')
     }
   },
   methods: {
@@ -114,21 +128,6 @@ export default {
       } else {
         return hexCodes[color]
       }
-    },
-    handleTextFontSize () {
-      const $text = $('#' + this.id + ' > .text')
-      const text = $text.text().trim()
-      const words = text.split(' ')
-      const longestWord = words.reduce((longest, word) => {
-        if (word.length > longest.length) longest = word
-        return longest
-      }, '')
-      const longestWordLength = longestWord.length
-      const fontSize = $text.width() / longestWordLength
-
-      $text.css({
-        'font-size': fontSize < 20 ? '2vmin' : fontSize + 'px'
-      })
     }
   },
   props: ['id', 'ind', 'func', 'pieceToShow', 'showName', 'method']
@@ -154,11 +153,12 @@ export default {
       top: 0;
       width: 100%;
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       color: white;
-      line-height: 2.1vmin;
+      font-size: 1.9vmin;
+      line-height: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     img {
