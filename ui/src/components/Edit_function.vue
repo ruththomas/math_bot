@@ -17,7 +17,7 @@
         </div>
 
         <div class="func-name">
-          <input v-default-value="editingFunction.name" autofocus type="text" maxlength="57" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
+          <input v-default-value="editingFunction.name" autofocus type="text" maxlength="20" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
         </div>
 
         <img
