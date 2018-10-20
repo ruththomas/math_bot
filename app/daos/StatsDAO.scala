@@ -29,9 +29,11 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   )
 
   private final val tokenIdLabel: TokenId = "tokenId"
-  private final val starSystemLabel: String = "starSystem"
-  private final val planetLabel: String = "planet"
-  private final val continentLabel: String = "continent"
+  private final val superClusterLabel: String = "superClusterInd"
+  private final val galaxyLabel: String = "galaxyInd"
+  private final val starSystemLabel: String = "starSystemInd"
+  private final val planetLabel: String = "planetInd"
+  private final val continentLabel: String = "continentInd"
 
   val collection: MongoCollection[Stats] =
     mathbotDb.getCollection[Stats](collectionLabel).withCodecRegistry(codecRegistry)
@@ -42,7 +44,8 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   def findStats(tokenId: TokenId): Future[Option[Stats]] =
     collection.find(equal(tokenIdLabel, tokenId)).first().toFutureOption()
 
-  def gatherGalaxy(tokenId: TokenId, key: String): Future[Option[Map[TokenId, Map[String, LayerStatistic]]]] =
+  def gatherGalaxy(tokenId: TokenId, path: String): Future[Option[Map[TokenId, Map[String, LayerStatistic]]]] = {
+    val key = path.take(2)
     collection
       .find(equal(tokenIdLabel, tokenId))
       .first()
@@ -55,8 +58,10 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
           )
         }
       }
+  }
 
-  def gatherStarSystem(tokenId: TokenId, key: String): Future[Option[Map[TokenId, Map[String, LayerStatistic]]]] =
+  def gatherStarSystem(tokenId: TokenId, path: String): Future[Option[Map[TokenId, Map[String, LayerStatistic]]]] = {
+    val key = path.take(3)
     collection.find(equal(tokenIdLabel, tokenId)).first().toFutureOption().map {
       _.map { stats =>
         Map(
@@ -66,15 +71,21 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
         )
       }
     }
+  }
 
-  def updateLevel(tokenId: TokenId,
-                  starSystemInd: Int,
-                  planetInd: Int,
-                  continentInd: Int): Future[Option[UpdateResult]] =
+  def updateLevel(tokenId: TokenId, path: String): Future[Option[UpdateResult]] = {
+    val arrayPath: Array[Int] = Stats.makePath(path)
     collection
       .updateOne(
         equal(tokenIdLabel, tokenId),
-        combine(set(starSystemLabel, starSystemInd), set(planetLabel, planetInd), set(continentLabel, continentInd))
+        combine(
+          set(superClusterLabel, arrayPath(0)),
+          set(galaxyLabel, arrayPath(1)),
+          set(starSystemLabel, arrayPath(2)),
+          set(planetLabel, arrayPath(3)),
+          set(continentLabel, arrayPath.drop(4).mkString("").toInt)
+        )
       )
       .toFutureOption()
+  }
 }

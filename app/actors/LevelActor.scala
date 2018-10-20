@@ -15,11 +15,11 @@ object LevelActor {
   final case class GetLambdas(tokenId: TokenId)
   final case class GetStats(tokenId: TokenId)
   final case class GetSuperClusterData(tokenId: TokenId)
-  final case class GetGalaxyData(tokenId: TokenId)
+  final case class GetGalaxyData(tokenId: TokenId, path: String)
   final case class GetStarSystemData(tokenId: TokenId, key: StarSystemId)
   final case class GetPlanetData(tokenId: TokenId)
   final case class GetContinentData(tokenId: TokenId, key: ContinentId)
-  final case class ChangeLevel(tokenId: TokenId, starSystemInd: Int, planetInd: Int, continentInd: Int)
+  final case class ChangeLevel(tokenId: TokenId, path: String)
   final case class HandleWin(tokenId: TokenId)
   final case class HandleLoss(tokenId: TokenId)
   final case class CreateContinentData(functions: Functions, key: String)
@@ -84,10 +84,11 @@ class LevelActor @Inject()(out: ActorRef,
      * Get galaxy data, children is a list of the star system data without the continents.
      * Use the star system id to get the star system and all its children
      * */
-    case GetGalaxyData(tokenId) =>
-      statsDAO.gatherGalaxy(tokenId, "00").map {
+    case GetGalaxyData(tokenId, path) =>
+      statsDAO.gatherGalaxy(tokenId, path).map {
         case Some(data) =>
           val galaxy = data("galaxy").head
+          statsDAO.updateLevel(tokenId, path)
           out ! GalaxyData(
             id = galaxy._1,
             starSystems = data("starSystems").toList.sortBy(_._1.substring(3)).map { s =>
@@ -100,8 +101,8 @@ class LevelActor @Inject()(out: ActorRef,
      * Get star system data and all of its children.
      * Planets data child's contain the continents stats and id for rendering in the profile page.
      * */
-    case GetStarSystemData(tokenId, key) =>
-      statsDAO.gatherStarSystem(tokenId, key).map {
+    case GetStarSystemData(tokenId, path) =>
+      statsDAO.gatherStarSystem(tokenId, path).map {
         case Some(data) =>
           val continents = data("continents")
           val planets = data("planets").toList.sortBy(_._1.last.toInt).map { p =>
@@ -115,6 +116,7 @@ class LevelActor @Inject()(out: ActorRef,
             )
           }
           val starSystem = data("starSystem").head
+          statsDAO.updateLevel(tokenId, path)
           out ! StarSystemData(
             starSystem._1,
             starSystem._2,
@@ -125,30 +127,31 @@ class LevelActor @Inject()(out: ActorRef,
     /*
      * Gets the built continent data for loading a continent.
      * */
-    case GetContinentData(tokenId, key) =>
+    case GetContinentData(tokenId, path) =>
       functionsDAO.find(tokenId).map {
         case Some(functions) => // already in new system
-          self ! CreateContinentData(functions, key)
+          statsDAO.updateLevel(tokenId, path)
+          self ! CreateContinentData(functions, path)
         case None =>
           playerTokenDAO.getToken(tokenId).map {
             case Some(models.PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
               val swappedFunctions: Functions = Functions(tokenId, lambdas.get)
               functionsDAO.insert(swappedFunctions)
-              self ! CreateContinentData(swappedFunctions, key)
+              self ! CreateContinentData(swappedFunctions, path)
             case _ => // new account
               val functions: Functions = Functions(tokenId)
               functionsDAO.insert(functions)
-              self ! CreateContinentData(functions, key)
+              self ! CreateContinentData(functions, path)
           }
       }
-    case CreateContinentData(functions, key) =>
+    case CreateContinentData(functions, p) =>
       val superCluster = SuperClusters.getCluster("SuperCluster1")
-      val path = Stats.makePath(key)
+      val path = Stats.makePath(p)
       val struct = superCluster
-        .children(path(0))
         .children(path(1))
         .children(path(2))
         .children(path(3))
+        .children(path.drop(4).mkString("").toInt)
         .continentStruct
         .get
       out ! BuiltContinent(
@@ -157,13 +160,9 @@ class LevelActor @Inject()(out: ActorRef,
       )
     case UpdateFunction(tokenId, function) =>
       functionsDAO.updateFunction(tokenId, function).map {
-        case Some(_) =>
-          val p = 0
-          out ! function
+        case Some(_) => out ! function
         case None => self ! ActorFailed(s"Unable to locate functions for $tokenId")
       }
-    case HandleWin(tokenId) => ???
-    case HandleLoss(tokenId) => ???
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }
