@@ -15,7 +15,10 @@
          <div class="play-now" @click="gotosite()">PLAY NOW</div>
        </div>
      </div>
-     <img class="logo" :src="imgResources['mathBotLogo']" alt="Image of a robot.">
+     <!--<img class="logo" :src="imgResources['mathBotLogo']" alt="Image of a robot.">-->
+     <span class="logo">
+      <mascot :animate="true" :color="'#B8E986'"></mascot>
+     </span>
      <img class="planet planet-one" :src="imgResources['planetOne']">
      <img class="planet planet-two" :src="imgResources['planetTwo']">
      <img class="planet planet-three" :src="imgResources['planetThree']">
@@ -29,6 +32,7 @@
 
 <script>
 import MathbotHeader from '../Mathbot_header'
+import Mascot from '../Mascot'
 export default {
   name: 'TopSection',
   data () {
@@ -47,7 +51,8 @@ export default {
     }
   },
   components: {
-    MathbotHeader
+    MathbotHeader,
+    Mascot
   },
   props: ['gotosite']
 }
@@ -73,6 +78,7 @@ export default {
   $space-ship-size: 128px;
   $robot-size: 250px;
   $mathbot-header-size: 60px;
+  $mascot-height: 20vmin;
 
   #Marketing-top-section {
     grid-area: topsection;
@@ -136,6 +142,10 @@ export default {
     grid-row: r-three / span 2;
     z-index: 4;
     width: $robot-size;
+
+    .mascot {
+      height: calc(#{$mascot-height} * 1.5);
+    }
   }
 
   .planet {
@@ -381,7 +391,7 @@ export default {
     .logo {
       display: inline-block;
       grid-column: c-six / span 2;
-      grid-row: r-three / span 2;
+      grid-row: r-four / span 2;
       z-index: 4;
       width: $robot-size;
     }
@@ -435,7 +445,7 @@ export default {
 
     .arched-line {
       grid-column: c-one / span 8;
-      grid-row: r-four / span 3;
+      grid-row: r-five / span 3;
       z-index: 2;
       align-self: end;
       max-width: 100vw;
@@ -1281,7 +1291,7 @@ export default {
     .logo {
       display: inline-block;
       grid-column: c-six / span 2;
-      grid-row: r-three / span 2;
+      grid-row: r-four / span 2;
       z-index: 4;
       width: $robot-size;
     }

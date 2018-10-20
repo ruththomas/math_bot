@@ -20,7 +20,12 @@
         class="speed dialog-button"
         @click="adjustSpeed"
         data-toggle="tooltip"
-        title="Adjust speed"> {{ robotSpeedDisplay }}</div>
+        title="Adjust speed">
+        <i v-if="robotSpeedDisplay === 'lightning'" class="fa fa-bolt"></i>
+        <span v-else>
+          {{ robotSpeedDisplay }}
+        </span>
+      </div>
 
       <img
         v-if="runCompiled.robot.state === 'home' || runCompiled.robot.state === 'paused'"
