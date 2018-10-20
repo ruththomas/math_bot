@@ -75,6 +75,8 @@ import _ from 'underscore'
 export default {
   name: 'puzzle_pieces',
   mounted () {
+    $(window).on('keyup resize', this.handleTextFontSize)
+    this.handleTextFontSize()
   },
   computed: {
     permanentImages () {
@@ -112,6 +114,21 @@ export default {
       } else {
         return hexCodes[color]
       }
+    },
+    handleTextFontSize () {
+      const $text = $('#' + this.id + ' > .text')
+      const text = $text.text().trim()
+      const words = text.split(' ')
+      const longestWord = words.reduce((longest, word) => {
+        if (word.length > longest.length) longest = word
+        return longest
+      }, '')
+      const longestWordLength = longestWord.length
+      const fontSize = $text.width() / longestWordLength
+
+      $text.css({
+        'font-size': fontSize < 20 ? '2vmin' : fontSize + 'px'
+      })
     }
   },
   props: ['id', 'ind', 'func', 'pieceToShow', 'showName', 'method']
@@ -141,7 +158,6 @@ export default {
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 2vmin;
       line-height: 2.1vmin;
     }
 
