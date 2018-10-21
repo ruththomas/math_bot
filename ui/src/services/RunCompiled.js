@@ -124,7 +124,7 @@ class RunCompiled extends GridAnimator {
   _hideLevelCongrats = () => this.context.$root.$emit('bv::hide::modal', 'level-congrats-modal')
 
   _showFreeHint (url) {
-    this.videoHint.showVideo(url)
+    this.videoHint.showFreeHint(url)
   }
 
   _initializeStep (stepData) {
@@ -293,7 +293,11 @@ class RunCompiled extends GridAnimator {
 
   _askCompiler (startRunning) {
     api.compilerWebSocket.compileWs({problem: this.stepData.problem.encryptedProblem}, (compiled) => {
+      // if (this.robotSpeed !== null && this.robotSpeed.display === 'lightning') {
+      //   this.robotFrames.push(_.last(compiled.frames))
+      // } else {
       this.robotFrames = this.robotFrames.concat(compiled.frames)
+      // }
       if (startRunning) startRunning()
     })
   }

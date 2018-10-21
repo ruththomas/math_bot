@@ -298,12 +298,12 @@ class PlayerActor()(system: ActorSystem,
             .pipeTo(self)(sender)
       }
     case ChangeFunctionColor(jsValue: JsValue) =>
-      def changeAllInstancesColor(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] = funcList.map {
-        ft =>
+      def changeAllInstancesColor(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] =
+        funcList.map { ft =>
           val func = ft.func.getOrElse(List.empty[FuncToken])
           ft.copy(color = if (ft.created_id == funcToken.created_id) funcToken.color else ft.color,
                   func = Some(changeAllInstancesColor(func, funcToken)))
-      }
+        }
       jsValue.validate[PrepareLambdas].asOpt match {
         case Some(prepareLambdas) =>
           playerTokenDAO
@@ -345,6 +345,16 @@ class PlayerActor()(system: ActorSystem,
             .pipeTo(self)(sender)
       }
     case UpdateFunc(funcToken, playerToken, overrideBool) =>
+      // this is just temporary until level refactor is complete
+      def changeAllDisplayImages(funcList: List[FuncToken], funcToken: FuncToken): List[FuncToken] =
+        funcList.map { ft =>
+          val func = ft.func.getOrElse(List.empty[FuncToken])
+          ft.copy(
+            name = if (ft.created_id == funcToken.created_id) funcToken.name else ft.name,
+            displayImage = if (ft.created_id == funcToken.created_id) funcToken.displayImage else ft.displayImage,
+            func = Some(changeAllDisplayImages(func, funcToken))
+          )
+        }
       for {
         stats <- playerToken.stats
         lambdas <- playerToken.lambdas
@@ -366,8 +376,14 @@ class PlayerActor()(system: ActorSystem,
           if (funcTokenLengthInBounds || mainFuncLengthInBounds || overrideBool) {
             playerToken.copy(lambdas = Some(if (funcType == "function") {
               lambdas.copy(
-                activeFuncs = indexFunctions(
-                  lambdas.activeFuncs.map(f => if (f.created_id == funcToken.created_id) funcToken else f)
+                main = lambdas.main.copy(
+                  func = lambdas.main.func.map(changeAllDisplayImages(_, funcToken))
+                ),
+                activeFuncs = changeAllDisplayImages(
+                  indexFunctions(
+                    lambdas.activeFuncs.map(f => if (f.created_id == funcToken.created_id) funcToken else f)
+                  ),
+                  funcToken
                 )
               )
             } else {
@@ -413,6 +429,11 @@ class PlayerActor()(system: ActorSystem,
     case DeactivateFunc(tokenId, activeIndex, stagedIndex) =>
       val oldIndex = activeIndex.toInt
       val newIndex = stagedIndex.toInt
+
+      def deleteAllInstances(createdId: String, funcList: List[FuncToken]): List[FuncToken] = funcList map { ft =>
+        ft.copy(func = ft.func.map(p => p.filterNot(_.created_id == createdId)))
+      }
+
       (for {
         playerTokenOpt <- playerTokenDAO.getToken(tokenId)
         playerToken = playerTokenOpt.get
@@ -422,9 +443,14 @@ class PlayerActor()(system: ActorSystem,
           .copy(name = Some(""), func = Some(List.empty[FuncToken]), color = "default")
         updatedStagedFuncs = lambdas.stagedFuncs
           .take(newIndex) ++ List(funcToMove) ++ lambdas.stagedFuncs.drop(newIndex)
-        updatedActiveFuncs = lambdas.activeFuncs.take(oldIndex) ++ lambdas.activeFuncs.drop(oldIndex + 1)
+        updatedActiveFuncs = deleteAllInstances(
+          funcToMove.created_id,
+          lambdas.activeFuncs.take(oldIndex) ++ lambdas.activeFuncs.drop(oldIndex + 1)
+        )
+        updatedMainFunc = lambdas.main.func.map(_.filterNot(_.created_id == funcToMove.created_id))
         updatedLambdas = lambdas.copy(stagedFuncs = indexFunctions(updatedStagedFuncs),
-                                      activeFuncs = indexFunctions(updatedActiveFuncs))
+                                      activeFuncs = indexFunctions(updatedActiveFuncs),
+                                      main = lambdas.main.copy(func = updatedMainFunc))
         updatedToken = playerToken.copy(
           lambdas = Some(updatedLambdas)
         )

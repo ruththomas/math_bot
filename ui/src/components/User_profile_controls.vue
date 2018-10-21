@@ -1,15 +1,16 @@
 <template>
   <div class="col-8 user-profile-controls" style="display: flex;">
     <div class="profile-image">
-      <img class="profile-logo" :src="permanentImages.instructionsRobot">
+      <!--<img class="profile-logo" :src="permanentImages.instructionsRobot">-->
+      <mascot :animate="true"></mascot>
     </div>
     <div class="profile-text">
       <div class="user-profile-user-name">{{currentUser.name}}</div>
       <mathbot-header :font-size="headerFont" :line-height="headerFont + 2"></mathbot-header>
       <div class="profile-text-footer">
         <span class="nav-links about" @click="gotoMarketing">About</span>
-        <span class="nav-links sign-in" v-if="!auth.authenticated" @click="auth.login()">Sign In</span>
-        <span class="nav-links sign-out" v-else @click="auth.logout()">Sign Out</span>
+        <span class="nav-links sign-in" v-if="!auth.authenticated" @click="auth.login">Sign In</span>
+        <span class="nav-links sign-out" v-else @click="auth.logout">Sign Out</span>
       </div>
     </div>
   </div>
@@ -17,6 +18,7 @@
 
 <script>
 import MathbotHeader from './Mathbot_header'
+import Mascot from './Mascot'
 export default {
   name: 'user_profile_controls',
   computed: {
@@ -41,7 +43,8 @@ export default {
     }
   },
   components: {
-    MathbotHeader
+    MathbotHeader,
+    Mascot
   },
   props: ['permanentImages']
 }
@@ -53,6 +56,7 @@ export default {
   $font-family: Roboto, Georgia, serif;
   $logo-width: 20vmin;
   $line-height: 1.2em;
+  $mascot-height: 20vmin;
 
   .profile-text .social-sharing .social-links .share-button {
     height: $line-height!important;
@@ -71,10 +75,16 @@ export default {
     .profile-image {
       display: flex;
       align-items: flex-end;
-      padding: 0 1vmin 0 0;
+      position: relative;
 
       .profile-logo {
         width: $logo-width;
+      }
+
+      .mascot {
+        position: relative;
+        top: calc(#{$mascot-height} / 2);
+        height: calc(#{$mascot-height} * 1.5);
       }
     }
 

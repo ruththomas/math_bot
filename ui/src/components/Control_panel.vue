@@ -1,12 +1,10 @@
 <template>
   <div class="row control-panel">
-    <div class="" style="padding: 0;">
-      <img :src="permanentImages.instructionsRobot" class="instructions-robot">
-    </div>
+    <mascot :animate="true"></mascot>
 
     <div
       class="btn button-effect help-button"
-      @click="[videoHint.showVideo(), runCompiled.reset()]"
+      @click="[videoHint.showHint()]"
     >
       <stars
         :star-group="'star-spread'"
@@ -14,13 +12,13 @@
         :step="step"
         :step-stats="stepStats"></stars>
     </div>
-
   </div>
 </template>
 
 <script>
 import RobotCarrying from './Robot_carrying'
 import Stars from './Stars'
+import Mascot from './Mascot'
 
 export default {
   name: 'control-panel',
@@ -70,7 +68,8 @@ export default {
   },
   components: {
     RobotCarrying,
-    Stars
+    Stars,
+    Mascot
   }
 }
 </script>
@@ -80,6 +79,7 @@ export default {
   $instructions-robot-size: 13vmin;
   $grid-space-size: 9vmin;
   $grid-background: rgba(0, 0, 0, 0.6);
+  $mascot-height: 20vmin;
 
   .control-panel {
     display: flex;
@@ -87,6 +87,7 @@ export default {
     justify-content: space-between;
     position: relative;
     width: 100%;
+    height: calc(#{$mascot-height} / 1.3);
     margin: 0;
 
     .help-button {
@@ -95,6 +96,14 @@ export default {
       background-color: $grid-background;
       display: flex;
       z-index: 100;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+
+    .mascot {
+      position: relative;
+      top: calc(#{$mascot-height} / 2.9);
     }
   }
 
