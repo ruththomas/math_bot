@@ -20,15 +20,9 @@ object LevelActor {
   final case class GetPlanetData(tokenId: TokenId)
   final case class GetContinentData(tokenId: TokenId, key: ContinentId)
   final case class ChangeLevel(tokenId: TokenId, path: String)
-  final case class HandleWin(tokenId: TokenId)
-  final case class HandleLoss(tokenId: TokenId)
+  final case class UpdateStats(tokenId: TokenId, success: Boolean)
   final case class CreateContinentData(functions: Functions, key: String)
   final case class UpdateFunction(tokenId: TokenId, function: Function)
-
-  private final val galaxyLabel: String = "galaxy"
-  private final val starSystemLabel: String = "starSystem"
-  private final val planetLabel: String = "planet"
-  private final val continentLabel: String = "continent"
 
   def props(out: ActorRef,
             statsDAO: StatsDAO,
@@ -55,7 +49,7 @@ class LevelActor @Inject()(out: ActorRef,
     /*
      * Gets entire game layout, not actually useful for the game, just for testing.
      * */
-    case GetSuperCluster(name) =>
+    case GetSuperCluster(_) =>
       out ! SuperClusters.getCluster("SuperCluster1")
     /*
      * Get users stats
@@ -88,7 +82,7 @@ class LevelActor @Inject()(out: ActorRef,
       statsDAO.gatherGalaxy(tokenId, path).map {
         case Some(data) =>
           val galaxy = data("galaxy").head
-          statsDAO.updateLevel(tokenId, path)
+          statsDAO.updateCurrentLevel(tokenId, path)
           out ! GalaxyData(
             id = galaxy._1,
             starSystems = data("starSystems").toList.sortBy(_._1.substring(3)).map { s =>
@@ -116,7 +110,7 @@ class LevelActor @Inject()(out: ActorRef,
             )
           }
           val starSystem = data("starSystem").head
-          statsDAO.updateLevel(tokenId, path)
+          statsDAO.updateCurrentLevel(tokenId, path)
           out ! StarSystemData(
             starSystem._1,
             starSystem._2,
@@ -130,7 +124,7 @@ class LevelActor @Inject()(out: ActorRef,
     case GetContinentData(tokenId, path) =>
       functionsDAO.find(tokenId).map {
         case Some(functions) => // already in new system
-          statsDAO.updateLevel(tokenId, path)
+          statsDAO.updateCurrentLevel(tokenId, path)
           self ! CreateContinentData(functions, path)
         case None =>
           playerTokenDAO.getToken(tokenId).map {
@@ -163,6 +157,7 @@ class LevelActor @Inject()(out: ActorRef,
         case Some(_) => out ! function
         case None => self ! ActorFailed(s"Unable to locate functions for $tokenId")
       }
+    case UpdateStats(tokenId, success) => ???
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }

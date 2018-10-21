@@ -2,8 +2,8 @@ package controllers
 
 import java.net.URLDecoder
 
-import actors.StatsActor
-import actors.StatsActor._
+import actors.CurrentStatsActor
+import actors.CurrentStatsActor._
 import actors.messages.ActorFailed
 import akka.actor.ActorSystem
 import akka.pattern.ask
@@ -11,7 +11,7 @@ import akka.util.Timeout
 import javax.inject.Inject
 import loggers.MathBotLogger
 import daos.PlayerTokenDAO
-import models.Stats
+import models.CurrentStats
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -23,12 +23,12 @@ class StatsController @Inject()(system: ActorSystem, playerTokenDAO: PlayerToken
 
   implicit val timeout: Timeout = 5000.minutes
 
-  val statsActor = system.actorOf(StatsActor.props(system, playerTokenDAO, logger), "stats-actor")
+  val statsActor = system.actorOf(CurrentStatsActor.props(system, playerTokenDAO, logger), "stats-actor")
 
   def advanceStats(encodedTokenId: String, success: Option[String]) = Action.async {
     implicit request: Request[AnyContent] =>
       (statsActor ? UpdateStats(success.contains("true"), URLDecoder.decode(encodedTokenId, "UTF-8")))
-        .mapTo[Either[Stats, ActorFailed]]
+        .mapTo[Either[CurrentStats, ActorFailed]]
         .map {
           case Left(stats) => Ok(Json.prettyPrint(Json.toJson(stats)))
           case Right(invalidJson) => BadRequest(invalidJson.msg)
@@ -37,7 +37,7 @@ class StatsController @Inject()(system: ActorSystem, playerTokenDAO: PlayerToken
 
   def getStats(encodedTokenId: String) = Action.async { implicit request =>
     (statsActor ? GetStats(URLDecoder.decode(encodedTokenId, "UTF-8")))
-      .mapTo[Either[Stats, ActorFailed]]
+      .mapTo[Either[CurrentStats, ActorFailed]]
       .map {
         case Left(stats) => Ok(Json.toJson(stats))
         case Right(invalidJson) => BadRequest(invalidJson.msg)
@@ -46,7 +46,7 @@ class StatsController @Inject()(system: ActorSystem, playerTokenDAO: PlayerToken
 
   def changeLevel(encodedTokenId: String, level: String, step: String) = Action.async { implicit request =>
     (statsActor ? ChangeLevel(URLDecoder.decode(encodedTokenId, "UTF-8"), level, step))
-      .mapTo[Either[Stats, ActorFailed]]
+      .mapTo[Either[CurrentStats, ActorFailed]]
       .map {
         case Left(stats) => Ok(Json.toJson(stats))
         case Right(invalidJson) => BadRequest(invalidJson.msg)
@@ -55,7 +55,7 @@ class StatsController @Inject()(system: ActorSystem, playerTokenDAO: PlayerToken
 
   def unlock(encodedTokenId: String) = Action.async { implicit request: Request[AnyContent] =>
     (statsActor ? Unlock(URLDecoder.decode(encodedTokenId, "UTF-8")))
-      .mapTo[Either[Stats, ActorFailed]]
+      .mapTo[Either[CurrentStats, ActorFailed]]
       .map {
         case Left(stats) => Ok(Json.toJson(stats))
         case Right(invalidJson) => BadRequest(invalidJson.msg)
@@ -63,7 +63,7 @@ class StatsController @Inject()(system: ActorSystem, playerTokenDAO: PlayerToken
   }
 
   def reset(encodedTokenId: String) = Action.async { implicit request: Request[AnyContent] =>
-    (statsActor ? Reset(URLDecoder.decode(encodedTokenId, "UTF-8"))).mapTo[Either[Stats, ActorFailed]].map {
+    (statsActor ? Reset(URLDecoder.decode(encodedTokenId, "UTF-8"))).mapTo[Either[CurrentStats, ActorFailed]].map {
       case Left(stats) => Ok(Json.prettyPrint(Json.toJson(stats)))
       case Right(invalidJson) => BadRequest(invalidJson.msg)
     }
