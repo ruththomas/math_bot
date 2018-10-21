@@ -19,17 +19,20 @@ object VideoHintActor {
 
   final case class GetPlayerToken(tokenId: TokenId)
 
-  final case class GetVideoHint(playerToken: PlayerToken, stats: Stats)
+  final case class GetVideoHint(playerToken: PlayerToken, stats: CurrentStats)
 
   final case class UpdateExistingVideo(playerToken: PlayerToken,
                                        videoHint: HintsTaken,
                                        hintTaken: HintTaken,
-                                       stats: Stats,
+                                       stats: CurrentStats,
                                        videoIds: List[String])
 
-  final case class InsertNewVideo(playerToken: PlayerToken, videoHint: HintsTaken, stats: Stats, videoIds: List[String])
+  final case class InsertNewVideo(playerToken: PlayerToken,
+                                  videoHint: HintsTaken,
+                                  stats: CurrentStats,
+                                  videoIds: List[String])
 
-  final case class InsertNewVideoRecord(playerToken: PlayerToken, stats: Stats, videoIds: List[String])
+  final case class InsertNewVideoRecord(playerToken: PlayerToken, stats: CurrentStats, videoIds: List[String])
 
   final case class GetHintsTaken(tokenId: TokenId)
 

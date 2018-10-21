@@ -5,24 +5,24 @@ import play.api.libs.json.Reads._
 import play.api.libs.json.{JsPath, Reads, _}
 import types.{LevelName, StepName}
 
-object Stats {
-  val statsReads: Reads[Stats] = (
+object CurrentStats {
+  val statsReads: Reads[CurrentStats] = (
     (JsPath \ "level").read[LevelName] and
     (JsPath \ "step").read[StepName] and
     (JsPath \ "levels").read[Map[String, Map[String, StepToken]]]
-  )(Stats.apply _)
+  )(CurrentStats.apply _)
 
-  val statsWrites: Writes[Stats] = (
+  val statsWrites: Writes[CurrentStats] = (
     (JsPath \ "level").write[LevelName] and
     (JsPath \ "step").write[StepName] and
     (JsPath \ "levels").write[Map[String, Map[String, StepToken]]]
-  )(unlift(Stats.unapply))
+  )(unlift(CurrentStats.unapply))
 
-  implicit val funcTokenFormat: Format[Stats] =
+  implicit val funcTokenFormat: Format[CurrentStats] =
     Format(statsReads, statsWrites)
 }
 
-case class Stats(
+case class CurrentStats(
     level: LevelName,
     step: StepName,
     levels: Map[String, Map[String, StepToken]]

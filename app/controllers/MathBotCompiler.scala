@@ -26,7 +26,7 @@ import play.api.mvc._
 import play.api.{Configuration, Environment}
 import types.TokenId
 import utils.SecureIdentifier
-
+import actors.messages.level.{BuiltContinent, Stats}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
@@ -54,27 +54,24 @@ object MathBotCompiler {
   case class ClientFrame(robotState: ClientRobotState,
                          programState: String,
                          stats: Option[Stats],
-                         stepData: Option[PreparedStepData]) {
+                         stepData: Option[BuiltContinent]) {
     def isSuccess() = programState == "success"
     def isFailure() = programState == "failure"
   }
 
   object ClientFrame {
-    def apply(frame: Frame, stats: Option[Stats] = None, stepData: Option[PreparedStepData] = None): ClientFrame =
+    def apply(frame: Frame, stats: Option[Stats] = None, stepData: Option[BuiltContinent] = None): ClientFrame =
       ClientFrame(frame, "running", stats, stepData)
 
     // stepData is the step data to render at this point
-    def success(frame: Frame, stats: Stats, stepData: PreparedStepData): ClientFrame =
+    def success(frame: Frame, stats: Stats, stepData: BuiltContinent): ClientFrame =
       ClientFrame(frame, "success", Some(stats), Some(stepData))
 
     // stepData is the step data to render at this point
-    def failure(frame: Frame, stats: Stats, stepData: PreparedStepData): ClientFrame =
+    def failure(frame: Frame, stats: Stats, stepData: BuiltContinent): ClientFrame =
       ClientFrame(frame, "failure", Some(stats), Some(stepData))
 
-    def apply(frame: Frame,
-              programState: String,
-              stats: Option[Stats],
-              stepData: Option[PreparedStepData]): ClientFrame =
+    def apply(frame: Frame, programState: String, stats: Option[Stats], stepData: Option[BuiltContinent]): ClientFrame =
       ClientFrame(ClientRobotState(frame), programState, stats, stepData)
   }
 
@@ -93,13 +90,10 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                                   playerTokenDAO: PlayerTokenDAO,
                                   playerAccountDAO: PlayerAccountDAO,
                                   sessionDAO: SessionDAO,
+                                  @Named(ActorTags.level) levelActor: ActorRef,
                                   @Named(ActorTags.playerAccount) playerAccountActor: ActorRef)
     extends Controller
     with utils.SameOriginCheck {
-
-  val levelActor =
-    system.actorOf(LevelGenerationActor.props(playerTokenDAO, mathBotLogger, environment), "level-compiler-actor")
-  val statsActor = system.actorOf(StatsActor.props(system, playerTokenDAO, mathBotLogger), "stats-compiler-actor")
 
   val compilerConfiguration = CompilerConfiguration(
     maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000),
@@ -129,7 +123,6 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                       CompilerActor.props(out,
                                           session.playerTokenId,
                                           playerTokenDAO,
-                                          statsActor,
                                           levelActor,
                                           mathBotLogger,
                                           compilerConfiguration)
@@ -146,39 +139,38 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
     }
   }
 
-  def compile(encodedTokenId: String) = Action.async { implicit request =>
-    class FakeActor extends Actor {
+//  def compile(encodedTokenId: String) = Action.async { implicit request =>
+//    class FakeActor extends Actor {
+//
+//      override def receive: Receive = {
+//        case _ =>
+//      }
+//    }
+//
+//    val fakeActorProps = Props(new FakeActor)
+//    val fakeActor = system.actorOf(fakeActorProps)
+//
+//    implicit val timeout: Timeout = 500.seconds
+//
+//    request.body.asJson match {
+//      case Some(json) =>
+//        val sr = CompilerRequestConvertFlow.jsonToCommand(json)
+//
+//        val compilerProps =
+//          CompilerActor.props(fakeActor,
+//                              URLDecoder.decode(encodedTokenId, "UTF-8"),
+//                              playerTokenDAO,
+//                              levelActor,
+//                              mathBotLogger,
+//                              compilerConfiguration)
+//        val compiler = system.actorOf(compilerProps)
+//
+//        (compiler ? sr)
+//          .map(CompilerResponseConvertFlow.responseToJson)
+//          .map(Ok(_))
+//      case _ =>
+//        Future(NoContent)
+//    }
 
-      override def receive: Receive = {
-        case _ =>
-      }
-    }
-
-    val fakeActorProps = Props(new FakeActor)
-    val fakeActor = system.actorOf(fakeActorProps)
-
-    implicit val timeout: Timeout = 500.seconds
-
-    request.body.asJson match {
-      case Some(json) =>
-        val sr = CompilerRequestConvertFlow.jsonToCommand(json)
-
-        val compilerProps =
-          CompilerActor.props(fakeActor,
-                              URLDecoder.decode(encodedTokenId, "UTF-8"),
-                              playerTokenDAO,
-                              statsActor,
-                              levelActor,
-                              mathBotLogger,
-                              compilerConfiguration)
-        val compiler = system.actorOf(compilerProps)
-
-        (compiler ? sr)
-          .map(CompilerResponseConvertFlow.responseToJson)
-          .map(Ok(_))
-      case _ =>
-        Future(NoContent)
-    }
-
-  }
+//  }
 }

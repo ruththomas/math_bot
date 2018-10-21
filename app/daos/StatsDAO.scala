@@ -73,7 +73,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     }
   }
 
-  def updateLevel(tokenId: TokenId, path: String): Future[Option[UpdateResult]] = {
+  def updateCurrentLevel(tokenId: TokenId, path: String): Future[Option[UpdateResult]] = {
     val arrayPath: Array[Int] = Stats.makePath(path)
     collection
       .updateOne(
@@ -88,4 +88,6 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       )
       .toFutureOption()
   }
+
+  def incTimesPlayed(tokenId: TokenId, path: String)
 }

@@ -5,7 +5,7 @@ GET         /api/levels/getLevel/:level                                         
 GET         /ws/levels                                                            controllers.LevelController.levelSocket
 
 # Compiler
-POST        /api/compile/:tokenId                                                  controllers.MathBotCompiler.compile(tokenId)
+# POST        /api/compile/:tokenId                                                  controllers.MathBotCompiler.compile(tokenId)
 GET         /ws/compilews                                                          controllers.MathBotCompiler.compileWs
 GET         /api/wsPath/:tokenId/:connection                                       controllers.MathBotCompiler.wsPath(tokenId, connection)
 

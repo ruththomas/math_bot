@@ -67,7 +67,7 @@ object Stats {
   }
 
   // Converts legacy stats to new stats
-  def apply(tokenId: TokenId, originalStats: models.Stats): Stats = {
+  def apply(tokenId: TokenId, originalStats: models.CurrentStats): Stats = {
     val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
     val superClustersStats: mutable.Map[Int, LayerStatistic] =
