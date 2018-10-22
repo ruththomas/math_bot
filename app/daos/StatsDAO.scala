@@ -16,6 +16,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
   final val collectionLabel = "stats"
+  import Stats._
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(
@@ -27,13 +28,6 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     ),
     DEFAULT_CODEC_REGISTRY
   )
-
-  private final val tokenIdLabel: TokenId = "tokenId"
-  private final val superClusterLabel: String = "superClusterInd"
-  private final val galaxyLabel: String = "galaxyInd"
-  private final val starSystemLabel: String = "starSystemInd"
-  private final val planetLabel: String = "planetInd"
-  private final val continentLabel: String = "continentInd"
 
   val collection: MongoCollection[Stats] =
     mathbotDb.getCollection[Stats](collectionLabel).withCodecRegistry(codecRegistry)
@@ -53,8 +47,8 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       .map {
         _.map { stats =>
           Map(
-            "galaxy" -> Map(key -> stats.galaxyStats(key)),
-            "starSystems" -> stats.starSystemStats.filterKeys(_.take(key.length).contains(key))
+            "galaxy" -> Map(key -> stats.list(key)),
+            "starSystems" -> stats.list.filterKeys(l => l.length == 3 && l.take(key.length).contains(key))
           )
         }
       }
@@ -65,16 +59,16 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     collection.find(equal(tokenIdLabel, tokenId)).first().toFutureOption().map {
       _.map { stats =>
         Map(
-          "starSystem" -> Map(key -> stats.starSystemStats(key)),
-          "planets" -> stats.planetStats.filterKeys(_.take(key.length).contains(key)),
-          "continents" -> stats.continentStats.filterKeys(_.take(key.length).contains(key))
+          "starSystem" -> Map(key -> stats.list(key)),
+          "planets" -> stats.list.filterKeys(l => l.length == 4 && l.take(key.length).contains(key)),
+          "continents" -> stats.list.filterKeys(l => l.length > 4 && l.take(key.length).contains(key))
         )
       }
     }
   }
 
   def updateCurrentLevel(tokenId: TokenId, path: String): Future[Option[UpdateResult]] = {
-    val arrayPath: Array[Int] = Stats.makePath(path)
+    val arrayPath: Array[String] = Stats.makePath(path).map(_.toString)
     collection
       .updateOne(
         equal(tokenIdLabel, tokenId),
@@ -89,5 +83,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       .toFutureOption()
   }
 
-  def incTimesPlayed(tokenId: TokenId, path: String)
+  def incrementWinsAndTimedPlayed(tokenId: TokenId, incrementWins: Boolean): Future[Option[Stats]] = {
+    ???
+  }
 }

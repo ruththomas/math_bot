@@ -1,8 +1,9 @@
 package compiler
 
+import actors.messages.level.Function
 import compiler.operations._
 import daos.CommandIds
-import models.{ FuncToken, GridMap, GridPart, Problem }
+import models.{GridMap, GridPart, Problem}
 import play.api.libs.json._
 
 object Compiler {
@@ -95,14 +96,16 @@ object Compiler {
     }
   }
 
-  def compile(main: FuncToken,
-              funcs: List[FuncToken],
-              commands: List[FuncToken],
+  def compile(main: Function,
+              funcs: List[Function],
+              commands: List[Function],
               grid: GridMap,
               problem: Problem): Option[GridAndProgram] = {
     val funcTokens = funcs.map(token => token.created_id -> token).toMap + (main.created_id -> main)
     val firstPass = fixReferences(convertToOps(main, funcTokens, Map.empty[String, UserFunction], commands))
-    processBoard(grid).map(g => GridAndProgram(g, new Program(firstPass._1.asInstanceOf[UserFunction].operations), problem))
+    processBoard(grid).map(
+      g => GridAndProgram(g, new Program(firstPass._1.asInstanceOf[UserFunction].operations), problem)
+    )
   }
 
   // To avoid an infinite loop will processing user functions, user functions are sometimes placeholdered with refs.
@@ -116,9 +119,9 @@ object Compiler {
     } yield {
       f.operations = f.operations.map {
         case funcRef: UserFunctionRef => firstPass._2(funcRef.created_id)
-        case ifColor : IfColor =>
+        case ifColor: IfColor =>
           ifColor.operation match {
-            case funcRef : UserFunctionRef =>
+            case funcRef: UserFunctionRef =>
               ifColor.copy(operation = firstPass._2(funcRef.created_id))
             case _ =>
               ifColor
@@ -129,9 +132,9 @@ object Compiler {
 
     program.operations = program.operations.map {
       case funcRef: UserFunctionRef => firstPass._2(funcRef.created_id)
-      case ifColor : IfColor =>
+      case ifColor: IfColor =>
         ifColor.operation match {
-          case funcRef : UserFunctionRef =>
+          case funcRef: UserFunctionRef =>
             ifColor.copy(operation = firstPass._2(funcRef.created_id))
           case _ =>
             ifColor
@@ -141,18 +144,17 @@ object Compiler {
     firstPass
   }
 
-  def convertToOps(
-                    token      : FuncToken,
-                    funcTokens : Map[String, FuncToken],
-                    userFuncs  : Map[String, UserFunction],
-                    commands   : List[FuncToken]) : (Operation, Map[String, UserFunction]) = {
+  def convertToOps(token: Function,
+                   funcTokens: Map[String, Function],
+                   userFuncs: Map[String, UserFunction],
+                   commands: List[Function]): (Operation, Map[String, UserFunction]) = {
     token.created_id match {
       case id if commands.map(t => t.created_id).contains(id) =>
         val command = commands.find(c => c.created_id == id).map(c => c.commandId).getOrElse("unknown") match {
-          case Some(CommandIds.changeRobotDirection) => ChangeRobotDirection
-          case Some(CommandIds.moveRobotForwardOneSpot) => MoveRobotForwardOneSpot
-          case Some(CommandIds.setItemDown) => SetItemDown
-          case Some(CommandIds.pickUpItem) => PickUpItem
+          case CommandIds.changeRobotDirection => ChangeRobotDirection
+          case CommandIds.moveRobotForwardOneSpot => MoveRobotForwardOneSpot
+          case CommandIds.setItemDown => SetItemDown
+          case CommandIds.pickUpItem => PickUpItem
           case _ => NoOperation
         }
         (command, userFuncs)
@@ -172,7 +174,10 @@ object Compiler {
               case Some(uf) =>
                 (IfColor(color, uf), userFuncs)
               case None =>
-                val converted = convertFunction(token.copy(color = "default"), funcTokens, userFuncs  + (id -> UserFunctionRef(id)), commands)
+                val converted = convertFunction(token.copy(color = "default"),
+                                                funcTokens,
+                                                userFuncs + (id -> UserFunctionRef(id)),
+                                                commands)
                 val uf = new UserFunction(converted.operations)
                 (IfColor(color, uf), converted.userFuncs.updated(token.created_id, uf))
             }
@@ -180,23 +185,20 @@ object Compiler {
     }
   }
 
-  case class Converted(operations : Seq[Operation], userFuncs : Map[String, UserFunction])
+  case class Converted(operations: Seq[Operation], userFuncs: Map[String, UserFunction])
 
   def convertFunction(
-                       funcToken : FuncToken,
-                       funcTokens: Map[String, FuncToken],
-                       userFuncs  : Map[String, UserFunction],
-                       commands   : List[FuncToken]
-                     ) : Converted = {
+      funcToken: Function,
+      funcTokens: Map[String, Function],
+      userFuncs: Map[String, UserFunction],
+      commands: List[Function]
+  ): Converted = {
     val operations = funcTokens(funcToken.created_id).func.get
-    operations.foldLeft[Converted](Converted(Seq.empty[Operation], userFuncs)) {
-      (converted, token) =>
-        val (op, funcs) = convertToOps(token, funcTokens, converted.userFuncs, commands)
-        Converted(converted.operations :+ op, funcs)
+    operations.foldLeft[Converted](Converted(Seq.empty[Operation], userFuncs)) { (converted, token) =>
+      val (op, funcs) = convertToOps(token, funcTokens, converted.userFuncs, commands)
+      Converted(converted.operations :+ op, funcs)
     }
   }
-
-
   /*def convertToOps1(main: FuncToken,
                    funcs: Map[String, (FuncToken, Option[UserFunction])],
                    commands: List[FuncToken]

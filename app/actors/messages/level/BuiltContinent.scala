@@ -22,6 +22,7 @@ object BuiltContinent {
       problem = problemGen(continentStruct.problem),
       initFocus = createInitFocus(continentStruct.initFocus),
       freeHint = freeHintUrl(continentStruct.freeHint),
+      evalEachFrame = continentStruct.evalEachFrame.getOrElse(false),
       stepControl = new ContinentControl(continentStruct.specialParameters, continentStruct.description, functions)
     )
 
@@ -115,6 +116,7 @@ object BuiltContinent {
     (JsPath \ "problem").write[Problem] and
     (JsPath \ "initFocus").write[List[String]] and
     (JsPath \ "freeHint").writeNullable[String] and
+    (JsPath \ "evalEachFrame").write[Boolean] and
     OWrites[ContinentControl](_ => Json.obj())
   )(unlift(BuiltContinent.unapply))
 
@@ -135,5 +137,6 @@ case class BuiltContinent(
     problem: Problem,
     initFocus: List[String],
     freeHint: Option[String],
+    evalEachFrame: Boolean,
     stepControl: ContinentControl
 )

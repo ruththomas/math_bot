@@ -125,7 +125,7 @@ export default {
         } else {
           return `<p style="margin: 0; font-size: 2vmin">${w}</p>`
         }
-      }).join('')
+      })
     },
     convertColor (color) {
       const hexCodes = {

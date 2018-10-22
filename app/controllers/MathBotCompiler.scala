@@ -26,7 +26,8 @@ import play.api.mvc._
 import play.api.{Configuration, Environment}
 import types.TokenId
 import utils.SecureIdentifier
-import actors.messages.level.{BuiltContinent, Stats}
+import actors.messages.level.{BuiltContinent, LevelControl, Stats}
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
@@ -90,8 +91,8 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                                   playerTokenDAO: PlayerTokenDAO,
                                   playerAccountDAO: PlayerAccountDAO,
                                   sessionDAO: SessionDAO,
-                                  @Named(ActorTags.level) levelActor: ActorRef,
-                                  @Named(ActorTags.playerAccount) playerAccountActor: ActorRef)
+                                  @Named(ActorTags.playerAccount) playerAccountActor: ActorRef,
+                                  levelControl: LevelControl)
     extends Controller
     with utils.SameOriginCheck {
 
@@ -120,12 +121,8 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                 .via(
                   ActorFlow.actorRef(
                     out =>
-                      CompilerActor.props(out,
-                                          session.playerTokenId,
-                                          playerTokenDAO,
-                                          levelActor,
-                                          mathBotLogger,
-                                          compilerConfiguration)
+                      CompilerActor
+                        .props(out, session.playerTokenId, mathBotLogger, compilerConfiguration, levelControl)
                   )
                 )
                 .alsoTo(UpdateAccessFlow(session.playerTokenId, playerAccountActor))
