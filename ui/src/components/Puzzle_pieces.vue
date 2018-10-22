@@ -112,20 +112,22 @@ export default {
   },
   methods: {
     makeNameHtml (name) {
-      const $text = $(`#${this.id} > .text`)
-      const width = $text.width()
-      const height = $text.height()
-      const text = name.trim()
-      return text.split(' ').map((w, _, words) => {
-        if (words.length === 1 || w.length > 7) {
-          const amtToIncrease = w.length === 1 ? '-20px' : '3px'
-          return `<p style="margin: 0; font-size: calc(${width / w.length}px + ${amtToIncrease});">${w}</p>`
-        } else if (words.length > 3) {
-          return `<p style="margin: 0; font-size: calc(${height / words.length}px);">${w}</p>`
-        } else {
-          return `<p style="margin: 0; font-size: 2vmin">${w}</p>`
-        }
-      }).join('')
+      if (name) {
+        const $text = $(`#${this.id} > .text`)
+        const width = $text.width()
+        const height = $text.height()
+        const text = name.trim()
+        return text.split(' ').map((w, _, words) => {
+          if (words.length === 1 || w.length > 7) {
+            const amtToIncrease = w.length === 1 ? '-20px' : '3px'
+            return `<p style="margin: 0; font-size: calc(${width / w.length}px + ${amtToIncrease});">${w}</p>`
+          } else if (words.length > 3) {
+            return `<p style="margin: 0; font-size: calc(${height / words.length}px);">${w}</p>`
+          } else {
+            return `<p style="margin: 0; font-size: 2vmin">${w}</p>`
+          }
+        }).join('')
+      }
     },
     convertColor (color) {
       const hexCodes = {
