@@ -10,39 +10,43 @@ import scala.collection.mutable
 object Stats {
   implicit val format: OFormat[Stats] = Json.format[Stats]
 
+  val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
+  final val tokenIdLabel: TokenId = "tokenId"
+  final val superClusterLabel: String = "superClusterInd"
+  final val galaxyLabel: String = "galaxyInd"
+  final val starSystemLabel: String = "starSystemInd"
+  final val planetLabel: String = "planetInd"
+  final val continentLabel: String = "continentInd"
+  final val superClusterStatsLabel: String = "superClusterStats"
+  final val galaxyStatsLabel: String = "galaxyStats"
+  final val starSystemStatsLabel: String = "starSystemStats"
+  final val planetStatsLabel: String = "planetStats"
+  final val continentStatsLabel: String = "continentStatsLabel"
+
   def makePath(str: String): Array[Int] = str.split("").map(_.toInt)
 
   // New stats
   def apply(tId: TokenId): Stats = {
-    val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
-
-    val superClustersStats: mutable.Map[Int, LayerStatistic] =
-      mutable.Map(0 -> LayerStatistic("SuperCluster1", active = true))
-    var galaxiesStats: mutable.Map[(Int, Int), LayerStatistic] = mutable.Map.empty[(Int, Int), LayerStatistic]
-    var starSystemsStats: mutable.Map[(Int, Int, Int), LayerStatistic] =
-      mutable.Map.empty[(Int, Int, Int), LayerStatistic]
-    var planetsStats: mutable.Map[(Int, Int, Int, Int), LayerStatistic] =
-      mutable.Map.empty[(Int, Int, Int, Int), LayerStatistic]
-    var continentsStats: mutable.Map[(Int, Int, Int, Int, Int), LayerStatistic] =
-      mutable.Map.empty[(Int, Int, Int, Int, Int), LayerStatistic]
+    var listStats: mutable.Map[String, LayerStatistic] =
+      mutable.Map("0" -> LayerStatistic(name = superCluster.name, active = true))
 
     superCluster.children.zipWithIndex.map { g =>
-      galaxiesStats += ((0, g._2) -> LayerStatistic(
+      listStats += (s"0${g._2}" -> LayerStatistic(
         name = g._1.name,
         active = g._2 == 0
       ))
       g._1.children.zipWithIndex.map { s =>
-        starSystemsStats += ((0, g._2, s._2) -> LayerStatistic(
+        listStats += (s"0${g._2}${s._2}" -> LayerStatistic(
           name = s._1.name,
           active = g._2 == 0 && s._2 == 0
         ))
         s._1.children.zipWithIndex.map { p =>
-          planetsStats += ((0, g._2, s._2, p._2) -> LayerStatistic(
+          listStats += (s"0${g._2}${s._2}${p._2}" -> LayerStatistic(
             name = p._1.name,
             active = g._2 == 0 && s._2 == 0 && p._2 == 0
           ))
           p._1.children.zipWithIndex.map { c =>
-            continentsStats += ((0, g._2, s._2, p._2, c._2) -> LayerStatistic(
+            listStats += (s"0${g._2}${s._2}${p._2}${c._2}" -> LayerStatistic(
               name = p._1.name,
               active = g._2 == 0 && s._2 == 0 && p._2 == 0 && c._2 == 0
             ))
@@ -53,16 +57,8 @@ object Stats {
 
     new Stats(
       tokenId = tId,
-      superClusterInd = 0,
-      galaxyInd = 0,
-      starSystemInd = 0,
-      planetInd = 0,
-      continentInd = 0,
-      superClusterStats = superClustersStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2),
-      galaxyStats = galaxiesStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2),
-      starSystemStats = starSystemsStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2),
-      planetStats = planetsStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2),
-      continentStats = continentsStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2)
+      currentPath = "00000",
+      list = listStats.toMap
     )
   }
 
@@ -70,28 +66,21 @@ object Stats {
   def apply(tokenId: TokenId, originalStats: models.CurrentStats): Stats = {
     val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
-    val superClustersStats: mutable.Map[Int, LayerStatistic] =
-      mutable.Map(0 -> LayerStatistic("SuperCluster1", active = true))
-    var galaxiesStats: mutable.Map[(Int, Int), LayerStatistic] = mutable.Map.empty[(Int, Int), LayerStatistic]
-    var starSystemsStats: mutable.Map[(Int, Int, Int), LayerStatistic] =
-      mutable.Map.empty[(Int, Int, Int), LayerStatistic]
-    var planetsStats: mutable.Map[(Int, Int, Int, Int), LayerStatistic] =
-      mutable.Map.empty[(Int, Int, Int, Int), LayerStatistic]
-    var continentsStats: mutable.Map[(Int, Int, Int, Int, Int), LayerStatistic] =
-      mutable.Map.empty[(Int, Int, Int, Int, Int), LayerStatistic]
+    val listStats: mutable.Map[String, LayerStatistic] =
+      mutable.Map("0" -> LayerStatistic("SuperCluster1", active = true))
 
     superCluster.children.zipWithIndex.map { g =>
-      galaxiesStats += ((0, g._2) -> LayerStatistic(
+      listStats += (s"0${g._2}" -> LayerStatistic(
         name = g._1.name,
         active = g._2 == 0
       ))
       g._1.children.zipWithIndex.map { s =>
-        starSystemsStats += ((0, g._2, s._2) -> LayerStatistic(
+        listStats += (s"0${g._2}${s._2}" -> LayerStatistic(
           name = s._1.name,
           active = g._2 == 0 && s._2 == 0
         ))
         s._1.children.zipWithIndex.map { p =>
-          planetsStats += ((0, g._2, s._2, p._2) -> LayerStatistic(
+          listStats += (s"0${g._2}${s._2}${p._2}" -> LayerStatistic(
             name = p._1.name,
             active = originalStats.levels
               .get(p._1.name)
@@ -99,7 +88,7 @@ object Stats {
               .getOrElse(false)
           ))
           p._1.children.zipWithIndex.map { c =>
-            continentsStats += ((0, g._2, s._2, p._2, c._2) -> LayerStatistic(
+            listStats += (s"0${g._2}${s._2}${p._2}${c._2}" -> LayerStatistic(
               name = c._1.name,
               active = originalStats.levels.get(p._1.name).flatMap(_.get(c._1.name).map(_.active)).getOrElse(false),
               timesPlayed =
@@ -116,37 +105,20 @@ object Stats {
 
     new Stats(
       tokenId = tokenId,
-      superClusterInd = 0,
-      galaxyInd = 0,
-      starSystemInd = 0,
-      planetInd = 0,
-      continentInd = 0,
-      superClusterStats = superClustersStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2),
-      galaxyStats = galaxiesStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2),
-      starSystemStats = starSystemsStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2),
-      planetStats = planetsStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2),
-      continentStats = continentsStats.toMap.map(m => m._1.toString.replaceAll("[(|,|)]", "") -> m._2)
+      currentPath = "00000",
+      list = listStats.toMap
     )
   }
 }
 
 case class Stats(
     tokenId: TokenId,
-    superClusterInd: Int = 0,
-    galaxyInd: Int = 0,
-    starSystemInd: Int = 0,
-    planetInd: Int = 0,
-    continentInd: Int = 0,
-    superClusterStats: Map[String, LayerStatistic],
-    galaxyStats: Map[String, LayerStatistic],
-    starSystemStats: Map[String, LayerStatistic],
-    planetStats: Map[String, LayerStatistic],
-    continentStats: Map[String, LayerStatistic]
+    currentPath: String,
+    list: Map[String, LayerStatistic]
 ) {
-  def superClusterPath: Int = this.superClusterInd
-  def galaxyPath: (Int, Int) = (this.superClusterInd, this.galaxyInd)
-  def starSystemPath: (Int, Int, Int) = (this.superClusterInd, this.galaxyInd, this.starSystemInd)
-  def planetPath: (Int, Int, Int, Int) = (this.superClusterInd, this.galaxyInd, this.starSystemInd, this.planetInd)
-  def continentPath: (Int, Int, Int, Int, Int) =
-    (this.superClusterInd, this.galaxyInd, this.starSystemInd, this.planetInd, this.continentInd)
+  def superClusterPath: String = this.currentPath.take(1)
+  def galaxyPath: String = this.currentPath.take(2)
+  def starSystemPath: String = this.currentPath.take(3)
+  def planetPath: String = this.currentPath.take(4)
+  def continentPath: String = this.currentPath
 }

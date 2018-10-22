@@ -7,5 +7,4 @@ object ActorTags {
   final val auth0 = "auth0"
   final val admin = "admin"
   final val playerAccount = "playerAccount"
-  final val level = "level"
 }

@@ -5,6 +5,7 @@ import java.net.URLDecoder
 import actors.{ActorTags, LevelActor, LevelGenerationActor}
 import actors.LevelGenerationActor.{GetLevel, GetStep}
 import actors.convert_flow.{LevelRequestConvertFlow, LevelResponseConvertFlow}
+import actors.messages.level.LevelControl
 import actors.messages.{ActorFailed, PreparedStepData, RawLevelData}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.pattern.ask
@@ -41,7 +42,8 @@ class LevelController @Inject()(
     adminConfig: AdminConfig,
     implicit val ec: ExecutionContext,
     logger: MathBotLogger,
-    environment: Environment
+    environment: Environment,
+    val levelControl: LevelControl
 ) extends Controller {
 
   implicit val timeout: Timeout = 5000.minutes
@@ -53,7 +55,7 @@ class LevelController @Inject()(
         LevelRequestConvertFlow()
           .via(
             ActorFlow.actorRef { out =>
-              LevelActor.props(out, statsDAO, lambdasDAO, playerTokenDAO, ws, environment)
+              LevelActor.props(out, statsDAO, lambdasDAO, playerTokenDAO, ws, environment, levelControl)
             }
           )
           .via(LevelResponseConvertFlow())

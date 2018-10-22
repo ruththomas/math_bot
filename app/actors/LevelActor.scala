@@ -23,14 +23,16 @@ object LevelActor {
   final case class UpdateStats(tokenId: TokenId, success: Boolean)
   final case class CreateContinentData(functions: Functions, key: String)
   final case class UpdateFunction(tokenId: TokenId, function: Function)
+  final case class CreateStatsAndContinent(tokenId: TokenId)
 
   def props(out: ActorRef,
             statsDAO: StatsDAO,
             lambdasDAO: FunctionsDAO,
             playerTokenDAO: PlayerTokenDAO,
             ws: WSClient,
-            environment: Environment) =
-    Props(new LevelActor(out, statsDAO, lambdasDAO, playerTokenDAO, ws, environment))
+            environment: Environment,
+            levelControl: LevelControl) =
+    Props(new LevelActor(out, statsDAO, lambdasDAO, playerTokenDAO, ws, environment, levelControl))
 }
 
 class LevelActor @Inject()(out: ActorRef,
@@ -38,7 +40,8 @@ class LevelActor @Inject()(out: ActorRef,
                            functionsDAO: FunctionsDAO,
                            playerTokenDAO: PlayerTokenDAO,
                            ws: WSClient,
-                           environment: Environment)
+                           environment: Environment,
+                           levelControl: LevelControl)
     extends Actor {
   import LevelActor._
   import context.dispatcher
@@ -55,25 +58,9 @@ class LevelActor @Inject()(out: ActorRef,
      * Get users stats
      * */
     case GetStats(tokenId) =>
-      statsDAO.findStats(tokenId).map {
-        case Some(stats) => // if the user already has new stats
-          out ! stats
-        case None => // else
-          // Check if user has a token in the deprecated token table
-          playerTokenDAO
-            .getToken(tokenId)
-            .map {
-              case Some(token) => // User exists in token table
-                val swappedStats = Stats(tokenId, token.stats.get)
-                statsDAO.insert(swappedStats)
-                swappedStats
-              case None => // else
-                val stats = Stats(tokenId)
-                statsDAO.insert(stats)
-                stats
-            }
-            .map(out ! _)
-      }
+      for {
+        stats <- levelControl.getStats(tokenId)
+      } yield out ! stats
     /*
      * Get galaxy data, children is a list of the star system data without the continents.
      * Use the star system id to get the star system and all its children
@@ -103,10 +90,9 @@ class LevelActor @Inject()(out: ActorRef,
             PlanetData(
               id = p._1,
               stats = p._2,
-              continents =
-                continents.filterKeys(_.take(4).contains(p._1)).toList.sortBy(_._1.substring(4).toInt).map { c =>
-                  ContinentData(c._1, c._2)
-                }
+              continents.filterKeys(_.take(4).contains(p._1)).toList.sortBy(_._1.substring(4).toInt).map { c =>
+                ContinentData(c._1, c._2)
+              }
             )
           }
           val starSystem = data("starSystem").head
@@ -122,42 +108,9 @@ class LevelActor @Inject()(out: ActorRef,
      * Gets the built continent data for loading a continent.
      * */
     case GetContinentData(tokenId, path) =>
-      functionsDAO.find(tokenId).map {
-        case Some(functions) => // already in new system
-          statsDAO.updateCurrentLevel(tokenId, path)
-          self ! CreateContinentData(functions, path)
-        case None =>
-          playerTokenDAO.getToken(tokenId).map {
-            case Some(models.PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
-              val swappedFunctions: Functions = Functions(tokenId, lambdas.get)
-              functionsDAO.insert(swappedFunctions)
-              self ! CreateContinentData(swappedFunctions, path)
-            case _ => // new account
-              val functions: Functions = Functions(tokenId)
-              functionsDAO.insert(functions)
-              self ! CreateContinentData(functions, path)
-          }
-      }
-    case CreateContinentData(functions, p) =>
-      val superCluster = SuperClusters.getCluster("SuperCluster1")
-      val path = Stats.makePath(p)
-      val struct = superCluster
-        .children(path(1))
-        .children(path(2))
-        .children(path(3))
-        .children(path.drop(4).mkString("").toInt)
-        .continentStruct
-        .get
-      out ! BuiltContinent(
-        functions = functions,
-        continentStruct = struct
-      )
-    case UpdateFunction(tokenId, function) =>
-      functionsDAO.updateFunction(tokenId, function).map {
-        case Some(_) => out ! function
-        case None => self ! ActorFailed(s"Unable to locate functions for $tokenId")
-      }
-    case UpdateStats(tokenId, success) => ???
+      for {
+        builtContinent <- levelControl.createBuiltContinent(tokenId, path)
+      } yield out ! builtContinent
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }
