@@ -6,6 +6,12 @@ import play.api.libs.json.{Json, OFormat}
 
 object LayerStatistic {
   implicit val statisticsFormat: OFormat[LayerStatistic] = Json.format[LayerStatistic]
+
+  final val nameLabel: String = "name"
+  final val activeLabel: String = "active"
+  final val winsLabel: String = "wins"
+  final val timesPlayedLabel: String = "timesPlayed"
+  final val lastPlayedLabel: String = "lastPlayed"
 }
 
 case class LayerStatistic(

@@ -17,7 +17,9 @@ object LevelResponseConvertFlow extends SocketResponseConvertFlow {
       starSystemData: Option[StarSystemData] = None,
       galaxyData: Option[GalaxyData] = None,
       builtContinent: Option[BuiltContinent] = None,
-      function: Option[Function] = None
+      function: Option[Function] = None,
+      statsAndContinent: Option[StatsAndContinent] = None,
+      test: Option[String] = None
   )
 
   final val success = "success"
@@ -32,6 +34,8 @@ object LevelResponseConvertFlow extends SocketResponseConvertFlow {
       case galaxyData: GalaxyData => LevelResponse(success, galaxyData = Some(galaxyData))
       case builtContinent: BuiltContinent => LevelResponse(success, builtContinent = Some(builtContinent))
       case function: Function => LevelResponse(success, function = Some(function))
+      case statsAndContinent: StatsAndContinent => LevelResponse(success, statsAndContinent = Some(statsAndContinent))
+      case path: String => LevelResponse(success, test = Some(path))
       case ActorFailed(message) => LevelResponse(failed, message = Some(message))
       case _ => LevelResponse(failed, message = Some("Malformed Json output"))
     })

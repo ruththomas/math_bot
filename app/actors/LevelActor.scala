@@ -25,6 +25,8 @@ object LevelActor {
   final case class UpdateFunction(tokenId: TokenId, function: Function)
   final case class CreateStatsAndContinent(tokenId: TokenId)
 
+  final case class RunWon(tokenId: TokenId)
+
   def props(out: ActorRef,
             statsDAO: StatsDAO,
             lambdasDAO: FunctionsDAO,
@@ -111,6 +113,13 @@ class LevelActor @Inject()(out: ActorRef,
       for {
         builtContinent <- levelControl.createBuiltContinent(tokenId, path)
       } yield out ! builtContinent
+    /*
+     *
+     * */
+    case RunWon(tokenId) =>
+      levelControl
+        .updateStats(tokenId, success = true)
+        .map(statsAndContinent => out ! statsAndContinent.stats.currentPath)
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }
