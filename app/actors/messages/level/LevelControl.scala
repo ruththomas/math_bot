@@ -77,10 +77,9 @@ class LevelControl @Inject()(
   }
 
   def updateStats(tokenId: TokenId, success: Boolean): Future[StatsAndContinent] = {
-    if (success) {
-      ???
-    } else {
-      ???
-    }
+    for {
+      stats <- statsDAO.incrementWinsAndTimedPlayed(tokenId, success)
+      continent <- createBuiltContinent(tokenId, stats.currentPath)
+    } yield StatsAndContinent(stats, continent)
   }
 }

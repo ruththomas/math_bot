@@ -35,7 +35,7 @@ class FunctionsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
   def insert(functions: Functions): Future[Option[Completed]] =
     collection.insertOne(functions).toFutureOption()
 
-  def updateFunction(tokenId: TokenId, function: Function) =
+  def updateFunction(tokenId: TokenId, function: Function): Future[Option[UpdateResult]] =
     collection
       .updateOne(
         equal(tokenIdLabel, tokenId),
