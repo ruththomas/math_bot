@@ -1,4 +1,5 @@
 package actors.messages.level
+import akka.http.scaladsl.util.FastFuture
 import com.google.inject.Inject
 import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
@@ -14,6 +15,22 @@ class LevelControl @Inject()(
 )(implicit ec: ExecutionContext) {
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
+  def getGalaxyData(tokenId: TokenId, path: String): Future[GalaxyData] = {
+    statsDAO.updateCurrentLevel(tokenId, path)
+    statsDAO.findStats(tokenId).flatMap {
+      case Some(stats) => FastFuture.successful(GalaxyData(stats, path))
+      case None => getStats(tokenId).map(stats => GalaxyData(stats, path))
+    }
+  }
+
+  def getStarSystemData(tokenId: TokenId, path: String): Future[StarSystemData] = {
+    statsDAO.updateCurrentLevel(tokenId, path)
+    statsDAO.findStats(tokenId).flatMap {
+      case Some(stats) => FastFuture.successful(StarSystemData(stats, path))
+      case None => getStats(tokenId).map(stats => StarSystemData(stats, path))
+    }
+  }
+
   def createBuiltContinent(tokenId: TokenId, p: String): Future[BuiltContinent] = getFunctions(tokenId).map {
     functions =>
       val path = Stats.makePath(p)
@@ -24,6 +41,7 @@ class LevelControl @Inject()(
         .children(path.drop(4).mkString("").toInt)
         .continentStruct
         .get
+      statsDAO.updateCurrentLevel(tokenId, p)
       BuiltContinent(functions, struct)
   }
 
@@ -69,17 +87,17 @@ class LevelControl @Inject()(
       }
   }
 
-  def getStatsAndContinent(tokenId: TokenId): Future[StatsAndContinent] = {
+  def getBuiltContinent(tokenId: TokenId): Future[BuiltContinent] = {
     for {
       stats <- getStats(tokenId)
-      continent <- createBuiltContinent(tokenId, stats.superClusterPath)
-    } yield StatsAndContinent(stats, continent)
+      continent <- createBuiltContinent(tokenId, stats.currentPath)
+    } yield continent
   }
 
-  def updateStats(tokenId: TokenId, success: Boolean): Future[StatsAndContinent] = {
+  def updateStats(tokenId: TokenId, success: Boolean): Future[PathAndContinent] = {
     for {
       stats <- statsDAO.incrementWinsAndTimedPlayed(tokenId, success)
       continent <- createBuiltContinent(tokenId, stats.currentPath)
-    } yield StatsAndContinent(stats, continent)
+    } yield PathAndContinent(stats.currentPath, continent)
   }
 }

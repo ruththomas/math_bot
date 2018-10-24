@@ -109,24 +109,34 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     (for {
       stats <- collection.find(equal(tokenIdLabel, tokenId))
       currentPath = stats.currentPath
+      nextPath = computeNewPath(stats)()
       updated <- collection.findOneAndUpdate(
         equal(tokenIdLabel, tokenId),
         combine(
-          set("currentPath", if (incrementWins) computeNewPath(stats)() else currentPath),
+          set("currentPath", if (incrementWins) nextPath else currentPath),
           inc(s"$listLabel.$currentPath.$timesPlayedLabel", 1),
           inc(s"$listLabel.$currentPath.$winsLabel", if (incrementWins) 1 else 0),
-          set(s"list.$currentPath.$lastPlayedLabel", newDate),
+          set(s"$listLabel.$nextPath.$activeLabel", if (stats.list(nextPath).active || incrementWins) true else false),
+          set(s"$listLabel.$currentPath.$lastPlayedLabel", newDate),
           inc(s"$listLabel.${currentPath.take(4)}.$timesPlayedLabel", 1),
           inc(s"$listLabel.${currentPath.take(4)}.$winsLabel", if (incrementWins) 1 else 0),
+          set(s"$listLabel.${nextPath.take(4)}.$activeLabel",
+              if (stats.list(nextPath.take(4)).active || incrementWins) true else false),
           set(s"list.${currentPath.take(4)}.$lastPlayedLabel", newDate),
           inc(s"$listLabel.${currentPath.take(3)}.$timesPlayedLabel", 1),
           inc(s"$listLabel.${currentPath.take(3)}.$winsLabel", if (incrementWins) 1 else 0),
+          set(s"$listLabel.${nextPath.take(3)}.$activeLabel",
+              if (stats.list(nextPath.take(3)).active || incrementWins) true else false),
           set(s"list.${currentPath.take(3)}.$lastPlayedLabel", newDate),
           inc(s"$listLabel.${currentPath.take(2)}.$timesPlayedLabel", 1),
           inc(s"$listLabel.${currentPath.take(2)}.$winsLabel", if (incrementWins) 1 else 0),
+          set(s"$listLabel.${nextPath.take(2)}.$activeLabel",
+              if (stats.list(nextPath.take(2)).active || incrementWins) true else false),
           set(s"list.${currentPath.take(2)}.$lastPlayedLabel", newDate),
           inc(s"$listLabel.${currentPath.take(1)}.$timesPlayedLabel", 1),
           inc(s"$listLabel.${currentPath.take(1)}.$winsLabel", if (incrementWins) 1 else 0),
+          set(s"$listLabel.${nextPath.take(1)}.$activeLabel",
+              if (stats.list(nextPath.take(1)).active || incrementWins) true else false),
           set(s"list.${currentPath.take(1)}.$lastPlayedLabel", newDate)
         )
       )

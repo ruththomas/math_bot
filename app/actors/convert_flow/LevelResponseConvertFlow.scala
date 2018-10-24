@@ -18,7 +18,7 @@ object LevelResponseConvertFlow extends SocketResponseConvertFlow {
       galaxyData: Option[GalaxyData] = None,
       builtContinent: Option[BuiltContinent] = None,
       function: Option[Function] = None,
-      statsAndContinent: Option[StatsAndContinent] = None,
+      pathAndContinent: Option[PathAndContinent] = None,
       test: Option[String] = None
   )
 
@@ -34,7 +34,7 @@ object LevelResponseConvertFlow extends SocketResponseConvertFlow {
       case galaxyData: GalaxyData => LevelResponse(success, galaxyData = Some(galaxyData))
       case builtContinent: BuiltContinent => LevelResponse(success, builtContinent = Some(builtContinent))
       case function: Function => LevelResponse(success, function = Some(function))
-      case statsAndContinent: StatsAndContinent => LevelResponse(success, statsAndContinent = Some(statsAndContinent))
+      case pathAndContinent: PathAndContinent => LevelResponse(success, pathAndContinent = Some(pathAndContinent))
       case path: String => LevelResponse(success, test = Some(path))
       case ActorFailed(message) => LevelResponse(failed, message = Some(message))
       case _ => LevelResponse(failed, message = Some("Malformed Json output"))

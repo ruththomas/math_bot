@@ -2,7 +2,6 @@
 <div class="social-sharing">
   <social-sharing url="https://mathbot.com"
                   :title="message"
-                  twitter-user="JWWeatherman_"
                   inline-template>
     <div class="social-links">
       <network class="share-button share-twitter" network="twitter">
