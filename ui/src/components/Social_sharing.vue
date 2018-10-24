@@ -1,8 +1,6 @@
 <template>
 <div class="social-sharing">
-  <social-sharing url="https://mathbot.com"
-                  :title="message"
-                  twitter-user="JWWeatherman_"
+  <social-sharing :title="message"
                   inline-template>
     <div class="social-links">
       <network class="share-button share-twitter" network="twitter">
@@ -28,7 +26,7 @@ export default {
   data () {
     return {
       message: `
-        I just found this cool site: https://mathbot.com. It's a fun little game, but I guess it teaches you programming & math too. I'm enjoying it. It's very satisfying when you get that little robot to finally bend to your will! **World Domination Face**
+        I just found this cool site mathbot.com. It's a fun little game, but I guess it teaches you programming & math too. I'm enjoying it. It's very satisfying when you get that little robot to finally bend to your will! **World Domination Face**
       `
     }
   }
