@@ -54,26 +54,29 @@ object MathBotCompiler {
 
   case class ClientFrame(robotState: ClientRobotState,
                          programState: String,
-                         stats: Option[Stats],
+                         newPath: Option[String],
                          stepData: Option[BuiltContinent]) {
     def isSuccess() = programState == "success"
     def isFailure() = programState == "failure"
   }
 
   object ClientFrame {
-    def apply(frame: Frame, stats: Option[Stats] = None, stepData: Option[BuiltContinent] = None): ClientFrame =
-      ClientFrame(frame, "running", stats, stepData)
+    def apply(frame: Frame, newPath: Option[String] = None, stepData: Option[BuiltContinent] = None): ClientFrame =
+      ClientFrame(frame, "running", newPath, stepData)
 
     // stepData is the step data to render at this point
-    def success(frame: Frame, stats: Stats, stepData: BuiltContinent): ClientFrame =
-      ClientFrame(frame, "success", Some(stats), Some(stepData))
+    def success(frame: Frame, newPath: String, stepData: BuiltContinent): ClientFrame =
+      ClientFrame(frame, "success", Some(newPath), Some(stepData))
 
     // stepData is the step data to render at this point
-    def failure(frame: Frame, stats: Stats, stepData: BuiltContinent): ClientFrame =
-      ClientFrame(frame, "failure", Some(stats), Some(stepData))
+    def failure(frame: Frame, newPath: String, stepData: BuiltContinent): ClientFrame =
+      ClientFrame(frame, "failure", Some(newPath), Some(stepData))
 
-    def apply(frame: Frame, programState: String, stats: Option[Stats], stepData: Option[BuiltContinent]): ClientFrame =
-      ClientFrame(ClientRobotState(frame), programState, stats, stepData)
+    def apply(frame: Frame,
+              programState: String,
+              newPath: Option[String],
+              stepData: Option[BuiltContinent]): ClientFrame =
+      ClientFrame(ClientRobotState(frame), programState, newPath, stepData)
   }
 
   case class CompilerResponse(frames: List[ClientFrame] = List.empty[ClientFrame],

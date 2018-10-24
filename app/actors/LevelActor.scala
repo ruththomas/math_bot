@@ -3,6 +3,7 @@ package actors
 import actors.messages.ActorFailed
 import actors.messages.level._
 import akka.actor.{Actor, ActorRef, Props}
+import akka.japi.Option.Some
 import com.google.inject.Inject
 import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
@@ -16,16 +17,16 @@ object LevelActor {
   final case class GetStats(tokenId: TokenId)
   final case class GetSuperClusterData(tokenId: TokenId)
   final case class GetGalaxyData(tokenId: TokenId, path: String)
-  final case class GetStarSystemData(tokenId: TokenId, key: StarSystemId)
+  final case class GetStarSystemData(tokenId: TokenId, path: StarSystemId)
   final case class GetPlanetData(tokenId: TokenId)
-  final case class GetContinentData(tokenId: TokenId, key: ContinentId)
   final case class ChangeLevel(tokenId: TokenId, path: String)
   final case class UpdateStats(tokenId: TokenId, success: Boolean)
-  final case class CreateContinentData(functions: Functions, key: String)
+  final case class CreateContinentData(functions: Functions, path: String)
   final case class UpdateFunction(tokenId: TokenId, function: Function)
   final case class CreateStatsAndContinent(tokenId: TokenId)
+  final case class GetContinentData(tokenId: TokenId, path: ContinentId)
 
-  final case class RunWon(tokenId: TokenId)
+  final case class RunWon(tokenId: TokenId, success: Boolean)
 
   def props(out: ActorRef,
             statsDAO: StatsDAO,
@@ -58,6 +59,8 @@ class LevelActor @Inject()(out: ActorRef,
       out ! SuperClusters.getCluster("SuperCluster1")
     /*
      * Get users stats
+     * not actually useful for app, get galaxy data and get star system data will both update or add stats
+     * without this.
      * */
     case GetStats(tokenId) =>
       for {
@@ -68,58 +71,32 @@ class LevelActor @Inject()(out: ActorRef,
      * Use the star system id to get the star system and all its children
      * */
     case GetGalaxyData(tokenId, path) =>
-      statsDAO.gatherGalaxy(tokenId, path).map {
-        case Some(data) =>
-          val galaxy = data("galaxy").head
-          statsDAO.updateCurrentLevel(tokenId, path)
-          out ! GalaxyData(
-            id = galaxy._1,
-            starSystems = data("starSystems").toList.sortBy(_._1.substring(3)).map { s =>
-              StarSystemData(s._1, s._2, None)
-            }
-          )
-        case None => self ! ActorFailed(s"Unable to locate stats for $tokenId")
-      }
+      for {
+        galaxyData <- levelControl.getGalaxyData(tokenId, path)
+      } yield out ! galaxyData
     /*
      * Get star system data and all of its children.
      * Planets data child's contain the continents stats and id for rendering in the profile page.
      * */
     case GetStarSystemData(tokenId, path) =>
-      statsDAO.gatherStarSystem(tokenId, path).map {
-        case Some(data) =>
-          val continents = data("continents")
-          val planets = data("planets").toList.sortBy(_._1.last.toInt).map { p =>
-            PlanetData(
-              id = p._1,
-              stats = p._2,
-              continents.filterKeys(_.take(4).contains(p._1)).toList.sortBy(_._1.substring(4).toInt).map { c =>
-                ContinentData(c._1, c._2)
-              }
-            )
-          }
-          val starSystem = data("starSystem").head
-          statsDAO.updateCurrentLevel(tokenId, path)
-          out ! StarSystemData(
-            starSystem._1,
-            starSystem._2,
-            Some(planets)
-          )
-        case None => self ! ActorFailed(s"Unable to locate stats for $tokenId")
-      }
+      for {
+        starSystemData <- levelControl.getStarSystemData(tokenId, path)
+      } yield out ! starSystemData
     /*
      * Gets the built continent data for loading a continent.
+     * Used when client clicks a new continent
      * */
     case GetContinentData(tokenId, path) =>
       for {
-        builtContinent <- levelControl.createBuiltContinent(tokenId, path)
-      } yield out ! builtContinent
+        continent <- levelControl.createBuiltContinent(tokenId, path)
+      } yield out ! continent
     /*
-     *
+     * For testing update stats without running compiler
      * */
-    case RunWon(tokenId) =>
+    case RunWon(tokenId, success) =>
       levelControl
-        .updateStats(tokenId, success = true)
-        .map(statsAndContinent => out ! statsAndContinent.stats.currentPath)
+        .updateStats(tokenId, success)
+        .map(pathAndContinent => out ! pathAndContinent)
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }
