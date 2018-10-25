@@ -25,4 +25,6 @@ case class ContinentStruct(
     evalEachFrame: Option[Boolean] = None,
     videoHints: List[String],
     freeHint: Option[String] = None
-)
+) {
+  def maxMain: Int = this.mainMax match { case -1 => 10000; case _ => this.mainMax }
+}

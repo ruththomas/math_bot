@@ -15,6 +15,16 @@ class LevelControl @Inject()(
 )(implicit ec: ExecutionContext) {
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
+  private def updateStats(stats: Stats): Future[Stats] = {
+    val shouldMatch = Stats("").list.toList
+    if (stats.list.toList.length != shouldMatch.length) {
+      val filteredUserStats = stats.list.filter(s => shouldMatch.exists(_._1 == s._1))
+      val shouldMatchDiff = shouldMatch.diff(filteredUserStats.toList).toMap
+      val updatedUserStats = stats.copy(list = filteredUserStats ++ shouldMatchDiff)
+      statsDAO.replace(updatedUserStats)
+    } else FastFuture.successful(stats)
+  }
+
   def getGalaxyData(tokenId: TokenId, path: String): Future[GalaxyData] = {
     statsDAO.updateCurrentLevel(tokenId, path)
     statsDAO.findStats(tokenId).flatMap {
@@ -34,15 +44,13 @@ class LevelControl @Inject()(
   def createBuiltContinent(tokenId: TokenId, p: String): Future[BuiltContinent] = getFunctions(tokenId).map {
     functions =>
       val path = Stats.makePath(p)
-      val struct = superCluster
+      val continent = superCluster
         .children(path(1))
         .children(path(2))
         .children(path(3))
         .children(path.drop(4).mkString("").toInt)
-        .continentStruct
-        .get
       statsDAO.updateCurrentLevel(tokenId, p)
-      BuiltContinent(functions, struct)
+      BuiltContinent(functions, continent)
   }
 
   def getFunctions(tokenId: TokenId): Future[Functions] = {
@@ -67,37 +75,41 @@ class LevelControl @Inject()(
   }
 
   def getStats(tokenId: TokenId): Future[Stats] = {
-    for {
+    (for {
       stats <- statsDAO.findStats(tokenId)
       playerToken <- playerTokenDAO.getToken(tokenId)
     } yield
       stats match {
-        case Some(s) => s // user already in new system
+        case Some(s) => // user already in new system
+          updateStats(s)
         case None =>
-          playerToken match {
-            case Some(p) => // legacy user needs moved
-              val swappedStats = Stats(tokenId, p.stats.get)
-              statsDAO.insert(swappedStats)
-              swappedStats
-            case None => // new user
-              val stats = Stats(tokenId)
-              statsDAO.insert(stats)
-              stats
-          }
-      }
+          FastFuture.successful(
+            playerToken match {
+              case Some(p) => // legacy user needs moved
+                val swappedStats = Stats(tokenId, p.stats.get)
+                statsDAO.insert(swappedStats)
+                swappedStats
+              case None => // new user
+                val stats = Stats(tokenId)
+                statsDAO.insert(stats)
+                stats
+            }
+          )
+      }).flatMap(s => s)
   }
 
-  def getBuiltContinent(tokenId: TokenId): Future[BuiltContinent] = {
+  def getBuiltContinent(tokenId: TokenId, pathOpt: Option[String] = None): Future[PathAndContinent] = {
     for {
       stats <- getStats(tokenId)
-      continent <- createBuiltContinent(tokenId, stats.currentPath)
-    } yield continent
+      continent <- createBuiltContinent(tokenId, pathOpt.getOrElse(stats.currentPath))
+    } yield PathAndContinent(pathOpt.getOrElse(stats.currentPath), continent)
   }
 
-  def updateStats(tokenId: TokenId, success: Boolean): Future[PathAndContinent] = {
+  def advanceStats(tokenId: TokenId, success: Boolean): Future[PathAndContinent] = {
     for {
-      stats <- statsDAO.incrementWinsAndTimedPlayed(tokenId, success)
-      continent <- createBuiltContinent(tokenId, stats.currentPath)
-    } yield PathAndContinent(stats.currentPath, continent)
+      _ <- getStats(tokenId) // ensures user definitely exists in table
+      newPath <- statsDAO.incrementWinsAndTimedPlayed(tokenId, success)
+      continent <- createBuiltContinent(tokenId, newPath)
+    } yield PathAndContinent(newPath, continent)
   }
 }
