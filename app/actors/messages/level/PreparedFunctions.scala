@@ -54,6 +54,8 @@ object PreparedFunctions {
     val allowedActivesIds = continentStruct.allowedActives.getOrElse(List.empty[String])
     val preBuildActivesIds = continentStruct.preBuiltActive.map(_.createdId)
     val assignedStagedIds = continentStruct.assignedStaged.map(_.createdId)
+    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, functionIds)
+    val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
 
     new PreparedFunctions(
       main = listedFunctions
@@ -62,23 +64,18 @@ object PreparedFunctions {
           m.copy(
             func = m.func.map {
               _.filter(f => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(f.created_id) else false)
-              /*
-             *   These may not be needed, will need to verify after more testing
-             *  .filter(f => if (preBuildActivesIds.nonEmpty) preBuildActivesIds.contains(f.created_id) else false)
-             *  .filter(f => if (assignedStagedIds.nonEmpty) assignedStagedIds.contains(f.created_id) else false)
-             * */
             }
           )
         }
-        .take(continentStruct.mainMax)
+        .take(continentStruct.maxMain)
         .head,
       cmds = listedFunctions
         .filter(c => c.category == Categories.command)
         .filter(c => continentStruct.cmdsAvailable.contains(c.commandId)),
-      activeFuncs = makePrebuiltActives(continentStruct.preBuiltActive, functionIds) ::: listedFunctions
+      activeFuncs = preBuiltActives ::: listedFunctions
         .filter(_.category == Categories.function)
         .filter(a => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(a.created_id) else false),
-      stagedFunctions = makeAssignedStaged(continentStruct.assignedStaged, functionIds) ::: listedFunctions
+      stagedFunctions = assignedStaged ::: listedFunctions
         .filter(_.category == Categories.staged)
         .filter(s => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(s.created_id) else false)
         .take(continentStruct.stagedQty)

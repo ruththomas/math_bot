@@ -29,12 +29,14 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
         GetGalaxyData(tempId, path)
       case Some(LevelRequest(action, _, Some(path), _)) if action == "get-star-system" =>
         GetStarSystemData(tempId, path)
-      case Some(LevelRequest(action, _, Some(path), _)) if action == "get-continent" =>
-        GetContinentData(tempId, path)
+      case Some(LevelRequest(action, _, pathOpt, _)) if action == "get-continent" =>
+        GetContinentData(tempId, pathOpt)
       case Some(LevelRequest(action, Some(function), _, _)) if action == "update-function" =>
         UpdateFunction(tempId, function)
-      case Some(LevelRequest(action, _, _, Some(boolean))) if action == "update-stats" =>
+      case Some(LevelRequest(action, _, _, Some(boolean))) if action == "advance-stats" =>
         RunWon(tempId, boolean)
+      case Some(LevelRequest(action, _, _, _)) if action == "update-stats" =>
+        UpdateStats(tempId)
       case _ => ActorFailed("Bad json input")
     }
   }

@@ -1,15 +1,17 @@
 package actors.messages.level
 
 import actors.VideoHintActor.embedURL
-import level_gen.models.ContinentStruct
+import level_gen.models.{CelestialSystem, ContinentStruct}
 import models.Problem.makeProblem
 import models._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 object BuiltContinent {
-  def apply(functions: Functions, continentStruct: ContinentStruct): BuiltContinent =
+  def apply(functions: Functions, continent: CelestialSystem): BuiltContinent = {
+    val continentStruct = continent.continentStruct.get
     new BuiltContinent(
+      name = continent.name,
       gridMap = buildGrid(continentStruct.gridMap),
       description = makeDescription(continentStruct),
       mainMax = continentStruct.mainMax,
@@ -25,6 +27,7 @@ object BuiltContinent {
       evalEachFrame = continentStruct.evalEachFrame.getOrElse(false),
       stepControl = new ContinentControl(continentStruct.specialParameters, continentStruct.description, functions)
     )
+  }
 
   case class InitialRobotState(location: Map[String, Int], orientation: String, holding: List[String])
 
@@ -100,10 +103,11 @@ object BuiltContinent {
 
   val stepDataReads: Reads[BuiltContinent] = (
     (JsPath \ "functions").read[Functions] and
-    (JsPath \ "continentStruct").read[ContinentStruct]
+    (JsPath \ "continent").read[CelestialSystem]
   )(BuiltContinent(_, _))
 
   val stepDataWrites: Writes[BuiltContinent] = (
+    (JsPath \ "name").write[String] and
     (JsPath \ "gridMap").write[List[List[GridPart]]] and
     (JsPath \ "description").write[String] and
     (JsPath \ "mainMax").write[Int] and
@@ -125,6 +129,7 @@ object BuiltContinent {
 }
 
 case class BuiltContinent(
+    name: String,
     gridMap: List[List[GridPart]],
     description: String,
     mainMax: Int,

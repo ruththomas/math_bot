@@ -38,36 +38,12 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   def insert(stats: Stats): Future[Option[Completed]] =
     collection.insertOne(stats).toFutureOption()
 
-  def findStats(tokenId: TokenId): Future[Option[Stats]] =
-    collection.find(equal(tokenIdLabel, tokenId)).first().toFutureOption()
+  def replace(stats: Stats): Future[Stats] =
+    collection.replaceOne(equal(tokenIdLabel, stats.tokenId), stats).toFutureOption().map(_ => stats)
 
-  def gatherGalaxy(tokenId: TokenId, path: String): Future[Option[Map[TokenId, Map[String, LayerStatistic]]]] = {
-    val key = path.take(2)
-    collection
-      .find(equal(tokenIdLabel, tokenId))
-      .first()
-      .toFutureOption()
-      .map {
-        _.map { stats =>
-          Map(
-            "galaxy" -> Map(key -> stats.list(key)),
-            "starSystems" -> stats.list.filterKeys(l => l.length == 3 && l.take(key.length).contains(key))
-          )
-        }
-      }
-  }
-
-  def gatherStarSystem(tokenId: TokenId, path: String): Future[Option[Map[TokenId, Map[String, LayerStatistic]]]] = {
-    val key = path.take(3)
-    collection.find(equal(tokenIdLabel, tokenId)).first().toFutureOption().map {
-      _.map { stats =>
-        Map(
-          "starSystem" -> Map(key -> stats.list(key)),
-          "planets" -> stats.list.filterKeys(l => l.length == 4 && l.take(key.length).contains(key)),
-          "continents" -> stats.list.filterKeys(l => l.length > 4 && l.take(key.length).contains(key))
-        )
-      }
-    }
+  def findStats(tokenId: TokenId): Future[Option[Stats]] = {
+    val p = collection.find(equal(tokenIdLabel, tokenId))
+    p.first().toFutureOption()
   }
 
   def updateCurrentLevel(tokenId: TokenId, path: String): Future[Option[UpdateResult]] = {
@@ -90,10 +66,11 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   private def computeNewPath(stats: Stats,
                              position: Int = 4)(path: String = incContinent(stats.currentPath)): String = {
     stats.list.get(path) match {
-      case Some(_) => path
+      case Some(t) =>
+        path
       case None =>
         val zeroLast = path.take(position) + path.drop(position + 1).split("").map(_ => 0).mkString("")
-        if (position == 4) incPlanet(zeroLast)
+        if (position == 4) computeNewPath(stats, position - 1)(incPlanet(zeroLast))
         else if (position == 3) computeNewPath(stats, position - 1)(incStarSystem(zeroLast))
         else if (position == 2) computeNewPath(stats, position - 1)(incGalaxy(zeroLast))
         else if (position == 1) computeNewPath(stats, position - 1)(incSuperCluster(zeroLast))
@@ -104,42 +81,56 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     }
   }
 
-  def incrementWinsAndTimedPlayed(tokenId: TokenId, incrementWins: Boolean): Future[Stats] = {
+  def incrementWinsAndTimedPlayed(tokenId: TokenId, incrementWins: Boolean): Future[String] = {
     val newDate = new Date()
     (for {
       stats <- collection.find(equal(tokenIdLabel, tokenId))
       currentPath = stats.currentPath
       nextPath = computeNewPath(stats)()
-      updated <- collection.findOneAndUpdate(
+      _ <- collection.updateOne(
         equal(tokenIdLabel, tokenId),
         combine(
-          set("currentPath", if (incrementWins) nextPath else currentPath),
+          set(currentPathLabel, if (incrementWins) nextPath else currentPath),
           inc(s"$listLabel.$currentPath.$timesPlayedLabel", 1),
           inc(s"$listLabel.$currentPath.$winsLabel", if (incrementWins) 1 else 0),
-          set(s"$listLabel.$nextPath.$activeLabel", if (stats.list(nextPath).active || incrementWins) true else false),
+          set(s"$listLabel.$nextPath.$activeLabel",
+              if (stats.list.keySet.contains(nextPath) && (stats.list(nextPath).active || incrementWins)) true
+              else false),
           set(s"$listLabel.$currentPath.$lastPlayedLabel", newDate),
           inc(s"$listLabel.${currentPath.take(4)}.$timesPlayedLabel", 1),
           inc(s"$listLabel.${currentPath.take(4)}.$winsLabel", if (incrementWins) 1 else 0),
-          set(s"$listLabel.${nextPath.take(4)}.$activeLabel",
-              if (stats.list(nextPath.take(4)).active || incrementWins) true else false),
+          set(
+            s"$listLabel.${nextPath.take(4)}.$activeLabel",
+            if (stats.list.keySet.contains(nextPath) && (stats.list(nextPath.take(4)).active || incrementWins)) true
+            else false
+          ),
           set(s"list.${currentPath.take(4)}.$lastPlayedLabel", newDate),
           inc(s"$listLabel.${currentPath.take(3)}.$timesPlayedLabel", 1),
           inc(s"$listLabel.${currentPath.take(3)}.$winsLabel", if (incrementWins) 1 else 0),
-          set(s"$listLabel.${nextPath.take(3)}.$activeLabel",
-              if (stats.list(nextPath.take(3)).active || incrementWins) true else false),
+          set(
+            s"$listLabel.${nextPath.take(3)}.$activeLabel",
+            if (stats.list.keySet.contains(nextPath) && (stats.list(nextPath.take(3)).active || incrementWins)) true
+            else false
+          ),
           set(s"list.${currentPath.take(3)}.$lastPlayedLabel", newDate),
           inc(s"$listLabel.${currentPath.take(2)}.$timesPlayedLabel", 1),
           inc(s"$listLabel.${currentPath.take(2)}.$winsLabel", if (incrementWins) 1 else 0),
-          set(s"$listLabel.${nextPath.take(2)}.$activeLabel",
-              if (stats.list(nextPath.take(2)).active || incrementWins) true else false),
+          set(
+            s"$listLabel.${nextPath.take(2)}.$activeLabel",
+            if (stats.list.keySet.contains(nextPath) && (stats.list(nextPath.take(2)).active || incrementWins)) true
+            else false
+          ),
           set(s"list.${currentPath.take(2)}.$lastPlayedLabel", newDate),
           inc(s"$listLabel.${currentPath.take(1)}.$timesPlayedLabel", 1),
           inc(s"$listLabel.${currentPath.take(1)}.$winsLabel", if (incrementWins) 1 else 0),
-          set(s"$listLabel.${nextPath.take(1)}.$activeLabel",
-              if (stats.list(nextPath.take(1)).active || incrementWins) true else false),
+          set(
+            s"$listLabel.${nextPath.take(1)}.$activeLabel",
+            if (stats.list.keySet.contains(nextPath) && (stats.list(nextPath.take(1)).active || incrementWins)) true
+            else false
+          ),
           set(s"list.${currentPath.take(1)}.$lastPlayedLabel", newDate)
         )
       )
-    } yield updated).toFuture().map(_.head)
+    } yield nextPath).toFuture().map(_.head)
   }
 }

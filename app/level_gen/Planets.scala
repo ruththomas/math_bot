@@ -29,4 +29,27 @@ trait Planets extends Continents with LevelGenTags {
       children = conditionals
     )
   )
+
+  val arithmetic = List(
+    CelestialSystem(
+      name = "Addition",
+      kind = planet,
+      children = addition
+    ),
+    CelestialSystem(
+      name = "Subtraction",
+      kind = planet,
+      children = subtraction
+    ),
+    CelestialSystem(
+      name = "Multiplication",
+      kind = planet,
+      children = multiplication
+    ),
+    CelestialSystem(
+      name = "Division",
+      kind = planet,
+      children = division
+    )
+  )
 }

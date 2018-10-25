@@ -3,7 +3,6 @@ package actors
 import actors.messages.ActorFailed
 import actors.messages.level._
 import akka.actor.{Actor, ActorRef, Props}
-import akka.japi.Option.Some
 import com.google.inject.Inject
 import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
@@ -20,11 +19,11 @@ object LevelActor {
   final case class GetStarSystemData(tokenId: TokenId, path: StarSystemId)
   final case class GetPlanetData(tokenId: TokenId)
   final case class ChangeLevel(tokenId: TokenId, path: String)
-  final case class UpdateStats(tokenId: TokenId, success: Boolean)
+  final case class UpdateStats(tokenId: TokenId)
   final case class CreateContinentData(functions: Functions, path: String)
   final case class UpdateFunction(tokenId: TokenId, function: Function)
   final case class CreateStatsAndContinent(tokenId: TokenId)
-  final case class GetContinentData(tokenId: TokenId, path: ContinentId)
+  final case class GetContinentData(tokenId: TokenId, path: Option[ContinentId])
 
   final case class RunWon(tokenId: TokenId, success: Boolean)
 
@@ -86,16 +85,16 @@ class LevelActor @Inject()(out: ActorRef,
      * Gets the built continent data for loading a continent.
      * Used when client clicks a new continent
      * */
-    case GetContinentData(tokenId, path) =>
+    case GetContinentData(tokenId, pathOpt) =>
       for {
-        continent <- levelControl.createBuiltContinent(tokenId, path)
+        continent <- levelControl.getBuiltContinent(tokenId, pathOpt)
       } yield out ! continent
     /*
      * For testing update stats without running compiler
      * */
     case RunWon(tokenId, success) =>
       levelControl
-        .updateStats(tokenId, success)
+        .advanceStats(tokenId, success)
         .map(pathAndContinent => out ! pathAndContinent)
     case actorFailed: ActorFailed => out ! actorFailed
   }
