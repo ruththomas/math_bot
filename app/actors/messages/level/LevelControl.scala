@@ -14,7 +14,9 @@ class LevelControl @Inject()(
     playerTokenDAO: PlayerTokenDAO
 )(implicit ec: ExecutionContext) {
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
-
+  /*
+   * Checks if levels have been added or removed then updates the stats
+   * */
   private def updateStats(stats: Stats): Future[Stats] = {
     val shouldMatch = Stats("").list.toList
     if (stats.list.toList.length != shouldMatch.length) {
@@ -25,6 +27,9 @@ class LevelControl @Inject()(
     } else FastFuture.successful(stats)
   }
 
+  /*
+   * Assembles galaxy data back into its nested data structure
+   * */
   def getGalaxyData(tokenId: TokenId, path: String): Future[GalaxyData] = {
     statsDAO.updateCurrentLevel(tokenId, path)
     statsDAO.findStats(tokenId).flatMap {
@@ -33,6 +38,9 @@ class LevelControl @Inject()(
     }
   }
 
+  /*
+   * Assembles star system data back into its nested data structure
+   * */
   def getStarSystemData(tokenId: TokenId, path: String): Future[StarSystemData] = {
     statsDAO.updateCurrentLevel(tokenId, path)
     statsDAO.findStats(tokenId).flatMap {
@@ -41,7 +49,11 @@ class LevelControl @Inject()(
     }
   }
 
-  def createBuiltContinent(tokenId: TokenId, p: String): Future[BuiltContinent] = getFunctions(tokenId).map {
+  /*
+   * Creates built continent ready for the client to render
+   * also includes functions for that continent
+   * */
+  private def createBuiltContinent(tokenId: TokenId, p: String): Future[BuiltContinent] = getFunctions(tokenId).map {
     functions =>
       val path = Stats.makePath(p)
       val continent = superCluster
@@ -53,7 +65,10 @@ class LevelControl @Inject()(
       BuiltContinent(functions, continent)
   }
 
-  def getFunctions(tokenId: TokenId): Future[Functions] = {
+  /*
+   * Gets all functions for user
+   * */
+  private def getFunctions(tokenId: TokenId): Future[Functions] = {
     for {
       playerToken <- playerTokenDAO.getToken(tokenId)
       functions <- functionsDAO.find(tokenId)
@@ -74,6 +89,9 @@ class LevelControl @Inject()(
       }
   }
 
+  /*
+   * Gets a users stats
+   * */
   def getStats(tokenId: TokenId): Future[Stats] = {
     (for {
       stats <- statsDAO.findStats(tokenId)
@@ -98,6 +116,11 @@ class LevelControl @Inject()(
       }).flatMap(s => s)
   }
 
+  /*
+   * Gets the continent data and current path
+   * If path is omitted the current path in the db will be used
+   * This is the main function used by the outside to get a built continent
+   * */
   def getBuiltContinent(tokenId: TokenId, pathOpt: Option[String] = None): Future[PathAndContinent] = {
     for {
       stats <- getStats(tokenId)
@@ -105,6 +128,10 @@ class LevelControl @Inject()(
     } yield PathAndContinent(pathOpt.getOrElse(stats.currentPath), continent)
   }
 
+  /*
+   * Advances the user stats to the next level if success is true otherwise
+   * updates times played and last played.
+   * */
   def advanceStats(tokenId: TokenId, success: Boolean): Future[PathAndContinent] = {
     for {
       _ <- getStats(tokenId) // ensures user definitely exists in table
