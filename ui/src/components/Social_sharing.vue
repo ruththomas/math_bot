@@ -1,7 +1,9 @@
 <template>
 <div class="social-sharing">
-  <social-sharing :title="message"
-                  inline-template>
+  <social-sharing
+    url=""
+    :title="message"
+    inline-template>
     <div class="social-links">
       <network class="share-button share-twitter" network="twitter">
         <i class="fa fa-twitter"></i>
