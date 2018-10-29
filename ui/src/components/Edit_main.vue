@@ -16,7 +16,7 @@
     <div class="bar noDrag" v-if="Object.keys(robot).length">
       <img class="trash noDrag dialog-button" :src="permanentImages.buttons.trashButton"  @click="wipeFunction" data-toggle="tooltip" title="Clear main" />
       <div
-        v-if="runCompiled.robot.state !== 'failure'"
+        v-if="robot.state !== 'failure'"
         class="speed dialog-button"
         @click="adjustSpeed"
         data-toggle="tooltip"
@@ -28,28 +28,28 @@
       </div>
 
       <img
-        v-if="runCompiled.robot.state === 'home' || runCompiled.robot.state === 'paused'"
+        v-if="robot.state === 'home' || robot.state === 'paused'"
         class="play noDrag dialog-button"
         :src="permanentImages.buttons.playButton"
         alt="Play button" @click="[runCompiled.start(), togglePut(true), closeHint()]"
         data-toggle="tooltip" title="Run program" />
 
       <img
-        v-else-if="runCompiled.robot.state === 'running'"
+        v-else-if="robot.state === 'running'"
         class="play noDrag dialog-button"
         :src="permanentImages.buttons.pauseButton"
         alt="Pause button" @click="runCompiled.pause"
         data-toggle="tooltip" title="Pause program" />
 
       <img
-        v-if="runCompiled.robot.state === 'running'"
+        v-if="robot.state === 'running'"
         class="stop button noDrag dialog-button"
         :src="permanentImages.buttons.stopButton"
         alt="Stop button" @click="runCompiled.stop"
         data-toggle="tooltip" title="Stop program"/>
 
       <img
-        v-if="runCompiled.robot.state === 'failure'"
+        v-if="robot.state === 'failure'"
         class="reset play button noDrag dialog-button"
         :src="permanentImages.buttons.resetButton"
         alt="Reset button" @click="runCompiled.reset"
@@ -68,15 +68,36 @@ import FunctionDrop from './Function_drop'
 
 export default {
   mounted () {
-    this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
+    // this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
   },
   computed: {
-    runCompiled () {
-      return this.$store.getters.getRunCompiled
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+    mainFunction () {
+      return this.levelControl.functions.main
     },
     mainFunctionFunc () {
-      const mainToken = this.$store.getters.getMainFunction
-      return mainToken === null ? [] : mainToken.func
+      return this.mainFunction.func
+    },
+    runCompiled () {
+      return this.levelControl.runCompiled
+    },
+
+    editingFunction () {
+      return this.$store.getters.getMainFunction.func[this.editingIndex]
     },
     congratsShowing () {
       return this.$store.getters.getCongratsShowing
@@ -102,17 +123,11 @@ export default {
     editingIndex () {
       return this.$store.getters.getEditingIndex
     },
-    editingFunction () {
-      return this.$store.getters.getMainFunction.func[this.editingIndex]
-    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
     },
     currentFunc () {
       return this.$store.getters.getFunctions[this.$store.getters.getCurrentFunction]
-    },
-    robot () {
-      return this.$store.getters.getRobot
     },
     robotSpeedDisplay () {
       return this.robot.robotSpeed.display
@@ -160,11 +175,9 @@ export default {
     togglePut (bool) {
       this.mainDraggableOptions.group.put = bool
     },
-    editFunction (evt) {
-      if (!evt.hasOwnProperty('removed')) {
-        buildUtils.addToFunction()
-      }
-      const mainBalance = this.mainFunctionFunc.length < this.stepData.mainMax
+    editFunction () {
+      this.levelControl.updateFunction(this.mainFunction)
+      const mainBalance = this.mainFunctionFunc.length < this.levelControl.continent.mainMax
       this.togglePut(mainBalance)
       if (!mainBalance) {
         this.fullMessage()
@@ -176,7 +189,7 @@ export default {
       }
     },
     wipeFunction () {
-      buildUtils.deleteFunction({context: this})
+      this.levelControl.deleteMain()
       this.togglePut(true)
     },
     adjustSpeed () {

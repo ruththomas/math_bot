@@ -14,7 +14,7 @@ object BuiltContinent {
       name = continent.name,
       gridMap = buildGrid(continentStruct.gridMap),
       description = makeDescription(continentStruct),
-      mainMax = continentStruct.mainMax,
+      mainMax = continentStruct.maxMain,
       initialRobotState = setInitialRobot(continentStruct),
       stagedEnabled = continentStruct.stagedEnabled,
       activeEnabled = continentStruct.activeEnabled,

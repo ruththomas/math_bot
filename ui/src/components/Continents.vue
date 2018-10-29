@@ -1,43 +1,46 @@
 <template>
   <div class="col-4 steps">
     <div class="row">
-      <h2 class="header"><span v-if="level !== 'Sandbox'">{{`${planetName}`}}.</span> {{ parseCamelCase(level) }}</h2>
+      <h2 class="header"><span>{{`${selectedPlanet + 1}`}}.</span> {{ parseCamelCase(planetName) }}</h2>
     </div>
     <div class="row steps-container">
       <div class="btn-group-vertical">
         <button
-          v-for="(step, value) in steps"
+          v-for="(continent, continentNumber) in continents"
           type="button"
           class="btn btn-dark btn-lg btn-block"
-          :id="actionClass(step.name)"
-          @click="step.active ? goToRobot(level, step.name) : ''"
-          :key="step + ':' + value"
-          :disabled="!step.active"
+          :id="actionClass(continent.stats.name)"
+          @click="continent.stats.active ? goToRobot(continent) : ''"
+          :key="'continent/' + continent.id"
+          :disabled="!continent.stats.active"
         >
           <div class="col-6">
-            <div class="step-info-text">Level {{ value + 1 }}</div>
+            <div class="step-info-text">Level {{ continentNumber + 1 }}</div>
           </div>
           <div class="col-6">
-            <stars :level="level" :step="step.name" :step-stats="step" :star-group="'star-cluster'"></stars>
+            <stars v-if="continent.stats.active" :continent-id="continent.id"></stars>
+            <div v-else class="stars">
+              <img :src="permanentImages.lock" style="height: 1.5em;" />
+            </div>
           </div>
         </button>
-        <button
-          v-if="steps[steps.length - 1].wins > 0 && nextLevel !== 'None'"
-          type="button"
-          class="btn btn-dark btn-lg btn-block"
-          @click="goToRobot(nextLevel.name, nextLevel.firstStep)">
-          <div class="col-6">
-            <div class="step-info-text"><div>Next planet!</div> {{parseCamelCase(nextLevel.name)}}</div>
-          </div>
-          <div class="col-6">
-            <img
-              class="step-next-planet"
-              :class="`step-${nextLevel.planetClass}`"
-              :src="permanentImages.planets[nextLevel.planet]"
-              alt="Image of a planet"
-            />
-          </div>
-        </button>
+        <!--<button-->
+          <!--v-if="steps[steps.length - 1].wins > 0 && nextLevel !== 'None'"-->
+          <!--type="button"-->
+          <!--class="btn btn-dark btn-lg btn-block"-->
+          <!--@click="goToRobot(nextLevel.name, nextLevel.firstStep)">-->
+          <!--<div class="col-6">-->
+            <!--<div class="step-info-text"><div>Next planet!</div> {{parseCamelCase(nextLevel.name)}}</div>-->
+          <!--</div>-->
+          <!--<div class="col-6">-->
+            <!--<img-->
+              <!--class="step-next-planet"-->
+              <!--:class="`step-${nextLevel.planetClass}`"-->
+              <!--:src="permanentImages.planets[nextLevel.planet]"-->
+              <!--alt="Image of a planet"-->
+            <!--/>-->
+          <!--</div>-->
+        <!--</button>-->
       </div>
     </div>
   </div>
@@ -45,13 +48,14 @@
 
 <script>
 import utils from '../services/utils'
-import api from '../services/api'
 import Stars from './Stars'
 
 export default {
   name: 'steps',
+  mounted () {
+  },
   computed: {
-    planetName () {
+    planetN () {
       const planets = {
         BasicProgramming: '1',
         Counting: '2',
@@ -61,17 +65,11 @@ export default {
       }
       return planets[this.level]
     },
-    step () {
-      return this.$store.getters.getStep
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     },
-    level () {
-      return this.$store.getters.getLevel
-    },
-    levels () {
-      return this.$store.getters.getLevels
-    },
-    steps () {
-      return this.$store.getters.getSteps
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
     nextLevel () {
       const name = this.steps[this.steps.length - 1].nextLevel
@@ -100,30 +98,29 @@ export default {
       const levelSteps = utils.orderEm(level.level)[0].name
       return levelSteps
     },
-    goToRobot (level, step) {
-      api.switchLevel({tokenId: this.tokenId, level: level, step: step}, (res) => {
-        this.$store.dispatch('updateStats', res.body)
+    goToRobot (continent) {
+      this.levelControl.getContinent(continent.id, () => {
         this.$router.push({path: '/robot'})
       })
     },
     actionClass (step) {
-      if (this.step === step) {
-        const id = 'selected-step' + '-planet-' + this.planetName + '-selected'
-        setTimeout(() => {
-          const $stepsContainer = $('.steps-container')
-          const stepsHeight = $stepsContainer.innerHeight()
-          $stepsContainer.animate({
-            scrollTop: $(`#${id}`).offset().top - stepsHeight / 2
-          })
-        }, 50)
-        return id
-      }
+      // if (this.step === step) {
+      //   const id = 'selected-step' + '-planet-' + this.planetName + '-selected'
+      //   setTimeout(() => {
+      //     const $stepsContainer = $('.steps-container')
+      //     const stepsHeight = $stepsContainer.innerHeight()
+      //     $stepsContainer.animate({
+      //       scrollTop: $(`#${id}`).offset().top - stepsHeight / 2
+      //     })
+      //   }, 50)
+      //   return id
+      // }
     }
   },
   components: {
     Stars
   },
-  props: ['permanentImages']
+  props: ['selectedPlanet', 'continents', 'planetName']
 }
 </script>
 
@@ -142,10 +139,12 @@ export default {
   $font-color: #ffffff;
 
   .steps {
+    position: absolute;
+    top: 8%;
+    right: 0;
+    bottom: 0;
     color: $font-color;
-    margin: 8% 0 0 0;
     font-size: $steps-font-size;
-    height: 100%;
 
     .header {
       font-size: 1.5em;

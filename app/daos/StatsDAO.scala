@@ -2,24 +2,24 @@ package daos
 
 import java.util.Date
 
+import actors.messages.level.{LayerStatistic, Stats}
 import com.google.inject.Inject
+import level_gen.models._
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
-import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase, Observable}
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
-import actors.messages.level.{LayerStatistic, Stats}
-import level_gen.models._
-import types.TokenId
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.UpdateResult
+import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase}
+import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
   final val collectionLabel = "stats"
-  import Stats._
   import LayerStatistic._
+  import Stats._
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(

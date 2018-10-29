@@ -6,11 +6,7 @@
       class="btn button-effect help-button"
       @click="[videoHint.showHint()]"
     >
-      <stars
-        :star-group="'star-spread'"
-        :level="level"
-        :step="step"
-        :step-stats="stepStats"></stars>
+      <stars :continent-id="levelControl.continent.id"></stars>
     </div>
   </div>
 </template>
@@ -23,6 +19,22 @@ import Mascot from './Mascot'
 export default {
   name: 'control-panel',
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+
     runCompiled () {
       return this.$store.getters.getRunCompiled
     },

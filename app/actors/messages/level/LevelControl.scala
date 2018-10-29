@@ -30,39 +30,54 @@ class LevelControl @Inject()(
   /*
    * Assembles galaxy data back into its nested data structure
    * */
-  def getGalaxyData(tokenId: TokenId, path: String): Future[GalaxyData] = {
-    statsDAO.updateCurrentLevel(tokenId, path)
+  def getGalaxyData(tokenId: TokenId, path: Option[String]): Future[GalaxyData] = {
     statsDAO.findStats(tokenId).flatMap {
-      case Some(stats) => FastFuture.successful(GalaxyData(stats, path))
-      case None => getStats(tokenId).map(stats => GalaxyData(stats, path))
+      case Some(stats) =>
+        FastFuture.successful(GalaxyData(stats, path.getOrElse(stats.currentPath)))
+      case None => getStats(tokenId).map(stats => GalaxyData(stats, path.getOrElse("00000")))
     }
   }
 
   /*
+   * !! Possibly not needed !!
    * Assembles star system data back into its nested data structure
    * */
-  def getStarSystemData(tokenId: TokenId, path: String): Future[StarSystemData] = {
-    statsDAO.updateCurrentLevel(tokenId, path)
+  def getStarSystemData(tokenId: TokenId, path: Option[String]): Future[StarSystemData] = {
     statsDAO.findStats(tokenId).flatMap {
-      case Some(stats) => FastFuture.successful(StarSystemData(stats, path))
-      case None => getStats(tokenId).map(stats => StarSystemData(stats, path))
+      case Some(stats) =>
+        FastFuture.successful(StarSystemData(stats, path.getOrElse(stats.currentPath)))
+      case None => getStats(tokenId).map(stats => StarSystemData(stats, path.getOrElse("00000")))
     }
+  }
+
+  def getPath(tokenId: TokenId): Future[String] = {
+    for {
+      stats <- getStats(tokenId)
+    } yield stats.currentPath
   }
 
   /*
    * Creates built continent ready for the client to render
    * also includes functions for that continent
    * */
-  private def createBuiltContinent(tokenId: TokenId, p: String): Future[BuiltContinent] = getFunctions(tokenId).map {
+  private def createBuiltContinent(tokenId: TokenId, path: String): Future[BuiltContinent] = getFunctions(tokenId).map {
     functions =>
-      val path = Stats.makePath(p)
-      val continent = superCluster
-        .children(path(1))
-        .children(path(2))
-        .children(path(3))
-        .children(path.drop(4).mkString("").toInt)
-      statsDAO.updateCurrentLevel(tokenId, p)
+      val continent = getCelestialSystem(path)
+      statsDAO.updateCurrentLevel(tokenId, path)
       BuiltContinent(functions, continent)
+  }
+
+  def getCelestialSystem(p: String): CelestialSystem = {
+    val path = Stats.makePath(p)
+    superCluster
+      .children(path(1))
+      .children(path(2))
+      .children(path(3))
+      .children(path.drop(4).mkString("").toInt)
+  }
+
+  def getVideoIds(path: String): List[String] = {
+    getCelestialSystem(path).continentStruct.map(_.videoHints).getOrElse(List.empty[String])
   }
 
   /*
@@ -88,6 +103,11 @@ class LevelControl @Inject()(
           }
       }
   }
+
+  def updateFunction(tokenId: TokenId, function: Function): Future[Function] =
+    for {
+      _ <- functionsDAO.updateFunction(tokenId, function)
+    } yield function
 
   /*
    * Gets a users stats

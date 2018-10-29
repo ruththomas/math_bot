@@ -12,31 +12,37 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
       action: String,
       function: Option[Function] = None,
       path: Option[String] = None,
-      boolean: Option[Boolean] = None
+      boolean: Option[Boolean] = None,
+      id: Option[String] = None
   )
-
-//  final val tempId = "mathbot|xa5skmltsyyqsRGgW3JA6A==" // temporary until a secure this socket
-  final val tempId = "somecrazymofo"
 
   override def jsonToCommand(msg: JsValue): Any = {
     Json.fromJson[LevelRequest](msg).asOpt match {
-      case Some(LevelRequest(action, _, _, _))
+      case Some(LevelRequest(action, _, _, _, _))
           if action == "get-raw-super-cluster" => // was used for testing, is probably garbage
         GetSuperCluster("SuperCluster1")
-      case Some(LevelRequest(action, _, _, _)) if action == "get-stats" =>
-        GetStats(tempId) // todo - tokenId needs to come from cookie
-      case Some(LevelRequest(action, _, Some(path), _)) if action == "get-galaxy" =>
-        GetGalaxyData(tempId, path)
-      case Some(LevelRequest(action, _, Some(path), _)) if action == "get-star-system" =>
-        GetStarSystemData(tempId, path)
-      case Some(LevelRequest(action, _, pathOpt, _)) if action == "get-continent" =>
-        GetContinentData(tempId, pathOpt)
-      case Some(LevelRequest(action, Some(function), _, _)) if action == "update-function" =>
-        UpdateFunction(tempId, function)
-      case Some(LevelRequest(action, _, _, Some(boolean))) if action == "advance-stats" =>
-        RunWon(tempId, boolean)
-      case Some(LevelRequest(action, _, _, _)) if action == "update-stats" =>
-        UpdateStats(tempId)
+      case Some(LevelRequest(action, _, _, _, _)) if action == "get-stats" =>
+        GetStats() // todo - tokenId needs to come from cookie
+      case Some(LevelRequest(action, _, pathOpt, _, _)) if action == "get-galaxy" =>
+        GetGalaxyData(pathOpt)
+      case Some(LevelRequest(action, _, pathOpt, _, _)) if action == "get-star-system" =>
+        GetStarSystemData(pathOpt)
+      case Some(LevelRequest(action, _, pathOpt, _, _)) if action == "get-continent" =>
+        GetContinentData(pathOpt)
+      case Some(LevelRequest(action, Some(function), _, _, _)) if action == "update-function" =>
+        UpdateFunction(function)
+      case Some(LevelRequest(action, _, _, Some(boolean), _)) if action == "advance-stats" =>
+        RunWon(boolean)
+      case Some(LevelRequest(action, _, _, _, _)) if action == "get-path" =>
+        GetPath()
+      case Some(LevelRequest(action, _, _, _, _)) if action == "update-stats" =>
+        UpdateStats()
+      case Some(LevelRequest(action, _, _, _, _)) if action == "init" =>
+        Init()
+      case Some(LevelRequest(action, _, pathOpt, _, Some(id))) if action == "watched-video" =>
+        WatchedVideo(id, pathOpt)
+      case Some(LevelRequest(action, _, Some(path), _, Some(id))) if action == "reset-videos" =>
+        ResetVideos(id, path)
       case _ => ActorFailed("Bad json input")
     }
   }

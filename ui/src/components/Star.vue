@@ -14,7 +14,7 @@
           </g>
         </g>
       </g>
-      <image v-if="active" :xlink:href="permanentImages.questionMark" height="40%" width="40%" x="30%" y="30%" />
+      <image v-if="showQuestionMark && active" :xlink:href="permanentImages.questionMark" height="40%" width="40%" x="30%" y="30%" />
     </svg>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default {
       return this.$store.getters.getPermanentImages
     }
   },
-  props: ['starGroup', 'active']
+  props: ['showQuestionMark', 'active']
 }
 </script>
 

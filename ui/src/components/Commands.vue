@@ -65,10 +65,35 @@ import buildUtils from '../services/BuildFunction'
 import PuzzlePieces from './Puzzle_pieces'
 
 export default {
-  name: 'FunctionDrop',
+  name: 'Commands',
   mounted () {
   },
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+    commands () {
+      return this.levelControl.functions.cmds
+    },
+    activeFunctions () {
+      return this.levelControl.functions.activeFuncs
+    },
+    runCompiled () {
+      return this.levelControl.runCompiled
+    },
+
     stagedFunctions () {
       return this.$store.getters.getStagedFunctions
     },
@@ -102,12 +127,6 @@ export default {
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
     },
-    commands () {
-      return this.$store.getters.getCommands
-    },
-    activeFunctions () {
-      return this.$store.getters.getActiveFunctions
-    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
@@ -125,9 +144,6 @@ export default {
     },
     swiperSlide () {
       return this.$store.getters.getSwiperSlide
-    },
-    runCompiled () {
-      return this.$store.getters.getRunCompiled
     }
   },
   data () {

@@ -12,13 +12,14 @@ import VueYouTubeEmbed from 'vue-youtube-embed'
 import VueForm from 'vue-form'
 import VueSocialSharing from 'vue-social-sharing'
 import VueShortKey from 'vue-shortkey'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 
 import $store from '../store/store'
-
-// require styles
+import 'swiper/dist/css/swiper.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+Vue.use(VueAwesomeSwiper)
 Vue.use(VueShortKey)
 Vue.use(VueSocialSharing)
 Vue.use(VueYouTubeEmbed)
