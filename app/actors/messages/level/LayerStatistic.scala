@@ -1,7 +1,6 @@
 package actors.messages.level
 
 import java.util.Date
-
 import play.api.libs.json.{Json, OFormat}
 
 object LayerStatistic {

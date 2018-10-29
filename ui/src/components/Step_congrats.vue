@@ -10,7 +10,7 @@
     <div class="congrats-icon">
       <img :src="permanentImages.instructionsRobot">
     </div>
-    <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
+    <stars :continent-id="levelControl.continent.id"></stars>
     <div class="text-minor">You won!</div>
     <div class="text-minor">
       <div>Tell your friends!</div>
@@ -45,6 +45,22 @@ import SocialSharing from './Social_sharing'
 import utils from '../services/utils'
 export default {
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+
     runCompiled () {
       return this.$store.getters.getRunCompiled
     },

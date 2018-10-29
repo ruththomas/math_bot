@@ -8,6 +8,7 @@ import actors.convert_flow.{LevelRequestConvertFlow, LevelResponseConvertFlow}
 import actors.messages.level.LevelControl
 import actors.messages.{ActorFailed, PreparedStepData, RawLevelData}
 import akka.actor.{ActorRef, ActorSystem}
+import akka.http.scaladsl.util.FastFuture
 import akka.pattern.ask
 import akka.stream.Materializer
 import akka.util.Timeout
@@ -22,6 +23,7 @@ import play.api.libs.streams.ActorFlow
 import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, Controller, WebSocket}
 import types.{LevelName, TokenId}
+import utils.SecureIdentifier
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
@@ -50,16 +52,30 @@ class LevelController @Inject()(
   type WSMessage = JsValue
 
   def levelSocket: WebSocket = WebSocket.acceptOrResult[WSMessage, WSMessage] { implicit request =>
-    Future { // todo - secure after finished
-      Right(
-        LevelRequestConvertFlow()
-          .via(
-            ActorFlow.actorRef { out =>
-              LevelActor.props(out, statsDAO, lambdasDAO, playerTokenDAO, ws, environment, levelControl)
-            }
-          )
-          .via(LevelResponseConvertFlow())
-      )
+    request.cookies.get("player-session").map(c => SecureIdentifier(c.value)) match {
+      case Some(sessionId) =>
+        sessionDAO.find(sessionId).map {
+          case Some(session) =>
+            Right(
+              LevelRequestConvertFlow()
+                .via(
+                  ActorFlow.actorRef { out =>
+                    LevelActor.props(out,
+                                     session.playerTokenId,
+                                     statsDAO,
+                                     lambdasDAO,
+                                     playerTokenDAO,
+                                     ws,
+                                     environment,
+                                     levelControl)
+                  }
+                )
+                .via(LevelResponseConvertFlow())
+            )
+          case None => Left(Unauthorized("Session invalid"))
+        }
+      case None =>
+        FastFuture.successful(Left(Unauthorized("No cookie")))
     }
   }
 

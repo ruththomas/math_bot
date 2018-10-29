@@ -27,4 +27,5 @@ case class ContinentStruct(
     freeHint: Option[String] = None
 ) {
   def maxMain: Int = this.mainMax match { case -1 => 10000; case _ => this.mainMax }
+  def maxStaged: Int = this.stagedQty match { case -1 => 10000; case _ => this.stagedQty }
 }

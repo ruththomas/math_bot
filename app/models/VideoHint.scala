@@ -1,5 +1,6 @@
 package models
 
+import actors.messages.level.HintTaken
 import play.api.libs.json.Json
 import types.TokenId
 

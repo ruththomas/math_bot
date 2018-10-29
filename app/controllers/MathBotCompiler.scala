@@ -104,10 +104,11 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
     maxEmptyLoopCount = configuration.getInt("mathbot.maxEmptyLoopCount").getOrElse(100)
   )
 
-  def wsPath(tokenId: TokenId, connection: String): Action[AnyContent] = Action { implicit request: RequestHeader =>
+  def wsPath(connection: String): Action[AnyContent] = Action { implicit request =>
     val url = connection match {
       case p if p == "compiler" => routes.MathBotCompiler.compileWs().webSocketURL()
       case p if p == "videohint" => routes.VideoHintController.videoSocket().webSocketURL()
+      case p if p == "level" => routes.LevelController.levelSocket().webSocketURL()
     }
     val changeSsl =
       if (url.contains("localhost")) url else url.replaceFirst("ws", "wss")
@@ -133,9 +134,9 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                   CompilerResponseConvertFlow()
                 )
             )
-          case None => Left(Unauthorized("Unable to locate player token"))
+          case None => Left(Unauthorized("Session invalid"))
         }
-      case None => FastFuture.successful(Left(Unauthorized("No session present")))
+      case None => FastFuture.successful(Left(Unauthorized("No cookie")))
     }
   }
 

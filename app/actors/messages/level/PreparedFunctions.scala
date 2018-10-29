@@ -63,7 +63,12 @@ object PreparedFunctions {
         .map { m =>
           m.copy(
             func = m.func.map {
-              _.filter(f => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(f.created_id) else false)
+              _.filter(
+                f =>
+                  if (f.category != Categories.command && allowedActivesIds.nonEmpty)
+                    allowedActivesIds.contains(f.created_id)
+                  else true
+              )
             }
           )
         }
@@ -74,11 +79,11 @@ object PreparedFunctions {
         .filter(c => continentStruct.cmdsAvailable.contains(c.commandId)),
       activeFuncs = preBuiltActives ::: listedFunctions
         .filter(_.category == Categories.function)
-        .filter(a => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(a.created_id) else false),
+        .filter(a => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(a.created_id) else true),
       stagedFunctions = assignedStaged ::: listedFunctions
         .filter(_.category == Categories.staged)
-        .filter(s => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(s.created_id) else false)
-        .take(continentStruct.stagedQty)
+        .filter(s => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(s.created_id) else true)
+        .take(continentStruct.maxStaged)
     )
   }
 }

@@ -14,8 +14,23 @@ import buildUtils from '../services/BuildFunction'
 export default {
   name: 'Activate_drop',
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
     activeFunctions () {
-      return this.$store.getters.getActiveFunctions
+      return this.levelControl.functions.activeFuncs
     }
   },
   data () {

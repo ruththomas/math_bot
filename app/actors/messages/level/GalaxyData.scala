@@ -11,7 +11,7 @@ object GalaxyData {
     val starSystem = stats.list.filterKeys(l => l.length == 3 && l.take(key.length).contains(key))
     new GalaxyData(
       id = galaxy.head._1,
-      starSystems = starSystem.toList.sortBy(_._1.substring(3)).map(s => StarSystemData(s._1, s._2, None))
+      starSystems = starSystem.toList.sortBy(_._1.substring(2)).map(s => StarSystemData(stats, s._1))
     )
   }
 }
