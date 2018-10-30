@@ -71,6 +71,7 @@ object Problem {
    *   - else Exception(Rational("This is why input is invalid"))
    * */
   def evalProblem(prob: Problem): Rational = {
+    return Rational.zero
     val e = Evaluator.evaluate(decrypt("PROBLEM", prob.encryptedProblem))
     e.isSuccess match {
       case true => e.toList.head
