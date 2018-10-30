@@ -1,21 +1,21 @@
 package actors
 
-import actors.LevelGenerationActor.{ GetGridMap, GetStep }
-import actors.StatsActor.{ StatsDoneUpdating, UpdateStats }
+import actors.LevelGenerationActor.{GetGridMap, GetStep}
+import actors.StatsActor.{StatsDoneUpdating, UpdateStats}
 import actors.messages._
 import actors.messages.playeraccount.UpdateAccountAccess
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{Actor, ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import compiler.operations.NoOperation
-import compiler.processor.{ Frame, Processor, Register }
-import compiler.{ Compiler, GridAndProgram, Point }
+import compiler.processor.{Frame, Processor, Register}
+import compiler.{Compiler, GridAndProgram, Point}
 import configuration.CompilerConfiguration
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import daos.PlayerTokenDAO
-import models.{ FuncToken, GridMap, Problem, Stats }
+import models.{FuncToken, GridMap, Problem, Stats}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
 
@@ -142,6 +142,33 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           self ! CompilerContinue(steps)
         }
       }
+    case CompilerCreateMbl(steps, problem, mbl) =>
+      logger.LogInfo(className, "Creating new compiler.")
+
+      for {
+        tokenList <- playerTokenDAO.getToken(tokenId)
+        grid <- (levelActor ? GetGridMap(tokenList)).mapTo[GridMap]
+      } yield {
+        Compiler.compileMbl(mbl, grid, problem) match {
+
+          case Left(program) =>
+            val processor = Processor(program, config)
+            val stream = processor.execute()
+            context.become(
+              compileContinue(
+                ProgramState(stream = stream,
+                             iterator = stream.iterator,
+                             grid = grid,
+                             program = program,
+                             exitOnSuccess = grid.evalEachFrame)
+              )
+            )
+            self ! CompilerContinue(steps)
+          case Right(error) =>
+            out ! ActorFailed(error)
+        }
+      }
+
     case CompilerContinue(_) =>
       // We see this in production and don't know why the client is still sending continues after the actor
       // has signaled end of program.  So we try to create a fake last frame.

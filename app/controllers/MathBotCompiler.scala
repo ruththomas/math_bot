@@ -117,7 +117,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
   }
 
   def compileWs(): WebSocket = WebSocket.acceptOrResult[JsValue, JsValue] { request =>
-    request.cookies.get("player-session").map(c => SecureIdentifier(c.value)) match {
+    /*request.cookies.get("player-session")*/Some(Cookie("player-session","dbFe4wRyszlReVGJWIkFUQ==" )).map(c => SecureIdentifier(c.value)) match {
       case Some(sessionId) =>
         sessionDAO.find(sessionId).map {
           case Some(session) =>
