@@ -2,7 +2,6 @@
   <b-modal
     id="step-congrats-modal"
     ref="step-congrats-modal"
-    @hidden="closeCongrats"
   >
     <div slot="modal-header">
       <img class="dialog-button close-congrats" @click="closeCongrats" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
@@ -60,10 +59,10 @@ export default {
     problem () {
       return this.levelControl.continent.problem.problem
     },
-
     runCompiled () {
-      return this.$store.getters.getRunCompiled
+      return this.levelControl.runCompiled
     },
+
     level () {
       return this.$store.getters.getLevel
     },

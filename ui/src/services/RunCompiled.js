@@ -2,6 +2,7 @@ import GridAnimator from './GridAnimator'
 import _ from 'underscore'
 import $store from '../store/store'
 import $router from '../router'
+import { $root } from '../main'
 
 class RunCompiled extends GridAnimator {
   constructor () {
@@ -83,10 +84,8 @@ class RunCompiled extends GridAnimator {
     this._stopRobot()
   }
 
-  initializeNextStep (stepData) {
-    this._initializeStep(stepData)
-    this._hideCongrats()
-    this.lastFrame = null
+  initializeNextStep () {
+    this._initializeStep()
   }
 
   quit () {
@@ -104,21 +103,23 @@ class RunCompiled extends GridAnimator {
     this._hideStepCongrats()
   }
 
-  _showStepCongrats = () => this.context.$root.$emit('bv::show::modal', 'step-congrats-modal')
+  _showStepCongrats = () => $root.$emit('bv::show::modal', 'step-congrats-modal')
 
-  _hideStepCongrats = () => this.context.$root.$emit('bv::hide::modal', 'step-congrats-modal')
+  _hideStepCongrats = () => $root.$emit('bv::hide::modal', 'step-congrats-modal')
 
-  _showLevelCongrats = () => this.context.$root.$emit('bv::show::modal', 'level-congrats-modal')
+  _showLevelCongrats = () => $root.$emit('bv::show::modal', 'level-congrats-modal')
 
-  _hideLevelCongrats = () => this.context.$root.$emit('bv::hide::modal', 'level-congrats-modal')
+  _hideLevelCongrats = () => $root.$emit('bv::hide::modal', 'level-congrats-modal')
 
   _showFreeHint (url) {
     this.videoHint.showFreeHint(url)
   }
 
-  _initializeStep (stepData) {
-    if (stepData.freeHint) this._showFreeHint(stepData.freeHint)
-    this.levelControl.getContinent()
+  _initializeStep () {
+    const freeHint = this.lastFrame.pathAndContinent.builtContinent.freeHint
+    if (freeHint) this._showFreeHint(freeHint)
+    this.levelControl._setContinent(this.lastFrame)
+    this._hideCongrats()
     this.constructor(this.context)
   }
 
@@ -195,12 +196,9 @@ class RunCompiled extends GridAnimator {
     $store.dispatch('addMessage', messageBuilder)
   }
 
-  _updateStats (stats) {
-    this.$store.dispatch('updateStats', stats)
-  }
-
   _resetStep () {
-    console.log('reset step')
+    $store.state.levelControl._setContinent(this.lastFrame)
+    this.lastFrame = null
   }
 
   _stopRobot () {
@@ -212,27 +210,17 @@ class RunCompiled extends GridAnimator {
 
   _success (frame) {
     return this.initializeAnimation(frame, async () => {
-      // console.log('[last frame grid]', JSON.parse(JSON.stringify(frame.robotState.grid)))
-      // console.log('[grid]', JSON.parse(JSON.stringify(this.grid)))
-      const isLastStep = this.stats.levels[this.stats.level][this.stats.step].nextStep === 'None'
-      if (isLastStep) {
-        this.$router.push({path: '/profile', query: {showCongrats: 'true'}})
-        // this._showLevelCongrats()
-      } else {
-        // this._showStepCongrats()
-      }
-      console.log(frame)
-      // this.lastFrame = frame
+      this.lastFrame = frame
+      this.robot.setState('success')
+      this._showStepCongrats()
     })
   }
 
   _failure (frame) {
-    // console.log(JSON.parse(JSON.stringify(frame)))
     return this.initializeAnimation(frame, async () => {
-      console.log(frame)
-      // this._updateStats(frame.stats)
-      // this.robot.setState('failure')
-      // this._failedMessage()
+      this.lastFrame = frame
+      this.robot.setState('failure')
+      this._failedMessage()
     })
   }
 

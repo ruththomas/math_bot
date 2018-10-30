@@ -1,8 +1,7 @@
 <template>
 <div class="star-system animated fadeIn">
-  <h2 class="header">{{ starSystemData.stats.name }}</h2>
-  <planets :planets="starSystemData.planets" :selected-planet="selectedPlanet" :update-selected-planet="updateSelectedPlanet"></planets>
-  <continents :selected-planet="selectedPlanet" :continents="starSystemData.planets[selectedPlanet].continents" :planet-name="starSystemData.planets[selectedPlanet].stats.name"></continents>
+  <planets :planets="starSystem.planets" :selected-planet="selectedPlanet" :update-selected-planet="levelControl.updatePlanet"></planets>
+  <continents :selected-planet="selectedPlanet" :continents="starSystem.planets[selectedPlanet].continents" :planet-name="starSystem.planets[selectedPlanet].stats.name"></continents>
 </div>
 </template>
 
@@ -14,23 +13,21 @@ export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
-    }
-  },
-  data () {
-    return {
-      selectedPlanet: 0
-    }
-  },
-  methods: {
-    updateSelectedPlanet (ind) {
-      this.selectedPlanet = ind
+    },
+    selectedPlanet () {
+      return this.levelControl.path[3]
+    },
+    starSystem () {
+      return this.levelControl.galaxy.starSystems[this.starSystemShowing]
+    },
+    starSystemShowing () {
+      return this.levelControl.path[2]
     }
   },
   components: {
     Continents,
     Planets
-  },
-  props: ['starSystemData']
+  }
 }
 </script>
 

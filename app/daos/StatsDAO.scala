@@ -86,7 +86,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     (for {
       stats <- collection.find(equal(tokenIdLabel, tokenId))
       currentPath = stats.currentPath
-      nextPath = computeNewPath(stats)()
+      nextPath = if (incrementWins) computeNewPath(stats)() else stats.currentPath
       _ <- collection.updateOne(
         equal(tokenIdLabel, tokenId),
         combine(
@@ -132,5 +132,9 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
         )
       )
     } yield nextPath).toFuture().map(_.head)
+  }
+
+  def updatePath(tokenId: TokenId, path: String): Future[Stats] = {
+    collection.findOneAndUpdate(equal(tokenIdLabel, tokenId), set(currentPathLabel, path)).toFuture()
   }
 }

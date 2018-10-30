@@ -16,11 +16,12 @@ class LevelControl extends Ws {
     this.getGalaxyData = this.getGalaxyData.bind(this)
     this.getContinent = this.getContinent.bind(this)
     this.updateFunction = this.updateFunction.bind(this)
+    this.updatePlanet = this.updatePlanet.bind(this)
 
     this._openSocket(this._init)
   }
 
-  path = null
+  path = '00000'
   galaxy = null
   continent = null
   robot = null
@@ -49,8 +50,12 @@ class LevelControl extends Ws {
     this.functions = this.continent.lambdas
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
-    console.log(this.functions)
     // console.log(JSON.stringify(this.functions, null, 2))
+  }
+
+  _updatePath () {
+    this._wsOnMessage(() => {})
+    this._send(JSON.stringify({action: 'update-path', path: this.path}))
   }
 
   updateFunction (func) {
@@ -84,6 +89,31 @@ class LevelControl extends Ws {
   deleteMain () {
     this.functions.main.func = []
     this.updateFunction(this.functions.main)
+  }
+
+  deleteFunction (func) {
+    func.func = []
+    this.updateFunction(func)
+  }
+
+  isLastContinent (pathToCheck) {
+    const path = pathToCheck || this.path
+    return this.galaxy.starSystems[path[2]].planets[path[3]].continents.length - 1 === Number(path.slice(4))
+  }
+
+  isEndOfGame (pathToCheck) {
+    const path = pathToCheck || this.path
+    return this.galaxy.starSystems.length - 1 === Number(path[2])
+  }
+
+  updateStarSystem (ind) {
+    this.path = this.path.substr(0, 2) + ind + '00'
+    this._updatePath()
+  }
+
+  updatePlanet (ind) {
+    this.path = this.path.substr(0, 3) + ind + '0'
+    this._updatePath()
   }
 
   _init () {

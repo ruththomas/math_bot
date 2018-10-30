@@ -1,35 +1,26 @@
 package controllers
 
-import java.net.URLDecoder
-
 import actors._
 import actors.convert_flow.{CompilerRequestConvertFlow, CompilerResponseConvertFlow, UpdateAccessFlow}
-import actors.messages.auth.SessionAuthorized
-import actors.messages.{ClientRobotState, PreparedStepData}
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import actors.messages.ClientRobotState
+import actors.messages.level.{LevelControl, PathAndContinent}
+import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
-import akka.pattern.ask
 import akka.stream.Materializer
-import akka.util.Timeout
 import com.google.inject.name.Named
 import compiler.processor.Frame
 import compiler.{Cell, Point}
 import configuration.CompilerConfiguration
+import daos.{PlayerAccountDAO, PlayerTokenDAO, SessionDAO}
 import javax.inject.Inject
 import loggers.MathBotLogger
-import daos.{PlayerAccountDAO, PlayerTokenDAO, SessionDAO}
 import models._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import play.api.{Configuration, Environment}
-import types.TokenId
 import utils.SecureIdentifier
-import actors.messages.level.{BuiltContinent, LevelControl, Stats}
-
-import scala.concurrent.Future
-import scala.concurrent.duration._
 
 object MathBotCompiler {
 
@@ -54,29 +45,25 @@ object MathBotCompiler {
 
   case class ClientFrame(robotState: ClientRobotState,
                          programState: String,
-                         newPath: Option[String],
-                         stepData: Option[BuiltContinent]) {
+                         pathAndContinent: Option[PathAndContinent]) {
     def isSuccess() = programState == "success"
     def isFailure() = programState == "failure"
   }
 
   object ClientFrame {
-    def apply(frame: Frame, newPath: Option[String] = None, stepData: Option[BuiltContinent] = None): ClientFrame =
-      ClientFrame(frame, "running", newPath, stepData)
+    def apply(frame: Frame, pathAndContinent: Option[PathAndContinent] = None): ClientFrame =
+      ClientFrame(frame, "running", pathAndContinent)
 
     // stepData is the step data to render at this point
-    def success(frame: Frame, newPath: String, stepData: BuiltContinent): ClientFrame =
-      ClientFrame(frame, "success", Some(newPath), Some(stepData))
+    def success(frame: Frame, pathAndContinent: PathAndContinent): ClientFrame =
+      ClientFrame(frame, "success", Some(pathAndContinent))
 
     // stepData is the step data to render at this point
-    def failure(frame: Frame, newPath: String, stepData: BuiltContinent): ClientFrame =
-      ClientFrame(frame, "failure", Some(newPath), Some(stepData))
+    def failure(frame: Frame, pathAndContinent: PathAndContinent): ClientFrame =
+      ClientFrame(frame, "failure", Some(pathAndContinent))
 
-    def apply(frame: Frame,
-              programState: String,
-              newPath: Option[String],
-              stepData: Option[BuiltContinent]): ClientFrame =
-      ClientFrame(ClientRobotState(frame), programState, newPath, stepData)
+    def apply(frame: Frame, programState: String, pathAndContinent: Option[PathAndContinent]): ClientFrame =
+      ClientFrame(ClientRobotState(frame), programState, pathAndContinent)
   }
 
   case class CompilerResponse(frames: List[ClientFrame] = List.empty[ClientFrame],
