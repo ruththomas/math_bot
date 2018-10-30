@@ -1,7 +1,7 @@
 <template>
   <div class="col-4 steps">
     <div class="row">
-      <h2 class="header"><span>{{`${selectedPlanet + 1}`}}.</span> {{ parseCamelCase(planetName) }}</h2>
+      <h2 class="header"><span>{{`${Number(selectedPlanet) + 1}`}}.</span> {{ parseCamelCase(planetName) }}</h2>
     </div>
     <div class="row steps-container">
       <div class="btn-group-vertical">
@@ -9,7 +9,7 @@
           v-for="(continent, continentNumber) in continents"
           type="button"
           class="btn btn-dark btn-lg btn-block"
-          :id="actionClass(continent.stats.name)"
+          :class="['step-planet-' + (Number(selectedPlanet) + 1), Number(selectedContinent) === continentNumber ? 'selected' : '']"
           @click="continent.stats.active ? goToRobot(continent) : ''"
           :key="'continent/' + continent.id"
           :disabled="!continent.stats.active"
@@ -71,6 +71,9 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
+    selectedContinent () {
+      return this.levelControl.path.slice(4)
+    },
     nextLevel () {
       const name = this.steps[this.steps.length - 1].nextLevel
       if (name === 'None') {
@@ -102,19 +105,6 @@ export default {
       this.levelControl.getContinent(continent.id, () => {
         this.$router.push({path: '/robot'})
       })
-    },
-    actionClass (step) {
-      // if (this.step === step) {
-      //   const id = 'selected-step' + '-planet-' + this.planetName + '-selected'
-      //   setTimeout(() => {
-      //     const $stepsContainer = $('.steps-container')
-      //     const stepsHeight = $stepsContainer.innerHeight()
-      //     $stepsContainer.animate({
-      //       scrollTop: $(`#${id}`).offset().top - stepsHeight / 2
-      //     })
-      //   }, 50)
-      //   return id
-      // }
     }
   },
   components: {
@@ -186,53 +176,24 @@ export default {
     }
   }
 
-  .step-planet-1 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-1-color, #000);
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-1-color;
-  }
-
-  .step-planet-2 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-2-color, #000);
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-2-color;
-  }
-
-  .step-planet-3 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-3-color, #000);
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-3-color;
-  }
-
-  .step-planet-4 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-4-color, #000);
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-4-color;
-  }
-
-  .step-planet-5 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, #000);
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-5-color;
-  }
-
-  #selected-step-planet-1-selected {
+  .step-planet-1.selected {
     border: 2px solid $planet-1-color;
   }
 
-  #selected-step-planet-2-selected {
+  .step-planet-2.selected {
     border: 2px solid $planet-2-color;
   }
 
-  #selected-step-planet-3-selected {
+  .step-planet-3.selected {
     border: 2px solid $planet-3-color;
   }
 
-  #selected-step-planet-4-selected {
+  .step-planet-4.selected {
     border: 2px solid $planet-4-color;
   }
 
-  #selected-step-planet-5-selected {
+  .step-planet-5.selected {
     border: 2px solid $planet-5-color;
-  }
-
-  #selected-step-planet-6-selected {
-    border: 2px solid $planet-6-color;
   }
 
   .step-image-stars {

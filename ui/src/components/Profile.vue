@@ -1,15 +1,18 @@
 <template>
   <div class="container profile">
-    <!--<level-congrats key="level-congrats"></level-congrats>-->
+    <div v-if="levelControl.galaxy !== null" class="star-system-nav">
+      <b-button
+        v-for="(starSystem, ind) in levelControl.galaxy.starSystems"
+        :key="'star-system/' + ind"
+        @click="levelControl.updateStarSystem(ind)"
+        class="btn-dark"
+        :class="Number(starSystemShowing) === ind ? 'selected' : ''"
+      >{{starSystem.stats.name}}</b-button>
+    </div>
     <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
-      <div class="star-system-nav">
-        <b-button @click="changeSystem(-1)" v-if="preSystem">{{preSystem.stats.name}}</b-button>
-        <b-button @click="changeSystem(1)" v-if="nextSystem">{{nextSystem.stats.name}}</b-button>
-      </div>
+      <!--<level-congrats key="level-congrats" :congrats-data="congratsData"></level-congrats>-->
       <div class="star-systems">
-        <star-system
-          :star-system-data="starSystem"
-        ></star-system>
+        <star-system></star-system>
       </div>
     </div>
     <div class="col-8 controls" style="height: 20%;">
@@ -33,6 +36,9 @@ export default {
     setTimeout(this.slideToCurrent, 50)
   },
   computed: {
+    starSystemShowing () {
+      return this.levelControl.path[2]
+    },
     preSystem () {
       return this.levelControl.galaxy.starSystems[this.starSystemShowing - 1]
     },
@@ -73,19 +79,23 @@ export default {
     },
     tokenId () {
       return this.$store.getters.getTokenId
-    },
-    starSystem () {
-      return this.levelControl.galaxy.starSystems[this.starSystemShowing]
     }
   },
   data () {
     return {
-      starSystemShowing: 0
+      congratsData: {
+        path: '00000',
+        builtContinent: {
+          name: ''
+        }
+      }
     }
   },
   methods: {
     handleCongrats () {
-      if (this.$route.query.showCongrats === 'true') {
+      const showCongrats = this.$route.query.showCongrats
+      if (showCongrats) {
+        this.congratsData = JSON.parse(showCongrats)
         this.$root.$emit('bv::show::modal', 'level-congrats-modal')
         this.$router.push({query: {}})
       }
@@ -116,6 +126,7 @@ export default {
 </script>
 
 <style lang="scss">
+  $font-color: #ffffff;
   .profile {
     height: 100%;
     position: relative;
@@ -139,11 +150,27 @@ export default {
         height: 100%;
         width: 100%;
       }
-      .star-system-nav {
-        display: inline-block;
-        position: absolute;
-        top: 50%;
-        z-index: 100;
+    }
+    .star-system-nav {
+      display: flex;
+      position: absolute;
+      z-index: 100;
+      right: 0;
+      justify-content: space-evenly;
+      .btn {
+        color: $font-color;
+        display: flex;
+        justify-content: center;
+        padding: 3%;
+        margin: 0.4em;
+        border-radius: 0.25rem!important;
+        background-color: #000000;
+        font-size: 1.1em;
+        opacity: 0.7;
+      }
+      .selected {
+        opacity: 1;
+        border: 1px solid #ffffff;
       }
     }
   }

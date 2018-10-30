@@ -159,4 +159,9 @@ class LevelControl @Inject()(
       continent <- createBuiltContinent(tokenId, newPath)
     } yield PathAndContinent(newPath, continent)
   }
+
+  def updatePath(tokenId: TokenId, path: String) =
+    for {
+      updated <- statsDAO.updatePath(tokenId, path)
+    } yield path
 }

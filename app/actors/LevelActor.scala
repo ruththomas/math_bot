@@ -29,6 +29,7 @@ object LevelActor {
   final case class Init()
   final case class WatchedVideo(id: String, pathOpt: Option[String])
   final case class ResetVideos(id: String, path: String)
+  final case class UpdatePath(path: String)
 
   def props(out: ActorRef,
             tokenId: TokenId,
@@ -124,6 +125,10 @@ class LevelActor @Inject()(out: ActorRef,
       for {
         updatedFunction <- levelControl.updateFunction(tokenId, function)
       } yield out ! updatedFunction
+    case UpdatePath(path) =>
+      for {
+        _ <- levelControl.updatePath(tokenId, path)
+      } yield out ! path
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }

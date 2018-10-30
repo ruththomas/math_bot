@@ -430,9 +430,7 @@ trait BasicProgramming extends LevelGenTags {
             "moveRobotForwardOneSpot",
             "changeRobotDirection"
           ),
-          specialParameters = List(
-            "functionRequired"
-          ),
+          specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
           initFocus = List.empty[String],
@@ -464,9 +462,7 @@ trait BasicProgramming extends LevelGenTags {
             "moveRobotForwardOneSpot",
             "changeRobotDirection"
           ),
-          specialParameters = List(
-            "functionRequired"
-          ),
+          specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
           initFocus = List.empty[String],
@@ -498,9 +494,7 @@ trait BasicProgramming extends LevelGenTags {
             "moveRobotForwardOneSpot",
             "changeRobotDirection"
           ),
-          specialParameters = List(
-            "functionRequired"
-          ),
+          specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
           initFocus = List.empty[String],

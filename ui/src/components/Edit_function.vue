@@ -205,7 +205,7 @@ export default {
     },
     deleteFuncContents () {
       this.closePopover('delete-function')
-      buildUtils.deleteFunction({context: this})
+      this.levelControl.deleteFunction(this.editingFunction)
     },
     animateVulnerable () {
       const $functions = $('.editFunction-drop-zone > .piece:not(.placeholder-piece)')

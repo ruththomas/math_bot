@@ -6,10 +6,12 @@ import router from './router'
 import store from './store/store'
 
 /* eslint-disable no-new */
-new Vue({
+const app = new Vue({
   el: '#app',
   router,
   template: '<App/>',
   store,
   components: {App}
 })
+
+export const $root = app.$root

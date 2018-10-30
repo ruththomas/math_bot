@@ -43,6 +43,8 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
         WatchedVideo(id, pathOpt)
       case Some(LevelRequest(action, _, Some(path), _, Some(id))) if action == "reset-videos" =>
         ResetVideos(id, path)
+      case Some(LevelRequest(action, _, Some(path), _, _)) if action == "update-path" =>
+        UpdatePath(path)
       case _ => ActorFailed("Bad json input")
     }
   }
