@@ -39,12 +39,6 @@ export default {
     starSystemShowing () {
       return this.levelControl.path[2]
     },
-    preSystem () {
-      return this.levelControl.galaxy.starSystems[this.starSystemShowing - 1]
-    },
-    nextSystem () {
-      return this.levelControl.galaxy.starSystems[this.starSystemShowing + 1]
-    },
     swiper () {
       return this.$refs.galaxySwiper.swiper
     },
