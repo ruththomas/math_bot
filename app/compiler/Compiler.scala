@@ -145,7 +145,7 @@ object Compiler {
             None
         }
     }
-
+  
   // To avoid an infinite loop while processing user functions, user functions are sometimes replaced with refs.
   // Before running the code, replace the refs with the functions.  This function works by side effect because it
   // was simpler to write the fixup using mutable operations value. Unknown functions are replaced with a NoOperation
@@ -300,7 +300,7 @@ object Compiler {
         }))(elements.map(e => convertMbl(e, lc)))
       case MblSymbol("left") =>
         Left((ChangeRobotDirection, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
-      case MblSymbol("pickUp") =>
+      case MblSymbol("pickup") =>
         Left((PickUpItem, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
       case MblSymbol("drop") =>
         Left((SetItemDown, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
