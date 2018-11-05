@@ -119,23 +119,47 @@ object Compiler {
                               byName: Map[String, UserFunction],
                               byLambda: Map[Int, UserFunction])(ref: UserFunctionRef) =
     ref match {
-      case UserFunctionRefById(created_id) => byCreatedId(created_id)
-      case UserFunctionRefByName(name) => byName(name)
-      case UserFunctionRefByLambdaId(lambdaId) => byLambda(lambdaId)
+      case UserFunctionRefById(created_id) =>
+        byCreatedId.get(created_id)
+      case UserFunctionRefByName(name) =>
+        byName.get(name)
+      case UserFunctionRefByLambdaId(lambdaId) =>
+        byLambda.get(lambdaId)
+    }
+
+  // Return a list of unmatched function references
+  private def checkReferences(functions: Seq[UserFunction], lookup: UserFunctionRef => Option[UserFunction]) : Seq[UserFunctionRef] =
+    functions.flatMap {
+      f =>
+        f.operations.flatMap {
+          case funcRef: UserFunctionRef =>
+            if (lookup(funcRef).isEmpty) Some(funcRef) else None
+          case ifColor: IfColor =>
+            ifColor.operation match {
+              case funcRef: UserFunctionRefById =>
+                if (lookup(funcRef).isEmpty) Some(funcRef) else None
+              case _ =>
+                None
+            }
+          case _ =>
+            None
+        }
     }
 
   // To avoid an infinite loop while processing user functions, user functions are sometimes replaced with refs.
   // Before running the code, replace the refs with the functions.  This function works by side effect because it
-  // was simpler to write the fixup using mutable operations value.
-  private def fixReferences(functions: Seq[UserFunction], lookup: UserFunctionRef => UserFunction): Unit = {
+  // was simpler to write the fixup using mutable operations value. Unknown functions are replaced with a NoOperation
+  // as they should be discovered by an earlier check.
+  private def fixReferences(functions: Seq[UserFunction], lookup: UserFunctionRef => Option[UserFunction]): Unit = {
 
     functions.foreach { f =>
       f.operations = f.operations.map {
-        case funcRef: UserFunctionRef => lookup(funcRef)
+        case funcRef: UserFunctionRef =>
+          lookup(funcRef).getOrElse(NoOperation)
         case ifColor: IfColor =>
           ifColor.operation match {
             case funcRef: UserFunctionRefById =>
-              ifColor.copy(operation = lookup(funcRef))
+              ifColor.copy(operation = lookup(funcRef).getOrElse(NoOperation))
             case _ =>
               ifColor
           }
@@ -301,11 +325,23 @@ object Compiler {
               case uf: UserFunction => uf
               case op: Operation => UserFunction(Seq(op))
             }
-            fixReferences(byNamed.values.toSeq ++ byLambdaId.values.toSeq :+ program,
-                          lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId))
-            processBoard(grid).map(g => GridAndProgram(g, program, problem)) match {
-              case Some(gp) => Left(gp)
-              case None => Right("Unable to process grid")
+            checkReferences(byNamed.values.toSeq ++ byLambdaId.values.toSeq :+ program,
+              lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId)) match {
+              case Nil =>
+                fixReferences(byNamed.values.toSeq ++ byLambdaId.values.toSeq :+ program,
+                  lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId))
+                processBoard(grid).map(g => GridAndProgram(g, program, problem)) match {
+                  case Some(gp) => Left(gp)
+                  case None => Right("Unable to process grid")
+                }
+              case unknown =>
+                val printable = unknown.map {
+                  case UserFunctionRefByName(n) => s"named($n)" // Most common when a user misspells a function
+                  case UserFunctionRefByLambdaId(id) => s"lambda($id)" // Indicates a bug in the parser
+                  case UserFunctionRefById(id) => s"icon($id)" // Won't appear until we can convert from simple to advanced editing
+                }
+                Right(s"Reference to unknown function${if(printable.length > 1) "" else "s"}: ${printable.mkString(", ")}")
+
             }
           case Right(error) =>
             Right(error)

@@ -30,11 +30,6 @@ class Processor(val initialGridAndProgram: GridAndProgram, config : CompilerConf
         case Some(operation) if passColorCheck(operation, state) =>
           operation match {
             case UserFunction(operations) =>
-              if (operations.length == 1 && operations.head.isInstanceOf[UserFunction])
-              // Skip functions that only call another function to avoid non-existing function call loop (not best solution)
-                execute(state, post.headOption, post.drop(1), emptyLoopCount + 1)
-              else
-              // Insert the function into the operations stream
                 execute(state, operations.headOption, operations.tail ++: post, emptyLoopCount + 1)
             case IfColor(color, conditionalOperation) =>
               state.currentRegister.peek() match {
