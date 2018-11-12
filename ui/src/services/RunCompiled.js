@@ -14,7 +14,6 @@ class RunCompiled extends GridAnimator {
     this.stepData = $store.state.levelControl.continent
     this.toolList = this.stepData.toolList
     this.programCreate = true
-    this.videoHint = $store.getters.getVideoHint
 
     this._askCompiler = this._askCompiler.bind(this)
     this._processFrames = this._processFrames.bind(this)
@@ -112,7 +111,7 @@ class RunCompiled extends GridAnimator {
   _hideLevelCongrats = () => $root.$emit('bv::hide::modal', 'level-congrats-modal')
 
   _showFreeHint (url) {
-    this.videoHint.showFreeHint(url)
+    $store.state.videoHintControl.showFreeHint(url)
   }
 
   _initializeStep () {
