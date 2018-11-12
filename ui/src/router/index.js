@@ -7,6 +7,7 @@ import Profile from '@/components/Profile'
 import Marketing from '@/components/marketing/Marketing'
 import Callback from '@/components/Callback'
 import Auth from '@/components/Auth'
+import Admin from '@/components/Admin'
 import BootstrapVue from 'bootstrap-vue'
 import VueYouTubeEmbed from 'vue-youtube-embed'
 import VueForm from 'vue-form'
@@ -79,6 +80,11 @@ const router = new Router({
       path: '/callback',
       name: 'Callback',
       component: Callback
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: Admin
     },
     {
       path: '*',
