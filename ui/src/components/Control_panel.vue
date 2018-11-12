@@ -4,7 +4,7 @@
 
     <div
       class="btn button-effect help-button"
-      @click="[videoHint.showHint()]"
+      @click="videoHintControl.showHint"
     >
       <stars :continent-id="levelControl.path"></stars>
     </div>
@@ -33,6 +33,9 @@ export default {
     },
     problem () {
       return this.levelControl.continent.problem.problem
+    },
+    videoHintControl () {
+      return this.$store.getters.getVideoHintControl
     },
 
     runCompiled () {
@@ -65,9 +68,6 @@ export default {
     stepStats () {
       const stepName = this.step
       return this.steps.find(s => s.name === stepName)
-    },
-    videoHint () {
-      return this.$store.getters.getVideoHint
     }
   },
   data () {

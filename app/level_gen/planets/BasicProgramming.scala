@@ -72,39 +72,6 @@ trait BasicProgramming extends LevelGenTags {
       )
     ),
     CelestialSystem(
-      name = "WalkThree",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "|E| |E| |E| |E| |E| ($) |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| (R) |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Walk to the portal using the walk command 3 times.",
-          mainMax = 3,
-          robotOrientation = 0,
-          stagedEnabled = false,
-          activeEnabled = true,
-          stagedQty = 0,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          allowedActives = Some(List.empty[String]),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot"
-          ),
-          specialParameters = List.empty[String],
-          problem = "0",
-          clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List("aGRc1MR91Fk", "hAOSQnzbVLY", "CUbBgS7llOI"),
-          freeHint = Some("RUxCBeJx-Bg")
-        )
-      )
-    ),
-    CelestialSystem(
       name = "WalkFour",
       kind = continent,
       continentStruct = Some(

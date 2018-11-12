@@ -7,7 +7,6 @@ import { AuthService } from '../services/AuthService'
 import utils from '../services/utils'
 import VideoTimer from '../services/VideoTimer'
 import RunCompiled from '../services/RunCompiled'
-import VideoHint from '../services/VideoHint'
 import CompilerControl from '../services/CompilerControl'
 import VideoControl from '../services/VideoControl'
 import LevelControl from '../services/LevelControl'
@@ -104,9 +103,6 @@ export default new Vuex.Store({
     },
     PUSH_AUTH_ERRORS (state, msg) {
       state.authErrors.push(msg)
-    },
-    UPDATE_VIDEO_HINT (state, context) {
-      state.videoHint = new VideoHint(context)
     },
     UPDATE_RUN_COMPILED (state, context) {
       state.runCompiled = new RunCompiled(context)
@@ -240,9 +236,6 @@ export default new Vuex.Store({
     pushAuthErrors ({commit}, msg) {
       commit('PUSH_AUTH_ERRORS', msg)
     },
-    updateVideoHint ({commit}, context) {
-      commit('UPDATE_VIDEO_HINT', context)
-    },
     updateRunCompiled ({commit}, context) {
       commit('UPDATE_RUN_COMPILED', context)
     },
@@ -367,7 +360,6 @@ export default new Vuex.Store({
     getVideoTimers: state => state.videoTimers,
     getLevelControl: state => state.levelControl,
     getAuthErrors: state => state.authErrors,
-    getVideoHint: state => state.videoHint,
     getRunCompiled: state => state.runCompiled,
     getEditFunctionEvent: state => state.editFunctionEvent,
     getHintShowing: state => state.hintShowing,

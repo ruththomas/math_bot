@@ -48,7 +48,6 @@ import VideoHint from './Video_hint'
 import LevelCongrats from './Level_congrats'
 export default {
   mounted () {
-    this.$store.dispatch('updateVideoHint', this)
     this.$store.dispatch('updateRunCompiled', this)
   },
   computed: {

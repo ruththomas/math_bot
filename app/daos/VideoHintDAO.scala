@@ -19,6 +19,7 @@ class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
 
   import HintTaken._
   import HintsTaken._
+  import actors.VideoHintActor.calculateStars
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(
@@ -31,38 +32,73 @@ class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
   val collection: MongoCollection[HintsTaken] =
     mathbotDb.getCollection[HintsTaken](collectionLabel).withCodecRegistry(codecRegistry)
 
-  def insert(tokenId: TokenId, path: String): Future[HintsTaken] = {
+  def getHints(tokenId: TokenId): Future[Option[HintsTaken]] =
+    collection.find(equal(tokenIdField, tokenId)).first().toFutureOption()
+
+  def updateOrAdd(tokenId: TokenId, path: String, videoCount: Int): Future[HintsTaken] = {
+    for {
+      hints <- collection.find(equal(tokenIdField, tokenId)).first().toFutureOption()
+      updatedOrAdded <- hints match {
+        case Some(hintsTaken) =>
+          hintsTaken.list.get(path) match {
+            case Some(_) => updateHint(tokenId, path, videoCount)
+            case None => insertHint(tokenId, path, videoCount)
+          }
+        case None => insert(tokenId, path, videoCount)
+      }
+    } yield updatedOrAdded
+  }
+
+  def insert(tokenId: TokenId, path: String, videoCount: Int): Future[HintsTaken] = {
     val timeStamp: Long = Instant.now.getEpochSecond
-    val hintTaken = HintTaken(path, timeStamp, 1, 3)
+    val hintTaken = HintTaken(path, timeStamp, 1, calculateStars(3, videoCount))
     val hintsTaken = HintsTaken(tokenId, Map(path -> hintTaken))
     for {
       _ <- collection.insertOne(hintsTaken).toFuture()
     } yield hintsTaken
   }
 
-  def getHints(tokenId: TokenId): Future[Option[HintsTaken]] =
-    collection.find(equal(tokenIdField, tokenId)).first().toFutureOption()
-
-  def update(tokenId: TokenId, path: String): Future[Option[HintsTaken]] = {
+  def insertHint(tokenId: TokenId, path: String, videoCount: Int): Future[HintsTaken] = {
     val timeStamp: Long = Instant.now.getEpochSecond
-    collection
-      .findOneAndUpdate(
-        equal(tokenIdField, tokenId),
-        combine(
-          set(s"$listLabel.$path.$timeStampLabel", timeStamp),
-          inc(s"$listLabel.$path.$countLabel", 1)
+    val hintTaken = HintTaken(path, timeStamp, 1, calculateStars(3, videoCount))
+    for {
+      hintsTaken <- collection
+        .findOneAndUpdate(
+          equal(tokenIdField, tokenId),
+          set(s"$listLabel.$path", hintTaken)
         )
-      )
-      .toFutureOption()
-      .map( // doing this because it is returning the pre-updated hints
-        _.map(
+        .toFuture()
+        .map(ht => ht.copy(list = ht.list + (path -> hintTaken)))
+    } yield hintsTaken
+  }
+
+  def updateHint(tokenId: TokenId, path: String, videoCount: Int): Future[HintsTaken] = {
+    val timeStamp: Long = Instant.now.getEpochSecond
+    for {
+      stars <- collection.find(equal(tokenIdField, tokenId)).first().toFutureOption().map {
+        case Some(hintsTaken) if hintsTaken.list isDefinedAt path =>
+          calculateStars(hintsTaken.list(path).stars, videoCount)
+        case _ => calculateStars(3, videoCount)
+      }
+      updated <- collection
+        .findOneAndUpdate(
+          equal(tokenIdField, tokenId),
+          combine(
+            set(s"$listLabel.$path.$continentIdLabel", path),
+            set(s"$listLabel.$path.$timeStampLabel", timeStamp),
+            inc(s"$listLabel.$path.$countLabel", 1),
+            set(s"$listLabel.$path.$starsLabel", stars)
+          )
+        )
+        .toFuture()
+        .map(
           ht =>
             ht.copy(
               list = ht.list
                 .map(h => if (h._1 == path) (h._1, h._2.copy(timeStamp = timeStamp, count = h._2.count + 1)) else h)
           )
         )
-      )
+    } yield updated
   }
 
   def replaceList(tokenId: TokenId, list: Map[String, HintTaken]): Future[HintsTaken] = {
