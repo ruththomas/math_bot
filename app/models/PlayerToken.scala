@@ -6,7 +6,7 @@ import utils.SecureIdentifier
 case class PlayerToken(
     token_id: String,
     lambdas: Option[Lambdas] = None,
-    stats: Option[Stats] = None,
+    stats: Option[CurrentStats] = None,
     randomImages: Option[List[String]] = None,
     sessionId: Option[SecureIdentifier] = None
 )
@@ -18,5 +18,5 @@ object PlayerToken {
   final val statsField = "stats"
   final val randomImagesField = "randomImages"
 
-  implicit val jsonFormat : OFormat[PlayerToken] = Json.format[PlayerToken]
+  implicit val jsonFormat: OFormat[PlayerToken] = Json.format[PlayerToken]
 }

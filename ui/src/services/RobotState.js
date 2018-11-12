@@ -1,9 +1,9 @@
 import { robotImages } from '../assets/assets'
+import $store from '../store/store'
 
 class Robot {
-  constructor ({context, state, holding, orientation, location, robotSpeed}) {
-    this.context = context
-    this.$store = this.context.$store
+  constructor ({state, holding, orientation, location, robotSpeed}) {
+    this.$store = $store
     this.state = state || 'home'
     this.robotCarrying = holding || []
     this.robotFacing = orientation || 0

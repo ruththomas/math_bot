@@ -7,6 +7,6 @@ import play.api.libs.json.{JsValue, Json, Reads}
 
 trait SocketRequestConvertFlow {
   implicit val sockRequestReads: Reads[CompilerRequest] = Json.reads[CompilerRequest]
-  def jsonToCompilerCommand(msg: JsValue): Any
+  def jsonToCommand(msg: JsValue): Any
   def apply(): Flow[JsValue, Any, NotUsed]
 }

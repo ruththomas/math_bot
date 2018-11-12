@@ -1,13 +1,11 @@
-import api from './api'
 /*
 * VideoTimer - used to create a timer for all level/steps that have watched a video
 * After 60 minutes all stars are reset
 * */
 class VideoTimer {
-  constructor ({state, level, step, stars, remainingTime}) {
+  constructor (remainingTime, count, stars, state) {
     this.state = state
-    this.level = level
-    this.step = step
+    this.count = count
     this.stars = stars
 
     this._startTimer = this._startTimer.bind(this)
@@ -24,13 +22,7 @@ class VideoTimer {
   }
 
   _resetVideos () {
-    api.videoHintSocket.requestHintsTaken(res => {
-      const timers = {}
-      res.remainingTimes.forEach(rt => {
-        timers[`${rt.level}/${rt.step}`] = new VideoTimer({state: this.state, level: rt.level, step: rt.step, stars: rt.stars, remainingTime: rt.remainingTime})
-      })
-      this.state.videoTimers = timers
-    })
+    this.state.videoHintControl.requestHintsTaken()
   }
 
   _startTimer () {
