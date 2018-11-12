@@ -14,7 +14,7 @@
           </g>
         </g>
       </g>
-      <image v-if="showQuestionMark && active" :xlink:href="permanentImages.questionMark" height="40%" width="40%" x="30%" y="30%" />
+      <image v-if="isRobotPath && active" :xlink:href="permanentImages.questionMark" height="40%" width="40%" x="30%" y="30%" />
     </svg>
   </div>
 </template>
@@ -25,6 +25,9 @@ export default {
   computed: {
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    isRobotPath () {
+      return this.$route.fullPath === '/robot'
     }
   },
   props: ['showQuestionMark', 'active']
