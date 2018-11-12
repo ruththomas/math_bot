@@ -6,7 +6,7 @@
       class="btn button-effect help-button"
       @click="[videoHint.showHint()]"
     >
-      <stars :continent-id="levelControl.continent.id"></stars>
+      <stars :continent-id="levelControl.path"></stars>
     </div>
   </div>
 </template>
