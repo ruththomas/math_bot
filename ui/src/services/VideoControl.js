@@ -41,11 +41,9 @@ class VideoControl extends Ws {
   }
 
   showFreeHint (url) {
-    if (!this.freeHintsShown.includes(url)) {
-      this.freeHintsShown.push(url)
-      this.setCurrentVideo(url)
-      this.showVideo()
-    }
+    this.freeHintsShown.push(url)
+    this.setCurrentVideo(url)
+    this.showVideo()
   }
 
   showHint () {
