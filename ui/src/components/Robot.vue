@@ -47,9 +47,6 @@ import StepCongrats from './Step_congrats'
 import VideoHint from './Video_hint'
 import LevelCongrats from './Level_congrats'
 export default {
-  mounted () {
-    this.$store.dispatch('updateRunCompiled', this)
-  },
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
