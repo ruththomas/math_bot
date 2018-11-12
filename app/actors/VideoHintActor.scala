@@ -75,21 +75,16 @@ class VideoHintActor @Inject()(out: ActorRef,
       for {
         path <- levelControl.getPath(tokenId)
         videoIds = levelControl.getVideoIds(path)
-        hintsTaken <- videoHintDAO.update(tokenId, path).map {
-          case Some(hintsTaken) => FastFuture.successful(hintsTaken)
-          case None => videoHintDAO.insert(tokenId, path)
-        }
-      } yield
-        hintsTaken.map { hintsTaken =>
-          val hint = hintsTaken.list(path)
-          val count = hint.count
-          val videoId = if (count > videoIds.length - 1) videoIds.last else videoIds(count)
-          val videoUrl = embedURL(videoId)
-          val timeStamp = hint.timeStamp
-          val stars = calculateStars(hint.stars, videoIds.length)
-          out ! HintPrepared(videoUrl,
-                             RemainingTime(path, count, stars, calculateRemainingTime(timeStamp, starExpiration)))
-        }
+        hintsTaken <- videoHintDAO.updateOrAdd(tokenId, path, videoIds.length)
+      } yield {
+        val hint = hintsTaken.list(path)
+        val count = hint.count
+        val videoId = if (count > videoIds.length - 1) videoIds.last else videoIds(count - 1)
+        val videoUrl = embedURL(videoId)
+        val timeStamp = hint.timeStamp
+        out ! HintPrepared(videoUrl,
+                           RemainingTime(path, count, hint.stars, calculateRemainingTime(timeStamp, starExpiration)))
+      }
     /*
      * GetHintsTaken - returns a list of hints taken with a remaining time in minutes
      * also filters out expired videos.
@@ -116,12 +111,13 @@ class VideoHintActor @Inject()(out: ActorRef,
                     val videoIds = levelControl.getVideoIds(ht.continentId)
                     RemainingTime(ht.continentId,
                                   ht.count,
-                                  calculateStars(ht.stars, videoIds.length),
+                                  ht.stars,
                                   calculateRemainingTime(ht.timeStamp, starExpiration))
                   }
                   .toList
               )
-          case None => out ! RemainingTimeList(tokenId, List.empty[RemainingTime])
+          case None =>
+            out ! RemainingTimeList(tokenId, List.empty[RemainingTime])
         }
     case GetHintData(path) =>
       for {
@@ -137,10 +133,7 @@ class VideoHintActor @Inject()(out: ActorRef,
                } yield RemainingTime(reset.continentId, reset.count, calculateStars(3, videoIds.length), remainingTime)
              } else {
                FastFuture.successful(
-                 RemainingTime(hintTaken.continentId,
-                               hintTaken.count,
-                               calculateStars(hintTaken.stars, videoIds.length),
-                               remainingTime)
+                 RemainingTime(hintTaken.continentId, hintTaken.count, hintTaken.stars, remainingTime)
                )
              }).map(out ! _)
           case None => out ! NoHints()

@@ -48,8 +48,7 @@ import VideoHint from './Video_hint'
 import LevelCongrats from './Level_congrats'
 export default {
   mounted () {
-    this.$store.dispatch('updateVideoHint', this)
-    this.$store.dispatch('updateRunCompiled', this)
+    this.videoHintControl.showFreeHint(this.levelControl.continent.freeHint)
   },
   computed: {
     levelControl () {
@@ -66,6 +65,9 @@ export default {
     },
     problem () {
       return this.levelControl.continent.problem.problem
+    },
+    videoHintControl () {
+      return this.$store.getters.getVideoHintControl
     },
 
     runCompiled () {
