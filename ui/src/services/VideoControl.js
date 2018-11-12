@@ -74,7 +74,6 @@ class VideoControl extends Ws {
   }
 
   setCurrentVideo (url) {
-    console.log(url)
     this.currentVideo = getIdFromURL(url)
   }
 }
