@@ -9,6 +9,7 @@ object HintTaken {
   final val continentIdLabel: String = "continentId"
   final val timeStampLabel: String = "timeStamp"
   final val countLabel: String = "count"
+  final val starsLabel: String = "stars"
 }
 /*
  * HintTaken
