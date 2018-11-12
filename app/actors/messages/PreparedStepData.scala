@@ -50,7 +50,9 @@ object PreparedStepData {
       nextStep = rawStepData.nextStep,
       initFocus = createInitFocus(rawStepData.initFocus),
       freeHint = freeHintUrl(rawStepData.freeHint),
-      stepControl = new StepControl(rawStepData, playerToken.lambdas.getOrElse(Lambdas()))
+      stepControl = new StepControl(rawStepData.specialParameters,
+                                    rawStepData.description,
+                                    playerToken.lambdas.getOrElse(Lambdas()))
     )
   }
 

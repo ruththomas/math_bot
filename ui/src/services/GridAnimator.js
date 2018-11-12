@@ -1,3 +1,5 @@
+import $store from '../store/store'
+
 class GridAnimator {
   constructor () {
     this._updateGrid = this._updateGrid.bind(this)
@@ -56,13 +58,12 @@ class GridAnimator {
     })
   }
 
-  async initializeAnimation (store, frame, done) {
-    this.$store = store
+  async initializeAnimation (frame, done) {
     this.frame = frame
     this.robotState = frame.robotState
-    this.robot = this.$store.getters.getRobot
-    this.grid = this.$store.getters.getGrid
-    this.toolList = this.$store.getters.getStepData.toolList
+    this.robot = $store.state.levelControl.robot
+    this.grid = $store.state.levelControl.gridMap
+    this.toolList = $store.getters.getStepData.toolList
     this.robotSpeed = this.robot.robotSpeed
     this.$robot = $('.robot')
 

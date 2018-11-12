@@ -78,6 +78,9 @@ export default {
     this.nameHtml = this.makeNameHtml(this.name)
   },
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
@@ -91,7 +94,7 @@ export default {
       return _.extend(this.funcImages, this.commandImages)
     },
     runCompiled () {
-      return this.$store.getters.getRunCompiled
+      return this.levelControl.runCompiled
     },
     robotState () {
       return this.runCompiled.robot.state

@@ -9,7 +9,6 @@ case class RawLevelData(level: LevelName,
                         nextLevel: LevelName,
                         show: Boolean,
                         steps: Map[String, RawStepData])
-
 object RawLevelData {
   val levelDataReads: Reads[RawLevelData] = (
     (JsPath \ "level").read[LevelName] and

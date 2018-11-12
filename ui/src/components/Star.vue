@@ -30,7 +30,7 @@ export default {
       return this.$route.fullPath === '/robot'
     }
   },
-  props: ['starGroup', 'active']
+  props: ['showQuestionMark', 'active']
 }
 </script>
 

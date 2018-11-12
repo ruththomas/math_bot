@@ -20,7 +20,7 @@ class AdminActor @Inject()(out: ActorRef, playerTokenDAO: PlayerTokenDAO, ws: WS
   import AdminActor._
   import context.dispatcher
 
-  private final val className = "AdminActor"
+  private final val className = "LevelActor"
 
   override def receive: Receive = {
     case GetUserCount() =>

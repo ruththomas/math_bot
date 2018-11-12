@@ -12,7 +12,6 @@
 
 <script>
 import draggable from 'vuedraggable'
-import buildUtils from '../services/BuildFunction'
 
 export default {
   data () {
@@ -39,7 +38,6 @@ export default {
   methods: {
     dumpTrash () {
       this.$store.dispatch('updateTrashVisible', false)
-      buildUtils.deleteItemFromFunction({context: this})
     }
   },
   components: {
