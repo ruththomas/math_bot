@@ -188,10 +188,7 @@ export default {
       return this.colors[this.currentColor].next
     },
     updateName () {
-      buildUtils._putFunc({
-        context: this,
-        funcToken: this.editingFunction
-      })
+      this.levelControl.updateFunction(this.editingFunction)
     },
     applyColorConditional () {
       const level = this.stats.level
