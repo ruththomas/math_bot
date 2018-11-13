@@ -192,7 +192,7 @@ export default new Vuex.Store({
       state.auth.userToken.u_id = userData._id
     },
     CHANGE_ROBOT_SPEED (state) {
-      state.robot.adjustSpeed()
+      state.levelControl.robot.adjustSpeed()
     },
     CHANGE_FULLSCREEN (state) {
       state.fullscreen = !state.fullscreen

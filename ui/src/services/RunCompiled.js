@@ -26,9 +26,28 @@ class RunCompiled extends GridAnimator {
     this._waitForFrames = this._waitForFrames.bind(this)
     this.initializeNextStep = this.initializeNextStep.bind(this)
     this.resetIfFailure = this.resetIfFailure.bind(this)
+    this.startMbl = this.startMbl.bind(this)
+    this.clearMbl = this.clearMbl.bind(this)
   }
 
   lastFrame = null
+  mbl = `
+  (in-package :cl-postgres)
+
+  ;; These are used to synthesize reader and writer names for integer
+  ;; reading/writing functions when the amount of bytes and the
+  ;; signedness is known. Both the macro that creates the functions and
+  ;; some macros that use them create names this way.
+  (eval-when (:compile-toplevel :load-toplevel :execute)
+    (defun integer-reader-name (bytes signed)
+      (intern (with-standard-io-syntax
+                (format nil "~a~a~a~a" '#:read- (if signed "" '#:u) '#:int bytes))))
+    (defun integer-writer-name (bytes signed)
+      (intern (with-standard-io-syntax
+                (format nil "~a~a~a~a" '#:write- (if signed "" '#:u) '#:int bytes)))))
+
+  (defmacro integer-reader (bytes)
+  `
 
   _testForEmptyFunctions () {
     const mainFunction = $store.state.levelControl.functions.main.func
@@ -51,6 +70,14 @@ class RunCompiled extends GridAnimator {
     if (this.robot.state === 'failure') {
       this.reset()
     }
+  }
+
+  clearMbl () {
+    this.mbl = ''
+  }
+
+  startMbl () {
+    console.log(this.mbl)
   }
 
   start () {
