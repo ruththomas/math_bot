@@ -3,19 +3,19 @@ package actors
 import actors.CurrentStatsActor.StatsDoneUpdating
 import actors.messages._
 import actors.messages.level.LevelControl
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{ Actor, ActorRef, Props }
 import akka.util.Timeout
 import compiler.operations.NoOperation
-import compiler.processor.{Frame, Processor, Register}
-import compiler.{Compiler, GridAndProgram, Point}
+import compiler.processor.{ Frame, Processor, Register }
+import compiler.{ Compiler, GridAndProgram, Point }
 import configuration.CompilerConfiguration
 import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import models._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import types.TokenId
 
+import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
@@ -26,7 +26,11 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
 
   import MathBotCompiler._
 
-  case class ProgramState(stream: Stream[Frame],
+  private implicit val ec : ExecutionContextExecutor = context.dispatcher
+
+  implicit val timeout: Timeout = 5000.minutes
+
+  private case class ProgramState(stream: Stream[Frame],
                           iterator: Iterator[Frame],
                           grid: GridMap,
                           program: GridAndProgram,
@@ -37,7 +41,6 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     def addSteps(steps: Int): ProgramState = this.copy(stepCount = this.stepCount + steps)
     def withLeftover(l: Frame): ProgramState = this.copy(leftover = Some(l))
   }
-  implicit val timeout: Timeout = 5000.minutes
 
   private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
 
@@ -76,6 +79,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     }
   }
 
+  /* Uncomment to help with debugging
   private def clientFramePrint(frame: ClientFrame): TokenId = {
     s"location: ${frame.robotState.location}\n" +
     s"register: ${frame.robotState.holding.mkString(", ")}\n" +
@@ -85,6 +89,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       .map(_.mkString("\n"))
       .getOrElse(" No Grid")
   }
+  */
 
   private def sendFrames(programState: ProgramState, clientFrames: List[ClientFrame]): Unit = {
     out ! CompilerOutput(clientFrames, programState.grid.problem)
@@ -101,8 +106,8 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
 
       for {
         pathAndContinent <- levelControl.getBuiltContinent(tokenId)
-        continent = pathAndContinent.builtContinent
       } yield {
+        val continent = pathAndContinent.builtContinent
         val main = continent.lambdas.main
         val funcs = continent.lambdas.activeFuncs
         val commands = continent.lambdas.cmds
@@ -132,6 +137,43 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
           self ! CompilerContinue(steps)
         }
       }
+    case CompilerCreateMbl(steps, problem, mbl) =>
+      logger.LogInfo(className, "Creating new compiler.")
+
+      for {
+        pathAndContinent <- levelControl.getBuiltContinent(tokenId)
+      } yield {
+        val continent = pathAndContinent.builtContinent
+        val grid = GridMap( // todo - refactor to use continent directly
+          gMap = continent.gridMap,
+          robotOrientation = continent.initialRobotState.orientation,
+          success = continent.stepControl.success,
+          problem = problem,
+          evalEachFrame = continent.evalEachFrame,
+          description = continent.description,
+          toolList = continent.toolList
+        )
+
+        Compiler.compileMbl(mbl, grid, problem) match {
+
+          case Left(program) =>
+            val processor = Processor(program, config)
+            val stream = processor.execute()
+            context.become(
+              compileContinue(
+                ProgramState(stream = stream,
+                             iterator = stream.iterator,
+                             grid = grid,
+                             program = program,
+                             exitOnSuccess = grid.evalEachFrame)
+              )
+            )
+            self ! CompilerContinue(steps)
+          case Right(error) =>
+            out ! ActorFailed(error)
+        }
+      }
+
     case CompilerContinue(_) =>
       // We see this in production and don't know why the client is still sending continues after the actor
       // has signaled end of program.  So we try to create a fake last frame.
@@ -141,7 +183,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       } yield out ! CompilerOutput(List(lastFrame), Problem(""))
   }
 
-  def compileContinue(currentCompiler: ProgramState): Receive = {
+  private def compileContinue(currentCompiler: ProgramState): Receive = {
 
     case CompilerExecute(steps, _) =>
       self ! CompilerContinue(steps)

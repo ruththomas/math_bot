@@ -1,3 +1,3 @@
 package compiler.operations
 
-case object PickUpItem extends OperationWithColor
+case object PickUpItem extends Operation
