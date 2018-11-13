@@ -43,7 +43,7 @@
         <toggle-button
           @change="toggleAdvanced"
           :color="{checked: 'rgba(255, 255, 255, 0.5)', unchecked: 'rgba(255, 255, 255, 0.5)', disabled: 'rgba(255, 255, 255, 0.5)'}"
-          :switch-color="{checked: 'linear-gradient(#25EF02, #000000)', unchecked: 'linear-gradient(#000000, #25EF02)'}"
+          :switch-color="{checked: 'linear-gradient(to left, #25EF02, #000000)', unchecked: 'linear-gradient(to left, #000000, #25EF02)'}"
         />
         <span :style="{opacity: !advancedMode ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
       </div>
