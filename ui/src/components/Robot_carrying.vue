@@ -33,6 +33,22 @@ import utils from '../services/utils'
 
 export default {
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+
     organizeCarrying () {
       return _.chain(this.robotCarrying)
         .reduce((organized, tool) => {
@@ -54,9 +70,6 @@ export default {
     },
     displayCarrying () {
       return this.robotCarrying.slice(0, this.displayAmt)
-    },
-    robotCarrying () {
-      return this.$store.getters.getRobotCarrying
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages

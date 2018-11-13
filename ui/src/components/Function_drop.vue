@@ -12,7 +12,7 @@
       @remove="removed"
     >
       <function-box
-        v-for="(func, ind) in list.concat(placeholders)"
+        v-for="(func, ind) in list"
         :class="[
           func.placeholder ? 'placeholder-piece noDrag' : 'actual-piece',
           ind === sizeLimit - 1 && sizeLimit < 100 && !placeholders.length ? 'full-indicator' : ''
@@ -35,12 +35,32 @@ import FunctionBox from './Function_box'
 import _ from 'underscore'
 
 export default {
-  name: 'function_drop',
+  name: 'Function_drop',
   mounted () {
     document.querySelector(`.${this.origin}-drop-zone`).addEventListener('dragover', this.hideFirstPlaceholder)
     this.centerDropped({added: {newIndex: this.list.length - 1}})
   },
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+    mainFunctionFunc () {
+      const mainToken = this.levelControl.functions
+      return mainToken === null ? [] : mainToken.func
+    },
+
     placeholders () {
       if (this.sizeLimit < 100 && this.sizeLimit > 0) {
         return this.createPlaceHolders(this.sizeLimit).slice(this.list.length)

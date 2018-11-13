@@ -9,18 +9,18 @@
   >
     <img
       class="dialog-button close-congrats"
-      @click="videoHint.hideVideo()"
+      @click="videoHintControl.hideVideo()"
       :src="permanentImages.buttons.xButton"
       data-toggle="tooltip"
       title="Close"
     >
     <youtube
       class="player"
-      :video-id="videoHint.currentVideo"
+      :video-id="videoHintControl.currentVideo"
       :player-vars="{ autoplay: 1, rel: 0 }"
       :player-height="'100%'"
       :player-width="'100%'"
-      @ended="videoHint.hideVideo()"
+      @ended="videoHintControl.hideVideo()"
     ></youtube>
     <social-sharing></social-sharing>
   </b-modal>
@@ -41,8 +41,8 @@ export default {
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
-    videoHint () {
-      return this.$store.getters.getVideoHint
+    videoHintControl () {
+      return this.$store.getters.getVideoHintControl
     }
   },
   data () {

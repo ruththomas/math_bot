@@ -2,7 +2,7 @@ package actors.messages
 
 import daos.DefaultCommands.main
 import models.{FuncToken, Lambdas}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object ResponseLambdas {
   def apply(lambdas: Lambdas): ResponseLambdas = {
@@ -11,7 +11,7 @@ object ResponseLambdas {
                         cmds = lambdas.cmds,
                         activeFuncs = lambdas.activeFuncs)
   }
-  implicit val jsonFormat = Json.format[ResponseLambdas]
+  implicit val jsonFormat: OFormat[ResponseLambdas] = Json.format[ResponseLambdas]
 }
 
 case class ResponseLambdas(

@@ -85,9 +85,22 @@ export default {
       .value()
   },
   computed: {
-    problem () {
-      return this.currentStepData.problem.problem
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
+    gridMap () {
+      return this.levelControl.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+
     currentStepData () {
       return this.$store.getters.getStepData
     },
@@ -97,9 +110,6 @@ export default {
     step () {
       return this.currentStepData.step
     },
-    gridMap () {
-      return this.currentStepData.gridMap
-    },
     robotOrientation () {
       return this.robot.robotFacing
     },
@@ -108,9 +118,6 @@ export default {
     },
     robotDeactivated () {
       return this.$store.getters.getRobotDeactivated
-    },
-    robot () {
-      return this.$store.getters.getRobot
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
@@ -128,9 +135,6 @@ export default {
     },
     stepData () {
       return this.$store.getters.getStepData
-    },
-    robotCarrying () {
-      return this.$store.getters.getRobotCarrying
     },
     hintShowing () {
       return this.$store.getters.getHintShowing

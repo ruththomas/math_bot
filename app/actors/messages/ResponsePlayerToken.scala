@@ -1,6 +1,6 @@
 package actors.messages
 
-import models.{PlayerToken, Stats}
+import models.{CurrentStats, PlayerToken}
 import play.api.libs.json.Json
 
 object ResponsePlayerToken {
@@ -20,6 +20,6 @@ object ResponsePlayerToken {
 case class ResponsePlayerToken(
     token_id: String,
     lambdas: ResponseLambdas,
-    stats: Option[Stats],
+    stats: Option[CurrentStats],
     randomImages: Option[List[String]]
 )

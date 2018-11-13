@@ -2,11 +2,12 @@ GET         /                                                                   
 # Levels
 GET         /api/levels/getStep/:level/:step                                      controllers.LevelController.getStep(level, step, tokenId: Option[String])
 GET         /api/levels/getLevel/:level                                           controllers.LevelController.getLevel(level, tokenId: Option[String])
+GET         /ws/levels                                                            controllers.LevelController.levelSocket
 
 # Compiler
-POST        /api/compile/:tokenId                                                  controllers.MathBotCompiler.compile(tokenId)
+# POST        /api/compile/:tokenId                                                  controllers.MathBotCompiler.compile(tokenId)
 GET         /ws/compilews                                                          controllers.MathBotCompiler.compileWs
-GET         /api/wsPath/:tokenId/:connection                                       controllers.MathBotCompiler.wsPath(tokenId, connection)
+GET         /api/wsPath/:connection                                                controllers.MathBotCompiler.wsPath(connection)
 
 # PLAYER
 PUT         /api/token/editLambdas                                                 controllers.PlayerController.editLambdas
@@ -37,7 +38,7 @@ GET         /api/admin/approved                                                 
 GET         /api/admin/rejected                                                    controllers.AdminController.acceptOrDeny(isAccepted: Boolean = false)
 GET         /api/admin/revoke                                                      controllers.AdminController.revokeAdmin
 
-# Auth !! Not being used yet !!
+# Auth
 GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
 POST        /api/auth/resumeSession                                                controllers.AuthController.resumeSession
 GET         /api/auth/authorizeGoogle                                              controllers.AuthController.authorizeGoogle

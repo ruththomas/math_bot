@@ -1,9 +1,10 @@
 package compiler
 
 import compiler.mbl._
+import actors.messages.level.Function
 import compiler.operations._
 import daos.CommandIds
-import models.{ FuncToken, GridMap, GridPart, Problem }
+import models.{GridMap, GridPart, Problem}
 import play.api.libs.json._
 
 object Compiler {
@@ -101,9 +102,9 @@ object Compiler {
     }
   }
 
-  def compile(main: FuncToken,
-              funcs: List[FuncToken],
-              commands: List[FuncToken],
+  def compile(main: Function,
+              funcs: List[Function],
+              commands: List[Function],
               grid: GridMap,
               problem: Problem): Option[GridAndProgram] = {
     val funcTokens = funcs.map(token => token.created_id -> token).toMap + (main.created_id -> main)
@@ -145,7 +146,7 @@ object Compiler {
             None
         }
     }
-  
+
   // To avoid an infinite loop while processing user functions, user functions are sometimes replaced with refs.
   // Before running the code, replace the refs with the functions.  This function works by side effect because it
   // was simpler to write the fixup using mutable operations value. Unknown functions are replaced with a NoOperation

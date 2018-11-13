@@ -5,10 +5,11 @@ import permanentImages from '../assets/assets'
 import Message from '../services/Message'
 import { AuthService } from '../services/AuthService'
 import utils from '../services/utils'
-// import api from '../services/api'
 import VideoTimer from '../services/VideoTimer'
 import RunCompiled from '../services/RunCompiled'
-import VideoHint from '../services/VideoHint'
+import CompilerControl from '../services/CompilerControl'
+import VideoControl from '../services/VideoControl'
+import LevelControl from '../services/LevelControl'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -82,21 +83,26 @@ export default new Vuex.Store({
       showing: false,
       videoURL: ''
     },
-    videoTimers: {},
     editFunctionEvent: {},
     authErrors: [],
     runCompiled: {},
-    videoHint: {}
+    videoHint: {},
+    compilerControl: {},
+    videoTimers: {},
+    videoHintControl: {},
+    levelControl: {}
   },
   mutations: {
+    UPDATE_CONTROLS (state) {
+      state.compilerControl = new CompilerControl()
+      state.videoHintControl = new VideoControl(state)
+      state.levelControl = new LevelControl()
+    },
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
     },
     PUSH_AUTH_ERRORS (state, msg) {
       state.authErrors.push(msg)
-    },
-    UPDATE_VIDEO_HINT (state, context) {
-      state.videoHint = new VideoHint(context)
     },
     UPDATE_RUN_COMPILED (state, context) {
       state.runCompiled = new RunCompiled(context)
@@ -221,14 +227,14 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateControls ({commit}, tokenId) {
+      commit('UPDATE_CONTROLS')
+    },
     clearAuthErrors ({commit}) {
       commit('CLEAR_AUTH_ERRORS')
     },
     pushAuthErrors ({commit}, msg) {
       commit('PUSH_AUTH_ERRORS', msg)
-    },
-    updateVideoHint ({commit}, context) {
-      commit('UPDATE_VIDEO_HINT', context)
     },
     updateRunCompiled ({commit}, context) {
       commit('UPDATE_RUN_COMPILED', context)
@@ -349,11 +355,13 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getCompilerControl: state => state.compilerControl,
+    getVideoHintControl: state => state.videoHintControl,
+    getVideoTimers: state => state.videoTimers,
+    getLevelControl: state => state.levelControl,
     getAuthErrors: state => state.authErrors,
-    getVideoHint: state => state.videoHint,
     getRunCompiled: state => state.runCompiled,
     getEditFunctionEvent: state => state.editFunctionEvent,
-    getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,
     getCurrentUser: state => state.auth.userToken,
     getStepData: state => state.stepData,
