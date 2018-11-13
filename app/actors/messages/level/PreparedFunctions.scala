@@ -76,11 +76,11 @@ object PreparedFunctions {
         .head,
       cmds = listedFunctions
         .filter(c => c.category == Categories.command)
-        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
+//        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
         .sortBy(_.index),
       activeFuncs = preBuiltActives ::: listedFunctions
         .filter(_.category == Categories.function)
-        .filter(a => allowedActivesIds.contains(a.created_id))
+//        .filter(a => allowedActivesIds.contains(a.created_id))
         .sortBy(_.index),
       stagedFunctions = listedFunctions
         .filter(_.category == Categories.staged)
