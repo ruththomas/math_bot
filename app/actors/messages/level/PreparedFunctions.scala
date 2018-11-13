@@ -69,7 +69,9 @@ object PreparedFunctions {
         .map { m =>
           m.copy(
             func = m.func.map {
-              _.filter(f => f.category != Categories.command && isAllowedActive(f))
+              _.filter(
+                f => f.category == Categories.command || (f.category != Categories.command && isAllowedActive(f))
+              )
             }
           )
         }
