@@ -169,17 +169,17 @@ object Compiler {
     }
   }
 
-  def convertToOps(token: FuncToken,
-                   funcTokens: Map[String, FuncToken],
+  def convertToOps(token: Function,
+                   funcTokens: Map[String, Function],
                    userFuncs: TokenUserFunctions,
-                   commands: List[FuncToken]): (Operation, Map[String, UserFunction]) = {
+                   commands: List[Function]): (Operation, Map[String, UserFunction]) = {
     token.created_id match {
       case id if commands.map(t => t.created_id).contains(id) =>
         val command = commands.find(c => c.created_id == id).map(c => c.commandId).getOrElse("unknown") match {
-          case Some(CommandIds.changeRobotDirection) => ChangeRobotDirection
-          case Some(CommandIds.moveRobotForwardOneSpot) => MoveRobotForwardOneSpot
-          case Some(CommandIds.setItemDown) => SetItemDown
-          case Some(CommandIds.pickUpItem) => PickUpItem
+          case CommandIds.changeRobotDirection => ChangeRobotDirection
+          case CommandIds.moveRobotForwardOneSpot => MoveRobotForwardOneSpot
+          case CommandIds.setItemDown => SetItemDown
+          case CommandIds.pickUpItem => PickUpItem
           case _ => NoOperation
         }
         (command, userFuncs)
@@ -217,10 +217,10 @@ object Compiler {
   case class Converted(operations: Seq[Operation], userFuncs: Map[String, UserFunction])
 
   def convertFunction(
-      funcToken: FuncToken,
-      funcTokens: Map[String, FuncToken],
+      funcToken: Function,
+      funcTokens: Map[String, Function],
       userFuncs: Map[String, UserFunction],
-      commands: List[FuncToken]
+      commands: List[Function]
   ): Converted = {
     val operations = funcTokens(funcToken.created_id).func.get
     operations.foldLeft[Converted](Converted(Seq.empty[Operation], userFuncs)) { (converted, token) =>
@@ -299,7 +299,7 @@ object Compiler {
             )
           )
         }))(elements.map(e => convertMbl(e, lc)))
-      case MblSymbol("left") =>
+      case MblSymbol("right") =>
         Left((ChangeRobotDirection, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
       case MblSymbol("pickup") =>
         Left((PickUpItem, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
