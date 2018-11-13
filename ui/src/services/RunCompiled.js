@@ -31,10 +31,7 @@ class RunCompiled extends GridAnimator {
   }
 
   lastFrame = null
-  mbl = `(
-  (defun rocket (forward forward forward forward))
-  rocket
-)`
+  mbl = ''
 
   _testForEmptyFunctions () {
     const mainFunction = $store.state.levelControl.functions.main.func
