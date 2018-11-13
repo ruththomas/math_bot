@@ -2,37 +2,35 @@
   <b-modal
     id="level-congrats-modal"
     ref="level-congrats-modal"
-    v-if="stepStats"
   >
     <div slot="modal-header">
       <img
         class="dialog-button close-congrats"
         @click="quit" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
     </div>
-    <div v-if="stepStats.nextLevel !== 'None'" class="text-minor">
+    <div class="text-minor">
       <div>You unlocked planet</div>
-      <div>{{parseCamelCase(stepStats.nextLevel)}}!</div>
+      <div>{{parseCamelCase(congratsData.builtContinent.name)}}!</div>
     </div>
-    <div v-else class="text-minor">
+    <div class="text-minor">
       <div>You beat all the levels!</div>
     </div>
-    <div v-if="stepStats.nextLevel !== 'None'" class="congrats-icon">
-      <img :class="`planet-${levelNumber(stepStats.nextLevel)}`" :src="permanentImages.planets[`planet${levelNumber(stepStats.nextLevel)}`]">
+    <div class="congrats-icon">
+      <img :class="`planet-${congratsData.path[3]}`" :src="permanentImages.planets[`planet${congratsData.path[3]}`]">
     </div>
-    <div v-else class="congrats-icon-robot">
+    <div class="congrats-icon-robot">
       <img :src="permanentImages.instructionsRobot">
     </div>
-    <div v-if="stepStats.nextLevel === 'None'" class="text-minor">
+    <div class="text-minor">
       <div>More coming soon!</div>
     </div>
-    <stars :level="level" :step="step" :step-stats="stepStats" :star-group="'congrats-spread'"></stars>
+    <stars :continent-id="congratsData.path"></stars>
     <div class="text-minor">
       <div>Tell your friends!</div>
     </div>
     <social-sharing :message="socialMessage" :size="'3rem'"></social-sharing>
     <div slot="modal-footer" class="row" style="width: 100%; display: flex; justify-content: space-between;">
       <b-btn
-        v-if="stepStats.nextLevel !== 'None'"
         size="md"
         style="width: 40%;"
         class="float-right"
@@ -42,7 +40,6 @@
         Quit
       </b-btn>
       <b-btn
-        v-if="stepStats.nextLevel !== 'None'"
         size="md"
         style="width: 40%"
         class="float-right"
@@ -61,37 +58,16 @@ import SocialSharing from './Social_sharing'
 import utils from '../services/utils'
 export default {
   computed: {
-    levels () {
-      return this.$store.getters.getLevels
-    },
-    runCompiled () {
-      return this.$store.getters.getRunCompiled
-    },
-    level () {
-      return this.$store.getters.getLevel
-    },
-    step () {
-      return this.$store.getters.getStep
-    },
-    steps () {
-      return this.$store.getters.getSteps
-    },
-    stepStats () {
-      const stepName = this.step
-      return this.steps.find(s => s.name === stepName)
+    path () {
+      return this.congratsData.path
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
     socialMessage () {
       return `
-      I beat planet ${this.level} step ${utils.findStepInd(this.steps, this.step)} on mathbot.com!
-    `
-    }
-  },
-  data () {
-    return {
-      show: true
+        I beat planet ${this.congratsData.path[3]} continent ${this.congratsData.path.slice(4)} on mathbot.com!
+      `
     }
   },
   methods: {
@@ -115,7 +91,8 @@ export default {
   components: {
     Stars,
     SocialSharing
-  }
+  },
+  props: ['congratsData']
 }
 </script>
 

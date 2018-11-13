@@ -44,7 +44,7 @@ object PlayerActor {
   case class DeactivateFunc(tokenId: TokenId, activeIndex: String, stagedIndex: String)
 
   object MakeStats {
-    def makeStats(levels: Map[String, RawLevelData]): Stats = {
+    def makeStats(levels: Map[String, RawLevelData]): CurrentStats = {
       val firstLevel = levels.find(rld => rld._2.prevLevel == "None" || !levels.isDefinedAt(rld._2.prevLevel)) match {
         case Some((_, rawLevelData)) => rawLevelData.copy(prevLevel = "None")
         case None => throw new Exception("Failed to find first level.")
@@ -75,14 +75,14 @@ object PlayerActor {
         })
       }
 
-      Stats(
+      CurrentStats(
         level = firstLevel.level,
         step = firstStep.step,
         levels = levelStats
       )
     }
 
-    def makeStatsSame(baseStats: Stats, userStats: Stats): Stats = {
+    def makeStatsSame(baseStats: CurrentStats, userStats: CurrentStats): CurrentStats = {
       userStats.copy(
         level =
           if (baseStats.levels.isDefinedAt(userStats.level)) userStats.level
@@ -145,7 +145,7 @@ object PlayerActor {
       )
     }
 
-    def editStats(baseStats: Stats, userStats: Option[Stats]): Stats = userStats match {
+    def editStats(baseStats: CurrentStats, userStats: Option[CurrentStats]): CurrentStats = userStats match {
       case Some(stats) => makeStatsSame(baseStats, stats)
       case None => baseStats
     }

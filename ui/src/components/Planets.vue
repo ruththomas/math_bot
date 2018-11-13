@@ -1,17 +1,19 @@
 <template>
   <div class="col-8 space">
     <img
-      v-for="planet in planets" :key="planet.planetName"
+      v-for="(planet, ind) in planets" :key="'planet/' + planet.id"
       class="planet"
-      v-if="planet.planetState !== 'no-show'"
-      :class="[planet.planetName, planet.planetState]"
-      :src="planet.image"
-      @click="selectLevel(planet.level)" />
+      :class="[
+        'planet-' + (ind + 1),
+        planet.stats.active ? 'active' : 'inactive',
+        planet.stats.active && Number(selectedPlanet) === ind ? 'selected' : ''
+      ]"
+      :src="permanentImages.planets[planet.stats.name]"
+      @click="planet.stats.active ? updateSelectedPlanet(ind) : ''" />
   </div>
 </template>
 
 <script>
-import api from '../services/api'
 export default {
   name: 'planets',
   computed: {
@@ -24,19 +26,11 @@ export default {
     steps () {
       return this.$store.getters.getSteps
     },
-    planets () {
-      return this.levels.map((level, index) => {
-        const planetNumber = index + 1
-        const planet = {}
-        planet.level = level
-        planet.planetName = `planet-${planetNumber}`
-        planet.planetState = this.level === level.name ? 'selected' : this.isLevelActive(level) ? 'active' : 'inactive'
-        planet.image = this.permanentImages.planets[`planet${planetNumber}`]
-        return planet
-      })
-    },
     tokenId () {
       return this.$store.getters.getToken.token_id
+    },
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
   },
   data () {
@@ -44,27 +38,7 @@ export default {
       selectedLevel: ''
     }
   },
-  methods: {
-    isLevelActive (l) {
-      const level = l.level
-      return Object.keys(level).reduce((bool, step) => {
-        if (level[step].active === true) {
-          bool = true
-        }
-        return bool
-      }, false)
-    },
-    selectLevel (level) {
-      if (this.isLevelActive(level)) {
-        api.switchLevel({tokenId: this.tokenId, level: level.name}, (res) => {
-          // console.log(res.body)
-          this.$store.dispatch('updateStats', res.body)
-          this.selectedLevel = level
-        })
-      }
-    }
-  },
-  props: ['permanentImages']
+  props: ['planets', 'selectedPlanet', 'updateSelectedPlanet']
 }
 </script>
 
@@ -77,7 +51,6 @@ export default {
   $planet-3-color: rgba(74, 144, 226, 1);
   $planet-4-color: rgba(255, 152, 177, 1);
   $planet-5-color: rgba(80, 227, 194, 1);
-  $planet-6-color: rgba(184, 233, 134, 1);
   $inactive-color: rgba(104, 104, 104, 1);
   $planet-1-size: 23vmin;
   $planet-2-size: 16vmin;
@@ -87,7 +60,8 @@ export default {
   $planet-gradient: rgba(0, 0, 0, 1);
 
   .space {
-    height: 100%;
+    height: 90%;
+    position: relative;
   }
 
   .planet {
@@ -142,20 +116,6 @@ export default {
     /*box-shadow: inset 0 0 120px #50E3C2;*/
   }
 
-  .planet-6 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, $planet-gradient);
-    height: 140px;
-    width: 140px;
-    top: 60%;
-    left: 20%;
-    /*box-shadow: inset 0 0 120px #50E3C2;*/
-  }
-
-  .planet-6 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-6-color, $planet-gradient);
-    /*box-shadow: inset 0 0 120px #B8E986;*/
-  }
-
   .planet-1.selected {
     box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-1-color;
     /*box-shadow: inset 0 0 120px #CA7AFF, 0 0 120px #CA7AFF;*/
@@ -179,11 +139,6 @@ export default {
   .planet-5.selected {
     box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-5-color;
     /*box-shadow: inset 0 0 120px #50E3C2, 0 0 120px #50E3C2;*/
-  }
-
-  .planet-6.selected {
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-6-color;
-    /*box-shadow: inset 0 0 120px #B8E986, 0 0 120px #B8E986;*/
   }
 
   .planet.inactive {

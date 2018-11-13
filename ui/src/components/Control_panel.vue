@@ -4,13 +4,9 @@
 
     <div
       class="btn button-effect help-button"
-      @click="[videoHint.showHint()]"
+      @click="videoHintControl.showHint"
     >
-      <stars
-        :star-group="'star-spread'"
-        :level="level"
-        :step="step"
-        :step-stats="stepStats"></stars>
+      <stars :continent-id="levelControl.path"></stars>
     </div>
   </div>
 </template>
@@ -23,6 +19,25 @@ import Mascot from './Mascot'
 export default {
   name: 'control-panel',
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+    videoHintControl () {
+      return this.$store.getters.getVideoHintControl
+    },
+
     runCompiled () {
       return this.$store.getters.getRunCompiled
     },
@@ -53,9 +68,6 @@ export default {
     stepStats () {
       const stepName = this.step
       return this.steps.find(s => s.name === stepName)
-    },
-    videoHint () {
-      return this.$store.getters.getVideoHint
     }
   },
   data () {

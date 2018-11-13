@@ -78,6 +78,28 @@ export default {
     this.functionDraggableOptions.group.put = true
   },
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+    activeFunctions () {
+      return this.levelControl.functions.activeFuncs
+    },
+    editingFunction () {
+      return this.activeFunctions[this.editingIndex]
+    },
+
     sizeLimit () {
       return this.editingFunction.sizeLimit < 0 ? 10000 : this.editingFunction.sizeLimit
     },
@@ -86,12 +108,6 @@ export default {
     },
     editingIndex () {
       return this.$store.getters.getEditingIndex
-    },
-    editingFunction () {
-      return this.activeFunctions[this.editingIndex]
-    },
-    activeFunctions () {
-      return this.$store.getters.getActiveFunctions
     },
     colorSelected () {
       return this.colors[this.currentColor]
@@ -189,7 +205,7 @@ export default {
     },
     deleteFuncContents () {
       this.closePopover('delete-function')
-      buildUtils.deleteFunction({context: this})
+      this.levelControl.deleteFunction(this.editingFunction)
     },
     animateVulnerable () {
       const $functions = $('.editFunction-drop-zone > .piece:not(.placeholder-piece)')
@@ -216,15 +232,8 @@ export default {
     togglePut (bool) {
       this.functionDraggableOptions.group.put = bool
     },
-    editFunction (evt, groupInd) {
-      if (!evt.hasOwnProperty('removed')) {
-        buildUtils.addToFunction({
-          context: this,
-          groupSize: this.groupSize,
-          groupInd: groupInd,
-          added: evt.hasOwnProperty('added') ? evt.added : evt.moved
-        })
-      }
+    editFunction () {
+      this.levelControl.updateFunction(this.editingFunction)
       if (this.editingFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
         this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
       }

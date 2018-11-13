@@ -1,5 +1,5 @@
 <template>
-  <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
+  <splash-screen v-if="levelControl.continent === null"></splash-screen>
   <div class="container-fluid robot" data-aos="fade-in" v-else>
     <video-hint></video-hint>
     <div
@@ -45,17 +45,31 @@ import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
 import StepCongrats from './Step_congrats'
 import VideoHint from './Video_hint'
-import api from '../services/api'
 import LevelCongrats from './Level_congrats'
 export default {
   mounted () {
-    this.$store.dispatch('updateVideoHint', this)
-    this.$store.dispatch('updateRunCompiled', this)
-    api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
-      this.runCompiled.initializeNextStep(stepData)
-    })
+    this.videoHintControl.showFreeHint(this.levelControl.continent.freeHint)
   },
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+    videoHintControl () {
+      return this.$store.getters.getVideoHintControl
+    },
+
     runCompiled () {
       return this.$store.getters.getRunCompiled
     },
@@ -68,17 +82,11 @@ export default {
     stats () {
       return this.$store.getters.getStats
     },
-    stepData () {
-      return this.$store.getters.getStepData
-    },
     auth () {
       return this.$store.getters.getAuth
     },
     splashScreenShowing () {
       return this.$store.getters.getSplashScreenShowing
-    },
-    gridMap () {
-      return this.stepData.gridMap
     },
     Functions () {
       return this.$store.getters.getFunctions

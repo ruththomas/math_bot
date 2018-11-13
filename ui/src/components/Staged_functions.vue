@@ -36,9 +36,25 @@ export default {
   mounted () {
   },
   computed: {
-    stagedFunctions () {
-      return this.$store.getters.getStagedFunctions
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
+    gridMap () {
+      return this.levelControl.continent.gridMap
+    },
+    robot () {
+      return this.levelControl.robot
+    },
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+    stagedFunctions () {
+      return this.levelControl.functions.stagedFunctions
+    },
+
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },

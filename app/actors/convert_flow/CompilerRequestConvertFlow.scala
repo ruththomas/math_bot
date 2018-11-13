@@ -11,7 +11,7 @@ import scala.util.{Failure, Success, Try}
 object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
   import actors.messages.CompilerRequest._
 
-  def jsonToCompilerCommand(msg: JsValue): Any = {
+  def jsonToCommand(msg: JsValue): Any = {
     Try(Json.fromJson[CompilerRequest](msg)) match {
       case Success(cr) =>
         cr match {
@@ -34,6 +34,6 @@ object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
   }
 
   def apply(): Flow[JsValue, Any, NotUsed] = {
-    Flow[JsValue].map(jsonToCompilerCommand)
+    Flow[JsValue].map(jsonToCommand)
   }
 }

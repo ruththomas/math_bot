@@ -7,10 +7,10 @@ import akka.pattern.pipe
 import com.google.inject.Inject
 import loggers.MathBotLogger
 import daos.PlayerTokenDAO
-import models.{Stats, StepToken}
+import models.{CurrentStats, StepToken}
 import types.{LevelName, StepName, TokenId}
 
-object StatsActor {
+object CurrentStatsActor {
 
   case class ChangeLevel(tokenId: TokenId, level: LevelName, step: StepName)
 
@@ -18,13 +18,13 @@ object StatsActor {
 
   case class Reset(tokenId: TokenId)
 
-  case class StatsDoneUpdating(tokenId: TokenId, stats: Stats)
+  case class StatsDoneUpdating(tokenId: TokenId, stats: CurrentStats)
 
   case class GetStats(tokenId: TokenId)
 
   case class UpdateStats(success: Boolean, tokenId: TokenId)
 
-  def updateStats(stats: Stats) = {
+  def updateStats(stats: CurrentStats) = {
     val currentLevelName: String = stats.level
     val currentStepName: String = stats.step
 
@@ -101,7 +101,7 @@ object StatsActor {
     }
   }
 
-  def increaseTimesPlayed(stats: Stats): Stats = {
+  def increaseTimesPlayed(stats: CurrentStats): CurrentStats = {
     stats.copy(levels = stats.levels.get(stats.level) match {
       case Some(level) =>
         level.get(stats.step) match {
@@ -115,13 +115,13 @@ object StatsActor {
   }
 
   def props(system: ActorSystem, playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger) =
-    Props(new StatsActor(system, playerTokenDAO, logger))
+    Props(new CurrentStatsActor(system, playerTokenDAO, logger))
 }
 
-class StatsActor @Inject()(val system: ActorSystem, playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger)
+class CurrentStatsActor @Inject()(val system: ActorSystem, playerTokenDAO: PlayerTokenDAO, logger: MathBotLogger)
     extends Actor {
 
-  import StatsActor._
+  import CurrentStatsActor._
   import context.dispatcher
 
   private val className = "StatsActor"
