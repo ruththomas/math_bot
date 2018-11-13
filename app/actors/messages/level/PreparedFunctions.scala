@@ -51,11 +51,17 @@ object PreparedFunctions {
   def apply(functions: Functions, continentStruct: ContinentStruct): PreparedFunctions = {
     val listedFunctions = functions.list.values.toList
     val functionIds = getFunctionIds(listedFunctions)
-    val allowedActivesIds = continentStruct.allowedActives.getOrElse(List.empty[String])
+    val allowedActivesIds = continentStruct.allowedActives
     val preBuildActivesIds = continentStruct.preBuiltActive.map(_.createdId)
     val assignedStagedIds = continentStruct.assignedStaged.map(_.createdId)
     val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
+
+    def isAllowedActive(func: Function) = continentStruct.allowedActives match {
+      case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
+      case Some(allowed) if allowed.isEmpty => false
+      case None => true
+    }
 
     new PreparedFunctions(
       main = listedFunctions
@@ -63,12 +69,7 @@ object PreparedFunctions {
         .map { m =>
           m.copy(
             func = m.func.map {
-              _.filter(
-                f =>
-                  if (f.category != Categories.command && allowedActivesIds.nonEmpty)
-                    allowedActivesIds.contains(f.created_id)
-                  else true
-              )
+              _.filter(f => f.category != Categories.command && isAllowedActive(f))
             }
           )
         }
@@ -76,17 +77,15 @@ object PreparedFunctions {
         .head,
       cmds = listedFunctions
         .filter(c => c.category == Categories.command)
-//        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
+        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
         .sortBy(_.index),
       activeFuncs = preBuiltActives ::: listedFunctions
         .filter(_.category == Categories.function)
-//        .filter(a => allowedActivesIds.contains(a.created_id))
+        .filter(isAllowedActive)
         .sortBy(_.index),
       stagedFunctions = listedFunctions
         .filter(_.category == Categories.staged)
-//        .take(continentStruct.maxStaged)
-//        .filter(s => allowedActivesIds.contains(s.created_id))
-//      ::: assignedStaged
+        .filter(isAllowedActive)
         .sortBy(_.index)
     )
   }

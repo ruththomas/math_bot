@@ -60,11 +60,14 @@ class LevelControl @Inject()(
    * Creates built continent ready for the client to render
    * also includes functions for that continent
    * */
-  private def createBuiltContinent(tokenId: TokenId, path: String): Future[BuiltContinent] = getFunctions(tokenId).map {
-    functions =>
+  private def createBuiltContinent(tokenId: TokenId, path: String): Future[BuiltContinent] = {
+    getFunctions(tokenId).map { functions =>
       val continent = getCelestialSystem(path)
       statsDAO.updateCurrentLevel(tokenId, path)
-      BuiltContinent(functions, continent)
+      val builtContinent = BuiltContinent(functions, continent)
+      functionsDAO.updateFunction(tokenId, builtContinent.lambdas.main)
+      builtContinent
+    }
   }
 
   def getCelestialSystem(p: String): CelestialSystem = {
