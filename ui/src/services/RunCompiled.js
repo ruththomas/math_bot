@@ -31,23 +31,7 @@ class RunCompiled extends GridAnimator {
   }
 
   lastFrame = null
-  mbl = `
-  (in-package :cl-postgres)
-
-  ;; These are used to synthesize reader and writer names for integer
-  ;; reading/writing functions when the amount of bytes and the
-  ;; signedness is known. Both the macro that creates the functions and
-  ;; some macros that use them create names this way.
-  (eval-when (:compile-toplevel :load-toplevel :execute)
-    (defun integer-reader-name (bytes signed)
-      (intern (with-standard-io-syntax
-                (format nil "~a~a~a~a" '#:read- (if signed "" '#:u) '#:int bytes))))
-    (defun integer-writer-name (bytes signed)
-      (intern (with-standard-io-syntax
-                (format nil "~a~a~a~a" '#:write- (if signed "" '#:u) '#:int bytes)))))
-
-  (defmacro integer-reader (bytes)
-  `
+  mbl = '(defun turn-left (turn turn turn))'
 
   _testForEmptyFunctions () {
     const mainFunction = $store.state.levelControl.functions.main.func
