@@ -29,7 +29,6 @@
           @start="start"
           @change="moveFunction"
           @end="end"
-          @add="addToActiveFunc"
         >
           <function-box
             v-for="(func, ind) in activeFunctions"
@@ -61,7 +60,6 @@ import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
 import uId from 'uid'
-import buildUtils from '../services/BuildFunction'
 import PuzzlePieces from './Puzzle_pieces'
 
 export default {
@@ -228,18 +226,17 @@ export default {
       this.$store.dispatch('toggleShowMesh', false)
     },
     moveFunction (evt) {
-      if (evt.moved) {
-        buildUtils.moveFunction({
-          oldIndex: evt.moved.oldIndex,
-          newIndex: evt.moved.newIndex
-        })
-      }
-    },
-    addToActiveFunc (evt) {
-      buildUtils.activateFunction({
-        stagedIndex: evt.oldIndex,
-        activeIndex: evt.newIndex
-      })
+      const element = evt.added || evt.moved
+      const newIndex = element.newIndex
+      const func = element.element
+      console.log(newIndex)
+      console.log('func', func)
+      // if (evt.moved) {
+      //   buildUtils.moveFunction({
+      //     oldIndex: evt.moved.oldIndex,
+      //     newIndex: evt.moved.newIndex
+      //   })
+      // }
     }
   },
   components: {
