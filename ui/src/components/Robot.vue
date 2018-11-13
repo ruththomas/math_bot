@@ -23,7 +23,7 @@
         leave-active-class="animated bounceOutRight"
       >
         <div v-if="!advancedMode" class="row container" style="flex: 1;">
-          <div class="row" style="padding: 0; display: flex; flex: 1;">
+          <div class="row" style="padding: 0; display: flex; flex: 1; position: relative; z-index: 1;">
             <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
             <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
           </div>
