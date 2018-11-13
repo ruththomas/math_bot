@@ -27,6 +27,7 @@ libraryDependencies ++= Seq(
   "com.pauldijou" %% "jwt-play-json" % "0.16.0",
   "com.sendgrid" % "sendgrid-java" % "4.1.2",
   "com.lihaoyi" %% "scalatags" % "0.6.7",
+  "com.lihaoyi" %% "fastparse" % "1.0.0",
 
 
 // Test

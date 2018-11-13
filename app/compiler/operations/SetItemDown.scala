@@ -1,3 +1,3 @@
 package compiler.operations
 
-case object SetItemDown extends OperationWithColor
+case object SetItemDown extends Operation

@@ -31,7 +31,7 @@ object Cell {
   }
 }
 
-case class CellChange(location : Point, contents: List[Element], cellCleared: Boolean)
+case class CellChange(location : Point, contents : List[Element], cellCleared : Boolean)
 
 object CellChange {
   def apply(robotLocation : Point, changedCell : Option[Cell]) : CellChange =
