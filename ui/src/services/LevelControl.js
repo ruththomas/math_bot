@@ -21,6 +21,7 @@ class LevelControl extends Ws {
     this._openSocket(this._init)
   }
 
+  mbl = ''
   path = '00000'
   galaxy = null
   continent = null

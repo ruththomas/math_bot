@@ -31,7 +31,6 @@ class RunCompiled extends GridAnimator {
   }
 
   lastFrame = null
-  mbl = ''
 
   _testForEmptyFunctions () {
     const mainFunction = $store.state.levelControl.functions.main.func
@@ -57,11 +56,11 @@ class RunCompiled extends GridAnimator {
   }
 
   clearMbl () {
-    this.mbl = ''
+    $store.state.levelControl.mbl = ''
   }
 
   startMbl () {
-    this.start(this.mbl)
+    this.start($store.state.levelControl.mbl)
   }
 
   start (mbl) {

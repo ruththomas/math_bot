@@ -1,6 +1,6 @@
 <template>
 <div class="advanced-mode">
-  <codemirror v-model="runCompiled.mbl" :options="editorOptions"></codemirror>
+  <codemirror v-model="levelControl.mbl" :options="editorOptions"></codemirror>
   <control-bar
     :wipe-function="runCompiled.clearMbl"
     :start="runCompiled.startMbl"
