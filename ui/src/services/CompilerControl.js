@@ -13,8 +13,15 @@ class CompilerControl extends Ws {
     this.send(0, '0', false, true)
   }
 
-  send (problem, halt, create) {
-    this._send(JSON.stringify({steps: this._compilerTake, problem: problem, halt: halt, create: create}))
+  send (problem, halt, mbl, create) {
+    const prepReq = {
+      steps: this._compilerTake,
+      problem: problem,
+      halt: halt,
+      create: create
+    }
+    if (mbl) prepReq.mbl = mbl
+    this._send(JSON.stringify(prepReq))
   }
 }
 

@@ -76,14 +76,18 @@ object PreparedFunctions {
         .head,
       cmds = listedFunctions
         .filter(c => c.category == Categories.command)
-        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId)),
+        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
+        .sortBy(_.index),
       activeFuncs = preBuiltActives ::: listedFunctions
         .filter(_.category == Categories.function)
-        .filter(a => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(a.created_id) else true),
-      stagedFunctions = assignedStaged ::: listedFunctions
+        .filter(a => allowedActivesIds.contains(a.created_id))
+        .sortBy(_.index),
+      stagedFunctions = listedFunctions
         .filter(_.category == Categories.staged)
-        .filter(s => if (allowedActivesIds.nonEmpty) allowedActivesIds.contains(s.created_id) else true)
-        .take(continentStruct.maxStaged)
+//        .take(continentStruct.maxStaged)
+//        .filter(s => allowedActivesIds.contains(s.created_id))
+//      ::: assignedStaged
+        .sortBy(_.index)
     )
   }
 }

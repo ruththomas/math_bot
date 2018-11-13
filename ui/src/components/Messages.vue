@@ -88,6 +88,7 @@ export default {
   .message {
     display: flex;
     width: 99%;
+    height: min-content!important;
     margin-top: 8px;
     border-radius: 2px;
     justify-content: center;
