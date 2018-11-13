@@ -29,18 +29,7 @@ class Processor(val initialGridAndProgram: GridAndProgram, config : CompilerConf
       maybeOperation match {
         case Some(operation) if passColorCheck(operation, state) =>
           operation match {
-            case Program(operations) =>
-              // Execute the main program.
-              // Note: smh69 observed Program and UserFunction are practically the same, and they are.
-              // This is more than likely temporary, but for now its because the UI treats them differently
-              // because they display differently.
-              execute(state, operations.headOption, operations.tail ++: post, 0)
             case UserFunction(operations) =>
-              if (operations.length == 1 && operations.head.isInstanceOf[UserFunction])
-              // Skip functions that only call another function to avoid non-existing function call loop (not best solution)
-                execute(state, post.headOption, post.drop(1), emptyLoopCount + 1)
-              else
-              // Insert the function into the operations stream
                 execute(state, operations.headOption, operations.tail ++: post, emptyLoopCount + 1)
             case IfColor(color, conditionalOperation) =>
               state.currentRegister.peek() match {
@@ -72,10 +61,6 @@ class Processor(val initialGridAndProgram: GridAndProgram, config : CompilerConf
   }
 
   private def process(state: ProcessorState, operation: Operation): Frame = operation match {
-
-    case Program(_) =>
-      state.currentRegister = Register()
-      Frame(operation, state.currentRegister, state.currentGrid)
 
     case PickUpItem =>
       val (grid, change, item) = state.currentGrid.pickupItem()
