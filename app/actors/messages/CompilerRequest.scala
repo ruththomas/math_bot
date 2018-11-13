@@ -1,8 +1,15 @@
 package actors.messages
 
+import play.api.libs.json.{JsValue, Json, Reads}
+
 case class CompilerRequest(
     steps: Option[Int], // Maximum number of client frames for the compiler to respond with
     problem: Option[String], // The encrypted problem the user is solving
     halt: Option[Boolean], // Stops or destroys the compiler
-    create: Option[Boolean] // When true, creates a new compiler to run the program
+    create: Option[Boolean], // When true, creates a new compiler to run the program
+    mbl : Option[String] // Program in the math_bot language
 )
+
+object CompilerRequest {
+  implicit val sockRequestReads: Reads[CompilerRequest] = Json.reads[CompilerRequest]
+}
