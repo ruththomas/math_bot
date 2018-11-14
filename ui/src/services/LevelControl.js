@@ -2,6 +2,8 @@ import Ws from './Ws'
 import $router from '../router'
 import Robot from './RobotState'
 import RunCompiled from './RunCompiled'
+import CircularJson from 'circular-json'
+import _ from 'underscore'
 
 class LevelControl extends Ws {
   constructor () {
@@ -17,6 +19,9 @@ class LevelControl extends Ws {
     this.getContinent = this.getContinent.bind(this)
     this.updateFunction = this.updateFunction.bind(this)
     this.updatePlanet = this.updatePlanet.bind(this)
+    this.updateFunctionProperties = this.updateFunctionProperties.bind(this)
+    this._resetContinent = this._resetContinent.bind(this)
+    this._prepFunc = this._prepFunc.bind(this)
 
     this._openSocket(this._init)
   }
@@ -51,7 +56,10 @@ class LevelControl extends Ws {
     this.functions = this.continent.lambdas
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
-    // console.log(JSON.stringify(this.functions, null, 2))
+  }
+
+  _resetContinent ({pathAndContinent: {path, builtContinent}}) {
+    this.continent = builtContinent
   }
 
   _updatePath () {
@@ -59,9 +67,32 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'update-path', path: this.path}))
   }
 
+  /*
+  * removes func contents from nested functions then stringifies function
+  * todo - revisit !!important!!
+  * */
+  _prepFunc (func, cb) {
+    const removeCircular = CircularJson.stringify(func) // replaces circular with "~"
+    const cleaned = JSON.parse(removeCircular)
+    cleaned.func = cleaned.func.map((f) => {
+      if (f === '~') return _.omit(Object.assign({}, func), 'func')
+      else return f
+    })
+    cb(cleaned)
+  }
+
   updateFunction (func) {
     this._wsOnMessage(() => {}) // doing nothing with response for now
     this._send(JSON.stringify({action: 'update-function', 'function': func}))
+  }
+
+  updateFunctionProperties (func) {
+    this._wsOnMessage(this._resetContinent)
+    this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
+  }
+
+  toggleFunctionImage (func) {
+    console.log(func)
   }
 
   getPath () {

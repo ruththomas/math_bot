@@ -43,10 +43,16 @@ object Functions {
   def apply( // new account
       tokenId: TokenId
   ): Functions = new Functions(tokenId)
+
+  def apply( // remapping listed functions
+            tokenId: TokenId,
+            listed: List[Function]): Functions = new Functions(tokenId, listed.map(f => f.created_id -> f).toMap)
 }
 
 case class Functions(
     tokenId: TokenId,
     list: Map[String, Function] =
       (main :: cmds ::: funcs).zipWithIndex.map(f => f._1.copy(index = f._2)).map(f => (f.created_id, f)).toMap
-)
+) {
+  def listed: List[Function] = this.list.values.toList
+}

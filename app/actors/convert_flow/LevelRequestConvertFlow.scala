@@ -31,6 +31,8 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
         GetContinentData(pathOpt)
       case Some(LevelRequest(action, Some(function), _, _, _)) if action == "update-function" =>
         UpdateFunction(function)
+      case Some(LevelRequest(action, Some(function), _, _, _)) if action == "update-function-properties" =>
+        UpdateFunctionProperties(function)
       case Some(LevelRequest(action, _, _, Some(boolean), _)) if action == "advance-stats" =>
         RunWon(boolean)
       case Some(LevelRequest(action, _, _, _, _)) if action == "get-path" =>
