@@ -45,4 +45,7 @@ class FunctionsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
         )
       )
       .toFutureOption()
+
+  def replaceAll(tokenId: TokenId, functions: Functions): Future[Option[UpdateResult]] =
+    collection.replaceOne(equal(tokenIdLabel, tokenId), functions).toFutureOption()
 }

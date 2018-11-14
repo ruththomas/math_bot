@@ -29,7 +29,9 @@ object PreparedFunctions {
       }
   }
 
-  def makePrebuiltActives(prebuiltActives: List[AssignedFunction], functionIds: List[String]): List[Function] = {
+  def makePrebuiltActives(prebuiltActives: List[AssignedFunction],
+                          cmds: List[Function],
+                          functionIds: List[String]): List[Function] = {
     prebuiltActives
       .filterNot { pa =>
         functionIds.contains(pa.createdId)
@@ -37,7 +39,7 @@ object PreparedFunctions {
       .map { pa =>
         Function(
           created_id = pa.createdId,
-          func = Some(List.empty[Function]),
+          func = Some(pa.func.flatMap(fn => cmds.find(_.commandId.contains(fn)))),
           name = pa.name,
           image = pa.image,
           index = 0,
@@ -51,10 +53,9 @@ object PreparedFunctions {
   def apply(functions: Functions, continentStruct: ContinentStruct): PreparedFunctions = {
     val listedFunctions = functions.list.values.toList
     val functionIds = getFunctionIds(listedFunctions)
-    val allowedActivesIds = continentStruct.allowedActives
-    val preBuildActivesIds = continentStruct.preBuiltActive.map(_.createdId)
-    val assignedStagedIds = continentStruct.assignedStaged.map(_.createdId)
-    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, functionIds)
+    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive,
+                                              listedFunctions.filter(_.category == Categories.command),
+                                              functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
 
     def isAllowedActive(func: Function) = continentStruct.allowedActives match {
@@ -81,13 +82,13 @@ object PreparedFunctions {
         .filter(c => c.category == Categories.command)
         .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
         .sortBy(_.index),
-      activeFuncs = preBuiltActives ::: listedFunctions
+      activeFuncs = listedFunctions
         .filter(_.category == Categories.function)
-        .filter(isAllowedActive)
+        .filter(isAllowedActive) ::: preBuiltActives
         .sortBy(_.index),
       stagedFunctions = listedFunctions
         .filter(_.category == Categories.staged)
-        .filter(isAllowedActive)
+        .filter(isAllowedActive) ::: assignedStaged
         .sortBy(_.index)
     )
   }
