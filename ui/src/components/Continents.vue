@@ -9,6 +9,7 @@
           v-for="(continent, continentNumber) in continents"
           type="button"
           class="btn btn-dark btn-lg btn-block"
+          :id="Number(selectedContinent) === continentNumber ? 'selected-continent' : ''"
           :class="['step-planet-' + (Number(selectedPlanet) + 1), Number(selectedContinent) === continentNumber ? 'selected' : '']"
           @click="continent.stats.active ? goToRobot(continent) : ''"
           :key="'continent/' + continent.id"
@@ -53,6 +54,7 @@ import Stars from './Stars'
 export default {
   name: 'steps',
   mounted () {
+    setTimeout(this.scrollToSelected, 80)
   },
   computed: {
     planetN () {
@@ -105,6 +107,12 @@ export default {
       this.levelControl.getContinent(continent.id, () => {
         this.$router.push({path: '/robot'})
       })
+    },
+    scrollToSelected () {
+      const $selected = $('#selected-continent')
+      $('.steps-container').animate({
+        scrollTop: $selected.position().top - 75
+      }, 1000)
     }
   },
   components: {
