@@ -60,11 +60,20 @@ class LevelControl @Inject()(
    * Creates built continent ready for the client to render
    * also includes functions for that continent
    * */
-  private def createBuiltContinent(tokenId: TokenId, path: String): Future[BuiltContinent] = getFunctions(tokenId).map {
-    functions =>
+  private def createBuiltContinent(tokenId: TokenId, path: String): Future[BuiltContinent] = {
+    getFunctions(tokenId).map { functions =>
       val continent = getCelestialSystem(path)
       statsDAO.updateCurrentLevel(tokenId, path)
-      BuiltContinent(functions, continent)
+      val builtContinent = BuiltContinent(functions, continent)
+      val _ = {
+        (
+          List(builtContinent.lambdas.main) :::
+          builtContinent.lambdas.activeFuncs :::
+          builtContinent.lambdas.stagedFunctions
+        ).foreach(func => functionsDAO.updateFunction(tokenId, func))
+      }
+      builtContinent
+    }
   }
 
   def getCelestialSystem(p: String): CelestialSystem = {
@@ -104,10 +113,48 @@ class LevelControl @Inject()(
       }
   }
 
+  /*
+   * Updates function at the top level, only good when adding function to func property
+   * this is the most efficient way to update a function.
+   * Not good for updating color, name, or displayImage. Use updateFunctionProperties instead.
+   * */
   def updateFunction(tokenId: TokenId, function: Function): Future[Function] =
     for {
       _ <- functionsDAO.updateFunction(tokenId, function)
     } yield function
+
+  /*
+   * Updates all instances of passed in functions then returns updated PathAndContinent
+   * for client to update all instances of function
+   * */
+  def updateFunctionProperties(tokenId: TokenId, function: Function): Future[PathAndContinent] = {
+    for {
+      functions <- getFunctions(tokenId)
+      _ <- functionsDAO.replaceAll(
+        tokenId,
+        Functions(
+          tokenId,
+          changedAllInstances(functions.listed, function)
+        )
+      )
+      pathAndContinent <- getBuiltContinent(tokenId)
+    } yield pathAndContinent
+  }
+
+  /*
+   * Recursively updates all instances of a functions color, name, (todo displayImage)
+   * */
+  private def changedAllInstances(functions: List[Function], function: Function): List[Function] = {
+    functions.map { ft =>
+      val func = ft.func.getOrElse(List.empty[Function])
+      ft.copy(
+        name = if (ft.created_id == function.created_id) function.name else ft.name,
+        color = if (ft.created_id == function.created_id) function.color else ft.color,
+//      displayImage = if (ft.created_id == function.created_id) function.displayImage else ft.displayImage,
+        func = Some(changedAllInstances(func, function))
+      )
+    }
+  }
 
   /*
    * Gets a users stats
@@ -162,6 +209,6 @@ class LevelControl @Inject()(
 
   def updatePath(tokenId: TokenId, path: String) =
     for {
-      updated <- statsDAO.updatePath(tokenId, path)
+      _ <- statsDAO.updatePath(tokenId, path)
     } yield path
 }

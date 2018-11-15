@@ -28,6 +28,7 @@ class RunCompiled extends GridAnimator {
     this.resetIfFailure = this.resetIfFailure.bind(this)
     this.startMbl = this.startMbl.bind(this)
     this.clearMbl = this.clearMbl.bind(this)
+    this._updateGalaxyData = this._updateGalaxyData.bind(this)
   }
 
   lastFrame = null
@@ -218,11 +219,16 @@ class RunCompiled extends GridAnimator {
 
   _toggleBridge = (which, bool) => this.$store.dispatch(`toggle${which}`, bool)
 
+  _updateGalaxyData () {
+    $store.state.levelControl.getGalaxyData()
+  }
+
   _success (frame) {
     return this.initializeAnimation(frame, async () => {
       this.lastFrame = frame
       this.robot.setState('success')
       this._showStepCongrats()
+      this._updateGalaxyData()
     })
   }
 
@@ -231,6 +237,7 @@ class RunCompiled extends GridAnimator {
       this.lastFrame = frame
       this.robot.setState('failure')
       this._failedMessage()
+      this._updateGalaxyData()
     })
   }
 

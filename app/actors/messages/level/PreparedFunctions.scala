@@ -23,13 +23,15 @@ object PreparedFunctions {
           image = as.image,
           index = 0,
           commandId = "function",
-          category = Categories.function,
+          category = Categories.staged,
           sizeLimit = makeQtyUnlimited(as.sizeLimit)
         )
       }
   }
 
-  def makePrebuiltActives(prebuiltActives: List[AssignedFunction], functionIds: List[String]): List[Function] = {
+  def makePrebuiltActives(prebuiltActives: List[AssignedFunction],
+                          cmds: List[Function],
+                          functionIds: List[String]): List[Function] = {
     prebuiltActives
       .filterNot { pa =>
         functionIds.contains(pa.createdId)
@@ -37,7 +39,7 @@ object PreparedFunctions {
       .map { pa =>
         Function(
           created_id = pa.createdId,
-          func = Some(List.empty[Function]),
+          func = Some(pa.func.flatMap(fn => cmds.find(_.commandId.contains(fn)))),
           name = pa.name,
           image = pa.image,
           index = 0,
@@ -51,11 +53,16 @@ object PreparedFunctions {
   def apply(functions: Functions, continentStruct: ContinentStruct): PreparedFunctions = {
     val listedFunctions = functions.list.values.toList
     val functionIds = getFunctionIds(listedFunctions)
-    val allowedActivesIds = continentStruct.allowedActives.getOrElse(List.empty[String])
-    val preBuildActivesIds = continentStruct.preBuiltActive.map(_.createdId)
-    val assignedStagedIds = continentStruct.assignedStaged.map(_.createdId)
-    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, functionIds)
+    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive,
+                                              listedFunctions.filter(_.category == Categories.command),
+                                              functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
+
+    def isAllowedActive(func: Function) = continentStruct.allowedActives match {
+      case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
+      case Some(allowed) if allowed.isEmpty => false
+      case None => true
+    }
 
     new PreparedFunctions(
       main = listedFunctions
@@ -63,30 +70,24 @@ object PreparedFunctions {
         .map { m =>
           m.copy(
             func = m.func.map {
-              _.filter(
-                f =>
-                  if (f.category != Categories.command && allowedActivesIds.nonEmpty)
-                    allowedActivesIds.contains(f.created_id)
-                  else true
+              _.take(continentStruct.maxMain).filter(
+                f => f.category == Categories.command || (f.category != Categories.command && isAllowedActive(f))
               )
             }
           )
         }
-        .take(continentStruct.maxMain)
         .head,
       cmds = listedFunctions
         .filter(c => c.category == Categories.command)
-//        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
+        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
         .sortBy(_.index),
-      activeFuncs = preBuiltActives ::: listedFunctions
+      activeFuncs = listedFunctions
         .filter(_.category == Categories.function)
-//        .filter(a => allowedActivesIds.contains(a.created_id))
+        .filter(isAllowedActive) ::: preBuiltActives
         .sortBy(_.index),
       stagedFunctions = listedFunctions
         .filter(_.category == Categories.staged)
-//        .take(continentStruct.maxStaged)
-//        .filter(s => allowedActivesIds.contains(s.created_id))
-//      ::: assignedStaged
+        .filter(isAllowedActive) ::: assignedStaged
         .sortBy(_.index)
     )
   }

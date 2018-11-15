@@ -7,7 +7,7 @@
           :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayImage: editingFunction.displayImage}"
           :piece-to-show="'closed'"
           :show-name="false"
-          @click.native="toggleImage"
+          @click.native="levelControl.toggleFunctionImage(editingFunction)"
         ></puzzle-pieces>
         <div
           class='function-control'
@@ -188,10 +188,7 @@ export default {
       return this.colors[this.currentColor].next
     },
     updateName () {
-      buildUtils._putFunc({
-        context: this,
-        funcToken: this.editingFunction
-      })
+      this.levelControl.updateFunctionProperties(this.editingFunction)
     },
     applyColorConditional () {
       const level = this.stats.level
@@ -218,9 +215,6 @@ export default {
           $ele.addClass(animationClass)
         }
       })
-    },
-    toggleImage () {
-      buildUtils.toggleImage()
     },
     fullMessage () {
       const messageBuilder = {
