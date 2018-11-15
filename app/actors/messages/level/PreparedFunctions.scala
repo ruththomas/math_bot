@@ -23,7 +23,7 @@ object PreparedFunctions {
           image = as.image,
           index = 0,
           commandId = "function",
-          category = Categories.function,
+          category = Categories.staged,
           sizeLimit = makeQtyUnlimited(as.sizeLimit)
         )
       }
@@ -70,13 +70,12 @@ object PreparedFunctions {
         .map { m =>
           m.copy(
             func = m.func.map {
-              _.filter(
+              _.take(continentStruct.maxMain).filter(
                 f => f.category == Categories.command || (f.category != Categories.command && isAllowedActive(f))
               )
             }
           )
         }
-        .take(continentStruct.maxMain)
         .head,
       cmds = listedFunctions
         .filter(c => c.category == Categories.command)

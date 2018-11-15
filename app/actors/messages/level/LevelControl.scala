@@ -65,7 +65,13 @@ class LevelControl @Inject()(
       val continent = getCelestialSystem(path)
       statsDAO.updateCurrentLevel(tokenId, path)
       val builtContinent = BuiltContinent(functions, continent)
-      functionsDAO.updateFunction(tokenId, builtContinent.lambdas.main)
+      val _ = {
+        (
+          List(builtContinent.lambdas.main) :::
+          builtContinent.lambdas.activeFuncs :::
+          builtContinent.lambdas.stagedFunctions
+        ).foreach(func => functionsDAO.updateFunction(tokenId, func))
+      }
       builtContinent
     }
   }
