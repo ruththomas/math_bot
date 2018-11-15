@@ -229,14 +229,9 @@ export default {
       const element = evt.added || evt.moved
       const newIndex = element.newIndex
       const func = element.element
-      console.log(newIndex)
-      console.log('func', func)
-      // if (evt.moved) {
-      //   buildUtils.moveFunction({
-      //     oldIndex: evt.moved.oldIndex,
-      //     newIndex: evt.moved.newIndex
-      //   })
-      // }
+      func.category = 'function'
+      func.index = newIndex
+      this.levelControl.updateFunction(func)
     }
   },
   components: {
