@@ -49,6 +49,7 @@ class LevelControl extends Ws {
 
   _setContinent ({pathAndContinent: {path, builtContinent}}) {
     this.continent = builtContinent
+    // console.log(builtContinent.lambdas)
     this.path = path
     const robotState = this.continent.initialRobotState
     const robotSpeed = this.robot === null ? 0 : this.robot.robotSpeed

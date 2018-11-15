@@ -2,7 +2,6 @@ package actors.messages.level
 import actors.LevelGenerationActor.makeQtyUnlimited
 import actors.messages.AssignedFunction
 import level_gen.models.ContinentStruct
-import models.FuncToken
 import play.api.libs.json.{Json, OFormat}
 
 object PreparedFunctions {
@@ -50,13 +49,20 @@ object PreparedFunctions {
       }
   }
 
+  private def indexEm(functions: List[Function]): List[Function] =
+    functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2))
+
   def apply(functions: Functions, continentStruct: ContinentStruct): PreparedFunctions = {
-    val listedFunctions = functions.list.values.toList
+    val listedFunctions = functions.listed.sortBy(_.index)
     val functionIds = getFunctionIds(listedFunctions)
     val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive,
                                               listedFunctions.filter(_.category == Categories.command),
                                               functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
+    val main = listedFunctions.filter(_.category == Categories.main).head
+    val cmds = listedFunctions.filter(_.category == Categories.command)
+    val actives = indexEm(preBuiltActives ::: listedFunctions.filter(_.category == Categories.function))
+    val staged = indexEm(assignedStaged ::: listedFunctions.filter(_.category == Categories.staged))
 
     def isAllowedActive(func: Function) = continentStruct.allowedActives match {
       case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
@@ -65,30 +71,17 @@ object PreparedFunctions {
     }
 
     new PreparedFunctions(
-      main = listedFunctions
-        .filter(f => f.category == Categories.main)
-        .map { m =>
-          m.copy(
-            func = m.func.map {
-              _.take(continentStruct.maxMain).filter(
-                f => f.category == Categories.command || (f.category != Categories.command && isAllowedActive(f))
-              )
-            }
-          )
+      main = main.copy(
+        func = main.func.map {
+          _.take(continentStruct.maxMain)
+            .filter(
+              f => f.category == Categories.command || (f.category != Categories.command && isAllowedActive(f))
+            )
         }
-        .head,
-      cmds = listedFunctions
-        .filter(c => c.category == Categories.command)
-        .filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
-        .sortBy(_.index),
-      activeFuncs = listedFunctions
-        .filter(_.category == Categories.function)
-        .filter(isAllowedActive) ::: preBuiltActives
-        .sortBy(_.index),
-      stagedFunctions = listedFunctions
-        .filter(_.category == Categories.staged)
-        .filter(isAllowedActive) ::: assignedStaged
-        .sortBy(_.index)
+      ),
+      cmds = cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId)),
+      activeFuncs = actives.filter(isAllowedActive),
+      stagedFunctions = staged.filter(isAllowedActive)
     )
   }
 }
