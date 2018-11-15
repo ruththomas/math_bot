@@ -70,6 +70,9 @@ class LevelControl extends Ws {
   /*
   * removes func contents from nested functions then stringifies function
   * todo - revisit !!important!!
+  * deals with circular reference issue with recursive functions
+  * to be used with update function
+  * this implementation is sub par and to slow
   * */
   _prepFunc (func, cb) {
     const removeCircular = CircularJson.stringify(func) // replaces circular with "~"
