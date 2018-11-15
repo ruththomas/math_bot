@@ -8,7 +8,7 @@ import play.api.Environment
 import play.api.libs.ws.WSClient
 
 object AdminActor {
-  case class GetUserCount()
+  final case class GetUserCount()
   case class UserCount(count: String)
 
   def props(out: ActorRef, playerTokenDAO: PlayerTokenDAO, ws: WSClient, environment: Environment) =

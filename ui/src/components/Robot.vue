@@ -17,14 +17,35 @@
         <grid></grid>
       </div>
 
-      <div class="row box" style="padding: 0;">
-        <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
-        <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
-      </div>
+      <transition
+        name="custom-classes-transition"
+        enter-active-class="animated tada"
+        leave-active-class="animated bounceOutRight"
+      >
+        <div v-if="!advancedMode" class="row container" style="flex: 1;">
+          <div class="row" style="padding: 0; display: flex; flex: 1; position: relative; z-index: 1;">
+            <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+            <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
+          </div>
 
-      <div class="row">
-        <trash></trash>
-        <commands></commands>
+          <div class="row" style="padding: 0; display: flex; flex: 1;">
+            <trash></trash>
+            <commands></commands>
+          </div>
+        </div>
+
+        <div v-else class="row container" style="flex: 1;">
+          <advanced-mode></advanced-mode>
+        </div>
+      </transition>
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <span :style="{opacity: advancedMode ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Normal</span>
+        <toggle-button
+          @change="toggleAdvanced"
+          :color="{checked: 'rgba(255, 255, 255, 0.5)', unchecked: 'rgba(255, 255, 255, 0.5)', disabled: 'rgba(255, 255, 255, 0.5)'}"
+          :switch-color="{checked: 'linear-gradient(to left, #25EF02, #000000)', unchecked: 'linear-gradient(to left, #000000, #25EF02)'}"
+        />
+        <span :style="{opacity: !advancedMode ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
       </div>
     </div>
   </div>
@@ -46,10 +67,11 @@ import PopoverBucket from './Popover_bucket'
 import StepCongrats from './Step_congrats'
 import VideoHint from './Video_hint'
 import LevelCongrats from './Level_congrats'
+import AdvancedMode from './Advanced_mode'
+
 export default {
   mounted () {
-    this.$store.dispatch('updateVideoHint', this)
-    this.$store.dispatch('updateRunCompiled', this)
+    this.videoHintControl.showFreeHint(this.levelControl.continent.freeHint)
   },
   computed: {
     levelControl () {
@@ -66,6 +88,9 @@ export default {
     },
     problem () {
       return this.levelControl.continent.problem.problem
+    },
+    videoHintControl () {
+      return this.$store.getters.getVideoHintControl
     },
 
     runCompiled () {
@@ -140,7 +165,8 @@ export default {
   },
   data () {
     return {
-      renderGrid: false
+      renderGrid: false,
+      advancedMode: false
     }
   },
   methods: {
@@ -161,6 +187,9 @@ export default {
       } else {
         return picture
       }
+    },
+    toggleAdvanced (evt) {
+      this.advancedMode = evt.value
     }
   },
   components: {
@@ -176,13 +205,18 @@ export default {
     PopoverBucket,
     StepCongrats,
     LevelCongrats,
-    VideoHint
+    VideoHint,
+    AdvancedMode
   }
 }
 </script>
 
 <style scoped lang="scss">
   $box-height: 18vmin;
+
+  label {
+    margin: 0;
+  }
 
   .robot {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");

@@ -14,7 +14,6 @@ class RunCompiled extends GridAnimator {
     this.stepData = $store.state.levelControl.continent
     this.toolList = this.stepData.toolList
     this.programCreate = true
-    this.videoHint = $store.getters.getVideoHint
 
     this._askCompiler = this._askCompiler.bind(this)
     this._processFrames = this._processFrames.bind(this)
@@ -27,6 +26,8 @@ class RunCompiled extends GridAnimator {
     this._waitForFrames = this._waitForFrames.bind(this)
     this.initializeNextStep = this.initializeNextStep.bind(this)
     this.resetIfFailure = this.resetIfFailure.bind(this)
+    this.startMbl = this.startMbl.bind(this)
+    this.clearMbl = this.clearMbl.bind(this)
   }
 
   lastFrame = null
@@ -54,7 +55,15 @@ class RunCompiled extends GridAnimator {
     }
   }
 
-  start () {
+  clearMbl () {
+    $store.state.levelControl.mbl = ''
+  }
+
+  startMbl () {
+    this.start($store.state.levelControl.mbl)
+  }
+
+  start (mbl) {
     const emptyFuncs = this._testForEmptyFunctions()
 
     if (emptyFuncs.length) {
@@ -62,7 +71,7 @@ class RunCompiled extends GridAnimator {
     } else if (this.robot.state !== 'paused') {
       this.robotFrames = []
       this.robot.setState('running')
-      this._askCompiler(this._processFrames)
+      this._askCompiler(mbl, true, this._processFrames)
     } else {
       this.robot.setState('running')
       this._processFrames()
@@ -112,7 +121,7 @@ class RunCompiled extends GridAnimator {
   _hideLevelCongrats = () => $root.$emit('bv::hide::modal', 'level-congrats-modal')
 
   _showFreeHint (url) {
-    this.videoHint.showFreeHint(url)
+    $store.state.videoHintControl.showFreeHint(url)
   }
 
   _initializeStep () {
@@ -197,8 +206,9 @@ class RunCompiled extends GridAnimator {
   }
 
   _resetStep () {
-    $store.state.levelControl._setContinent(this.lastFrame)
-    this.lastFrame = null
+    this.levelControl.getContinent(this.levelControl.path, () => {
+      this.constructor(this.context)
+    })
   }
 
   _stopRobot () {
@@ -264,12 +274,32 @@ class RunCompiled extends GridAnimator {
     }
   }
 
-  _askCompiler (startRunning) {
+  _mblError (error) {
+    const dis = this
+    const messageBuilder = {
+      type: 'warn',
+      msg: error,
+      handlers () {
+        return {
+          closeControl: dis._closeMessageRobotHome()
+        }
+      }
+    }
+
+    this._addMessage(messageBuilder)
+  }
+
+  _askCompiler (mbl, create, startRunning) {
     this.compilerControl._wsOnMessage((compiled) => {
-      this.robotFrames = this.robotFrames.concat(compiled.frames)
-      if (startRunning) startRunning()
+      if (compiled.hasOwnProperty('error')) {
+        this._mblError(compiled.error)
+        this.robot.setState('failure')
+      } else {
+        this.robotFrames = this.robotFrames.concat(compiled.frames)
+        if (startRunning) startRunning()
+      }
     })
-    this.compilerControl.send(this.levelControl.continent.problem.encryptedProblem, false)
+    this.compilerControl.send(this.levelControl.continent.problem.encryptedProblem, false, mbl, create)
   }
 }
 

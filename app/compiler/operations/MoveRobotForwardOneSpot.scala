@@ -1,3 +1,3 @@
 package compiler.operations
 
-case object MoveRobotForwardOneSpot extends OperationWithColor
+case object MoveRobotForwardOneSpot extends Operation
