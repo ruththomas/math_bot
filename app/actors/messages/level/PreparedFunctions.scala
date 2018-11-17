@@ -109,6 +109,8 @@ object PreparedFunctions {
       case Categories.staged =>
         val insertAt: Int = {
           if (filteredActivesAndStaged.staged.isEmpty) 0
+          else if (filteredActivesAndStaged.staged.length <= function.index)
+            filteredActivesAndStaged.staged.last.index + 1
           else filteredActivesAndStaged.staged(function.index).index
         }
         val updatedStaged = indexEm(staged.take(insertAt) ::: List(function) ::: staged.drop(insertAt))
@@ -131,14 +133,14 @@ object PreparedFunctions {
    * Functions are updated in db with updated list
    * */
   def apply(functions: Functions, continentStruct: ContinentStruct, functionsDAO: FunctionsDAO): PreparedFunctions = {
-    val listedFunctions = functions.listed.sortBy(_.index)
+    val listedFunctions = functions.listed
     val functionIds = getFunctionIds(listedFunctions)
-    val cmds = functions.commands
+    val cmds = functions.commands.sortBy(_.index)
     val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, cmds, functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
     val main = functions.main
-    val actives = indexEm(preBuiltActives ::: functions.actives)
-    val staged = indexEm(assignedStaged ::: functions.staged)
+    val actives = indexEm(preBuiltActives ::: functions.actives.sortBy(_.index))
+    val staged = indexEm(assignedStaged ::: functions.staged.sortBy(_.index))
 
     val filteredActivesAndStaged = FilteredActivesAndStaged(actives, staged, continentStruct)
 

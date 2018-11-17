@@ -93,14 +93,15 @@ class LevelControl extends Ws {
   activateFunction (func) {
     console.log('activate')
     this._wsOnMessage((updated) => {
-      console.log(updated)
       this._setFunctions(updated.preparedFunctions)
     })
     this._send(JSON.stringify({action: 'activate-function', 'function': func}))
   }
 
   deactivateFunction (func) {
-    this._wsOnMessage(console.log)
+    this._wsOnMessage((updated) => {
+      this._setFunctions(updated.preparedFunctions)
+    })
     this._send(JSON.stringify({action: 'deactivate-function', 'function': func}))
   }
 
