@@ -64,4 +64,8 @@ case class Functions(
       (main :: cmds ::: funcs).zipWithIndex.map(f => f._1.copy(index = f._2)).map(f => (f.created_id, f)).toMap
 ) {
   def listed: List[Function] = this.list.values.toList
+  def main: Function = this.list.values.toList.filter(_.category == Categories.main).head
+  def staged: List[Function] = this.list.values.toList.filter(_.category == Categories.staged)
+  def actives: List[Function] = this.list.values.toList.filter(_.category == Categories.function)
+  def commands: List[Function] = this.list.values.toList.filter(_.category == Categories.command)
 }

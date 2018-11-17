@@ -22,6 +22,7 @@ class LevelControl extends Ws {
     this.updateFunctionProperties = this.updateFunctionProperties.bind(this)
     this._resetContinent = this._resetContinent.bind(this)
     this._prepFunc = this._prepFunc.bind(this)
+    this._setFunctions = this._setFunctions.bind(this)
 
     this._openSocket(this._init)
   }
@@ -49,7 +50,7 @@ class LevelControl extends Ws {
 
   _setContinent ({pathAndContinent: {path, builtContinent}}) {
     this.continent = builtContinent
-    // console.log(builtContinent.lambdas)
+    console.log(builtContinent.lambdas)
     this.path = path
     const robotState = this.continent.initialRobotState
     const robotSpeed = this.robot === null ? 0 : this.robot.robotSpeed
@@ -83,6 +84,24 @@ class LevelControl extends Ws {
       else return f
     })
     cb(cleaned)
+  }
+
+  _setFunctions (functions) {
+    this.functions = functions
+  }
+
+  activateFunction (func) {
+    console.log('activate')
+    this._wsOnMessage((updated) => {
+      console.log(updated)
+      this._setFunctions(updated.preparedFunctions)
+    })
+    this._send(JSON.stringify({action: 'activate-function', 'function': func}))
+  }
+
+  deactivateFunction (func) {
+    this._wsOnMessage(console.log)
+    this._send(JSON.stringify({action: 'deactivate-function', 'function': func}))
   }
 
   updateFunction (func) {

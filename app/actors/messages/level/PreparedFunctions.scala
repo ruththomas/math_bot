@@ -1,6 +1,7 @@
 package actors.messages.level
 import actors.LevelGenerationActor.makeQtyUnlimited
 import actors.messages.AssignedFunction
+import daos.FunctionsDAO
 import level_gen.models.ContinentStruct
 import play.api.libs.json.{Json, OFormat}
 
@@ -52,36 +53,113 @@ object PreparedFunctions {
   private def indexEm(functions: List[Function]): List[Function] =
     functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2))
 
-  def apply(functions: Functions, continentStruct: ContinentStruct): PreparedFunctions = {
+  private def isAllowedActive(func: Function, continentStruct: ContinentStruct) = continentStruct.allowedActives match {
+    case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
+    case Some(allowed) if allowed.isEmpty => false
+    case None => true
+  }
+
+  private def filteredCmds(cmds: List[Function], continentStruct: ContinentStruct): List[Function] =
+    cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId))
+
+  private object FilteredActivesAndStaged {
+    def apply(actives: List[Function],
+              staged: List[Function],
+              continentStruct: ContinentStruct): FilteredActivesAndStaged =
+      new FilteredActivesAndStaged(
+        actives = actives.filter(isAllowedActive(_, continentStruct)),
+        staged = staged.filter(isAllowedActive(_, continentStruct))
+      )
+  }
+
+  private case class FilteredActivesAndStaged(actives: List[Function], staged: List[Function])
+
+  /*
+   * For activating or deactivating a function
+   * Function index should be the functions new position
+   * Function category should be the functions new category
+   * Functions are replaced in db with updated list
+   * */
+  def apply(functions: Functions,
+            continentStruct: ContinentStruct,
+            function: Function,
+            functionsDAO: FunctionsDAO): PreparedFunctions = {
+    val actives = functions.actives.sortBy(_.index)
+    val staged = functions.staged.sortBy(_.index)
+    val filteredActivesAndStaged = FilteredActivesAndStaged(actives, staged, continentStruct)
+
+    val finished = function.category match {
+      case Categories.function =>
+        val insertAt: Int = {
+          if (filteredActivesAndStaged.actives.isEmpty) 0
+          else if (filteredActivesAndStaged.actives.length <= function.index)
+            filteredActivesAndStaged.actives.last.index + 1
+          else filteredActivesAndStaged.actives(function.index).index
+        }
+        val updatedActives = indexEm(actives.take(insertAt) ::: List(function) ::: actives.drop(insertAt))
+        val updatedStaged = indexEm(staged.filterNot(_.created_id == function.created_id))
+        functionsDAO.replaceAll(
+          functions.tokenId,
+          Functions(
+            functions.tokenId,
+            List(functions.main) ::: functions.commands ::: updatedActives ::: updatedStaged
+          )
+        )
+        FilteredActivesAndStaged(updatedActives, updatedStaged, continentStruct)
+      case Categories.staged =>
+        val insertAt: Int = {
+          if (filteredActivesAndStaged.staged.isEmpty) 0
+          else filteredActivesAndStaged.staged(function.index).index
+        }
+        val updatedStaged = indexEm(staged.take(insertAt) ::: List(function) ::: staged.drop(insertAt))
+        val updatedActives = indexEm(actives.filterNot(_.created_id == function.created_id))
+        functionsDAO.replaceAll(
+          functions.tokenId,
+          Functions(functions.tokenId, List(functions.main) ::: functions.commands ::: updatedActives ::: updatedStaged)
+        )
+        FilteredActivesAndStaged(updatedActives, updatedStaged, continentStruct)
+    }
+    new PreparedFunctions(functions.main,
+                          filteredCmds(functions.commands, continentStruct),
+                          finished.actives,
+                          finished.staged)
+  }
+
+  /*
+   * For creating built continent
+   * (filtered functions for a specific continent)
+   * Functions are updated in db with updated list
+   * */
+  def apply(functions: Functions, continentStruct: ContinentStruct, functionsDAO: FunctionsDAO): PreparedFunctions = {
     val listedFunctions = functions.listed.sortBy(_.index)
     val functionIds = getFunctionIds(listedFunctions)
-    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive,
-                                              listedFunctions.filter(_.category == Categories.command),
-                                              functionIds)
+    val cmds = functions.commands
+    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, cmds, functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
-    val main = listedFunctions.filter(_.category == Categories.main).head
-    val cmds = listedFunctions.filter(_.category == Categories.command)
-    val actives = indexEm(preBuiltActives ::: listedFunctions.filter(_.category == Categories.function))
-    val staged = indexEm(assignedStaged ::: listedFunctions.filter(_.category == Categories.staged))
+    val main = functions.main
+    val actives = indexEm(preBuiltActives ::: functions.actives)
+    val staged = indexEm(assignedStaged ::: functions.staged)
 
-    def isAllowedActive(func: Function) = continentStruct.allowedActives match {
-      case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
-      case Some(allowed) if allowed.isEmpty => false
-      case None => true
-    }
+    val filteredActivesAndStaged = FilteredActivesAndStaged(actives, staged, continentStruct)
+
+    functionsDAO.replaceAll(functions.tokenId, Functions(functions.tokenId, List(main) ::: cmds ::: actives ::: staged))
 
     new PreparedFunctions(
       main = main.copy(
         func = main.func.map {
           _.take(continentStruct.maxMain)
             .filter(
-              f => f.category == Categories.command || (f.category != Categories.command && isAllowedActive(f))
+              f =>
+                f.category == Categories.command || (f.category != Categories.command && isAllowedActive(
+                  f,
+                  continentStruct
+                ))
             )
         }
       ),
-      cmds = cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId)),
-      activeFuncs = actives.filter(isAllowedActive),
-      stagedFunctions = staged.filter(isAllowedActive)
+      cmds = filteredCmds(cmds, continentStruct),
+      activeFuncs = filteredActivesAndStaged.actives,
+      stagedFunctions = filteredActivesAndStaged.staged
     )
   }
 }

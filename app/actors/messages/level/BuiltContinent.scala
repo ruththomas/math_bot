@@ -1,6 +1,7 @@
 package actors.messages.level
 
 import actors.VideoHintActor.embedURL
+import daos.FunctionsDAO
 import level_gen.models.{CelestialSystem, ContinentStruct}
 import models.Problem.makeProblem
 import models._
@@ -8,7 +9,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 object BuiltContinent {
-  def apply(functions: Functions, continent: CelestialSystem): BuiltContinent = {
+  def apply(functions: Functions, continent: CelestialSystem, functionsDAO: Option[FunctionsDAO]): BuiltContinent = {
     val continentStruct = continent.continentStruct.get
     new BuiltContinent(
       name = continent.name,
@@ -18,7 +19,7 @@ object BuiltContinent {
       initialRobotState = setInitialRobot(continentStruct),
       stagedEnabled = continentStruct.stagedEnabled,
       activeEnabled = continentStruct.activeEnabled,
-      lambdas = PreparedFunctions(functions, continentStruct),
+      lambdas = PreparedFunctions(functions, continentStruct, functionsDAO.get),
       toolList = ToolList(),
       specialParameters = continentStruct.specialParameters,
       problem = problemGen(continentStruct.problem),
@@ -104,7 +105,7 @@ object BuiltContinent {
   val stepDataReads: Reads[BuiltContinent] = (
     (JsPath \ "functions").read[Functions] and
     (JsPath \ "continent").read[CelestialSystem]
-  )(BuiltContinent(_, _))
+  )(BuiltContinent(_, _, None))
 
   val stepDataWrites: Writes[BuiltContinent] = (
     (JsPath \ "name").write[String] and

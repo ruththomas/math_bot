@@ -147,6 +147,7 @@ export default {
     .header {
       font-size: 1.5em;
       padding: 2% 0;
+      text-align: left;
     }
 
     .btn {
