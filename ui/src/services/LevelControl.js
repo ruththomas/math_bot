@@ -61,6 +61,7 @@ class LevelControl extends Ws {
 
   _resetContinent ({pathAndContinent: {path, builtContinent}}) {
     this.continent = builtContinent
+    this.functions = this.continent.lambdas
   }
 
   _updatePath () {

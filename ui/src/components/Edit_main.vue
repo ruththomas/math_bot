@@ -3,7 +3,7 @@
     <function-drop
       :id="'edit-main'"
       :class="'edit-main-drop'"
-      :list="mainFunctionFunc"
+      :list="mainFunction.func"
       :options="mainDraggableOptions"
       :change="editFunction"
       :add="add"
@@ -49,11 +49,11 @@ export default {
     problem () {
       return this.levelControl.continent.problem.problem
     },
-    mainFunction () {
-      return this.levelControl.functions.main
+    functions () {
+      return this.levelControl.functions
     },
-    mainFunctionFunc () {
-      return this.mainFunction.func
+    mainFunction () {
+      return this.functions.main
     },
     runCompiled () {
       return this.levelControl.runCompiled
