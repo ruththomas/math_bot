@@ -30,7 +30,6 @@ import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
 import PuzzlePieces from './Puzzle_pieces'
 import ActiveDrop from './Activate_drop'
-import BuildUtils from '../services/BuildFunction'
 
 export default {
   mounted () {
@@ -88,10 +87,11 @@ export default {
       this.$store.dispatch('updateEditingIndex', null)
     },
     deactivateFunction (evt) {
-      BuildUtils.deactivateFunction({
-        activeIndex: evt.oldIndex,
-        stagedIndex: evt.newIndex
-      })
+      const func = this.levelControl.functions.activeFuncs[evt.oldIndex]
+      func.category = 'staged'
+      func.index = evt.newIndex
+      func.func = []
+      this.levelControl.deactivateFunction(func)
     }
   },
   components: {

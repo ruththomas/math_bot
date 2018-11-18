@@ -231,7 +231,7 @@ export default {
       const func = element.element
       func.category = 'function'
       func.index = newIndex
-      this.levelControl.updateFunction(func)
+      this.levelControl.activateFunction(func)
     }
   },
   components: {

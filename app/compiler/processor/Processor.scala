@@ -1,12 +1,12 @@
 package compiler.processor
 
-import compiler.operations.{ ChangeRobotDirection, MoveRobotForwardOneSpot, _ }
-import compiler.{ Grid, GridAndProgram }
+import compiler.operations.{ChangeRobotDirection, MoveRobotForwardOneSpot, _}
+import compiler.{Grid, GridAndProgram}
 import configuration.CompilerConfiguration
 
 import scala.annotation.tailrec
 
-class Processor(val initialGridAndProgram: GridAndProgram, config : CompilerConfiguration) {
+class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfiguration) {
 
   private class ProcessorState(
       var currentRegister: Register,
@@ -21,16 +21,18 @@ class Processor(val initialGridAndProgram: GridAndProgram, config : CompilerConf
   private def passColorCheck(operation: Operation, state: ProcessorState): Boolean = true
 
   @tailrec
-  private def execute(state: ProcessorState, maybeOperation: Option[Operation], post: Seq[Operation], emptyLoopCount : Int): Stream[Frame] = {
+  private def execute(state: ProcessorState,
+                      maybeOperation: Option[Operation],
+                      post: Seq[Operation],
+                      emptyLoopCount: Int): Stream[Frame] = {
     if (emptyLoopCount > config.maxEmptyLoopCount) {
       Stream.empty[Frame] // End of program
     } else {
-
       maybeOperation match {
         case Some(operation) if passColorCheck(operation, state) =>
           operation match {
             case UserFunction(operations) =>
-                execute(state, operations.headOption, operations.tail ++: post, emptyLoopCount + 1)
+              execute(state, operations.headOption, operations.tail ++: post, emptyLoopCount + 1)
             case IfColor(color, conditionalOperation) =>
               state.currentRegister.peek() match {
                 case Some(element) if element.color == color =>
@@ -105,5 +107,6 @@ class Processor(val initialGridAndProgram: GridAndProgram, config : CompilerConf
 }
 
 object Processor {
-  def apply(initialGridAndProgram: GridAndProgram, config: CompilerConfiguration): Processor = new Processor(initialGridAndProgram, config)
+  def apply(initialGridAndProgram: GridAndProgram, config: CompilerConfiguration): Processor =
+    new Processor(initialGridAndProgram, config)
 }

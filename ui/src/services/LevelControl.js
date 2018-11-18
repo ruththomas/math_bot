@@ -2,8 +2,8 @@ import Ws from './Ws'
 import $router from '../router'
 import Robot from './RobotState'
 import RunCompiled from './RunCompiled'
-import CircularJson from 'circular-json'
 import _ from 'underscore'
+import circular from 'circular-json'
 
 class LevelControl extends Ws {
   constructor () {
@@ -22,6 +22,7 @@ class LevelControl extends Ws {
     this.updateFunctionProperties = this.updateFunctionProperties.bind(this)
     this._resetContinent = this._resetContinent.bind(this)
     this._prepFunc = this._prepFunc.bind(this)
+    this._setFunctions = this._setFunctions.bind(this)
 
     this._openSocket(this._init)
   }
@@ -67,35 +68,50 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'update-path', path: this.path}))
   }
 
+  _setFunctions (functions) {
+    this.functions = functions
+  }
+
+  activateFunction (func) {
+    this._wsOnMessage((updated) => {
+      this._setFunctions(updated.preparedFunctions)
+    })
+    this._send(JSON.stringify({action: 'activate-function', 'function': func}))
+  }
+
+  deactivateFunction (func) {
+    this._wsOnMessage((updated) => {
+      this._setFunctions(updated.preparedFunctions)
+    })
+    this._send(JSON.stringify({action: 'deactivate-function', 'function': func}))
+  }
+
   /*
   * removes func contents from nested functions then stringifies function
-  * todo - revisit !!important!!
   * deals with circular reference issue with recursive functions
   * to be used with update function
   * this implementation is sub par and to slow
   * */
-  _prepFunc (func, cb) {
-    const removeCircular = CircularJson.stringify(func) // replaces circular with "~"
-    const cleaned = JSON.parse(removeCircular)
-    cleaned.func = cleaned.func.map((f) => {
-      if (f === '~') return _.omit(Object.assign({}, func), 'func')
-      else return f
+  _prepFunc (func) {
+    const copied = circular.stringify(func)
+    const parsed = circular.parse(copied)
+    parsed.func = parsed.func.map((f) => {
+      return _.omit(f, 'func')
     })
-    cb(cleaned)
+    return parsed
   }
 
   updateFunction (func) {
     this._wsOnMessage(() => {}) // doing nothing with response for now
-    this._send(JSON.stringify({action: 'update-function', 'function': func}))
+    this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))
   }
 
   updateFunctionProperties (func) {
-    this._wsOnMessage(this._resetContinent)
+    this._wsOnMessage((res) => {
+      console.log(res)
+      this._resetContinent(res)
+    })
     this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
-  }
-
-  toggleFunctionImage (func) {
-    console.log(func)
   }
 
   getPath () {
@@ -149,6 +165,18 @@ class LevelControl extends Ws {
   updatePlanet (ind) {
     this.path = this.path.substr(0, 3) + ind + '0'
     this._updatePath()
+  }
+
+  getNextStarSystem () {
+    return this.galaxy.starSystems[Number(this.path[2]) + 1]
+  }
+
+  getNextPlanet () {
+    return this.galaxy.starSystems[this.path[2]].planets[Number(this.path[3]) + 1]
+  }
+
+  getPlanetStats () {
+    return this.galaxy.starSystems[this.path[2]].planets[this.path[3]].stats
   }
 
   _init () {

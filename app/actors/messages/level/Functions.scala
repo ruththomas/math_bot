@@ -24,15 +24,24 @@ object Functions {
     )
   }
 
+  private def indexEm(functions: List[FuncToken]): List[FuncToken] =
+    functions.zipWithIndex.map(fNi => fNi._1.copy(index = Some(fNi._2)))
+
   def apply(tokenId: TokenId, lambdas: Lambdas): Functions = { // Legacy account, swap from lambdas to functions
     val transferred: List[Function] = convertFuncList(
-      List(lambdas.main.copy(`type` = Some(Categories.main)))
-      ++ (lambdas.activeFuncs ++ lambdas.inactiveActives.getOrElse(List.empty[FuncToken]))
-        .map(v => v.copy(`type` = Some(Categories.function)))
-      ++ (lambdas.cmds ++ lambdas.inactiveCmds.getOrElse(List.empty[FuncToken]))
-        .map(v => v.copy(`type` = Some(Categories.command)))
-      ++ (lambdas.stagedFuncs ++ lambdas.inactiveStaged.getOrElse(List.empty[FuncToken]))
-        .map(v => v.copy(`type` = Some(Categories.staged)))
+      indexEm(List(lambdas.main.copy(`type` = Some(Categories.main))))
+      ++ indexEm(
+        (lambdas.activeFuncs ++ lambdas.inactiveActives.getOrElse(List.empty[FuncToken]))
+          .map(v => v.copy(`type` = Some(Categories.function)))
+      )
+      ++ indexEm(
+        (lambdas.cmds ++ lambdas.inactiveCmds.getOrElse(List.empty[FuncToken]))
+          .map(v => v.copy(`type` = Some(Categories.command)))
+      )
+      ++ indexEm(
+        (lambdas.stagedFuncs ++ lambdas.inactiveStaged.getOrElse(List.empty[FuncToken]))
+          .map(v => v.copy(`type` = Some(Categories.staged)))
+      )
     )
     new Functions(
       tokenId = tokenId,
@@ -55,4 +64,8 @@ case class Functions(
       (main :: cmds ::: funcs).zipWithIndex.map(f => f._1.copy(index = f._2)).map(f => (f.created_id, f)).toMap
 ) {
   def listed: List[Function] = this.list.values.toList
+  def main: Function = this.list.values.toList.filter(_.category == Categories.main).head
+  def staged: List[Function] = this.list.values.toList.filter(_.category == Categories.staged)
+  def actives: List[Function] = this.list.values.toList.filter(_.category == Categories.function)
+  def commands: List[Function] = this.list.values.toList.filter(_.category == Categories.command)
 }

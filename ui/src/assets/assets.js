@@ -165,7 +165,6 @@ module.exports = {
     planet23: 'https://res.cloudinary.com/sheouth/image/upload/v154222322/newplanet-18.png',
     planet24: 'https://res.cloudinary.com/sheouth/image/upload/v154222322/newplanet-19.png',
     planet25: 'https://res.cloudinary.com/sheouth/image/upload/v154222322/newplanet-20.png'
-
   },
   buttons: {
     playButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342823/buttons/Play_Button.png',

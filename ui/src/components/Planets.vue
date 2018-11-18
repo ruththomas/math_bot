@@ -40,7 +40,6 @@ export default {
   },
   props: ['planets', 'selectedPlanet', 'updateSelectedPlanet']
 }
-
 </script>
 
 <style scoped lang="scss">

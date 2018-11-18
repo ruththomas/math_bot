@@ -24,6 +24,7 @@ case class Function(
     created_id: String,
     color: String = "default",
     func: Option[List[Function]],
+    displayName: Option[Boolean] = None,
     set: Boolean = false,
     name: String,
     image: String,

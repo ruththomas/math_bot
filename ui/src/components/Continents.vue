@@ -9,8 +9,9 @@
           v-for="(continent, continentNumber) in continents"
           type="button"
           class="btn btn-dark btn-lg btn-block"
-          :class="['step-planet-' + (Number(selectedPlanet) + 1), Number(selectedContinent) === continentNumber ? 'selected' : '']"
-          @click="continent.stats.active ? goToRobot(continent) : ''"
+          :id="Number(selectedContinent) === continentNumber ? 'selected-continent' : ''"
+          :class="[planetStats.name, Number(selectedContinent) === continentNumber ? 'selected' : '']"
+          @click="continent.stats.active ? goToRobot(continent.id) : ''"
           :key="'continent/' + continent.id"
           :disabled="!continent.stats.active"
         >
@@ -24,23 +25,23 @@
             </div>
           </div>
         </button>
-        <!--<button-->
-          <!--v-if="steps[steps.length - 1].wins > 0 && nextLevel !== 'None'"-->
-          <!--type="button"-->
-          <!--class="btn btn-dark btn-lg btn-block"-->
-          <!--@click="goToRobot(nextLevel.name, nextLevel.firstStep)">-->
-          <!--<div class="col-6">-->
-            <!--<div class="step-info-text"><div>Next planet!</div> {{parseCamelCase(nextLevel.name)}}</div>-->
-          <!--</div>-->
-          <!--<div class="col-6">-->
-            <!--<img-->
-              <!--class="step-next-planet"-->
-              <!--:class="`step-${nextLevel.planetClass}`"-->
-              <!--:src="permanentImages.planets[nextLevel.planet]"-->
-              <!--alt="Image of a planet"-->
-            <!--/>-->
-          <!--</div>-->
-        <!--</button>-->
+        <button
+          v-if="continents[continents.length - 1].stats.wins > 0"
+          type="button"
+          class="btn btn-dark btn-lg btn-block"
+          @click="goToRobot(nextPlanet.id + '0')">
+          <div class="col-6">
+            <div class="step-info-text"><div>Next planet!</div> {{parseCamelCase(nextPlanet.stats.name)}}</div>
+          </div>
+          <div class="col-6">
+            <img
+              class="step-next-planet"
+              :class="nextPlanet.stats.name"
+              :src="permanentImages.planets[nextPlanet.stats.name]"
+              alt="Planet"
+            />
+          </div>
+        </button>
       </div>
     </div>
   </div>
@@ -53,6 +54,7 @@ import Stars from './Stars'
 export default {
   name: 'steps',
   mounted () {
+    setTimeout(this.scrollToSelected, 80)
   },
   computed: {
     planetN () {
@@ -71,25 +73,17 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
+    planetStats () {
+      return this.levelControl.getPlanetStats()
+    },
     selectedContinent () {
       return this.levelControl.path.slice(4)
     },
-    nextLevel () {
-      const name = this.steps[this.steps.length - 1].nextLevel
-      if (name === 'None') {
-        return 'None'
-      } else {
-        let planetNumber = 0
-        const nextLevelData = {}
-        nextLevelData.name = name
-        nextLevelData.firstStep = this.findFirstStep(this.levels.find((level, index) => {
-          planetNumber = index + 1
-          return level.name === name
-        }))
-        nextLevelData.planet = `planet${planetNumber}`
-        nextLevelData.planetClass = `planet-${planetNumber}`
-        return nextLevelData
-      }
+    path () {
+      return this.levelControl.path
+    },
+    nextPlanet () {
+      return this.levelControl.getNextPlanet()
     },
     tokenId () {
       return this.$store.getters.getTokenId
@@ -101,10 +95,16 @@ export default {
       const levelSteps = utils.orderEm(level.level)[0].name
       return levelSteps
     },
-    goToRobot (continent) {
-      this.levelControl.getContinent(continent.id, () => {
+    goToRobot (continentId) {
+      this.levelControl.getContinent(continentId, () => {
         this.$router.push({path: '/robot'})
       })
+    },
+    scrollToSelected () {
+      const $selected = $('#selected-continent')
+      $('.steps-container').animate({
+        scrollTop: $selected.position().top - 75
+      }, 1000)
     }
   },
   components: {
@@ -119,12 +119,17 @@ export default {
   $gradient-size: 100px;
   $outer-shadow-blur: 50px;
   $outer-shadow-size: 1px;
-  $planet-1-color: rgba(202, 122, 255, 1);
-  $planet-2-color: rgba(242, 92, 92, 1);
-  $planet-3-color: rgba(74, 144, 226, 1);
-  $planet-4-color: rgba(255, 152, 177, 1);
-  $planet-5-color: rgba(80, 227, 194, 1);
-  $planet-6-color: rgba(184, 233, 134, 1);
+  $BasicProgramming-color: rgba(202, 122, 255, 1);
+  $Counting-color: rgba(242, 92, 92, 1);
+  $Numbers-color: rgba(74, 144, 226, 1);
+  $Recursion-color: rgba(255, 152, 177, 1);
+  $Conditionals-color: rgba(80, 227, 194, 1);
+  $Addition-color: rgba(41, 254, 28, 1);
+  $Subtraction-color: rgba(253, 254, 137, 1);
+  $Multiplication-color: rgba(254, 151, 78, 1);
+  $Division-color: rgba(64, 169, 254, 1);
+  $inactive-color: rgba(104, 104, 104, 1);
+  $planet-gradient: rgba(0, 0, 0, 1);
   $gradient-size: 100px;
   $font-color: #ffffff;
 
@@ -139,6 +144,7 @@ export default {
     .header {
       font-size: 1.5em;
       padding: 2% 0;
+      text-align: left;
     }
 
     .btn {
@@ -176,24 +182,76 @@ export default {
     }
   }
 
-  .step-planet-1.selected {
-    border: 2px solid $planet-1-color;
+  .step-next-planet.BasicProgramming {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $BasicProgramming-color, $planet-gradient);
   }
 
-  .step-planet-2.selected {
-    border: 2px solid $planet-2-color;
+  .step-next-planet.Counting {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Counting-color, $planet-gradient);
   }
 
-  .step-planet-3.selected {
-    border: 2px solid $planet-3-color;
+  .step-next-planet.Numbers {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Numbers-color, $planet-gradient);
   }
 
-  .step-planet-4.selected {
-    border: 2px solid $planet-4-color;
+  .step-next-planet.Recursion {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Recursion-color, $planet-gradient);
   }
 
-  .step-planet-5.selected {
-    border: 2px solid $planet-5-color;
+  .step-next-planet.Conditionals {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Conditionals-color, $planet-gradient);
+  }
+
+  .step-next-planet.Addition {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Addition-color, $planet-gradient);
+  }
+
+  .step-next-planet.Subtraction {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Subtraction-color, $planet-gradient);
+  }
+
+  .step-next-planet.Multiplication {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Multiplication-color, $planet-gradient);
+  }
+
+  .step-next-planet.Division {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+  }
+
+  .BasicProgramming.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $BasicProgramming-color;
+  }
+
+  .Counting.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Counting-color;
+  }
+
+  .Numbers.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Numbers-color;
+  }
+
+  .Recursion.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Recursion-color;
+  }
+
+  .Conditionals.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Conditionals-color;
+  }
+
+  .Addition.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Addition-color;
+  }
+
+  .Subtraction.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Subtraction-color;
+  }
+
+  .Multiplication.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Multiplication-color;
+  }
+
+  .Division.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Division-color;
   }
 
   .step-image-stars {

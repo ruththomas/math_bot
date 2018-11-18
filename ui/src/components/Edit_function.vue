@@ -4,10 +4,10 @@
       <div class="func-param-form">
         <puzzle-pieces
           :id="'edit-function-displayed-func'"
-          :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayImage: editingFunction.displayImage}"
+          :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayName: editingFunction.displayName}"
           :piece-to-show="'closed'"
           :show-name="false"
-          @click.native="levelControl.toggleFunctionImage(editingFunction)"
+          @click.native="toggleFunctionImage"
         ></puzzle-pieces>
         <div
           class='function-control'
@@ -65,7 +65,6 @@
 <script>
 import draggable from 'vuedraggable'
 import {_} from 'underscore'
-import buildUtils from '../services/BuildFunction'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
@@ -191,14 +190,14 @@ export default {
       this.levelControl.updateFunctionProperties(this.editingFunction)
     },
     applyColorConditional () {
-      const level = this.stats.level
-      if (level !== 'BasicProgramming' && level !== 'Counting' && level !== 'Numbers' && level !== 'Recursion') {
-        buildUtils.adjustColor({
-          context: this,
-          color: this.findColor()
-        })
-      }
-      this.color = 'default'
+      const func = this.editingFunction
+      func.color = this.findColor()
+      this.levelControl.updateFunctionProperties(func)
+    },
+    toggleFunctionImage () {
+      const func = this.editingFunction
+      func.displayName = !func.displayName
+      this.levelControl.updateFunctionProperties(func)
     },
     deleteFuncContents () {
       this.closePopover('delete-function')

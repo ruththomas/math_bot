@@ -47,6 +47,11 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
         ResetVideos(id, path)
       case Some(LevelRequest(action, _, Some(path), _, _)) if action == "update-path" =>
         UpdatePath(path)
+      case Some(LevelRequest(action, _, _, _, _)) if action == "unlock" =>
+        Unlock()
+      case Some(LevelRequest(action, Some(function), _, _, _))
+          if action == "activate-function" || action == "deactivate-function" =>
+        ActivateDeactivateFunction(function)
       case _ => ActorFailed("Bad json input")
     }
   }
