@@ -2,8 +2,8 @@ import Ws from './Ws'
 import $router from '../router'
 import Robot from './RobotState'
 import RunCompiled from './RunCompiled'
-import CircularJson from 'circular-json'
 import _ from 'underscore'
+import circular from 'circular-json'
 
 class LevelControl extends Ws {
   constructor () {
@@ -68,23 +68,6 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'update-path', path: this.path}))
   }
 
-  /*
-  * removes func contents from nested functions then stringifies function
-  * todo - revisit !!important!!
-  * deals with circular reference issue with recursive functions
-  * to be used with update function
-  * this implementation is sub par and to slow
-  * */
-  _prepFunc (func, cb) {
-    const removeCircular = CircularJson.stringify(func) // replaces circular with "~"
-    const cleaned = JSON.parse(removeCircular)
-    cleaned.func = cleaned.func.map((f) => {
-      if (f === '~') return _.omit(Object.assign({}, func), 'func')
-      else return f
-    })
-    cb(cleaned)
-  }
-
   _setFunctions (functions) {
     this.functions = functions
   }
@@ -103,14 +86,32 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'deactivate-function', 'function': func}))
   }
 
+  /*
+  * removes func contents from nested functions then stringifies function
+  * deals with circular reference issue with recursive functions
+  * to be used with update function
+  * this implementation is sub par and to slow
+  * */
+  _prepFunc (func) {
+    const copied = circular.stringify(func)
+    const parsed = circular.parse(copied)
+    parsed.func = parsed.func.map((f) => {
+      return _.omit(f, 'func')
+    })
+    return parsed
+  }
+
   updateFunction (func) {
     this._wsOnMessage(() => {}) // doing nothing with response for now
-    this._send(JSON.stringify({action: 'update-function', 'function': func}))
+    this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))
   }
 
   updateFunctionProperties (func) {
-    this._wsOnMessage(this._resetContinent)
-    this._send(JSON.stringify({action: 'update-function-properties', 'function': func}))
+    this._wsOnMessage((res) => {
+      console.log(res)
+      this._resetContinent(res)
+    })
+    this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
   }
 
   getPath () {
