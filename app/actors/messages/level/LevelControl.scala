@@ -80,24 +80,43 @@ class LevelControl @Inject()(
     }
   }
 
+  /*
+   * gathers all pre built actives and assigned staged
+   * this function adds all the previous levels functions to the current
+   * */
   private def gatherAssignedStagedAndPrebuiltActive(path: String): (List[AssignedFunction], List[AssignedFunction]) = {
     val bothLast = getLastPreBuiltActiveAndAssignedStaged(path)
     val allPrebuiltActives = getAllPreBuiltActives()
     val allAssignedStaged = getAllAssignedStaged()
     (
-      allPrebuiltActives.takeWhile(_.createdId != bothLast._1.createdId) :+ bothLast._1,
-      allAssignedStaged.takeWhile(_.createdId != bothLast._2.createdId) :+ bothLast._2
+      bothLast._1 match {
+        case Some(active) => allPrebuiltActives.takeWhile(_.createdId != active.createdId) :+ active
+        case None => Nil
+      },
+      bothLast._2 match {
+        case Some(preBuilt) => allAssignedStaged.takeWhile(_.createdId != preBuilt.createdId) :+ preBuilt
+        case None => Nil
+      }
     )
   }
 
-  private def getLastPreBuiltActiveAndAssignedStaged(path: String): (AssignedFunction, AssignedFunction) = {
+  /*
+   * Gets the last assigned staged and pre built active for passed in path
+   * */
+  private def getLastPreBuiltActiveAndAssignedStaged(
+      path: String
+  ): (Option[AssignedFunction], Option[AssignedFunction]) = {
     val planet = getPlanetData(path)
+    val p = 0
     (
-      planet.children.flatMap(_.continentStruct.get.preBuiltActive).last,
-      planet.children.flatMap(_.continentStruct.get.assignedStaged).last
+      planet.children.flatMap(_.continentStruct.get.preBuiltActive).lastOption,
+      planet.children.flatMap(_.continentStruct.get.assignedStaged).lastOption
     )
   }
 
+  /*
+   * Gets all the pre built actives for every level
+   * */
   private def getAllPreBuiltActives(celestialSystem: CelestialSystem = superCluster): List[AssignedFunction] =
     celestialSystem.continentStruct match {
       case Some(continentStruct) =>
@@ -105,6 +124,9 @@ class LevelControl @Inject()(
       case None => celestialSystem.children.flatMap(getAllPreBuiltActives)
     }
 
+  /*
+   * Gets all the assigned staged for every level
+   * */
   private def getAllAssignedStaged(celestialSystem: CelestialSystem = superCluster): List[AssignedFunction] =
     celestialSystem.continentStruct match {
       case Some(continentStruct) =>
@@ -191,7 +213,8 @@ class LevelControl @Inject()(
       ft.copy(
         name = if (ft.created_id == function.created_id) function.name else ft.name,
         color = if (ft.created_id == function.created_id) function.color else ft.color,
-//      displayImage = if (ft.created_id == function.created_id) function.displayImage else ft.displayImage,
+        displayName =
+          if (ft.created_id == function.created_id) Some(function.displayName.getOrElse(false)) else ft.displayName,
         func = Some(changedAllInstances(func, function))
       )
     }
@@ -259,4 +282,11 @@ class LevelControl @Inject()(
     for {
       _ <- statsDAO.updatePath(tokenId, path)
     } yield path
+
+  def unlock(tokenId: TokenId): Future[Stats] = {
+    for {
+      _ <- getStats(tokenId)
+      unlocked <- statsDAO.unlock(tokenId)
+    } yield unlocked
+  }
 }

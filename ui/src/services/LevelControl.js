@@ -50,7 +50,6 @@ class LevelControl extends Ws {
 
   _setContinent ({pathAndContinent: {path, builtContinent}}) {
     this.continent = builtContinent
-    console.log(builtContinent.lambdas)
     this.path = path
     const robotState = this.continent.initialRobotState
     const robotSpeed = this.robot === null ? 0 : this.robot.robotSpeed
@@ -111,11 +110,7 @@ class LevelControl extends Ws {
 
   updateFunctionProperties (func) {
     this._wsOnMessage(this._resetContinent)
-    this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
-  }
-
-  toggleFunctionImage (func) {
-    console.log(func)
+    this._send(JSON.stringify({action: 'update-function-properties', 'function': func}))
   }
 
   getPath () {
@@ -169,6 +164,18 @@ class LevelControl extends Ws {
   updatePlanet (ind) {
     this.path = this.path.substr(0, 3) + ind + '0'
     this._updatePath()
+  }
+
+  getNextStarSystem () {
+    return this.galaxy.starSystems[Number(this.path[2]) + 1]
+  }
+
+  getNextPlanet () {
+    return this.galaxy.starSystems[this.path[2]].planets[Number(this.path[3]) + 1]
+  }
+
+  getPlanetStats () {
+    return this.galaxy.starSystems[this.path[2]].planets[this.path[3]].stats
   }
 
   _init () {
