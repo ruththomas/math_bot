@@ -98,15 +98,15 @@ export default {
     editingFunction () {
       return this.activeFunctions[this.editingIndex]
     },
+    editingIndex () {
+      return this.$store.getters.getEditingIndex
+    },
 
     sizeLimit () {
       return this.editingFunction.sizeLimit < 0 ? 10000 : this.editingFunction.sizeLimit
     },
     stats () {
       return this.$store.getters.getStats
-    },
-    editingIndex () {
-      return this.$store.getters.getEditingIndex
     },
     colorSelected () {
       return this.colors[this.currentColor]
