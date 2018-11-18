@@ -23,7 +23,7 @@
         :collection="list.concat(placeholders)"
         :origin="origin"
         :data-created-id="func.created_id"
-        @click.native="func.type === 'function' ? editFunction($event, func, findIndex(func)) : () => {}"
+        @click.native="func.category === 'function' ? editFunction($event, func) : () => {}"
       ></function-box>
     </draggable>
   </div>
@@ -114,14 +114,9 @@ export default {
     handleEditFunctionEvent (evt) {
       this.$store.dispatch('updateEditFunctionEvent', evt.target)
     },
-    editFunction (evt, func, ind) {
-      if (ind !== undefined) {
-        $('#open-staged').show()
-        this.handleEditFunctionEvent(evt)
-        const i = ind === this.editingIndex ? null : ind
-        if (i !== null) this.editingFunctionMessage(func)
-        this.toggleEditFunction(i)
-      }
+    editFunction (evt, func) {
+      this.toggleEditFunction(func.index)
+      this.$store.dispatch('updateEditFunctionEvent', evt.target)
     },
     createPlaceHolders (size) {
       return _.chain(size)
