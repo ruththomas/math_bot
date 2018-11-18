@@ -88,43 +88,71 @@ object PreparedFunctions {
     val staged = functions.staged.sortBy(_.index)
     val filteredActivesAndStaged = FilteredActivesAndStaged(actives, staged, continentStruct)
 
-    val finished = function.category match {
-      case Categories.function =>
-        val insertAt: Int = {
-          if (filteredActivesAndStaged.actives.isEmpty) 0
-          else if (filteredActivesAndStaged.actives.length <= function.index)
-            filteredActivesAndStaged.actives.last.index + 1
-          else filteredActivesAndStaged.actives(function.index).index
-        }
-        val updatedActives = indexEm(actives.take(insertAt) ::: List(function) ::: actives.drop(insertAt))
-        val updatedStaged = indexEm(staged.filterNot(_.created_id == function.created_id))
-        functionsDAO.replaceAll(
+    if (function.category == Categories.function && actives.exists(_.created_id == function.created_id)) {
+      // move active function
+      val insertAt: Int = filteredActivesAndStaged.actives(function.index).index
+      val activesWithOutFunction = actives.filterNot(_.created_id == function.created_id)
+      val updatedActives = indexEm(
+        activesWithOutFunction.take(insertAt) ::: List(function) ::: activesWithOutFunction.drop(insertAt)
+      )
+
+      val finished = FilteredActivesAndStaged(updatedActives, functions.staged, continentStruct)
+
+      functionsDAO.replaceAll(
+        functions.tokenId,
+        Functions(
           functions.tokenId,
-          Functions(
+          List(functions.main) ::: functions.commands ::: updatedActives ::: functions.staged
+        )
+      )
+
+      new PreparedFunctions(
+        functions.main,
+        filteredCmds(functions.commands, continentStruct),
+        finished.actives,
+        finished.staged
+      )
+    } else {
+      // activate function
+      val finished = function.category match {
+        case Categories.function =>
+          val insertAt: Int = {
+            if (filteredActivesAndStaged.actives.isEmpty) 0
+            else if (filteredActivesAndStaged.actives.length <= function.index)
+              filteredActivesAndStaged.actives.last.index + 1
+            else filteredActivesAndStaged.actives(function.index).index
+          }
+          val updatedActives = indexEm(actives.take(insertAt) ::: List(function) ::: actives.drop(insertAt))
+          val updatedStaged = indexEm(staged.filterNot(_.created_id == function.created_id))
+          functionsDAO.replaceAll(
             functions.tokenId,
-            List(functions.main) ::: functions.commands ::: updatedActives ::: updatedStaged
+            Functions(
+              functions.tokenId,
+              List(functions.main) ::: functions.commands ::: updatedActives ::: updatedStaged
+            )
           )
-        )
-        FilteredActivesAndStaged(updatedActives, updatedStaged, continentStruct)
-      case Categories.staged =>
-        val insertAt: Int = {
-          if (filteredActivesAndStaged.staged.isEmpty) 0
-          else if (filteredActivesAndStaged.staged.length <= function.index)
-            filteredActivesAndStaged.staged.last.index + 1
-          else filteredActivesAndStaged.staged(function.index).index
-        }
-        val updatedStaged = indexEm(staged.take(insertAt) ::: List(function) ::: staged.drop(insertAt))
-        val updatedActives = indexEm(actives.filterNot(_.created_id == function.created_id))
-        functionsDAO.replaceAll(
-          functions.tokenId,
-          Functions(functions.tokenId, List(functions.main) ::: functions.commands ::: updatedActives ::: updatedStaged)
-        )
-        FilteredActivesAndStaged(updatedActives, updatedStaged, continentStruct)
+          FilteredActivesAndStaged(updatedActives, updatedStaged, continentStruct)
+        case Categories.staged =>
+          val insertAt: Int = {
+            if (filteredActivesAndStaged.staged.isEmpty) 0
+            else if (filteredActivesAndStaged.staged.length <= function.index)
+              filteredActivesAndStaged.staged.last.index + 1
+            else filteredActivesAndStaged.staged(function.index).index
+          }
+          val updatedStaged = indexEm(staged.take(insertAt) ::: List(function) ::: staged.drop(insertAt))
+          val updatedActives = indexEm(actives.filterNot(_.created_id == function.created_id))
+          functionsDAO.replaceAll(
+            functions.tokenId,
+            Functions(functions.tokenId,
+                      List(functions.main) ::: functions.commands ::: updatedActives ::: updatedStaged)
+          )
+          FilteredActivesAndStaged(updatedActives, updatedStaged, continentStruct)
+      }
+      new PreparedFunctions(functions.main,
+                            filteredCmds(functions.commands, continentStruct),
+                            finished.actives,
+                            finished.staged)
     }
-    new PreparedFunctions(functions.main,
-                          filteredCmds(functions.commands, continentStruct),
-                          finished.actives,
-                          finished.staged)
   }
 
   /*
