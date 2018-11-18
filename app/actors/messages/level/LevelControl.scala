@@ -165,7 +165,8 @@ class LevelControl @Inject()(
         case None =>
           playerToken match {
             case Some(models.PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
-              val functions: Functions = Functions(tokenId, lambdas.get)
+              val functions: Functions =
+                Functions(tokenId, lambdas.get, getAllAssignedStaged() ::: getAllPreBuiltActives())
               functionsDAO.insert(functions)
               functions
             case _ => // new account

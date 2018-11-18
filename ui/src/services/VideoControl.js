@@ -54,6 +54,7 @@ class VideoControl extends Ws {
         $store.dispatch('addVideoTimer', res.remainingTime)
         this.setCurrentVideo(res.videoURL)
         this.showVideo()
+        this.requestHintsTaken()
       } else {
         const messageBuilder = {
           type: 'warn',

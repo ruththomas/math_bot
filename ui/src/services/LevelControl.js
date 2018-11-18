@@ -61,6 +61,7 @@ class LevelControl extends Ws {
 
   _resetContinent ({pathAndContinent: {path, builtContinent}}) {
     this.continent = builtContinent
+    this.functions = this.continent.lambdas
   }
 
   _updatePath () {
@@ -107,10 +108,7 @@ class LevelControl extends Ws {
   }
 
   updateFunctionProperties (func) {
-    this._wsOnMessage((res) => {
-      console.log(res)
-      this._resetContinent(res)
-    })
+    this._wsOnMessage(this._resetContinent)
     this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
   }
 
