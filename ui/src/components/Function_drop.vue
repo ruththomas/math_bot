@@ -12,7 +12,7 @@
       @remove="removed"
     >
       <function-box
-        v-for="(func, ind) in list"
+        v-for="(func, ind) in list.concat(placeholders)"
         :class="[
           func.placeholder ? 'placeholder-piece noDrag' : 'actual-piece',
           ind === sizeLimit - 1 && sizeLimit < 100 && !placeholders.length ? 'full-indicator' : ''
@@ -60,7 +60,6 @@ export default {
       const mainToken = this.levelControl.functions
       return mainToken === null ? [] : mainToken.func
     },
-
     placeholders () {
       if (this.sizeLimit < 100 && this.sizeLimit > 0) {
         return this.createPlaceHolders(this.sizeLimit).slice(this.list.length)
@@ -68,6 +67,7 @@ export default {
         return []
       }
     },
+
     showMesh () {
       return this.$store.getters.getShowMesh
     },

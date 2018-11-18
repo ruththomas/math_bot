@@ -10,7 +10,7 @@
       :start="moving"
       :end="end"
       :origin="'editMain'"
-      :size-limit="stepData.mainMax"
+      :size-limit="levelControl.continent.mainMax"
     ></function-drop>
     <control-bar
       :wipe-function="wipeFunction"
@@ -134,7 +134,7 @@ export default {
     },
     editFunction () {
       this.levelControl.updateFunction(this.mainFunction)
-      const mainBalance = this.mainFunctionFunc.length < this.levelControl.continent.mainMax
+      const mainBalance = this.mainFunction.func.length < this.levelControl.continent.mainMax
       this.togglePut(mainBalance)
       if (!mainBalance) {
         this.fullMessage()
