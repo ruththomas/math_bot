@@ -22,60 +22,8 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
-    robot () {
-      return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
     videoHintControl () {
       return this.$store.getters.getVideoHintControl
-    },
-
-    runCompiled () {
-      return this.$store.getters.getRunCompiled
-    },
-    tryAgainShowing () {
-      return this.$store.getters.getTryAgainShowing
-    },
-    congratsShowing () {
-      return this.$store.getters.getCongratsShowing
-    },
-    currentStepData () {
-      return this.$store.getters.getStepData
-    },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    },
-    description () {
-      return this.currentStepData.description
-    },
-    steps () {
-      return this.$store.getters.getSteps
-    },
-    step () {
-      return this.$store.getters.getStep
-    },
-    level () {
-      return this.$store.getters.getLevel
-    },
-    stepStats () {
-      const stepName = this.step
-      return this.steps.find(s => s.name === stepName)
-    }
-  },
-  data () {
-    return {
-      speechBubbleShowing: true,
-      getTime: false,
-      counter: 45,
-      max: 100
     }
   },
   components: {

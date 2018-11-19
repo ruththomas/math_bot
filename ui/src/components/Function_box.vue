@@ -35,9 +35,6 @@ export default {
       } else {
         return 'middle'
       }
-    },
-    colors () {
-      return this.$store.getters.getColors
     }
   },
   components: {

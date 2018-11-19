@@ -27,52 +27,21 @@ import SplashScreen from './Splash_screen'
 import UserProfileControls from './User_profile_controls'
 import SocialSharing from './Social_sharing'
 import LevelCongrats from './Level_congrats'
-import api from '../services/api'
 import StarSystem from './Star_system'
 
 export default {
   mounted () {
     this.handleCongrats()
-    setTimeout(this.slideToCurrent, 50)
   },
   computed: {
     starSystemShowing () {
       return this.levelControl.path[2]
     },
-    swiper () {
-      return this.$refs.galaxySwiper.swiper
-    },
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    auth () {
-      return this.$store.getters.getAuth
-    },
-    splashScreenShowing () {
-      return this.$store.getters.getSplashScreenShowing
-    },
-    profileView () {
-      return this.$store.getters.getProfileView
-    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
-    },
-    stats () {
-      return this.$store.getters.getStats
-    },
-    currentUserName () {
-      let currentUser = this.$store.getters.getCurrentUser
-      if (currentUser === null) {
-        return 'Profile'
-      } else {
-        return currentUser.given_name || currentUser.nickname
-      }
-    },
-    step () {
-      return this.$store.getters.getStep
-    },
-    tokenId () {
-      return this.$store.getters.getTokenId
     }
   },
   methods: {
@@ -81,20 +50,6 @@ export default {
       if (showCongrats) {
         this.$root.$emit('bv::show::modal', 'level-congrats-modal')
       }
-    },
-    changeSystem (dir) {
-      const newPos = this.starSystemShowing + dir
-      const starSystems = this.levelControl.galaxy.starSystems
-      if (newPos < 0) this.starSystemShowing = 0
-      else if (newPos > starSystems.length - 1) this.starSystemShowing = starSystems.length - 1
-      else this.starSystemShowing = newPos
-    },
-    goToSandbox () {
-      this.$store.dispatch('updateRunCompiled', this)
-      api.switchLevel({tokenId: this.tokenId, level: 'Sandbox', step: '1'}, (res) => {
-        this.$store.dispatch('updateStats', res.body)
-        this.$router.push({path: '/robot'})
-      })
     }
   },
   components: {

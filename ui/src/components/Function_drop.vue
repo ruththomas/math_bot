@@ -44,22 +44,6 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
-    robot () {
-      return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
-    mainFunctionFunc () {
-      const mainToken = this.levelControl.functions
-      return mainToken === null ? [] : mainToken.func
-    },
     placeholders () {
       if (this.sizeLimit < 100 && this.sizeLimit > 0) {
         return this.createPlaceHolders(this.sizeLimit).slice(this.list.length)
@@ -67,21 +51,11 @@ export default {
         return []
       }
     },
-
     showMesh () {
       return this.$store.getters.getShowMesh
     },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    },
-    editingIndex () {
-      return this.$store.getters.getEditingIndex
-    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    },
-    activeFunctions () {
-      return this.$store.getters.getActiveFunctions
     }
   },
   data () {
@@ -90,16 +64,6 @@ export default {
     }
   },
   methods: {
-    findIndex (func, _currentInd) {
-      _currentInd = !_currentInd ? 0 : _currentInd
-      const currentFunc = this.activeFunctions[_currentInd]
-      if (func.created_id === currentFunc.created_id) {
-        return _currentInd
-      } else if (Number(func.created_id) < 2000 || _currentInd > func.length) {
-        return undefined
-      }
-      return this.findIndex(func, _currentInd + 1)
-    },
     toggleEditFunction (ind) {
       this.$store.dispatch('updateEditingIndex', ind)
       this.$store.dispatch('updateFunctionAreaShowing', ind === null ? 'editMain' : 'editFunction')
@@ -110,9 +74,6 @@ export default {
         msg: `${func.name ? `Edit: ${func.name}` : 'Edit: Function'}`
       }
       this.$store.dispatch('addMessage', messageBuilder)
-    },
-    handleEditFunctionEvent (evt) {
-      this.$store.dispatch('updateEditFunctionEvent', evt.target)
     },
     editFunction (evt, func) {
       this.toggleEditFunction(func.index)

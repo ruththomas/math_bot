@@ -28,9 +28,6 @@ export default {
     }
   },
   computed: {
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    },
     trashVisible () {
       return this.$store.getters.getTrashVisible
     }
