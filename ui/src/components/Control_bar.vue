@@ -8,7 +8,7 @@
     @click="animateVulnerable"
   />
   <b-popover
-    v-if="mainFunctionFunc.length"
+    v-if="levelControl.functions.main.func.length"
     target="main-delete-function"
     placement="top"
     triggers="click"

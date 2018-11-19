@@ -47,7 +47,7 @@
         <span :style="{opacity: !advancedMode ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
       </div>
     </div>
-    <confirm_deactivate_func></confirm_deactivate_func>
+    <confirm-deactivate-func></confirm-deactivate-func>
   </div>
 </template>
 
@@ -64,8 +64,8 @@ import PopoverBucket from './Popover_bucket'
 import StepCongrats from './Step_congrats'
 import LevelCongrats from './Level_congrats'
 import AdvancedMode from './Advanced_mode'
+import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 
-import Confirm_deactivate_func from './Confirm_deactivate_func'
 export default {
   computed: {
     levelControl () {
@@ -108,7 +108,7 @@ export default {
     }
   },
   components: {
-    Confirm_deactivate_func,
+    ConfirmDeactivateFunc,
     Grid,
     Commands,
     Trash,
