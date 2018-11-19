@@ -91,7 +91,6 @@ class LevelControl extends Ws {
   * removes func contents from nested functions then stringifies function
   * deals with circular reference issue with recursive functions
   * to be used with update function
-  * this implementation is sub par and to slow
   * */
   _prepFunc (func) {
     const copied = circular.stringify(func)

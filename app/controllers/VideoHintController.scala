@@ -1,8 +1,7 @@
 package controllers
 
-import actors.VideoHintActor
+import actors.{LevelControl, VideoHintActor}
 import actors.convert_flow.{VideoRequestConvertFlow, VideoResponseConvertFlow}
-import actors.messages.level.LevelControl
 import akka.actor.ActorSystem
 import akka.http.scaladsl.util.FastFuture
 import akka.stream.Materializer

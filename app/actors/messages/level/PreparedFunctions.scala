@@ -1,5 +1,4 @@
 package actors.messages.level
-import actors.LevelGenerationActor.makeQtyUnlimited
 import actors.messages.AssignedFunction
 import daos.FunctionsDAO
 import level_gen.models.ContinentStruct
@@ -24,7 +23,7 @@ object PreparedFunctions {
           index = 0,
           commandId = "function",
           category = Categories.staged,
-          sizeLimit = makeQtyUnlimited(as.sizeLimit)
+          sizeLimit = as.limit
         )
       }
   }
@@ -45,7 +44,7 @@ object PreparedFunctions {
           index = 0,
           commandId = "function",
           category = Categories.function,
-          sizeLimit = makeQtyUnlimited(pa.sizeLimit)
+          sizeLimit = pa.limit
         )
       }
   }
