@@ -87,10 +87,7 @@ export default new Vuex.Store({
     authErrors: [],
     runCompiled: {},
     videoHint: {},
-    confirmDeactiveFunction: {
-      activeIndex: null,
-      stagedIndex: null,
-    },
+    confirmDeactiveFunction: {},
     compilerControl: {},
     videoTimers: {},
     videoHintControl: {},
@@ -229,16 +226,13 @@ export default new Vuex.Store({
     DELETE_MESSAGES (state) {
       state.messageList.map(m => m.delete())
     },
-    CONFIRM_DEACTIVATE_FUNCTION(state, {activeIndex, stagedIndex}) {
-      state.confirmDeactiveFunction = {
-        activeIndex,
-        stagedIndex
-      }
+    CONFIRM_DEACTIVATE_FUNCTION (state, _func) {
+      state.confirmDeactiveFunction = _func
     }
   },
   actions: {
-    confirmDeactivateFunction({commit}, {activeIndex, stagedIndex}) {
-      commit('CONFIRM_DEACTIVATE_FUNCTION', {activeIndex, stagedIndex})
+    confirmDeactivateFunction ({commit}, _func) {
+      commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
     },
     updateControls ({commit}, tokenId) {
       commit('UPDATE_CONTROLS')

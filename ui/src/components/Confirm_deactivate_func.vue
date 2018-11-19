@@ -18,9 +18,9 @@
 
     <div class="row d-flex justify-content-center align-items-center">
       <puzzle-pieces
-        :id="id"
-        :ind="ind"
-        :func="functionInfo"
+        :id="confirmDeactiveFunction.id"
+        :ind="confirmDeactiveFunction.ind"
+        :func="confirmDeactiveFunction"
         :piece-to-show="'closed'"
         :show-name="'true'"
       >
@@ -61,38 +61,24 @@ export default {
   mounted () {
   },
   computed: {
-    hintShowing () {
-      return this.$store.getters.getHintShowing
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
-    },
-    videoHint () {
-      return this.$store.getters.getVideoHint
     },
 
     confirmDeactiveFunction () {
       return this.$store.getters.getConfirmDeactiveFunction
     },
-    functionInfo () {
-      const {activeIndex} = this.confirmDeactiveFunction
-
-      console.log(this.$store.getters.getActiveFunctions[activeIndex])
-      return this.$store.getters.getActiveFunctions[activeIndex]
-    }
   },
   methods: {
 
     deactivateFunction () {
-      const index = this.confirmDeactiveFunction.stagedIndex
-      const func = this.levelControl.functions.activeFuncs[index]
-      this.levelControl.deactivateFunction(func)
 
+      this.levelControl.deactivateFunction(this.confirmDeactiveFunction)
       this.hide()
-      this.$store.dispatch('confirmDeactivateFunction', {
-        activeIndex: null,
-        stagedIndex: null
-      })
+      this.$store.dispatch('confirmDeactivateFunction', {})
     },
     hide () {
       this.$root.$emit('bv::hide::modal', 'confirm-deactivate-func')

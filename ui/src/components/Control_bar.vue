@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import utils from '../services/utils'
+
 export default {
   name: 'Control_bar',
   computed: {
@@ -100,6 +102,7 @@ export default {
     }
   },
   methods: {
+    closePopover: utils.closePopover,
     animateVulnerable () {
       const $functions = $('.editMain-drop-zone > .piece:not(.placeholder-piece)')
       const animationClass = 'piece-shake'
@@ -189,9 +192,6 @@ $danger-color: #F25C5C;
 .x {
   float: left;
 }
-
-
-
 
 .trash-confirm {
 

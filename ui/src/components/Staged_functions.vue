@@ -87,18 +87,14 @@ export default {
       this.$store.dispatch('updateEditingIndex', null)
     },
     confirmDeactivateFunction (evt) {
-      //
-      // const func = this.levelControl.functions.activeFuncs[evt.oldIndex]
-      // func.category = 'staged'
-      // func.index = evt.newIndex
+      const {oldIndex, newIndex} = evt;
+      const func = this.levelControl.functions.activeFuncs[oldIndex]
+      func.category = 'staged'
+      func.index = newIndex
       // func.func = []
-      // this.levelControl.deactivateFunction(func)
-      this.$store.dispatch('confirmDeactivateFunction', {
-        activeIndex: evt.oldIndex,
-        stagedIndex: evt.newIndex
-      })
-
+      this.$store.dispatch('confirmDeactivateFunction', func)
       this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
+      // this.levelControl.deactivateFunction(func)
     }
   },
   components: {
