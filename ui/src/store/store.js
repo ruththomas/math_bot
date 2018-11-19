@@ -87,6 +87,7 @@ export default new Vuex.Store({
     authErrors: [],
     runCompiled: {},
     videoHint: {},
+    confirmDeactiveFunction: {},
     compilerControl: {},
     videoTimers: {},
     videoHintControl: {},
@@ -224,9 +225,15 @@ export default new Vuex.Store({
     },
     DELETE_MESSAGES (state) {
       state.messageList.map(m => m.delete())
+    },
+    CONFIRM_DEACTIVATE_FUNCTION (state, _func) {
+      state.confirmDeactiveFunction = _func
     }
   },
   actions: {
+    confirmDeactivateFunction ({commit}, _func) {
+      commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
+    },
     updateControls ({commit}, tokenId) {
       commit('UPDATE_CONTROLS')
     },
@@ -358,6 +365,8 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,
+
     getCompilerControl: state => state.compilerControl,
     getVideoHintControl: state => state.videoHintControl,
     getVideoTimers: state => state.videoTimers,

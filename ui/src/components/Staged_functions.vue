@@ -9,7 +9,7 @@
         class="staged-functions"
         :list="stagedFunctions"
         :options="draggableOptions"
-        @add="deactivateFunction"
+        @add="confirmDeactivateFunction"
       >
         <function-box
           v-for="(func, ind) in stagedFunctions"
@@ -67,12 +67,15 @@ export default {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
       this.$store.dispatch('updateEditingIndex', null)
     },
-    deactivateFunction (evt) {
-      const func = this.levelControl.functions.activeFuncs[evt.oldIndex]
+    confirmDeactivateFunction (evt) {
+      const {oldIndex, newIndex} = evt
+      const func = this.levelControl.functions.activeFuncs[oldIndex]
       func.category = 'staged'
-      func.index = evt.newIndex
-      func.func = []
-      this.levelControl.deactivateFunction(func)
+      func.index = newIndex
+      // func.func = []
+      this.$store.dispatch('confirmDeactivateFunction', func)
+      this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
+      // this.levelControl.deactivateFunction(func)
     }
   },
   components: {
