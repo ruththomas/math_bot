@@ -1,7 +1,5 @@
 <template>
-  <splash-screen v-if="levelControl.continent === null"></splash-screen>
-  <div class="container-fluid robot" data-aos="fade-in" v-else>
-    <video-hint></video-hint>
+  <div class="container-fluid robot" data-aos="fade-in">
     <div
       @click="goToProfile()"
       class="return-to-profile"
@@ -9,8 +7,9 @@
     >
       <img :src="handlePicture(userProfile.picture)" />
     </div>
-    <step-congrats key="step-congrats"></step-congrats>
-    <div class="container">
+    <step-congrats v-if="levelControl.continent !== null" key="step-congrats"></step-congrats>
+    <splash-screen v-if="levelControl.continent === null"></splash-screen>
+    <div v-else class="container">
 
       <div class="row" style="position: relative;">
         <trash></trash>
@@ -66,15 +65,11 @@ import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
 import StepCongrats from './Step_congrats'
-import VideoHint from './Video_hint'
 import LevelCongrats from './Level_congrats'
 import AdvancedMode from './Advanced_mode'
 
 import Confirm_deactivate_func from './Confirm_deactivate_func'
 export default {
-  mounted () {
-    this.videoHintControl.showFreeHint(this.levelControl.continent.freeHint)
-  },
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
@@ -208,7 +203,6 @@ export default {
     PopoverBucket,
     StepCongrats,
     LevelCongrats,
-    VideoHint,
     AdvancedMode
   }
 }

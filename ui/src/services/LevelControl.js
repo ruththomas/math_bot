@@ -1,9 +1,9 @@
 import Ws from './Ws'
-import $router from '../router'
 import Robot from './RobotState'
 import RunCompiled from './RunCompiled'
 import _ from 'underscore'
 import circular from 'circular-json'
+import $store from '../store/store'
 
 class LevelControl extends Ws {
   constructor () {
@@ -48,7 +48,7 @@ class LevelControl extends Ws {
     this.starSystem = starSystemData
   }
 
-  _setContinent ({pathAndContinent: {path, builtContinent}}) {
+  _setContinent ({pathAndContinent: {path, builtContinent}}, dontShowHint) {
     this.continent = builtContinent
     this.path = path
     const robotState = this.continent.initialRobotState
@@ -57,6 +57,9 @@ class LevelControl extends Ws {
     this.functions = this.continent.lambdas
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
+    if (!dontShowHint) {
+      $store.state.videoHintControl.showFreeHint(this.continent.freeHint)
+    }
   }
 
   _resetContinent ({pathAndContinent: {path, builtContinent}}) {
@@ -186,14 +189,13 @@ class LevelControl extends Ws {
           this._setGalaxy(res)
           break
         case 'pathAndContinent':
-          this._setContinent(res)
+          this._setContinent(res, true)
           break
         default:
           console.error(res.status, res.message)
       }
     })
     this._send(JSON.stringify({action: 'init'}))
-    $router.push({path: '/profile'})
   }
 }
 
