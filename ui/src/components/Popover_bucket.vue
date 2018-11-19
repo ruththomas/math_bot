@@ -25,9 +25,6 @@ export default {
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    },
-    editingIndex () {
-      return this.$store.getters.getEditingIndex
     }
   },
   watch: {

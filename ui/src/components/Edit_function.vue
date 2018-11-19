@@ -64,7 +64,6 @@
 
 <script>
 import draggable from 'vuedraggable'
-import {_} from 'underscore'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
@@ -79,9 +78,6 @@ export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
-    },
-    gridMap () {
-      return this.levelControl.continent.gridMap
     },
     robot () {
       return this.levelControl.robot
@@ -101,12 +97,8 @@ export default {
     editingIndex () {
       return this.$store.getters.getEditingIndex
     },
-
     sizeLimit () {
-      return this.editingFunction.sizeLimit < 0 ? 10000 : this.editingFunction.sizeLimit
-    },
-    stats () {
-      return this.$store.getters.getStats
+      return this.editingFunction.sizeLimit
     },
     colorSelected () {
       return this.colors[this.currentColor]
@@ -125,9 +117,6 @@ export default {
     },
     cmdImages () {
       return this.permanentImages.cmdImages
-    },
-    funcNcmdImages () {
-      return _.extend(this.funcImages, this.cmdImages)
     }
   },
   data () {
