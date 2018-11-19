@@ -2,12 +2,11 @@ package actors
 
 import actors.CurrentStatsActor.StatsDoneUpdating
 import actors.messages._
-import actors.messages.level.LevelControl
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{Actor, ActorRef, Props}
 import akka.util.Timeout
 import compiler.operations.NoOperation
-import compiler.processor.{ Frame, Processor, Register }
-import compiler.{ Compiler, GridAndProgram, Point }
+import compiler.processor.{Frame, Processor, Register}
+import compiler.{Compiler, GridAndProgram, Point}
 import configuration.CompilerConfiguration
 import controllers.MathBotCompiler
 import javax.inject.Inject
@@ -26,18 +25,18 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
 
   import MathBotCompiler._
 
-  private implicit val ec : ExecutionContextExecutor = context.dispatcher
+  private implicit val ec: ExecutionContextExecutor = context.dispatcher
 
   implicit val timeout: Timeout = 5000.minutes
 
   private case class ProgramState(stream: Stream[Frame],
-                          iterator: Iterator[Frame],
-                          grid: GridMap,
-                          program: GridAndProgram,
-                          clientFrames: List[ClientFrame] = List.empty[ClientFrame],
-                          stepCount: Int = 0,
-                          leftover: Option[Frame] = None,
-                          exitOnSuccess: Boolean = false) {
+                                  iterator: Iterator[Frame],
+                                  grid: GridMap,
+                                  program: GridAndProgram,
+                                  clientFrames: List[ClientFrame] = List.empty[ClientFrame],
+                                  stepCount: Int = 0,
+                                  leftover: Option[Frame] = None,
+                                  exitOnSuccess: Boolean = false) {
     def addSteps(steps: Int): ProgramState = this.copy(stepCount = this.stepCount + steps)
     def withLeftover(l: Frame): ProgramState = this.copy(leftover = Some(l))
   }
@@ -89,7 +88,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       .map(_.mkString("\n"))
       .getOrElse(" No Grid")
   }
-  */
+   */
 
   private def sendFrames(programState: ProgramState, clientFrames: List[ClientFrame]): Unit = {
     out ! CompilerOutput(clientFrames, programState.grid.problem)

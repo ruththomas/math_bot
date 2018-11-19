@@ -1,10 +1,12 @@
-package actors.messages.level
+package actors
+
 import actors.messages.AssignedFunction
+import actors.messages.level._
 import akka.http.scaladsl.util.FastFuture
 import com.google.inject.Inject
 import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
-import level_gen.models.{CelestialSystem, ContinentStruct}
+import level_gen.models.CelestialSystem
 import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,7 +42,6 @@ class LevelControl @Inject()(
   }
 
   /*
-   * !! Possibly not needed !!
    * Assembles star system data back into its nested data structure
    * */
   def getStarSystemData(tokenId: TokenId, path: Option[String]): Future[StarSystemData] = {
@@ -107,7 +108,6 @@ class LevelControl @Inject()(
       path: String
   ): (Option[AssignedFunction], Option[AssignedFunction]) = {
     val planet = getPlanetData(path)
-    val p = 0
     (
       planet.children.flatMap(_.continentStruct.get.preBuiltActive).lastOption,
       planet.children.flatMap(_.continentStruct.get.assignedStaged).lastOption
@@ -148,6 +148,9 @@ class LevelControl @Inject()(
       .children(path.drop(4).mkString("").toInt)
   }
 
+  /*
+   * Gets list of
+   * */
   def getVideoIds(path: String): List[String] = {
     getContinentData(path).continentStruct.map(_.videoHints).getOrElse(List.empty[String])
   }
@@ -206,7 +209,7 @@ class LevelControl @Inject()(
   }
 
   /*
-   * Recursively updates all instances of a functions color, name, (todo displayImage)
+   * Recursively updates all instances of a functions color, name, displayName
    * */
   private def changedAllInstances(functions: List[Function], function: Function): List[Function] = {
     functions.map { ft =>
@@ -221,6 +224,11 @@ class LevelControl @Inject()(
     }
   }
 
+  /*
+   * Used to activate or deactivate a function (move from staged to active or vis versa)
+   * Passed in function index should be new index in list
+   * Passed in function category should be new list (staged or active)
+   * */
   def activateDeactivateFunction(tokenId: TokenId, function: Function): Future[PreparedFunctions] = {
     for {
       functions <- getFunctions(tokenId)
@@ -279,11 +287,18 @@ class LevelControl @Inject()(
     } yield PathAndContinent(newPath, continent)
   }
 
+  /*
+   * Used to update path in db
+   * */
   def updatePath(tokenId: TokenId, path: String): Future[String] =
     for {
       _ <- statsDAO.updatePath(tokenId, path)
     } yield path
 
+  /*
+   * Used to unlock all levels
+   * In the future this should be part of the admin screen
+   * */
   def unlock(tokenId: TokenId): Future[Stats] = {
     for {
       _ <- getStats(tokenId)
