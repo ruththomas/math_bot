@@ -50,23 +50,8 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
     robot () {
       return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
-    mainFunction () {
-      return this.levelControl.functions.main
-    },
-    mainFunctionFunc () {
-      return this.mainFunction.func
     },
     runCompiled () {
       return this.levelControl.runCompiled
