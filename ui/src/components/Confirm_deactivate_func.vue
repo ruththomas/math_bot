@@ -84,7 +84,9 @@ export default {
   methods: {
 
     deactivateFunction () {
-      BuildUtils.deactivateFunction(this.confirmDeactiveFunction)
+      const index = this.confirmDeactiveFunction.stagedIndex
+      const func = this.levelControl.functions.activeFuncs[index]
+      this.levelControl.deactivateFunction(func)
 
       this.hide()
       this.$store.dispatch('confirmDeactivateFunction', {

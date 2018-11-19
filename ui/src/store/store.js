@@ -90,7 +90,7 @@ export default new Vuex.Store({
     confirmDeactiveFunction: {
       activeIndex: null,
       stagedIndex: null,
-    }
+    },
     compilerControl: {},
     videoTimers: {},
     videoHintControl: {},

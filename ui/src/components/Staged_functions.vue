@@ -86,13 +86,13 @@ export default {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
       this.$store.dispatch('updateEditingIndex', null)
     },
-    deactivateFunction (evt) {
-      const func = this.levelControl.functions.activeFuncs[evt.oldIndex]
-      func.category = 'staged'
-      func.index = evt.newIndex
-      func.func = []
-      this.levelControl.deactivateFunction(func)
     confirmDeactivateFunction (evt) {
+      //
+      // const func = this.levelControl.functions.activeFuncs[evt.oldIndex]
+      // func.category = 'staged'
+      // func.index = evt.newIndex
+      // func.func = []
+      // this.levelControl.deactivateFunction(func)
       this.$store.dispatch('confirmDeactivateFunction', {
         activeIndex: evt.oldIndex,
         stagedIndex: evt.newIndex
