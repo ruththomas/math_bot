@@ -12,7 +12,7 @@
       @remove="removed"
     >
       <function-box
-        v-for="(func, ind) in list"
+        v-for="(func, ind) in list.concat(placeholders)"
         :class="[
           func.placeholder ? 'placeholder-piece noDrag' : 'actual-piece',
           ind === sizeLimit - 1 && sizeLimit < 100 && !placeholders.length ? 'full-indicator' : ''
@@ -23,7 +23,7 @@
         :collection="list.concat(placeholders)"
         :origin="origin"
         :data-created-id="func.created_id"
-        @click.native="func.type === 'function' ? editFunction($event, func, findIndex(func)) : () => {}"
+        @click.native="func.category === 'function' ? editFunction($event, func) : () => {}"
       ></function-box>
     </draggable>
   </div>
@@ -44,23 +44,6 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
-    robot () {
-      return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
-    mainFunctionFunc () {
-      const mainToken = this.levelControl.functions
-      return mainToken === null ? [] : mainToken.func
-    },
-
     placeholders () {
       if (this.sizeLimit < 100 && this.sizeLimit > 0) {
         return this.createPlaceHolders(this.sizeLimit).slice(this.list.length)
@@ -71,17 +54,8 @@ export default {
     showMesh () {
       return this.$store.getters.getShowMesh
     },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    },
-    editingIndex () {
-      return this.$store.getters.getEditingIndex
-    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    },
-    activeFunctions () {
-      return this.$store.getters.getActiveFunctions
     }
   },
   data () {
@@ -90,16 +64,6 @@ export default {
     }
   },
   methods: {
-    findIndex (func, _currentInd) {
-      _currentInd = !_currentInd ? 0 : _currentInd
-      const currentFunc = this.activeFunctions[_currentInd]
-      if (func.created_id === currentFunc.created_id) {
-        return _currentInd
-      } else if (Number(func.created_id) < 2000 || _currentInd > func.length) {
-        return undefined
-      }
-      return this.findIndex(func, _currentInd + 1)
-    },
     toggleEditFunction (ind) {
       this.$store.dispatch('updateEditingIndex', ind)
       this.$store.dispatch('updateFunctionAreaShowing', ind === null ? 'editMain' : 'editFunction')
@@ -111,17 +75,9 @@ export default {
       }
       this.$store.dispatch('addMessage', messageBuilder)
     },
-    handleEditFunctionEvent (evt) {
+    editFunction (evt, func) {
+      this.toggleEditFunction(func.index)
       this.$store.dispatch('updateEditFunctionEvent', evt.target)
-    },
-    editFunction (evt, func, ind) {
-      if (ind !== undefined) {
-        $('#open-staged').show()
-        this.handleEditFunctionEvent(evt)
-        const i = ind === this.editingIndex ? null : ind
-        if (i !== null) this.editingFunctionMessage(func)
-        this.toggleEditFunction(i)
-      }
     },
     createPlaceHolders (size) {
       return _.chain(size)

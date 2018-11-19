@@ -1,7 +1,9 @@
 import Ws from './Ws'
-import $router from '../router'
 import Robot from './RobotState'
 import RunCompiled from './RunCompiled'
+import _ from 'underscore'
+import circular from 'circular-json'
+import $store from '../store/store'
 
 class LevelControl extends Ws {
   constructor () {
@@ -17,6 +19,10 @@ class LevelControl extends Ws {
     this.getContinent = this.getContinent.bind(this)
     this.updateFunction = this.updateFunction.bind(this)
     this.updatePlanet = this.updatePlanet.bind(this)
+    this.updateFunctionProperties = this.updateFunctionProperties.bind(this)
+    this._resetContinent = this._resetContinent.bind(this)
+    this._prepFunc = this._prepFunc.bind(this)
+    this._setFunctions = this._setFunctions.bind(this)
 
     this._openSocket(this._init)
   }
@@ -42,7 +48,7 @@ class LevelControl extends Ws {
     this.starSystem = starSystemData
   }
 
-  _setContinent ({pathAndContinent: {path, builtContinent}}) {
+  _setContinent ({pathAndContinent: {path, builtContinent}}, dontShowHint) {
     this.continent = builtContinent
     this.path = path
     const robotState = this.continent.initialRobotState
@@ -51,7 +57,14 @@ class LevelControl extends Ws {
     this.functions = this.continent.lambdas
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
-    // console.log(JSON.stringify(this.functions, null, 2))
+    if (!dontShowHint) {
+      $store.state.videoHintControl.showFreeHint(this.continent.freeHint)
+    }
+  }
+
+  _resetContinent ({pathAndContinent: {path, builtContinent}}) {
+    this.continent = builtContinent
+    this.functions = this.continent.lambdas
   }
 
   _updatePath () {
@@ -59,9 +72,46 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'update-path', path: this.path}))
   }
 
+  _setFunctions (functions) {
+    this.functions = functions
+  }
+
+  activateFunction (func) {
+    this._wsOnMessage((updated) => {
+      this._setFunctions(updated.preparedFunctions)
+    })
+    this._send(JSON.stringify({action: 'activate-function', 'function': func}))
+  }
+
+  deactivateFunction (func) {
+    this._wsOnMessage((updated) => {
+      this._setFunctions(updated.preparedFunctions)
+    })
+    this._send(JSON.stringify({action: 'deactivate-function', 'function': func}))
+  }
+
+  /*
+  * removes func contents from nested functions then stringifies function
+  * deals with circular reference issue with recursive functions
+  * to be used with update function
+  * */
+  _prepFunc (func) {
+    const copied = circular.stringify(func)
+    const parsed = circular.parse(copied)
+    parsed.func = parsed.func.map((f) => {
+      return _.omit(f, 'func')
+    })
+    return parsed
+  }
+
   updateFunction (func) {
     this._wsOnMessage(() => {}) // doing nothing with response for now
-    this._send(JSON.stringify({action: 'update-function', 'function': func}))
+    this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))
+  }
+
+  updateFunctionProperties (func) {
+    this._wsOnMessage(this._resetContinent)
+    this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
   }
 
   getPath () {
@@ -117,6 +167,18 @@ class LevelControl extends Ws {
     this._updatePath()
   }
 
+  getNextStarSystem () {
+    return this.galaxy.starSystems[Number(this.path[2]) + 1]
+  }
+
+  getNextPlanet () {
+    return this.galaxy.starSystems[this.path[2]].planets[Number(this.path[3]) + 1]
+  }
+
+  getPlanetStats () {
+    return this.galaxy.starSystems[this.path[2]].planets[this.path[3]].stats
+  }
+
   _init () {
     this._wsOnMessage((res) => {
       switch (Object.keys(res).filter((key) => key !== 'status')[0]) {
@@ -127,14 +189,13 @@ class LevelControl extends Ws {
           this._setGalaxy(res)
           break
         case 'pathAndContinent':
-          this._setContinent(res)
+          this._setContinent(res, true)
           break
         default:
           console.error(res.status, res.message)
       }
     })
     this._send(JSON.stringify({action: 'init'}))
-    $router.push({path: '/profile'})
   }
 }
 

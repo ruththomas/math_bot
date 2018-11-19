@@ -31,6 +31,8 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
         GetContinentData(pathOpt)
       case Some(LevelRequest(action, Some(function), _, _, _)) if action == "update-function" =>
         UpdateFunction(function)
+      case Some(LevelRequest(action, Some(function), _, _, _)) if action == "update-function-properties" =>
+        UpdateFunctionProperties(function)
       case Some(LevelRequest(action, _, _, Some(boolean), _)) if action == "advance-stats" =>
         RunWon(boolean)
       case Some(LevelRequest(action, _, _, _, _)) if action == "get-path" =>
@@ -45,6 +47,11 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
         ResetVideos(id, path)
       case Some(LevelRequest(action, _, Some(path), _, _)) if action == "update-path" =>
         UpdatePath(path)
+      case Some(LevelRequest(action, _, _, _, _)) if action == "unlock" =>
+        Unlock()
+      case Some(LevelRequest(action, Some(function), _, _, _))
+          if action == "activate-function" || action == "deactivate-function" =>
+        ActivateDeactivateFunction(function)
       case _ => ActorFailed("Bad json input")
     }
   }

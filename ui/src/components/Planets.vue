@@ -4,7 +4,7 @@
       v-for="(planet, ind) in planets" :key="'planet/' + planet.id"
       class="planet"
       :class="[
-        'planet-' + (ind + 1),
+        planet.stats.name,
         planet.stats.active ? 'active' : 'inactive',
         planet.stats.active && Number(selectedPlanet) === ind ? 'selected' : ''
       ]"
@@ -17,18 +17,6 @@
 export default {
   name: 'planets',
   computed: {
-    level () {
-      return this.$store.getters.getLevel
-    },
-    levels () {
-      return this.$store.getters.getLevels
-    },
-    steps () {
-      return this.$store.getters.getSteps
-    },
-    tokenId () {
-      return this.$store.getters.getToken.token_id
-    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     }
@@ -46,17 +34,25 @@ export default {
   $gradient-size: 50%;
   $outer-shadow-blur: 100px;
   $outer-shadow-size: 5px;
-  $planet-1-color: rgba(202, 122, 255, 1);
-  $planet-2-color: rgba(242, 92, 92, 1);
-  $planet-3-color: rgba(74, 144, 226, 1);
-  $planet-4-color: rgba(255, 152, 177, 1);
-  $planet-5-color: rgba(80, 227, 194, 1);
+  $BasicProgramming-color: rgba(202, 122, 255, 1);
+  $Counting-color: rgba(242, 92, 92, 1);
+  $Numbers-color: rgba(74, 144, 226, 1);
+  $Recursion-color: rgba(255, 152, 177, 1);
+  $Conditionals-color: rgba(80, 227, 194, 1);
+  $Addition-color: rgba(41, 254, 28, 1);
+  $Subtraction-color: rgba(253, 254, 137, 1);
+  $Multiplication-color: rgba(254, 151, 78, 1);
+  $Division-color: rgba(64, 169, 254, 1);
   $inactive-color: rgba(104, 104, 104, 1);
-  $planet-1-size: 23vmin;
-  $planet-2-size: 16vmin;
-  $planet-3-size: 20vmin;
-  $planet-4-size: 14vmin;
-  $planet-5-size: 12vmin;
+  $BasicProgramming-size: 23vmin;
+  $Counting-size: 16vmin;
+  $Numbers-size: 20vmin;
+  $Recursion-size: 14vmin;
+  $Conditionals-size: 12vmin;
+  $Addition-size: 20vmin;
+  $Subtraction-size: 11vmin;
+  $Multiplication-size: 18vmin;
+  $Division-size: 15vmin;
   $planet-gradient: rgba(0, 0, 0, 1);
 
   .space {
@@ -71,79 +67,116 @@ export default {
     border-radius: 50%;
   }
 
-  .planet-1 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-1-color, $planet-gradient);
-    height: $planet-1-size;
-    width: $planet-1-size;
+  .BasicProgramming {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $BasicProgramming-color, $planet-gradient);
+    height: $BasicProgramming-size;
+    width: $BasicProgramming-size;
     top: 12%;
     left: 7%;
-    /*box-shadow: inset 0 0 120px #CA7AFF*/
   }
 
-  .planet-2 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-2-color, $planet-gradient);
-    height: $planet-2-size;
-    width: $planet-2-size;
+  .Counting {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Counting-color, $planet-gradient);
+    height: $Counting-size;
+    width: $Counting-size;
     top: 2%;
     left: 50%;
-    /*box-shadow: inset 0 0 120px #F25C5C;*/
   }
 
-  .planet-3 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-3-color, $planet-gradient);
-    height: $planet-3-size;
-    width: $planet-3-size;
+  .Numbers {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Numbers-color, $planet-gradient);
+    height: $Numbers-size;
+    width: $Numbers-size;
     top: 33%;
     left: 60%;
-    /*box-shadow: inset 0 0 120px #4A90E2;*/
   }
 
-  .planet-4 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-4-color, $planet-gradient);
-    height: $planet-4-size;
-    width: $planet-4-size;
+  .Recursion {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Recursion-color, $planet-gradient);
+    height: $Recursion-size;
+    width: $Recursion-size;
     top: 65%;
     left: 50%;
-    /*box-shadow: inset 0 0 120px #FF98B1;*/
   }
 
-  .planet-5 {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, $planet-gradient);
-    height: $planet-5-size;
-    width: $planet-5-size;
+  .Conditionals {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Conditionals-color, $planet-gradient);
+    height: $Conditionals-size;
+    width: $Conditionals-size;
     top: 80%;
     left: 25%;
-    /*box-shadow: inset 0 0 120px #50E3C2;*/
   }
 
-  .planet-1.selected {
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-1-color;
-    /*box-shadow: inset 0 0 120px #CA7AFF, 0 0 120px #CA7AFF;*/
+  .Addition {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Addition-color, $planet-gradient);
+    height: $Addition-size;
+    width: $Addition-size;
+    top: 75%;
+    left: 20%;
   }
 
-  .planet-2.selected {
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-2-color;
-    /*box-shadow: inset 0 0 120px #F25C5C, 0 0 120px #F25C5C;*/
+  .Subtraction {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Subtraction-color, $planet-gradient);
+    height: $Subtraction-size;
+    width: $Subtraction-size;
+    top: 60%;
+    left: 60%;
   }
 
-  .planet-3.selected {
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-3-color;
-    /*box-shadow: inset 0 0 120px #4A90E2, 0 0 120px #4A90E2;*/
+  .Multiplication {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Multiplication-color, $planet-gradient);
+    height: $Multiplication-size;
+    width: $Multiplication-size;
+    top: 40%;
+    left: 15%;
   }
 
-  .planet-4.selected {
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-4-color;
-    /*box-shadow: inset 0 0 120px #FF98B1, 0 0 120px #FF98B1;*/
+  .Division {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+    height: $Division-size;
+    width: $Division-size;
+    top: 20%;
+    left: 50%;
   }
 
-  .planet-5.selected {
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-5-color;
-    /*box-shadow: inset 0 0 120px #50E3C2, 0 0 120px #50E3C2;*/
+  .BasicProgramming.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $BasicProgramming-color;
+  }
+
+  .Counting.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Counting-color;
+  }
+
+  .Numbers.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Numbers-color;
+  }
+
+  .Recursion.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Recursion-color;
+  }
+
+  .Conditionals.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Conditionals-color;
+  }
+
+  .Addition.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Addition-color;
+  }
+
+  .Subtraction.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Subtraction-color;
+  }
+
+  .Multiplication.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Multiplication-color;
+  }
+
+  .Division.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Division-color;
   }
 
   .planet.inactive {
     opacity: 0.8;
     background: radial-gradient(circle at $gradient-size $gradient-size, $inactive-color, $planet-gradient);
-    /*box-shadow: inset 0 0 120px #686868;*/
   }
 </style>

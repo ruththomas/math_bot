@@ -87,6 +87,7 @@ export default new Vuex.Store({
     authErrors: [],
     runCompiled: {},
     videoHint: {},
+    confirmDeactiveFunction: {},
     compilerControl: {},
     videoTimers: {},
     videoHintControl: {},
@@ -168,9 +169,6 @@ export default new Vuex.Store({
     UPDATE_STATS (state, stats) {
       state.auth.userToken.stats = stats
     },
-    CREATE_LOCK (state) {
-
-    },
     PUSH_RANDOM_IMAGE (state, image) {
       state.auth.userToken.randomImages.push(image)
     },
@@ -219,14 +217,23 @@ export default new Vuex.Store({
       state.swiperSlide = slide
     },
     ADD_MESSAGE: addMessage,
+    DELETE_ALL_MESSAGES (state) {
+      state.messageList = []
+    },
     REMOVE_MESSAGE (state, ind) {
       state.messageList[ind].delete()
     },
     DELETE_MESSAGES (state) {
       state.messageList.map(m => m.delete())
+    },
+    CONFIRM_DEACTIVATE_FUNCTION (state, _func) {
+      state.confirmDeactiveFunction = _func
     }
   },
   actions: {
+    confirmDeactivateFunction ({commit}, _func) {
+      commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
+    },
     updateControls ({commit}, tokenId) {
       commit('UPDATE_CONTROLS')
     },
@@ -350,11 +357,16 @@ export default new Vuex.Store({
     removeMessage ({commit}, ind) {
       commit('REMOVE_MESSAGE', ind)
     },
+    deleteAllMessages ({commit}) {
+      commit('DELETE_ALL_MESSAGES')
+    },
     deleteMessages ({commit}) {
       commit('DELETE_MESSAGES')
     }
   },
   getters: {
+    getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,
+
     getCompilerControl: state => state.compilerControl,
     getVideoHintControl: state => state.videoHintControl,
     getVideoTimers: state => state.videoTimers,

@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import assets from '../assets/assets'
 import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
@@ -100,44 +99,14 @@ export default {
     problem () {
       return this.levelControl.continent.problem.problem
     },
-
-    currentStepData () {
-      return this.$store.getters.getStepData
-    },
-    level () {
-      return this.currentStepData.level
-    },
-    step () {
-      return this.currentStepData.step
-    },
     robotOrientation () {
       return this.robot.robotFacing
     },
     toolImages () {
-      return assets.tools
-    },
-    robotDeactivated () {
-      return this.$store.getters.getRobotDeactivated
+      return this.permanentImages.tools
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
-    },
-    messageShowing () {
-      if (this.congratsShowing) {
-        return true
-      } else return !!this.tryAgainShowing
-    },
-    currentPaused () {
-      return this.$store.getters.getPaused
-    },
-    mode () {
-      return this.$store.getters.getMode
-    },
-    stepData () {
-      return this.$store.getters.getStepData
-    },
-    hintShowing () {
-      return this.$store.getters.getHintShowing
     }
   },
   data () {
@@ -152,17 +121,6 @@ export default {
       const pNumber = Number(problem)
       if (!isNaN(pNumber) && pNumber > 0) {
         return problem
-      }
-    },
-    pause () {
-      this.robot.state = 'paused'
-    },
-    convertToImgName (spaceName) {
-      switch (spaceName) {
-        case 'wall':
-          return spaceName
-        default:
-          return 'floor'
       }
     },
     closePopover: utils.closePopover

@@ -3,14 +3,14 @@
     <function-drop
       :id="'edit-main'"
       :class="'edit-main-drop'"
-      :list="mainFunctionFunc"
+      :list="mainFunction.func"
       :options="mainDraggableOptions"
       :change="editFunction"
       :add="add"
       :start="moving"
       :end="end"
       :origin="'editMain'"
-      :size-limit="stepData.mainMax"
+      :size-limit="levelControl.continent.mainMax"
     ></function-drop>
     <control-bar
       :wipe-function="wipeFunction"
@@ -21,8 +21,6 @@
 </template>
 
 <script>
-import {_} from 'underscore'
-import utils from '../services/utils'
 import buildUtils from '../services/BuildFunction'
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
@@ -37,75 +35,18 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
-    robot () {
-      return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
     mainFunction () {
       return this.levelControl.functions.main
-    },
-    mainFunctionFunc () {
-      return this.mainFunction.func
     },
     runCompiled () {
       return this.levelControl.runCompiled
     },
-
-    editingFunction () {
-      return this.$store.getters.getMainFunction.func[this.editingIndex]
-    },
-    congratsShowing () {
-      return this.$store.getters.getCongratsShowing
-    },
-    tryAgainShowing () {
-      return this.$store.getters.getTryAgainShowing
-    },
-    showMesh () {
-      return this.$store.getters.getShowMesh
-    },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    },
-    funcImages () {
-      return this.permanentImages.funcImages
-    },
-    cmdImages () {
-      return this.permanentImages.cmdImages
-    },
-    funcNcmdImages () {
-      return _.extend(this.funcImages, this.cmdImages)
-    },
-    editingIndex () {
-      return this.$store.getters.getEditingIndex
-    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    },
-    currentFunc () {
-      return this.$store.getters.getFunctions[this.$store.getters.getCurrentFunction]
-    },
-    stepData () {
-      return this.$store.getters.getStepData
-    },
-    currentColor () {
-      return this.$store.getters.getColorSelected
-    },
-    colors () {
-      return this.$store.getters.getColors
     }
   },
   data () {
     return {
-      buttonSize: $('.commands > button').width() || 70,
-      screenSize: $('#robot').width(),
       mainDraggableOptions: {
         group: {
           name: 'commands-slide',
@@ -134,15 +75,10 @@ export default {
     },
     editFunction () {
       this.levelControl.updateFunction(this.mainFunction)
-      const mainBalance = this.mainFunctionFunc.length < this.levelControl.continent.mainMax
+      const mainBalance = this.mainFunction.func.length < this.levelControl.continent.mainMax
       this.togglePut(mainBalance)
       if (!mainBalance) {
         this.fullMessage()
-      }
-    },
-    toggleFunctionEdit (func, ind) {
-      if (func.name) {
-        utils.toggleFunctionEdit(this, func, ind, 'editMain')
       }
     },
     wipeFunction () {

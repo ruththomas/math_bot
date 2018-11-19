@@ -30,6 +30,9 @@ object LevelActor {
   final case class WatchedVideo(id: String, pathOpt: Option[String])
   final case class ResetVideos(id: String, path: String)
   final case class UpdatePath(path: String)
+  final case class UpdateFunctionProperties(function: Function)
+  final case class ActivateDeactivateFunction(function: Function)
+  final case class Unlock()
 
   def props(out: ActorRef,
             tokenId: TokenId,
@@ -121,14 +124,39 @@ class LevelActor @Inject()(out: ActorRef,
         self ! GetGalaxyData(None)
         self ! GetContinentData(None)
       }
+    /*
+     * Updates top level function (not nest instances of function)
+     * this is used when adding functions to the func property
+     * not good for color, name, or displayImages changes (use UpdateFunctionProperties instead)
+     * */
     case UpdateFunction(function) =>
       for {
         updatedFunction <- levelControl.updateFunction(tokenId, function)
       } yield out ! updatedFunction
+    /*
+     * Updates color, name, and displayImage of every instance of the passed in function
+     * */
+    case UpdateFunctionProperties(function) =>
+      for {
+        updatedPathAndContinent <- levelControl.updateFunctionProperties(tokenId, function)
+      } yield out ! updatedPathAndContinent
     case UpdatePath(path) =>
       for {
         _ <- levelControl.updatePath(tokenId, path)
       } yield out ! path
+    /*
+     * Moves staged to active or active to staged
+     * Passed in function must include new category (where function is being moved to)
+     * Passed in function muse include new index position (position function should be in list)
+     * */
+    case ActivateDeactivateFunction(function) =>
+      for {
+        preparedFunctions <- levelControl.activateDeactivateFunction(tokenId, function)
+      } yield out ! preparedFunctions
+    case Unlock() =>
+      for {
+        updated <- levelControl.unlock(tokenId)
+      } yield out ! updated
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }

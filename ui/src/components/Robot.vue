@@ -1,7 +1,5 @@
 <template>
-  <splash-screen v-if="levelControl.continent === null"></splash-screen>
-  <div class="container-fluid robot" data-aos="fade-in" v-else>
-    <video-hint></video-hint>
+  <div class="container-fluid robot" data-aos="fade-in">
     <div
       @click="goToProfile()"
       class="return-to-profile"
@@ -9,8 +7,9 @@
     >
       <img :src="handlePicture(userProfile.picture)" />
     </div>
-    <step-congrats key="step-congrats"></step-congrats>
-    <div class="container">
+    <step-congrats v-if="levelControl.continent !== null" key="step-congrats"></step-congrats>
+    <splash-screen v-if="levelControl.continent === null"></splash-screen>
+    <div v-else class="container">
 
       <div class="row" style="position: relative;">
         <trash></trash>
@@ -25,7 +24,7 @@
         <div v-if="!advancedMode" class="row container" style="flex: 1;">
           <div class="row" style="padding: 0; display: flex; flex: 1; position: relative; z-index: 1;">
             <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
-            <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
+            <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
           </div>
 
           <div class="row" style="padding: 0; display: flex; flex: 1;">
@@ -48,16 +47,14 @@
         <span :style="{opacity: !advancedMode ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
       </div>
     </div>
+    <confirm-deactivate-func></confirm-deactivate-func>
   </div>
 </template>
 
 <script>
-import Identicon from 'identicon.js'
-import md5 from 'md5'
 import Grid from './Grid'
 import Commands from './Commands'
-import Editmain from './Edit_main'
-import Editfunction from './Edit_function'
+import EditMain from './Edit_main'
 import Trash from './Trash'
 import Messages from './Messages'
 import ControlPanel from './Control_panel'
@@ -65,102 +62,26 @@ import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
 import StepCongrats from './Step_congrats'
-import VideoHint from './Video_hint'
 import LevelCongrats from './Level_congrats'
 import AdvancedMode from './Advanced_mode'
+import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 
 export default {
-  mounted () {
-    this.videoHintControl.showFreeHint(this.levelControl.continent.freeHint)
-  },
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
-    robot () {
-      return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
-    videoHintControl () {
-      return this.$store.getters.getVideoHintControl
-    },
-
-    runCompiled () {
-      return this.$store.getters.getRunCompiled
-    },
     userProfile () {
       return this.auth.userProfile
-    },
-    tokenId () {
-      return this.$store.getters.getTokenId
-    },
-    stats () {
-      return this.$store.getters.getStats
     },
     auth () {
       return this.$store.getters.getAuth
     },
-    splashScreenShowing () {
-      return this.$store.getters.getSplashScreenShowing
-    },
-    Functions () {
-      return this.$store.getters.getFunctions
-    },
-    currentFunction () {
-      return this.$store.getters.getCurrentFunction
-    },
-    programPanel () {
-      return this.$store.getters.getProgramPanelShowing
-    },
-    commands () {
-      return this.$store.getters.getCommands
-    },
-    congratsShowing () {
-      return this.$store.getters.getCongratsShowing
-    },
-    tryAgainShowing () {
-      return this.$store.getters.getTryAgainShowing
-    },
-    game () {
-      return this.$store.getters.getGame
-    },
-    userName () {
-      let currentUser = this.$store.getters.getCurrentUser
-      const loggedIn = this.$store.getters.getLoggedIn
-      if (loggedIn) {
-        if (currentUser.nickname) {
-          return new Identicon(md5(this.$store.getters.getCurrentUser.nickname), 30).toString()
-        }
-      }
-    },
-    loggedInShowing () {
-      return this.$store.getters.getLoggedInShowing
-    },
-    loggedIn () {
-      return this.$store.getters.getLoggedIn
-    },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    },
-    editFunctionShowing () {
-      return this.$store.getters.getEditFunctionShowing
-    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
     },
-    swiperSlide () {
-      return this.$store.getters.getSwiperSlide
-    },
-    activeFunctionGroups () {
-      return this.$store.getters.getActiveFunctionGroups
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
   },
   data () {
@@ -170,12 +91,6 @@ export default {
     }
   },
   methods: {
-    showProgramPanel () {
-      this.$store.dispatch('controlProgramPanelShowing')
-    },
-    adjustSpeed () {
-      this.speed = this.speed === 500 ? 200 : 500
-    },
     goToProfile () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
       this.$store.dispatch('deleteMessages')
@@ -193,11 +108,11 @@ export default {
     }
   },
   components: {
+    ConfirmDeactivateFunc,
     Grid,
     Commands,
-    Editfunction,
     Trash,
-    Editmain,
+    EditMain,
     Messages,
     ControlPanel,
     SplashScreen,
@@ -205,7 +120,6 @@ export default {
     PopoverBucket,
     StepCongrats,
     LevelCongrats,
-    VideoHint,
     AdvancedMode
   }
 }

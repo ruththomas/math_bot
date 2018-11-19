@@ -63,7 +63,7 @@ class GridAnimator {
     this.robotState = frame.robotState
     this.robot = $store.state.levelControl.robot
     this.grid = $store.state.levelControl.gridMap
-    this.toolList = $store.getters.getStepData.toolList
+    this.toolList = $store.state.levelControl.continent.toolList
     this.robotSpeed = this.robot.robotSpeed
     this.$robot = $('.robot')
 

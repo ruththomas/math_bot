@@ -70,18 +70,6 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
-    robot () {
-      return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
     commands () {
       return this.levelControl.functions.cmds
     },
@@ -91,36 +79,8 @@ export default {
     runCompiled () {
       return this.levelControl.runCompiled
     },
-
-    stagedFunctions () {
-      return this.$store.getters.getStagedFunctions
-    },
-    congratsShowing () {
-      return this.$store.getters.getCongratsShowing
-    },
-    tryAgainShowing () {
-      return this.$store.getters.getTryAgainShowing
-    },
-    evt () {
-      return this.commandEvt
-    },
-    mainFunctionFunc () {
-      return this.$store.getters.getMainFunction.func
-    },
-    stepData () {
-      return this.$store.getters.getStepData
-    },
-    currentStepData () {
-      return this.$store.getters.getStepData
-    },
-    token () {
-      return this.$store.getters.getToken
-    },
     editingIndex () {
       return this.$store.getters.getEditingIndex
-    },
-    editingFunction () {
-      return this.$store.getters.getActiveFunctions[this.editingIndex]
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
@@ -139,9 +99,6 @@ export default {
     },
     funcImages () {
       return this.permanentImages.funcImages
-    },
-    swiperSlide () {
-      return this.$store.getters.getSwiperSlide
     }
   },
   data () {
@@ -229,14 +186,9 @@ export default {
       const element = evt.added || evt.moved
       const newIndex = element.newIndex
       const func = element.element
-      console.log(newIndex)
-      console.log('func', func)
-      // if (evt.moved) {
-      //   buildUtils.moveFunction({
-      //     oldIndex: evt.moved.oldIndex,
-      //     newIndex: evt.moved.newIndex
-      //   })
-      // }
+      func.category = 'function'
+      func.index = newIndex
+      this.levelControl.activateFunction(func)
     }
   },
   components: {
