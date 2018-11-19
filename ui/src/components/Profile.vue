@@ -1,6 +1,7 @@
 <template>
   <div class="container profile">
     <div v-if="levelControl.galaxy !== null" class="star-system-nav">
+      <level-congrats key="level-congrats"></level-congrats>
       <b-button
         v-for="(starSystem, ind) in levelControl.galaxy.starSystems"
         :key="'star-system/' + ind"
@@ -10,7 +11,6 @@
       >{{starSystem.stats.name}}</b-button>
     </div>
     <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
-      <!--<level-congrats key="level-congrats" :congrats-data="congratsData"></level-congrats>-->
       <div class="star-systems">
         <star-system></star-system>
       </div>
@@ -75,23 +75,11 @@ export default {
       return this.$store.getters.getTokenId
     }
   },
-  data () {
-    return {
-      congratsData: {
-        path: '00000',
-        builtContinent: {
-          name: ''
-        }
-      }
-    }
-  },
   methods: {
     handleCongrats () {
       const showCongrats = this.$route.query.showCongrats
       if (showCongrats) {
-        this.congratsData = JSON.parse(showCongrats)
         this.$root.$emit('bv::show::modal', 'level-congrats-modal')
-        this.$router.push({query: {}})
       }
     },
     changeSystem (dir) {

@@ -2,6 +2,7 @@
   <b-modal
     id="level-congrats-modal"
     ref="level-congrats-modal"
+    @show="getCongratsData"
   >
     <div slot="modal-header">
       <img
@@ -10,19 +11,10 @@
     </div>
     <div class="text-minor">
       <div>You unlocked planet</div>
-      <div>{{parseCamelCase(congratsData.builtContinent.name)}}!</div>
-    </div>
-    <div class="text-minor">
-      <div>You beat all the levels!</div>
+      <div>{{parseCamelCase(nextPlanet.stats.name)}}!</div>
     </div>
     <div class="congrats-icon">
-      <img :class="`planet-${congratsData.path[3]}`" :src="permanentImages.planets[`planet${congratsData.path[3]}`]">
-    </div>
-    <div class="congrats-icon-robot">
-      <img :src="permanentImages.instructionsRobot">
-    </div>
-    <div class="text-minor">
-      <div>More coming soon!</div>
+      <img :class="nextPlanet.stats.name" :src="permanentImages.planets[nextPlanet.stats.name]">
     </div>
     <stars :continent-id="congratsData.path"></stars>
     <div class="text-minor">
@@ -68,31 +60,49 @@ export default {
       return `
         I beat planet ${this.congratsData.path[3]} continent ${this.congratsData.path.slice(4)} on mathbot.com!
       `
+    },
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
+    nextPlanet () {
+      return this.levelControl.getNextPlanet()
+    },
+    runCompiled () {
+      return this.levelControl.runCompiled
+    }
+  },
+  data () {
+    return {
+      congratsData: {
+        path: '00000',
+        builtContinent: {
+          name: ''
+        }
+      }
     }
   },
   methods: {
     parseCamelCase: utils.parseCamelCase,
-    levelNumber (levelName) {
-      return this.levels.reduce((num, l, i) => {
-        if (levelName === l.name) num = i + 1
-        return num
-      }, 1)
-    },
     quit () {
       this.runCompiled.quit()
     },
     next () {
       this.runCompiled.initializeNextStep()
+      this.$router.push({path: '/robot'})
     },
     closeCongrats () {
       this.runCompiled.stayOnLevel()
+    },
+    getCongratsData () {
+      const showCongrats = this.$route.query.showCongrats
+      this.congratsData = JSON.parse(showCongrats).pathAndContinent
+      this.$router.push({query: {}})
     }
   },
   components: {
     Stars,
     SocialSharing
-  },
-  props: ['congratsData']
+  }
 }
 </script>
 
@@ -110,13 +120,15 @@ export default {
   $gradient-size: 50%;
   $outer-shadow-blur: 100px;
   $outer-shadow-size: 5px;
-  $planet-1-color: rgba(202, 122, 255, 1);
-  $planet-2-color: rgba(242, 92, 92, 1);
-  $planet-3-color: rgba(74, 144, 226, 1);
-  $planet-4-color: rgba(255, 152, 177, 1);
-  $planet-5-color: rgba(80, 227, 194, 1);
-  $planet-6-color: rgba(184, 233, 134, 1);
-  $inactive-color: rgba(104, 104, 104, 1);
+  $BasicProgramming-color: rgba(202, 122, 255, 1);
+  $Counting-color: rgba(242, 92, 92, 1);
+  $Numbers-color: rgba(74, 144, 226, 1);
+  $Recursion-color: rgba(255, 152, 177, 1);
+  $Conditionals-color: rgba(80, 227, 194, 1);
+  $Addition-color: rgba(41, 254, 28, 1);
+  $Subtraction-color: rgba(253, 254, 137, 1);
+  $Multiplication-color: rgba(254, 151, 78, 1);
+  $Division-color: rgba(64, 169, 254, 1);
   $planet-1-size: 23vmin;
   $planet-2-size: 16vmin;
   $planet-3-size: 20vmin;
@@ -167,93 +179,40 @@ export default {
             border-radius: 50%;
           }
 
-          .planet-1 {
-            background: radial-gradient(circle at $gradient-size $gradient-size, $planet-1-color, $planet-gradient);
-            height: $planet-1-size;
-            width: $planet-1-size;
-            top: 12%;
-            left: 7%;
-            /*box-shadow: inset 0 0 120px #CA7AFF*/
+          .BasicProgramming {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $BasicProgramming-color, $planet-gradient);
           }
 
-          .planet-2 {
-            background: radial-gradient(circle at $gradient-size $gradient-size, $planet-2-color, $planet-gradient);
-            height: $planet-2-size;
-            width: $planet-2-size;
-            top: 2%;
-            left: 50%;
-            /*box-shadow: inset 0 0 120px #F25C5C;*/
+          .Counting {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Counting-color, $planet-gradient);
           }
 
-          .planet-3 {
-            background: radial-gradient(circle at $gradient-size $gradient-size, $planet-3-color, $planet-gradient);
-            height: $planet-3-size;
-            width: $planet-3-size;
-            top: 33%;
-            left: 60%;
-            /*box-shadow: inset 0 0 120px #4A90E2;*/
+          .Numbers {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Numbers-color, $planet-gradient);
           }
 
-          .planet-4 {
-            background: radial-gradient(circle at $gradient-size $gradient-size, $planet-4-color, $planet-gradient);
-            height: $planet-4-size;
-            width: $planet-4-size;
-            top: 65%;
-            left: 50%;
-            /*box-shadow: inset 0 0 120px #FF98B1;*/
+          .Recursion {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Recursion-color, $planet-gradient);
           }
 
-          .planet-5 {
-            background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, $planet-gradient);
-            height: $planet-5-size;
-            width: $planet-5-size;
-            top: 80%;
-            left: 25%;
-            /*box-shadow: inset 0 0 120px #50E3C2;*/
+          .Conditionals {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Conditionals-color, $planet-gradient);
           }
 
-          .planet-5 {
-            background: radial-gradient(circle at $gradient-size $gradient-size, $planet-5-color, $planet-gradient);
-            height: 140px;
-            width: 140px;
-            top: 60%;
-            left: 20%;
-            /*box-shadow: inset 0 0 120px #50E3C2;*/
+          .Addition {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Addition-color, $planet-gradient);
           }
 
-          .planet-6 {
-            background: radial-gradient(circle at $gradient-size $gradient-size, $planet-6-color, $planet-gradient);
-            /*box-shadow: inset 0 0 120px #B8E986;*/
+          .Subtraction {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Subtraction-color, $planet-gradient);
           }
 
-          .planet-1 {
-            box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-1-color;
-            /*box-shadow: inset 0 0 120px #CA7AFF, 0 0 120px #CA7AFF;*/
+          .Multiplication {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Multiplication-color, $planet-gradient);
           }
 
-          .planet-2 {
-            box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-2-color;
-            /*box-shadow: inset 0 0 120px #F25C5C, 0 0 120px #F25C5C;*/
-          }
-
-          .planet-3 {
-            box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-3-color;
-            /*box-shadow: inset 0 0 120px #4A90E2, 0 0 120px #4A90E2;*/
-          }
-
-          .planet-4 {
-            box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-4-color;
-            /*box-shadow: inset 0 0 120px #FF98B1, 0 0 120px #FF98B1;*/
-          }
-
-          .planet-5 {
-            box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-5-color;
-            /*box-shadow: inset 0 0 120px #50E3C2, 0 0 120px #50E3C2;*/
-          }
-
-          .planet-6 {
-            box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $planet-6-color;
-            /*box-shadow: inset 0 0 120px #B8E986, 0 0 120px #B8E986;*/
+          .Division {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
           }
         }
 
