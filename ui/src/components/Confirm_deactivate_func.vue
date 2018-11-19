@@ -53,7 +53,6 @@
 <script>
 import SplashScreen from './Splash_screen'
 import SocialSharing from './Social_sharing'
-import BuildUtils from '../services/BuildFunction'
 import PuzzlePieces from './Puzzle_pieces'
 
 export default {
@@ -67,15 +66,12 @@ export default {
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
-
     confirmDeactiveFunction () {
       return this.$store.getters.getConfirmDeactiveFunction
-    },
+    }
   },
   methods: {
-
     deactivateFunction () {
-
       this.levelControl.deactivateFunction(this.confirmDeactiveFunction)
       this.hide()
       this.$store.dispatch('confirmDeactivateFunction', {})
