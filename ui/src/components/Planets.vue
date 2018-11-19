@@ -17,18 +17,6 @@
 export default {
   name: 'planets',
   computed: {
-    level () {
-      return this.$store.getters.getLevel
-    },
-    levels () {
-      return this.$store.getters.getLevels
-    },
-    steps () {
-      return this.$store.getters.getSteps
-    },
-    tokenId () {
-      return this.$store.getters.getToken.token_id
-    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     }

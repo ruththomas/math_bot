@@ -57,16 +57,6 @@ export default {
     setTimeout(this.scrollToSelected, 80)
   },
   computed: {
-    planetN () {
-      const planets = {
-        BasicProgramming: '1',
-        Counting: '2',
-        Numbers: '3',
-        Recursion: '4',
-        Conditionals: '5'
-      }
-      return planets[this.level]
-    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
@@ -84,17 +74,10 @@ export default {
     },
     nextPlanet () {
       return this.levelControl.getNextPlanet()
-    },
-    tokenId () {
-      return this.$store.getters.getTokenId
     }
   },
   methods: {
     parseCamelCase: utils.parseCamelCase,
-    findFirstStep (level) {
-      const levelSteps = utils.orderEm(level.level)[0].name
-      return levelSteps
-    },
     goToRobot (continentId) {
       this.levelControl.getContinent(continentId, () => {
         this.$router.push({path: '/robot'})
