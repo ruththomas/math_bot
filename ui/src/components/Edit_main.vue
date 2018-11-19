@@ -12,6 +12,21 @@
       :origin="'editMain'"
       :size-limit="levelControl.continent.mainMax"
     ></function-drop>
+
+    <b-popover
+      v-if="mainFunctionFunc.length"
+      target="main-delete-function"
+      placement="top"
+      triggers="click"
+    >
+      <img class="dialog-button close-popover"
+           :src="permanentImages.buttons.xButton"
+           @click="closePopover('main-delete-function')"
+      />
+      <div class="button-effect trash-confirm"  @click="[wipeFunction(), closePopover('main-delete-function')]">
+        <img class="dialog-button btn-trash" :src="permanentImages.openTrashCan" />
+      </div>
+    </b-popover>
     <control-bar
       :wipe-function="wipeFunction"
       :toggle-put="togglePut"
@@ -161,7 +176,20 @@ export default {
       this.$store.dispatch('toggleShowMesh', false)
       this.$store.dispatch('updateTrashVisible', false)
       buildUtils._positionBar()
-    }
+    },
+    animateVulnerable () {
+      const $functions = $('.editMain-drop-zone > .piece:not(.placeholder-piece)')
+      const animationClass = 'piece-shake'
+      $functions.each(function () {
+        const $ele = $(this)
+        if ($ele.hasClass(animationClass)) {
+          $ele.removeClass(animationClass)
+        } else {
+          $ele.addClass(animationClass)
+        }
+      })
+    },
+    closePopover: utils.closePopover
   },
   components: {
     draggable,
@@ -176,7 +204,9 @@ export default {
   $edit-main-side-padding: 16%;
   $edit-main-top-bottom-padding: 0;
   $click-color: #B8E986;
+  $dialog-button-size: 3.5vmin;
 
+  $danger-color: #F25C5C;
   .edit-main {
     position: relative;
     width: 100%;
@@ -189,4 +219,93 @@ export default {
   .deactivate-edit-main {
     opacity: 0;
   }
+
+
+  // todo: remove unneccessary
+
+
+
+  .bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(50%);
+    height: $bar-height;
+    background-color: #B8E986;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: -1;
+  }
+
+  .red-bar {
+    background-color: #FF0000;
+  }
+
+  .dialog-button {
+    z-index: 2010;
+    display: flex;
+    cursor: pointer;
+    position: absolute;
+    float: right;
+  }
+
+  .play {
+    border-radius: 50%;
+    right: 0;
+  }
+
+  .reset {
+  }
+
+  .play-border {
+    border: 3px solid rgb(135, 206, 250);
+  }
+
+  .stop {
+    right: 10vmin;
+  }
+
+  .trash {
+    left: 0;
+  }
+
+  .speed {
+    right: 5vmin;
+    background-color: #B8E986;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 2vmin;
+    font-weight: 500;
+  }
+
+  .x {
+    float: left;
+  }
+
+  .trash-confirm {
+
+    animation: shake 0.8s;
+    animation-iteration-count: infinite;
+    margin: 3vmin;
+  }
+  .close-popover {
+    float: right;
+    display: flex;
+    position: absolute;
+    bottom: calc(100% - #{$dialog-button-size} / 2);
+    right:  calc(#{-$dialog-button-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
+  }
+
+  .btn-trash {
+
+    background-color: $danger-color;
+    box-shadow: 0 2px 10px 0 $danger-color;
+  }
+
 </style>

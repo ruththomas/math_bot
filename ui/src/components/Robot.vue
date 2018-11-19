@@ -48,6 +48,7 @@
         <span :style="{opacity: !advancedMode ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
       </div>
     </div>
+    <confirm_deactivate_func></confirm_deactivate_func>
   </div>
 </template>
 
@@ -69,6 +70,7 @@ import VideoHint from './Video_hint'
 import LevelCongrats from './Level_congrats'
 import AdvancedMode from './Advanced_mode'
 
+import Confirm_deactivate_func from './Confirm_deactivate_func'
 export default {
   mounted () {
     this.videoHintControl.showFreeHint(this.levelControl.continent.freeHint)
@@ -193,6 +195,7 @@ export default {
     }
   },
   components: {
+    Confirm_deactivate_func,
     Grid,
     Commands,
     Editfunction,
