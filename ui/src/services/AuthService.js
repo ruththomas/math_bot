@@ -34,6 +34,8 @@ export class AuthService {
     const storedRouteOpt = localStorage.getItem('last_location')
     if (storedRouteOpt) {
       $router.push({path: storedRouteOpt})
+    } else {
+      $router.push({path: '/profile'})
     }
   }
 
