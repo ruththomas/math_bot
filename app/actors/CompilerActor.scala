@@ -1,6 +1,5 @@
 package actors
 
-import actors.CurrentStatsActor.StatsDoneUpdating
 import actors.messages._
 import akka.actor.{Actor, ActorRef, Props}
 import akka.util.Timeout
@@ -277,9 +276,6 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       logger.LogInfo(className, "Compiler halted")
       context.become(createCompile())
       out ! CompilerHalted()
-
-    case Left(_: StatsDoneUpdating) =>
-      logger.LogInfo(className, s"Stats updated successfully. token_id:$tokenId")
 
     case Right(invalidJson: ActorFailed) =>
       logger.LogFailure(className, invalidJson.msg)

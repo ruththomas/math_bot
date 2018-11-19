@@ -1,14 +1,9 @@
 package controllers
 
-import java.net.URLDecoder
-
-import actors.{ActorTags, LevelActor, LevelControl, LevelGenerationActor}
-import actors.LevelGenerationActor.{GetLevel, GetStep}
 import actors.convert_flow.{LevelRequestConvertFlow, LevelResponseConvertFlow}
-import actors.messages.{ActorFailed, PreparedStepData, RawLevelData}
+import actors.{ActorTags, LevelActor, LevelControl}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
-import akka.pattern.ask
 import akka.stream.Materializer
 import akka.util.Timeout
 import com.google.inject.Inject
@@ -17,14 +12,13 @@ import configuration.AdminConfig
 import daos._
 import loggers.MathBotLogger
 import play.api.Environment
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import play.api.libs.streams.ActorFlow
 import play.api.libs.ws.WSClient
-import play.api.mvc.{Action, Controller, WebSocket}
-import types.{LevelName, TokenId}
+import play.api.mvc.{Controller, WebSocket}
 import utils.SecureIdentifier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 class LevelController @Inject()(
