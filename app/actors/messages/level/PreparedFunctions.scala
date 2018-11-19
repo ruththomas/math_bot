@@ -85,6 +85,7 @@ object PreparedFunctions {
             functionsDAO: FunctionsDAO): PreparedFunctions = {
     val actives = functions.actives.sortBy(_.index)
     val staged = functions.staged.sortBy(_.index)
+    val cmds = functions.commands.sortBy(_.index)
     val filteredActivesAndStaged = FilteredActivesAndStaged(actives, staged, continentStruct)
 
     if (function.category == Categories.function && actives.exists(_.created_id == function.created_id)) {
@@ -101,13 +102,13 @@ object PreparedFunctions {
         functions.tokenId,
         Functions(
           functions.tokenId,
-          List(functions.main) ::: functions.commands ::: updatedActives ::: functions.staged
+          List(functions.main) ::: cmds ::: updatedActives ::: functions.staged
         )
       )
 
       new PreparedFunctions(
         functions.main,
-        filteredCmds(functions.commands, continentStruct),
+        filteredCmds(cmds, continentStruct),
         finished.actives,
         finished.staged
       )
@@ -127,7 +128,7 @@ object PreparedFunctions {
             functions.tokenId,
             Functions(
               functions.tokenId,
-              List(functions.main) ::: functions.commands ::: updatedActives ::: updatedStaged
+              List(functions.main) ::: cmds ::: updatedActives ::: updatedStaged
             )
           )
           FilteredActivesAndStaged(updatedActives, updatedStaged, continentStruct)
@@ -142,15 +143,11 @@ object PreparedFunctions {
           val updatedActives = indexEm(actives.filterNot(_.created_id == function.created_id))
           functionsDAO.replaceAll(
             functions.tokenId,
-            Functions(functions.tokenId,
-                      List(functions.main) ::: functions.commands ::: updatedActives ::: updatedStaged)
+            Functions(functions.tokenId, List(functions.main) ::: cmds ::: updatedActives ::: updatedStaged)
           )
           FilteredActivesAndStaged(updatedActives, updatedStaged, continentStruct)
       }
-      new PreparedFunctions(functions.main,
-                            filteredCmds(functions.commands, continentStruct),
-                            finished.actives,
-                            finished.staged)
+      new PreparedFunctions(functions.main, filteredCmds(cmds, continentStruct), finished.actives, finished.staged)
     }
   }
 
