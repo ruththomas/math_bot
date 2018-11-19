@@ -87,7 +87,7 @@ export default {
       this.$store.dispatch('updateEditingIndex', null)
     },
     confirmDeactivateFunction (evt) {
-      const {oldIndex, newIndex} = evt;
+      const {oldIndex, newIndex} = evt
       const func = this.levelControl.functions.activeFuncs[oldIndex]
       func.category = 'staged'
       func.index = newIndex
