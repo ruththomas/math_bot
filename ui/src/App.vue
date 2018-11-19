@@ -28,6 +28,7 @@
         <li><a href="https://support.google.com/accounts/answer/61416?co=GENIE.Platform%3DDesktop&hl=en" target="_blank">Safari Instructions</a></li>
       </ul>
     </b-modal>
+    <video-hint></video-hint>
     <messages></messages>
     <router-view></router-view>
   </div>
@@ -36,6 +37,7 @@
 <script>
 import Messages from './components/Messages'
 import MBHeader from './components/Mathbot_header'
+import VideoHint from './components/Video_hint'
 export default {
   name: 'app',
   mounted () {
@@ -51,7 +53,8 @@ export default {
   },
   components: {
     Messages,
-    MBHeader
+    MBHeader,
+    VideoHint
   }
 }
 </script>

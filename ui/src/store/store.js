@@ -168,9 +168,6 @@ export default new Vuex.Store({
     UPDATE_STATS (state, stats) {
       state.auth.userToken.stats = stats
     },
-    CREATE_LOCK (state) {
-
-    },
     PUSH_RANDOM_IMAGE (state, image) {
       state.auth.userToken.randomImages.push(image)
     },
@@ -219,6 +216,9 @@ export default new Vuex.Store({
       state.swiperSlide = slide
     },
     ADD_MESSAGE: addMessage,
+    DELETE_ALL_MESSAGES (state) {
+      state.messageList = []
+    },
     REMOVE_MESSAGE (state, ind) {
       state.messageList[ind].delete()
     },
@@ -349,6 +349,9 @@ export default new Vuex.Store({
     },
     removeMessage ({commit}, ind) {
       commit('REMOVE_MESSAGE', ind)
+    },
+    deleteAllMessages ({commit}) {
+      commit('DELETE_ALL_MESSAGES')
     },
     deleteMessages ({commit}) {
       commit('DELETE_MESSAGES')
