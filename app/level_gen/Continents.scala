@@ -1,5 +1,5 @@
 package level_gen
-import level_gen.planets._
+import level_gen.continents._
 
 trait Continents
     extends LevelGenTags

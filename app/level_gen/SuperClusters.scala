@@ -10,6 +10,6 @@ object SuperClusters extends Galaxies with LevelGenTags {
   private val SuperCluster1 = CelestialSystem(
     name = "SuperCluster1",
     kind = superCluster,
-    children = superCluster1
+    children = superCluster1Children
   )
 }

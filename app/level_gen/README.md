@@ -1,49 +1,160 @@
-#### Adding a level
+# Level Generation
 
-1) Add a file to the assets directory
-    - File name must match the level name
-    
-2) Copy this json into the file
+### Game Structure
+
+---
+
+Mathbot's structure is a nested data structure based on the universe. Each celestial 
+system is represented by `/level_gen/models/CelestialSystem.scala`
+
+```$xslt
+SuperClusters
+    |                               
+    |-> Galaxies
+        |
+        |-> StarSystems
+            |
+            |-> Planets
+                |
+                |-> Continents
 ```
-{
-  "level": "<{string}LEVEL NAME (MUST MATCH FILE NAME)>",
-  "prevLevel": "<{string}PREVIOUS LEVEL NAME (IF NONE TYPE "None">",
-  "nextLevel": "<{string}NEXT LEVEL NAME (IF NONE TYPE "None">",
-  "show": <{boolean}(If the level's previous is "None" this field must be true)>, 
-  "steps": {}
+
+### Creating new levels
+
+---
+
+Anytime a new level is created or a level is removed the stats will be automatically 
+updated to match.
+
+#### Adding a SuperCluster
+
+Currently the system is only built to handle a single SuperCluster. SuperClusters are
+created in `/level_gen/SuperClusers.scala` which is the base for all the systems.
+
+#### Adding a Galaxy
+
+Galaxies are located inside `/level_gen/Galaxies.scala`.
+
+```
+trait Galaxies extends StarSystems with LevelGenTags {
+  val superCluster1: List[CelestialSystem] = List(
+    // Add new Galaxy here, notice children is a variable imported from `StarSystems.scala`
+    CelestialSystem(
+      name = "ExampleGalaxy",
+      kind = galaxy,
+      children = exampleGalaxyChildren // checkout `Adding a StarSystem` for relationship 
+    )
+  )
 }
 ```
 
-3) Fill out the json
+#### Adding a StarSystem
 
-#### Adding steps to the level
+StarSystems are located in `/level_gen/StarSystems.scala`.
 
-1) Add this json to the `"steps"` field 
+``` 
+trait StarSystems extends Planets with LevelGenTags {
+  // Add new StarSystems here, notice children is a variable imported from `Planets.scala`
+  val exampleGalaxyChildren = (
+    CelestialSystem(
+      name = "ExampleStarSystem",
+      kind = starSystem,
+      children = exampleStarSystemChildren // checkout `Adding a Planet` section for relationship
+    )
+  )
+}
+```
+
+#### Adding a Planet
+
+Planets are located in `/level_gen/Planets.scala`
+
+``` 
+trait Planets extends Continents with LevelGenTags {
+  // Add new Planets here, notice children is a variable imported from `Continents.scala`
+  val exampleStarSystemChildren = List(
+    CelestialSystem(
+      name = "ExamplePlanet",
+      kind = planet,
+      children = exampleContinentChildren // checkout `Adding a Continent` for relationship
+    )
+  )
+}
+```
+
+#### Adding a Continent
+
+Continents are located in `/level_gen/Continents.scala`
+
+``` 
+trait Continents extends LevelGenTags {
+  // Add new Continents here
+  val exampleContinentChildren = List(
+      CelestialSystem(
+        name = "1",
+        kind = continent,
+        continentStruct = Some( // Checkout `Build a Continent Struct` section
+          ContinentStruct(
+            gridMap = List(
+              "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+              "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+              "|E| |E| |E| |E| (R) ($) |E|  |E|   |E|  |E|",
+              "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+              "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            ),
+            description = "Place the correct amount on the portal",
+            mainMax = -1,
+            robotOrientation = 0,
+            stagedEnabled = true,
+            activeEnabled = true,
+            stagedQty = -1,
+            assignedStaged = List.empty[AssignedFunction],
+            preBuiltActive = List.empty[AssignedFunction],
+            allowedActives = Some(List.empty[String]),
+            cmdsAvailable = List(
+              "moveRobotForwardOneSpot",
+              "changeRobotDirection",
+              "pickUpItem",
+              "setItemDown"
+            ),
+            specialParameters = List.empty[String],
+            problem = "0",
+            clearMain = false,
+            initFocus = List("Walk"),
+            videoHints = List.empty[String],
+            freeHint = None
+          )
+        )
+      )
+  )
+}
+```
+
+### Build a Continent Struct
+
+---
 
 ```$xslt
- "<NAME OF STEP (must start with a capital and be camel cased)>": {
-      "level": "<{string}LEVEL NAME (must match the level name exactly)>",
-      "step": "<{string}MUST MACH NAME OF STEP EXACTLY>",
-      "gridMap": <{array[string]}SEE `Creating a Grid Map` SECTION>,
-      "description": <{string}SEE `Creating a Description` SECTION>, 
-      "mainMax": <{int}<ALLOWABLE COMMANDS IN MAIN (if infinite -1)>,
-      "robotOrientation": <{int}ROBOTS STARTING ORIENTATION (0, 90, 180, 270 ~ only)>,
-      "stagedEnabled": <{boolean}INDICATES IF THE USER IS ABLE TO OPEN THE STAGED FUNCTION POPOVER>,
-      "activeEnabled": <{boolean}INDICATES IF THE USER CAN ADD ANYTHING TO ACTIVE FUNCTIONS (almost always true)>,
-      "stagedQty": <{int}QTY OF STAGED FUNCTIONS AVAILABLE (if infinite -1)>,
-      "assignedStaged": <{list[object]}SEE `Adding Assigned Staged` SECTION>,
-      "preBuiltActive": <{list[object]}SEE `Adding Pre-Built Actives` SECTION>,
-      "allowedActives": <{list[string]}LIST OF FUNCTION CREATED IDS (only applies to built functions)>,
-      "cmdsAvailable": <{array[string]}ARRAY OF COMMAND NAMES, SEE `Command Names` SECTION FOR COMMAND NAMES>,
-      "specialParameters": <{array[string]}LIST OF SPECIAL PARAMETERS, SEE `Special Parameters` SECTION FOR CURRENT SPECIAL PARAMETERS>,
-      "problem": <{string}SEE `Building a Problem` SECTION FOR PROPER PROBLEM SYNTAX,
-      "clearMain": <{boolean>INDICATES IF MAIN SHOULD BE EMPTY AT THE START OF THE LEVEL>,
-      "initFocus": <{array[string]}LIST OF ELEMENTS TO ADD SPECIAL EFFECT ON AT START OF STEP, SEE `Init Focus` SECTION>
-      "videoHints": <{array[string]}LIST OF YOUTUBE VIDEO IDS>,
-      "freeHint": <{option[string]}YOUTUBE VIDEO ID THAT PLAYS AT THE BEGGINING OF LEVEL AUTOMATICALLY>,
-      "prevStep": <{String}PREVIOUS STEP NAME (Should be "None" if first step)>,
-      "nextStep": <{String}NEXT STEP NAME (Should be "None" if last step)>
-    },
+case class ContinentStruct(
+    gridMap: List[String], // see `Creating a Grid Map` section
+    description: String, // see `Creating a description` section (this feature is not currently being displayed)
+    mainMax: Int, // Set to -1 for infinity otherwise main will have of a max of this properties value
+    robotOrientation: Int, // Staring orientation of robot, must be set to 0, 90, 180 or 270
+    stagedEnabled: Boolean, // If set to false staged functions will be locked shut
+    activeEnabled: Boolean, // If set to false all active functions will be hidden @deprecated
+    stagedQty: Int, // Maximum ammount of staged functions, not including assignedStaged
+    assignedStaged: List[AssignedFunction], // see `Adding PreBuiltActives and AssignedStaged Functions` section
+    preBuiltActive: List[AssignedFunction], // see `Adding PreBuiltActives and AssignedStaged Functions` section
+    allowedActives: Option[List[String]] = None, // list of created_id's of allowed actives, these will be the only functions available for continent
+    cmdsAvailable: List[String], // List of command names (see `Command Names` section) allowed for this continent
+    specialParameters: List[String], // see `Special Parameters` section
+    problem: String, // see `Building a Problem` section
+    clearMain: Boolean, // If set to true main function will be cleared each time continent is reset @deprecated
+    initFocus: List[String], // see `Init Focue` section @deprecated
+    evalEachFrame: Option[Boolean] = None, // If set to true each frame will be evaluated as the program runs. Circumvents `Program must be completely finished running` rule
+    videoHints: List[String], // List of YouTube video ids, max length 3. If empty list a message will indicate continent has no hints
+    freeHint: Option[String] = None // A single YouTube video id that will be displayed when user navigates to continent
+)
 ```
 
 #### Command Names 
@@ -93,21 +204,18 @@
 !![img]src='<IMG SRC (Must be in single quotes)>'!! - include an image in description, will be same size as font
 ```
 
-#### Adding Assigned Staged
-* Adds specified staged functions to staged functions
-1) Add image resource url in `ui/src/assets/assets.js` to `funcImages`
-    
-2) Add assigned staged object to JSON scala case class located ar `app/actors/messages/AssignedFunctionModel.scala`
-```$xslt
-[
-    {
-        "name": <{string}DISPLAY NAME>,
-        "image": <{string}NAME OF IMAGE IN ASSETS>,
-        "createdId": <{string}CREATED ID, 11 DIGIT STRING OF NUMBERS STARTING WITH 5 (generate using random.org)>,
-        "sizeLimit": <{int}MAX SIZE FUNCTION CAN BE>,
-        "func": <{list[string]}MUST BE AN EMPTY ARRAY>,
-    }
-]
+#### Adding PreBuiltActives and AssignedStaged Functions
+
+Create a `List[AssignedFunction]`
+
+``` 
+AssignedFunction(
+    createdId: String, // An 11 digit string of numbers starting with 5
+    name: String, // Name of function
+    image: String, // Name of image found in `ui/src/assets/assets.js -> funcImages property`
+    sizeLimit: Int, // Max size of function, if -1 infinity, this is permanently set for this function
+    func: List[String] // List of command names see `Command Names` section. !!important!! if AssignedStaged this should be List.empty[String]
+)
 ```
 
 #### Special Parameters 
@@ -116,28 +224,15 @@
 Current Special Parameters
 ```$xslt
     "functionRequired" - user must use a built function
-    "recursionRequired" - user must use recursion (currently only checks top level)
+    "recursionRequired" - user must use recursion
 ```
 
 #### Building a Problem
 * {int} - becomes an integer with that many digits
 * int - becomes self
+* The math library we are using can also handle complex math
 ```$xslt
 "{1} + {2} * ({6} - {4}) - 55" == "4 + 65 * (123456 - 4513) - 55"
-```
-
-#### Adding Pre-built Actives;
-* Active functions already built for the user
-```$xslt
-[
-    {
-        "name": <{string}DISPLAY NAME>,
-        "image": <{string}NAME OF IMAGE IN ASSETS>,
-        "createdId": <{string}CREATED ID, 11 DIGIT STRING OF NUMBERS STARTING WITH 5 (generate using random.org)>,
-        "sizeLimit": <{int}MAX SIZE FUNCTION CAN BE>,
-        "func": <{list[string]}LIST OF COMMANDS (see 'command names' section}>,
-    }
-]
 ```
 
 #### Init Focus

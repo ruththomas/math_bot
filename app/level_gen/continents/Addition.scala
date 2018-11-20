@@ -1,10 +1,10 @@
-package level_gen.planets
+package level_gen.continents
 import actors.messages.AssignedFunction
 import level_gen.LevelGenTags
 import level_gen.models.{CelestialSystem, ContinentStruct}
 
-trait Subtraction extends LevelGenTags {
-  val subtraction = List(
+trait Addition extends LevelGenTags {
+  val additionChildren = List(
     CelestialSystem(
       name = "1",
       kind = continent,
