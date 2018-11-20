@@ -2,16 +2,16 @@ package level_gen
 import level_gen.models.CelestialSystem
 
 trait StarSystems extends Planets with LevelGenTags {
-  val galaxy1 = List(
+  val galaxy1Children = List(
     CelestialSystem(
       name = "Programming",
       kind = starSystem,
-      children = programming
+      children = programmingChildren
     ),
     CelestialSystem(
       name = "Arithmetic",
       kind = starSystem,
-      children = arithmetic
+      children = arithmeticChildren
     )
   )
 }

@@ -1,10 +1,10 @@
-package level_gen.planets
+package level_gen.continents
 import actors.messages.AssignedFunction
 import level_gen.LevelGenTags
 import level_gen.models.{CelestialSystem, ContinentStruct}
 
 trait Recursion extends LevelGenTags {
-  val recursion = List(
+  val recursionChildren = List(
     CelestialSystem(
       name = "RecurForward",
       kind = continent,
