@@ -15,9 +15,9 @@
   >
     <img class="dialog-button close-popover"
          :src="permanentImages.buttons.xButton"
-         @click="closePopover('main-delete-function')"
+         @click="[animateVulnerable(), closePopover('main-delete-function')]"
     />
-    <div class="button-effect trash-confirm"  @click="[wipeFunction(), closePopover('main-delete-function')]">
+    <div class="button-effect trash-confirm"  @click="[animateVulnerable(), wipeFunction(), closePopover('main-delete-function')]">
       <img class="dialog-button btn-trash" :src="permanentImages.openTrashCan" />
     </div>
   </b-popover>
