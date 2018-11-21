@@ -1,9 +1,9 @@
 package actors.convert_flow
 
 import actors.messages._
+import actors.messages.level.Problem
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import models.Problem
 import play.api.libs.json._
 
 import scala.util.{Failure, Success, Try}

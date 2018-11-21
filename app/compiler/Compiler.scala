@@ -1,10 +1,10 @@
 package compiler
 
 import compiler.mbl._
-import actors.messages.level.Function
+import actors.messages.level.{Function, GridPart, Problem}
 import compiler.operations._
 import daos.CommandIds
-import models.{GridMap, GridPart, Problem}
+import models.GridMap
 import play.api.libs.json._
 
 object Compiler {

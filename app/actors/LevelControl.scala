@@ -7,6 +7,7 @@ import com.google.inject.Inject
 import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
 import level_gen.models.CelestialSystem
+import models.deprecatedPlayerToken.PlayerToken
 import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -167,7 +168,7 @@ class LevelControl @Inject()(
         case Some(f) => f // already in new system
         case None =>
           playerToken match {
-            case Some(models.PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
+            case Some(PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
               val functions: Functions =
                 Functions(tokenId, lambdas.get, getAllAssignedStaged() ::: getAllPreBuiltActives())
               functionsDAO.insert(functions)

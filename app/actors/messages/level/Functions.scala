@@ -2,7 +2,7 @@ package actors.messages.level
 
 import DefaultFunctions._
 import actors.messages.AssignedFunction
-import models.{FuncToken, Lambdas}
+import models.deprecatedPlayerToken.{FuncToken, Lambdas}
 import play.api.libs.json.{Json, OFormat}
 import types.TokenId
 

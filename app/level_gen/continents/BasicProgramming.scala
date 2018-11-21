@@ -1,10 +1,10 @@
-package level_gen.planets
+package level_gen.continents
 import actors.messages.AssignedFunction
 import level_gen.LevelGenTags
 import level_gen.models.{CelestialSystem, ContinentStruct}
 
 trait BasicProgramming extends LevelGenTags {
-  val basicProgramming = List(
+  val basicProgrammingChildren = List(
     CelestialSystem(
       name = "WalkOne",
       kind = continent,

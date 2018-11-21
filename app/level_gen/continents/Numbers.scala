@@ -1,80 +1,12 @@
-package level_gen.planets
+package level_gen.continents
 import actors.messages.AssignedFunction
 import level_gen.LevelGenTags
 import level_gen.models.{CelestialSystem, ContinentStruct}
 
-trait Counting extends LevelGenTags {
-  val counting = List(
+trait Numbers extends LevelGenTags {
+  val numbersChildren = List(
     CelestialSystem(
-      name = "Pickup",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) [TS(1)] ($) |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Place the kitty on the portal.",
-          mainMax = -1,
-          robotOrientation = 90,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List.empty[String],
-          problem = "1",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("l_CnNj5aO6E", "lnCPjFhMU-s", "BSVWStDirZg")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup3",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "|E| |E| |E| |E|             |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E|             |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) [TS(1,1,1)]     ($) |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E|             |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E|             |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Place 3 kitties on the portal.",
-          mainMax = -1,
-          robotOrientation = 90,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List.empty[String],
-          problem = "3",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("l24v6ot_fYw", "Ty-eyXkXW4o", "UtPNfChYedM")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup5",
+      name = "Number7",
       kind = continent,
       continentStruct = Some(
         ContinentStruct(
@@ -85,75 +17,7 @@ trait Counting extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
           ),
-          description = "Place 5 kitties on the portal.",
-          mainMax = -1,
-          robotOrientation = 0,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List.empty[String],
-          problem = "5",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("aC3-fCaFErk", "jjYQlsgXvyE", "RGgNlFSKErg")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup4",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Place 4 kitties on the portal.",
-          mainMax = -1,
-          robotOrientation = 0,
-          stagedEnabled = true,
-          activeEnabled = true,
-          assignedStaged = List.empty[AssignedFunction],
-          stagedQty = -1,
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List.empty[String],
-          problem = "4",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("F5ZWSTBwZNU", "OGLNVzup_TM")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Navigate",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "($) |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Create a function to get to the portal.",
+          description = "Create a function to put 7 kitties on the portal.",
           mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
@@ -168,15 +32,15 @@ trait Counting extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List("functionRequired"),
-          problem = "0",
+          problem = "7",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List("jePF1-i3tck", "7GYsnAFv_qk")
+          videoHints = List("AxPKFXxcFFY", "zcHdtTmMddM")
         )
       )
     ),
     CelestialSystem(
-      name = "Pickup2WithFunction",
+      name = "Number8",
       kind = continent,
       continentStruct = Some(
         ContinentStruct(
@@ -187,212 +51,8 @@ trait Counting extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
           ),
-          description = "Use your function to get to the kitties and put 2 on the portal.",
-          mainMax = 9,
-          robotOrientation = 0,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List("functionRequired"),
-          problem = "2",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("92eDgAbBF9w", "6hTzddZVJ4Q")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup1WithFunction",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Use your function to get to the kitties and put 1 on the portal.",
-          mainMax = 7,
-          robotOrientation = 0,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List("functionRequired"),
-          problem = "1",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("lsZo8ZpnrBo", "IiYfP6Fb3Cw")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup5WithFunction",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Use your function to get to the kitties and put 5 on the portal.",
-          mainMax = 15,
-          robotOrientation = 0,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List("functionRequired"),
-          problem = "5",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("s8bVR65tR_U", "cqiaefo9zXY")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup9WithFunction",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Use your function to get to the kitties and put 9 on the portal.",
-          mainMax = 23,
-          robotOrientation = 0,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List("functionRequired"),
-          problem = "9",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("rpO3fqlm33A", "o06S52Fsuvw")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup4WithFunction",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Use your function to get to the kitties and put 4 on the portal.",
-          mainMax = 13,
-          robotOrientation = 0,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List("functionRequired"),
-          problem = "4",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("tXzR4s9Ptns", "rAp3CisZJYM")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup6WithFunction",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Use your function to get to the kitties and put 6 on the portal.",
-          mainMax = 17,
-          robotOrientation = 0,
-          stagedEnabled = true,
-          activeEnabled = true,
-          stagedQty = -1,
-          assignedStaged = List.empty[AssignedFunction],
-          preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
-          specialParameters = List("functionRequired"),
-          problem = "6",
-          clearMain = false,
-          initFocus = List.empty[String],
-          videoHints = List("--p0EUiWF1I")
-        )
-      )
-    ),
-    CelestialSystem(
-      name = "Pickup8WithFunction",
-      kind = continent,
-      continentStruct = Some(
-        ContinentStruct(
-          gridMap = List(
-            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
-          ),
-          description = "Use your function to get to the kitties and put 8 on the portal.",
-          mainMax = 21,
+          description = "Create a function to put 8 kitties on the portal.",
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -409,12 +69,12 @@ trait Counting extends LevelGenTags {
           problem = "8",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List("V3EKeXdQDBM")
+          videoHints = List("clFSrrU-h3k")
         )
       )
     ),
     CelestialSystem(
-      name = "Pickup3WithFunction",
+      name = "SevenAgain",
       kind = continent,
       continentStruct = Some(
         ContinentStruct(
@@ -425,8 +85,110 @@ trait Counting extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
           ),
-          description = "Use your function to get to the kitties and put 3 on the portal.",
-          mainMax = 11,
+          description = "Reuse your function to put 7 kitties on the portal.",
+          mainMax = 1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List("functionRequired"),
+          problem = "7",
+          clearMain = false,
+          initFocus = List.empty[String],
+          videoHints = List("HOm0_YM1V_A")
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "Number2",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
+          ),
+          description = "Create a function to put 2 kitties on the portal.",
+          mainMax = 1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List("functionRequired"),
+          problem = "2",
+          clearMain = false,
+          initFocus = List.empty[String],
+          videoHints = List("URxnxjxRz1w")
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "SevenAgainAgain",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
+          ),
+          description = "Reuse your function to put 7 kitties on the portal.",
+          mainMax = 1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List("functionRequired"),
+          problem = "7",
+          clearMain = false,
+          initFocus = List.empty[String],
+          videoHints = List("GXO_6gDCU7s")
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "Number3",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
+          ),
+          description = "Create a function to put 3 kitties on the portal.",
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -443,7 +205,109 @@ trait Counting extends LevelGenTags {
           problem = "3",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List("zWLznLyDVPU")
+          videoHints = List("vtg0vTHLG9o")
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "Reuse7",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
+          ),
+          description = "Reuse your function to put 7 kitties on the portal.",
+          mainMax = 1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List("functionRequired"),
+          problem = "7",
+          clearMain = false,
+          initFocus = List.empty[String],
+          videoHints = List("LZ9zgvQOE_8")
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "Number5",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
+          ),
+          description = "Create a function to put 5 kitties on the portal.",
+          mainMax = 1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List("functionRequired"),
+          problem = "5",
+          clearMain = false,
+          initFocus = List.empty[String],
+          videoHints = List("UpxGarD5nn4")
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "ReuseCode",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "[1] |E| ($) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| (R) |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
+            "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
+          ),
+          description = "You know what to do. No more repetitive tasks for you!",
+          mainMax = 1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List("functionRequired"),
+          problem = "7",
+          clearMain = false,
+          initFocus = List.empty[String],
+          videoHints = List("UZZpDk8SpUI")
         )
       )
     )
