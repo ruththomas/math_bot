@@ -1,4 +1,4 @@
-package models
+package actors.messages.level
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads}

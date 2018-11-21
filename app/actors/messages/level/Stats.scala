@@ -2,6 +2,7 @@ package actors.messages.level
 
 import level_gen.SuperClusters
 import level_gen.models.CelestialSystem
+import models.deprecatedPlayerToken.CurrentStats
 import play.api.libs.json.{Json, OFormat}
 import types._
 
@@ -56,7 +57,7 @@ object Stats {
   }
 
   // Converts legacy stats to new stats
-  def apply(tokenId: TokenId, originalStats: models.CurrentStats): Stats = {
+  def apply(tokenId: TokenId, originalStats: CurrentStats): Stats = {
     val listStats: mutable.Map[String, LayerStatistic] =
       mutable.Map("0" -> LayerStatistic("SuperCluster1", active = true))
 

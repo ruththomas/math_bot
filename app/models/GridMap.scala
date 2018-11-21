@@ -1,5 +1,6 @@
 package models
 
+import actors.messages.level.{GridPart, Problem, ToolList}
 import compiler.processor.Frame
 
 /*

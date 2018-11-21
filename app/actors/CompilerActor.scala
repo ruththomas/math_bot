@@ -1,6 +1,7 @@
 package actors
 
 import actors.messages._
+import actors.messages.level.Problem
 import akka.actor.{Actor, ActorRef, Props}
 import akka.util.Timeout
 import compiler.operations.NoOperation

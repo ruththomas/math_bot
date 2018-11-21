@@ -1,4 +1,4 @@
-package models
+package models.deprecatedPlayerToken
 
 import daos.DefaultCommands.{cmds, funcs, main}
 import play.api.libs.functional.syntax._

@@ -1,5 +1,4 @@
-package models
-
+package models.deprecatedPlayerToken
 import play.api.libs.json._
 import utils.SecureIdentifier
 

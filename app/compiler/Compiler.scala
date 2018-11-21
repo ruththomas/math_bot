@@ -1,10 +1,10 @@
 package compiler
 
 import compiler.mbl._
-import actors.messages.level.Function
+import actors.messages.level.{Function, GridPart, Problem}
 import compiler.operations._
 import daos.CommandIds
-import models.{GridMap, GridPart, Problem}
+import models.GridMap
 import play.api.libs.json._
 
 object Compiler {
@@ -129,22 +129,22 @@ object Compiler {
     }
 
   // Return a list of unmatched function references
-  private def checkReferences(functions: Seq[UserFunction], lookup: UserFunctionRef => Option[UserFunction]) : Seq[UserFunctionRef] =
-    functions.flatMap {
-      f =>
-        f.operations.flatMap {
-          case funcRef: UserFunctionRef =>
-            if (lookup(funcRef).isEmpty) Some(funcRef) else None
-          case ifColor: IfColor =>
-            ifColor.operation match {
-              case funcRef: UserFunctionRefById =>
-                if (lookup(funcRef).isEmpty) Some(funcRef) else None
-              case _ =>
-                None
-            }
-          case _ =>
-            None
-        }
+  private def checkReferences(functions: Seq[UserFunction],
+                              lookup: UserFunctionRef => Option[UserFunction]): Seq[UserFunctionRef] =
+    functions.flatMap { f =>
+      f.operations.flatMap {
+        case funcRef: UserFunctionRef =>
+          if (lookup(funcRef).isEmpty) Some(funcRef) else None
+        case ifColor: IfColor =>
+          ifColor.operation match {
+            case funcRef: UserFunctionRefById =>
+              if (lookup(funcRef).isEmpty) Some(funcRef) else None
+            case _ =>
+              None
+          }
+        case _ =>
+          None
+      }
     }
 
   // To avoid an infinite loop while processing user functions, user functions are sometimes replaced with refs.
@@ -238,7 +238,7 @@ object Compiler {
 
   private val opsReduce =
     new PartialFunction[List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]], (List[Operation], NamedUserFunctions, LambdaUserFunctions)] {
-      def isDefinedAt(ops: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]) : Boolean =
+      def isDefinedAt(ops: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]): Boolean =
         !ops.exists(_.isRight)
 
       def apply(
@@ -256,9 +256,11 @@ object Compiler {
   private val errReduce = new PartialFunction[List[
     Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]
   ], Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]] {
-    def isDefinedAt(errors: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]) : Boolean =
+    def isDefinedAt(errors: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]): Boolean =
       errors.exists(_.isRight)
-    def apply(errors: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]) : Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage] =
+    def apply(
+        errors: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]
+    ): Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage] =
       errors.filter(_.isRight).head
   }
 
@@ -317,7 +319,7 @@ object Compiler {
         Right(s"Unknown element $unknown")
     }
 
-  def compileMbl(mbl: String, grid: GridMap, problem: Problem) : Either[GridAndProgram, ErrorMessage] = {
+  def compileMbl(mbl: String, grid: GridMap, problem: Problem): Either[GridAndProgram, ErrorMessage] = {
     MblParser.parse(mbl) match {
       case Left(mblList) =>
         convertMbl(mblList) match {
@@ -327,10 +329,10 @@ object Compiler {
               case op: Operation => UserFunction(Seq(op))
             }
             checkReferences(byNamed.values.toSeq ++ byLambdaId.values.toSeq :+ program,
-              lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId)) match {
+                            lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId)) match {
               case Nil =>
                 fixReferences(byNamed.values.toSeq ++ byLambdaId.values.toSeq :+ program,
-                  lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId))
+                              lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId))
                 processBoard(grid).map(g => GridAndProgram(g, program, problem)) match {
                   case Some(gp) => Left(gp)
                   case None => Right("Unable to process grid")
@@ -339,9 +341,12 @@ object Compiler {
                 val printable = unknown.map {
                   case UserFunctionRefByName(n) => s"named($n)" // Most common when a user misspells a function
                   case UserFunctionRefByLambdaId(id) => s"lambda($id)" // Indicates a bug in the parser
-                  case UserFunctionRefById(id) => s"icon($id)" // Won't appear until we can convert from simple to advanced editing
+                  case UserFunctionRefById(id) =>
+                    s"icon($id)" // Won't appear until we can convert from simple to advanced editing
                 }
-                Right(s"Reference to unknown function${if(printable.length > 1) "" else "s"}: ${printable.mkString(", ")}")
+                Right(
+                  s"Reference to unknown function${if (printable.length > 1) "" else "s"}: ${printable.mkString(", ")}"
+                )
 
             }
           case Right(error) =>
