@@ -3,10 +3,10 @@ package daos
 import models.FuncToken
 
 object CommandIds extends Enumeration {
-  val changeRobotDirection = "changeRobotDirection"
-  val moveRobotForwardOneSpot = "moveRobotForwardOneSpot"
-  val setItemDown = "setItemDown"
-  val pickUpItem = "pickUpItem"
+  final val changeRobotDirection = "1001"
+  final val moveRobotForwardOneSpot = "1002"
+  final val setItemDown = "1003"
+  final val pickUpItem = "1004"
 }
 
 object DefaultCommands {
