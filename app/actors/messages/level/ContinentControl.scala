@@ -1,8 +1,6 @@
 package actors.messages.level
 import compiler.CellType
 import compiler.processor.Frame
-import models.Problem
-
 object ContinentControl {
   private def isFinalSpot(frame: Frame) =
     frame.board.currentCell().cellType == CellType.FinalAnswer

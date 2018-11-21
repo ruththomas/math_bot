@@ -1,6 +1,5 @@
 package daos
-
-import models.FuncToken
+import models.deprecatedPlayerToken.FuncToken
 
 object CommandIds extends Enumeration {
   val changeRobotDirection = "changeRobotDirection"

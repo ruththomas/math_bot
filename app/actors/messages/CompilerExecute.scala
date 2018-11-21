@@ -1,6 +1,4 @@
 package actors.messages
+import actors.messages.level.Problem
 
-import models.Problem
-
-case class CompilerExecute(steps : Int, problem : Problem)
-
+case class CompilerExecute(steps: Int, problem: Problem)

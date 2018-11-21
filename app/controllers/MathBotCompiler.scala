@@ -3,7 +3,7 @@ package controllers
 import actors._
 import actors.convert_flow.{CompilerRequestConvertFlow, CompilerResponseConvertFlow, UpdateAccessFlow}
 import actors.messages.ClientRobotState
-import actors.messages.level.PathAndContinent
+import actors.messages.level.{PathAndContinent, Problem}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
 import akka.stream.Materializer
