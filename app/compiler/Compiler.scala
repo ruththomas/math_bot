@@ -107,13 +107,17 @@ object Compiler {
               commands: List[Function],
               grid: GridMap,
               problem: Problem): Option[GridAndProgram] = {
-    val funcTokens = funcs.map(token => token.created_id -> token).toMap + (main.created_id -> main)
-    val firstPass = convertToOps(main, funcTokens, Map.empty[String, UserFunction], commands)
-    val program = firstPass._1.asInstanceOf[UserFunction]
-    val byCreatedId = firstPass._2
-    fixReferences(byCreatedId.values.toSeq :+ program,
-                  lookUpReference(byCreatedId, Map.empty[String, UserFunction], Map.empty[Int, UserFunction]))
-    processBoard(grid).map(g => GridAndProgram(g, program, problem))
+    val funcMap = funcs.map(token => token.created_id -> token).toMap
+    val cmdMap = commands.map(c => c.created_id -> c).toMap
+    val firstPassMain = convertToOps(main, funcMap, cmdMap)
+    val firstPassFuncs = funcs.map(convertToOps(_, funcMap, cmdMap))
+    fixReferences(
+      firstPassFuncs :+ firstPassMain,
+      lookUpReference(firstPassFuncs.map(uf => uf.created_id -> uf).toMap,
+                      Map.empty[String, UserFunction],
+                      Map.empty[Int, UserFunction])
+    )
+    processBoard(grid).map(g => GridAndProgram(g, firstPassMain, problem))
   }
 
   private def lookUpReference(byCreatedId: Map[String, UserFunction],
@@ -169,63 +173,36 @@ object Compiler {
     }
   }
 
-  def convertToOps(token: Function,
-                   funcTokens: Map[String, Function],
-                   userFuncs: TokenUserFunctions,
-                   commands: List[Function]): (Operation, Map[String, UserFunction]) = {
-    token.created_id match {
-      case id if commands.map(t => t.created_id).contains(id) =>
-        val command = commands.find(c => c.created_id == id).map(c => c.commandId).getOrElse("unknown") match {
-          case CommandIds.changeRobotDirection => ChangeRobotDirection
-          case CommandIds.moveRobotForwardOneSpot => MoveRobotForwardOneSpot
-          case CommandIds.setItemDown => SetItemDown
-          case CommandIds.pickUpItem => PickUpItem
-          case _ => NoOperation
-        }
-        (command, userFuncs)
-      case id if funcTokens.contains(id) =>
-        token.color match {
-          case "default" =>
-            userFuncs.get(id) match {
-              case Some(uf) =>
-                (uf, userFuncs)
-              case None =>
-                // The empty "UserFunction()" is used to prevent convertToOps from trying to convert the same function again.  It
-                // doesn't really get added because the line below replaces the empty with the "updated" call
-                val converted = convertFunction(token, funcTokens, userFuncs + (id -> UserFunction()), commands)
-                val uf = new UserFunction(converted.operations)
-                (uf, converted.userFuncs.updated(token.created_id, uf))
+  private def convertToOps(function: Function, allFunctions: Map[String, Function], commands: Map[String, Function]) : UserFunctionById = {
+    function.func match {
+      case Some(functions) =>
+        UserFunctionById(
+          functions.map { f =>
+            f.created_id match {
+              case CommandIds.changeRobotDirection =>
+                ChangeRobotDirection
+              case CommandIds.moveRobotForwardOneSpot =>
+                MoveRobotForwardOneSpot
+              case CommandIds.pickUpItem =>
+                PickUpItem
+              case CommandIds.setItemDown =>
+                SetItemDown
+              case id if allFunctions.contains(id) =>
+                f.color match {
+                  case "default" =>
+                    UserFunctionRefById(id)
+                  case _ =>
+                    IfColor(f.color, UserFunctionRefById(id))
+                }
+              case _ =>
+                NoOperation
             }
-          case color =>
-            userFuncs.get(id) match {
-              case Some(uf) =>
-                (IfColor(color, uf), userFuncs)
-              case None =>
-                // The empty "UserFunction()" is used to prevent convertToOps from trying to convert the same function again.  It
-                // doesn't get really added because the line below replaces the empty with the "updated" call
-                val converted = convertFunction(token.copy(color = "default"),
-                                                funcTokens,
-                                                userFuncs + (id -> UserFunction()),
-                                                commands)
-                val uf = new UserFunction(converted.operations)
-                (IfColor(color, uf), converted.userFuncs.updated(token.created_id, uf))
-            }
-        }
-    }
-  }
+          },
+          function.created_id
+        )
 
-  case class Converted(operations: Seq[Operation], userFuncs: Map[String, UserFunction])
-
-  def convertFunction(
-      funcToken: Function,
-      funcTokens: Map[String, Function],
-      userFuncs: Map[String, UserFunction],
-      commands: List[Function]
-  ): Converted = {
-    val operations = funcTokens(funcToken.created_id).func.get
-    operations.foldLeft[Converted](Converted(Seq.empty[Operation], userFuncs)) { (converted, token) =>
-      val (op, funcs) = convertToOps(token, funcTokens, converted.userFuncs, commands)
-      Converted(converted.operations :+ op, funcs)
+      case _ =>
+        UserFunctionById(Seq(NoOperation), function.created_id)
     }
   }
 
