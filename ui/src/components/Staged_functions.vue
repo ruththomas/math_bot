@@ -35,11 +35,17 @@ export default {
   mounted () {
   },
   computed: {
+    confirmDeactiveFunction () {
+      return this.$store.getters.getConfirmDeactiveFunction
+    },
     levelControl () {
       return this.$store.getters.getLevelControl
     },
     stagedFunctions () {
       return this.levelControl.functions.stagedFunctions
+        .filter(func => {
+          return func.created_id !== this.confirmDeactiveFunction.created_id
+        })
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
