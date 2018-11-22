@@ -76,12 +76,16 @@ export default {
     confirmDeactivateFunction (evt) {
       const {oldIndex, newIndex} = evt
       const func = this.levelControl.functions.activeFuncs[oldIndex]
-      func.category = 'staged'
-      func.index = newIndex
-      // func.func = []
+
+      // if user drags command function ignore
+      if (!func) return
+
+      Object.assign(func, {
+        category: 'staged',
+        index: newIndex
+      })
       this.$store.dispatch('confirmDeactivateFunction', func)
       this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
-      // this.levelControl.deactivateFunction(func)
     }
   },
   components: {
