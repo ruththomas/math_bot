@@ -3,6 +3,7 @@
     id="level-congrats-modal"
     ref="level-congrats-modal"
     @show="getCongratsData"
+    v-if="nextPlanet"
   >
     <div slot="modal-header">
       <img

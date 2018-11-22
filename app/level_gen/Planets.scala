@@ -32,6 +32,11 @@ trait Planets extends Continents with LevelGenTags {
 
   val arithmeticChildren = List(
     CelestialSystem(
+      name = "Coordinates",
+      kind = planet,
+      children = coordinatesChildren
+    ),
+    CelestialSystem(
       name = "Addition",
       kind = planet,
       children = additionChildren
@@ -50,6 +55,16 @@ trait Planets extends Continents with LevelGenTags {
       name = "Division",
       kind = planet,
       children = divisionChildren
+    ),
+    CelestialSystem(
+      name = "Exponents",
+      kind = planet,
+      children = exponentsChildren
+    ),
+    CelestialSystem(
+      name = "Roots",
+      kind = planet,
+      children = rootsChildren
     )
   )
 }

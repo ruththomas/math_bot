@@ -9,7 +9,7 @@ trait StarSystems extends Planets with LevelGenTags {
       children = programmingChildren
     ),
     CelestialSystem(
-      name = "Arithmetic",
+      name = "Single Digit Arithmetic",
       kind = starSystem,
       children = arithmeticChildren
     )

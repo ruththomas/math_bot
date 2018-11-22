@@ -26,7 +26,7 @@
           </div>
         </button>
         <button
-          v-if="continents[continents.length - 1].stats.wins > 0"
+          v-if="nextPlanet && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextPlanet.id + '0')">
