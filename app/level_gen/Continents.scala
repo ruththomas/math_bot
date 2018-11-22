@@ -12,3 +12,7 @@ trait Continents
     with Subtraction
     with Multiplication
     with Division
+    with Exponents
+    with Roots
+    with Refactor
+    with Coordinates

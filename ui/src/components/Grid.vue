@@ -22,7 +22,7 @@
               :key="'space:' + rInd + ':' + sInd"
             >
               <span v-if="space.name === 'final answer'"
-                    class="problem single-digit-problem">{{singleDigitProblem(problem)}}</span>
+                    class="problem single-digit-problem" style="z-index: 1000;">{{singleDigitProblem(problem)}}</span>
               <b-img
                 v-if="space.name === 'final answer'"
                 class="portal glyphicon"
@@ -118,10 +118,11 @@ export default {
   },
   methods: {
     singleDigitProblem (problem) {
-      const pNumber = Number(problem)
-      if (!isNaN(pNumber) && pNumber > 0) {
-        return problem
-      }
+      // const pNumber = Number(problem)
+      // if (!isNaN(pNumber) && pNumber > 0) {
+      //   return problem
+      // }
+      return problem
     },
     closePopover: utils.closePopover
   },
