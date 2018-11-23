@@ -33,15 +33,6 @@ export default {
     },
     videoTimers () {
       return this.$store.getters.getVideoTimers
-    },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    }
-  },
-  data () {
-    return {
-      counter: 45,
-      max: 100
     }
   },
   methods: {

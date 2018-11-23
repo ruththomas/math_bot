@@ -16,19 +16,9 @@
 <script>
 export default {
   name: 'planets',
+  mounted () {
+  },
   computed: {
-    level () {
-      return this.$store.getters.getLevel
-    },
-    levels () {
-      return this.$store.getters.getLevels
-    },
-    steps () {
-      return this.$store.getters.getSteps
-    },
-    tokenId () {
-      return this.$store.getters.getToken.token_id
-    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     }
@@ -40,7 +30,6 @@ export default {
   },
   props: ['planets', 'selectedPlanet', 'updateSelectedPlanet']
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -52,20 +41,28 @@ export default {
   $Numbers-color: rgba(74, 144, 226, 1);
   $Recursion-color: rgba(255, 152, 177, 1);
   $Conditionals-color: rgba(80, 227, 194, 1);
-  $Addition-color: rgba(41, 254, 28, 1);
-  $Subtraction-color: rgba(253, 254, 137, 1);
-  $Multiplication-color: rgba(254, 151, 78, 1);
-  $Division-color: rgba(64, 169, 254, 1);
+  $Coordinates-color: rgba(41, 254, 28, 1);
+  $Addition-color: rgba(253, 254, 137, 1);
+  $Subtraction-color: rgba(254, 151, 78, 1);
+  $Multiplication-color: rgba(64, 169, 254, 1);
+  $Division-color: transparent;
+  $Exponents-color: transparent;
+  $Roots-color: transparent;
+  $Refactor-color: transparent;
   $inactive-color: rgba(104, 104, 104, 1);
   $BasicProgramming-size: 23vmin;
+  $Coordinates-size: 10vmin;
   $Counting-size: 16vmin;
   $Numbers-size: 20vmin;
   $Recursion-size: 14vmin;
   $Conditionals-size: 12vmin;
-  $Addition-size: 20vmin;
-  $Subtraction-size: 11vmin;
-  $Multiplication-size: 18vmin;
-  $Division-size: 15vmin;
+  $Addition-size: 5vmin;
+  $Subtraction-size: 5vmin;
+  $Multiplication-size: 5vmin;
+  $Division-size: 5vmin;
+  $Exponents-size: 5vmin;
+  $Roots-size: 5vmin;
+  $Refactor-size: 5vmin;
   $planet-gradient: rgba(0, 0, 0, 1);
 
   .space {
@@ -120,38 +117,69 @@ export default {
     left: 25%;
   }
 
+  .Coordinates {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Coordinates-color, $planet-gradient);
+    height: $Addition-size;
+    width: $Addition-size;
+    top: 0;
+    left: 0;
+  }
+
   .Addition {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Addition-color, $planet-gradient);
     height: $Addition-size;
     width: $Addition-size;
-    top: 75%;
-    left: 20%;
+    top: 10%;
+    left: 0
   }
 
   .Subtraction {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Subtraction-color, $planet-gradient);
     height: $Subtraction-size;
     width: $Subtraction-size;
-    top: 60%;
-    left: 60%;
+    top: 20%;
+    left: 0;
   }
 
   .Multiplication {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Multiplication-color, $planet-gradient);
     height: $Multiplication-size;
     width: $Multiplication-size;
-    top: 40%;
-    left: 15%;
+    top: 30%;
+    left: 0;
   }
 
   .Division {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
     height: $Division-size;
     width: $Division-size;
-    top: 20%;
-    left: 50%;
+    top: 40%;
+    left: 0;
   }
 
+  .Exponents {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+    height: $Division-size;
+    width: $Division-size;
+    top: 50%;
+    left: 0;
+  }
+
+  .Roots {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+    height: $Division-size;
+    width: $Division-size;
+    top: 60%;
+    left: 0;
+  }
+
+  .Refactor {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+    height: $Division-size;
+    width: $Division-size;
+    top: 70%;
+    left: 0;
+  }
   .BasicProgramming.selected {
     box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $BasicProgramming-color;
   }
@@ -170,6 +198,10 @@ export default {
 
   .Conditionals.selected {
     box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Conditionals-color;
+  }
+
+  .Coordinates.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Coordinates-color;
   }
 
   .Addition.selected {

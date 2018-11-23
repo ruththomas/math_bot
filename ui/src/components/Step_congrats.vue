@@ -41,48 +41,16 @@
 <script>
 import Stars from './Stars'
 import SocialSharing from './Social_sharing'
-import utils from '../services/utils'
 export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
-    robot () {
-      return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
     runCompiled () {
       return this.levelControl.runCompiled
     },
-
-    level () {
-      return this.$store.getters.getLevel
-    },
-    step () {
-      return this.$store.getters.getStep
-    },
-    steps () {
-      return this.$store.getters.getSteps
-    },
-    stepStats () {
-      const stepName = this.step
-      return this.steps.find(s => s.name === stepName)
-    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
-    },
-    socialMessage () {
-      return `
-        I beat planet ${this.level} step ${utils.findStepInd(this.steps, this.step)} on mathbot.com!
-      `
     }
   },
   data () {

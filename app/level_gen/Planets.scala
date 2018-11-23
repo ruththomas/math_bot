@@ -2,54 +2,69 @@ package level_gen
 import level_gen.models.CelestialSystem
 
 trait Planets extends Continents with LevelGenTags {
-  val programming = List(
+  val programmingChildren = List(
     CelestialSystem(
       name = "BasicProgramming",
       kind = planet,
-      children = basicProgramming
+      children = basicProgrammingChildren
     ),
     CelestialSystem(
       name = "Counting",
       kind = planet,
-      children = counting
+      children = countingChildren
     ),
     CelestialSystem(
       name = "Numbers",
       kind = planet,
-      children = numbers
+      children = numbersChildren
     ),
     CelestialSystem(
       name = "Recursion",
       kind = planet,
-      children = recursion
+      children = recursionChildren
     ),
     CelestialSystem(
       name = "Conditionals",
       kind = planet,
-      children = conditionals
+      children = conditionalsChildren
     )
   )
 
-  val arithmetic = List(
+  val arithmeticChildren = List(
+    CelestialSystem(
+      name = "Coordinates",
+      kind = planet,
+      children = coordinatesChildren
+    ),
     CelestialSystem(
       name = "Addition",
       kind = planet,
-      children = addition
+      children = additionChildren
     ),
     CelestialSystem(
       name = "Subtraction",
       kind = planet,
-      children = subtraction
+      children = subtractionChildren
     ),
     CelestialSystem(
       name = "Multiplication",
       kind = planet,
-      children = multiplication
+      children = multiplicationChildren
     ),
     CelestialSystem(
       name = "Division",
       kind = planet,
-      children = division
+      children = divisionChildren
+    ),
+    CelestialSystem(
+      name = "Exponents",
+      kind = planet,
+      children = exponentsChildren
+    ),
+    CelestialSystem(
+      name = "Roots",
+      kind = planet,
+      children = rootsChildren
     )
   )
 }

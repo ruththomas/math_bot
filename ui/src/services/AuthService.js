@@ -16,18 +16,35 @@ export class AuthService {
     this._resumeSession = this._resumeSession.bind(this)
     this._requestSession = this._requestSession.bind(this)
     this._storeLastRoute = this._storeLastRoute.bind(this)
+    this._handleRoute = this._handleRoute.bind(this)
+
     this._resumeSession()
   }
 
   _storeLastRoute () {
-    localStorage.setItem('last_location', $router.history.current.fullPath)
+    window.onbeforeunload = () => {
+      const route = $router.history.current.fullPath
+      if (route === '/robot' || route === '/profile') {
+        localStorage.setItem('last_location', route)
+      }
+    }
+  }
+
+  _handleRoute () {
+    const storedRouteOpt = localStorage.getItem('last_location')
+    if (storedRouteOpt) {
+      $router.push({path: storedRouteOpt})
+    } else {
+      $router.push({path: '/profile'})
+    }
   }
 
   _handleAuthenticated () {
     const tokenId = this.userProfile.sub || this.userProfile.user_id
     this.authenticated = true
     $store.dispatch('updateControls', tokenId)
-    $router.push({path: '/profile'})
+    this._storeLastRoute()
+    this._handleRoute()
   }
 
   _setProfile (profile) {

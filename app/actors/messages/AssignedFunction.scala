@@ -12,4 +12,6 @@ case class AssignedFunction(name: String,
                             image: String,
                             sizeLimit: Int,
                             func: List[String],
-                            levelAndStep: Option[(LevelName, StepName)] = None)
+                            levelAndStep: Option[(LevelName, StepName)] = None) {
+  def limit: Int = if (this.sizeLimit < 0) 10000 else this.sizeLimit
+}

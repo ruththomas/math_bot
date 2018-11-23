@@ -3,7 +3,7 @@ package actors
 import java.time.Instant
 
 import actors.messages.ActorFailed
-import actors.messages.level.{LevelControl, Stats, _}
+import actors.messages.level.Stats
 import akka.actor.{Actor, ActorRef, Props}
 import akka.http.scaladsl.util
 import akka.http.scaladsl.util.FastFuture

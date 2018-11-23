@@ -31,6 +31,8 @@ object LevelActor {
   final case class ResetVideos(id: String, path: String)
   final case class UpdatePath(path: String)
   final case class UpdateFunctionProperties(function: Function)
+  final case class ActivateDeactivateFunction(function: Function)
+  final case class Unlock()
 
   def props(out: ActorRef,
             tokenId: TokenId,
@@ -142,6 +144,19 @@ class LevelActor @Inject()(out: ActorRef,
       for {
         _ <- levelControl.updatePath(tokenId, path)
       } yield out ! path
+    /*
+     * Moves staged to active or active to staged
+     * Passed in function must include new category (where function is being moved to)
+     * Passed in function muse include new index position (position function should be in list)
+     * */
+    case ActivateDeactivateFunction(function) =>
+      for {
+        preparedFunctions <- levelControl.activateDeactivateFunction(tokenId, function)
+      } yield out ! preparedFunctions
+    case Unlock() =>
+      for {
+        updated <- levelControl.unlock(tokenId)
+      } yield out ! updated
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }

@@ -1,6 +1,7 @@
 <template>
   <div class="container profile">
     <div v-if="levelControl.galaxy !== null" class="star-system-nav">
+      <level-congrats key="level-congrats"></level-congrats>
       <b-button
         v-for="(starSystem, ind) in levelControl.galaxy.starSystems"
         :key="'star-system/' + ind"
@@ -10,7 +11,6 @@
       >{{starSystem.stats.name}}</b-button>
     </div>
     <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
-      <!--<level-congrats key="level-congrats" :congrats-data="congratsData"></level-congrats>-->
       <div class="star-systems">
         <star-system></star-system>
       </div>
@@ -27,86 +27,29 @@ import SplashScreen from './Splash_screen'
 import UserProfileControls from './User_profile_controls'
 import SocialSharing from './Social_sharing'
 import LevelCongrats from './Level_congrats'
-import api from '../services/api'
 import StarSystem from './Star_system'
 
 export default {
   mounted () {
     this.handleCongrats()
-    setTimeout(this.slideToCurrent, 50)
   },
   computed: {
     starSystemShowing () {
       return this.levelControl.path[2]
     },
-    swiper () {
-      return this.$refs.galaxySwiper.swiper
-    },
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    auth () {
-      return this.$store.getters.getAuth
-    },
-    splashScreenShowing () {
-      return this.$store.getters.getSplashScreenShowing
-    },
-    profileView () {
-      return this.$store.getters.getProfileView
-    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
-    },
-    stats () {
-      return this.$store.getters.getStats
-    },
-    currentUserName () {
-      let currentUser = this.$store.getters.getCurrentUser
-      if (currentUser === null) {
-        return 'Profile'
-      } else {
-        return currentUser.given_name || currentUser.nickname
-      }
-    },
-    step () {
-      return this.$store.getters.getStep
-    },
-    tokenId () {
-      return this.$store.getters.getTokenId
-    }
-  },
-  data () {
-    return {
-      congratsData: {
-        path: '00000',
-        builtContinent: {
-          name: ''
-        }
-      }
     }
   },
   methods: {
     handleCongrats () {
       const showCongrats = this.$route.query.showCongrats
       if (showCongrats) {
-        this.congratsData = JSON.parse(showCongrats)
         this.$root.$emit('bv::show::modal', 'level-congrats-modal')
-        this.$router.push({query: {}})
       }
-    },
-    changeSystem (dir) {
-      const newPos = this.starSystemShowing + dir
-      const starSystems = this.levelControl.galaxy.starSystems
-      if (newPos < 0) this.starSystemShowing = 0
-      else if (newPos > starSystems.length - 1) this.starSystemShowing = starSystems.length - 1
-      else this.starSystemShowing = newPos
-    },
-    goToSandbox () {
-      this.$store.dispatch('updateRunCompiled', this)
-      api.switchLevel({tokenId: this.tokenId, level: 'Sandbox', step: '1'}, (res) => {
-        this.$store.dispatch('updateStats', res.body)
-        this.$router.push({path: '/robot'})
-      })
     }
   },
   components: {

@@ -137,4 +137,11 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   def updatePath(tokenId: TokenId, path: String): Future[Stats] = {
     collection.findOneAndUpdate(equal(tokenIdLabel, tokenId), set(currentPathLabel, path)).toFuture()
   }
+
+  def unlock(tokenId: TokenId): Future[Stats] =
+    for {
+      stats <- findStats(tokenId)
+      updated = stats.map(ss => ss.copy(list = ss.list.mapValues(s => s.copy(active = true, wins = 1))))
+      _ <- collection.replaceOne(equal(tokenIdLabel, tokenId), updated.get).toFuture()
+    } yield updated.get
 }

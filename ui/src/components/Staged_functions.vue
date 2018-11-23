@@ -9,7 +9,7 @@
         class="staged-functions"
         :list="stagedFunctions"
         :options="draggableOptions"
-        @add="deactivateFunction"
+        @add="confirmDeactivateFunction"
       >
         <function-box
           v-for="(func, ind) in stagedFunctions"
@@ -30,39 +30,25 @@ import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
 import PuzzlePieces from './Puzzle_pieces'
 import ActiveDrop from './Activate_drop'
-import BuildUtils from '../services/BuildFunction'
 
 export default {
   mounted () {
   },
   computed: {
+    confirmDeactiveFunction () {
+      return this.$store.getters.getConfirmDeactiveFunction
+    },
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    gridMap () {
-      return this.levelControl.continent.gridMap
-    },
-    robot () {
-      return this.levelControl.robot
-    },
-    robotCarrying () {
-      return this.robot.robotCarrying
-    },
-    problem () {
-      return this.levelControl.continent.problem.problem
-    },
     stagedFunctions () {
       return this.levelControl.functions.stagedFunctions
+        .filter(func => {
+          return func.created_id !== this.confirmDeactiveFunction.created_id
+        })
     },
-
     permanentImages () {
       return this.$store.getters.getPermanentImages
-    },
-    currentFunction () {
-      return this.$store.getters.getCurrentFunction
-    },
-    editFunctionShowing () {
-      return this.$store.getters.getEditFunctionShowing
     }
   },
   data () {
@@ -87,11 +73,19 @@ export default {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
       this.$store.dispatch('updateEditingIndex', null)
     },
-    deactivateFunction (evt) {
-      BuildUtils.deactivateFunction({
-        activeIndex: evt.oldIndex,
-        stagedIndex: evt.newIndex
+    confirmDeactivateFunction (evt) {
+      const {oldIndex, newIndex} = evt
+      const func = this.levelControl.functions.activeFuncs[oldIndex]
+
+      // if user drags command function ignore
+      if (!func) return
+
+      Object.assign(func, {
+        category: 'staged',
+        index: newIndex
       })
+      this.$store.dispatch('confirmDeactivateFunction', func)
+      this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
     }
   },
   components: {

@@ -29,6 +29,7 @@ class RunCompiled extends GridAnimator {
     this.startMbl = this.startMbl.bind(this)
     this.clearMbl = this.clearMbl.bind(this)
     this._updateGalaxyData = this._updateGalaxyData.bind(this)
+    this._deleteAllMessages = this._deleteAllMessages.bind(this)
   }
 
   lastFrame = null
@@ -71,6 +72,7 @@ class RunCompiled extends GridAnimator {
       this._mainEmptyMessage(emptyFuncs)
     } else if (this.robot.state !== 'paused') {
       this.robotFrames = []
+      this._deleteAllMessages()
       this.robot.setState('running')
       this._askCompiler(mbl, true, this._processFrames)
     } else {
@@ -202,6 +204,10 @@ class RunCompiled extends GridAnimator {
     this._addMessage(messageBuilder)
   }
 
+  _deleteAllMessages () {
+    $store.dispatch('deleteAllMessages')
+  }
+
   _addMessage (messageBuilder) {
     $store.dispatch('addMessage', messageBuilder)
   }
@@ -227,7 +233,11 @@ class RunCompiled extends GridAnimator {
     return this.initializeAnimation(frame, async () => {
       this.lastFrame = frame
       this.robot.setState('success')
-      this._showStepCongrats()
+      if ($store.state.levelControl.isLastContinent()) {
+        $router.push({path: '/profile', query: {showCongrats: JSON.stringify(frame)}})
+      } else {
+        this._showStepCongrats()
+      }
       this._updateGalaxyData()
     })
   }

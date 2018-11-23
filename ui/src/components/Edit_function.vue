@@ -4,10 +4,10 @@
       <div class="func-param-form">
         <puzzle-pieces
           :id="'edit-function-displayed-func'"
-          :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayImage: editingFunction.displayImage}"
+          :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayName: editingFunction.displayName}"
           :piece-to-show="'closed'"
           :show-name="false"
-          @click.native="levelControl.toggleFunctionImage(editingFunction)"
+          @click.native="toggleFunctionImage"
         ></puzzle-pieces>
         <div
           class='function-control'
@@ -64,8 +64,6 @@
 
 <script>
 import draggable from 'vuedraggable'
-import {_} from 'underscore'
-import buildUtils from '../services/BuildFunction'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
@@ -80,9 +78,6 @@ export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
-    },
-    gridMap () {
-      return this.levelControl.continent.gridMap
     },
     robot () {
       return this.levelControl.robot
@@ -99,15 +94,11 @@ export default {
     editingFunction () {
       return this.activeFunctions[this.editingIndex]
     },
-
-    sizeLimit () {
-      return this.editingFunction.sizeLimit < 0 ? 10000 : this.editingFunction.sizeLimit
-    },
-    stats () {
-      return this.$store.getters.getStats
-    },
     editingIndex () {
       return this.$store.getters.getEditingIndex
+    },
+    sizeLimit () {
+      return this.editingFunction.sizeLimit
     },
     colorSelected () {
       return this.colors[this.currentColor]
@@ -126,9 +117,6 @@ export default {
     },
     cmdImages () {
       return this.permanentImages.cmdImages
-    },
-    funcNcmdImages () {
-      return _.extend(this.funcImages, this.cmdImages)
     }
   },
   data () {
@@ -191,14 +179,14 @@ export default {
       this.levelControl.updateFunctionProperties(this.editingFunction)
     },
     applyColorConditional () {
-      const level = this.stats.level
-      if (level !== 'BasicProgramming' && level !== 'Counting' && level !== 'Numbers' && level !== 'Recursion') {
-        buildUtils.adjustColor({
-          context: this,
-          color: this.findColor()
-        })
-      }
-      this.color = 'default'
+      const func = this.editingFunction
+      func.color = this.findColor()
+      this.levelControl.updateFunctionProperties(func)
+    },
+    toggleFunctionImage () {
+      const func = this.editingFunction
+      func.displayName = !func.displayName
+      this.levelControl.updateFunctionProperties(func)
     },
     deleteFuncContents () {
       this.closePopover('delete-function')
