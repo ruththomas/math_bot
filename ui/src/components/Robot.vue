@@ -67,7 +67,13 @@ import AdvancedMode from './Advanced_mode'
 import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 
 export default {
+  mounted () {
+    // this.handleFreeHint()
+  },
   computed: {
+    videoControl () {
+      return this.$store.getters.getVideoHintControl
+    },
     levelControl () {
       return this.$store.getters.getLevelControl
     },
@@ -91,6 +97,10 @@ export default {
     }
   },
   methods: {
+    handleFreeHint () {
+      if (this.levelControl.continent !== null) return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
+      setTimeout(this.handleFreeHint, 10)
+    },
     goToProfile () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
       this.$store.dispatch('deleteMessages')
