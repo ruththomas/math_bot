@@ -118,11 +118,7 @@ export default {
   },
   methods: {
     singleDigitProblem (problem) {
-      // const pNumber = Number(problem)
-      // if (!isNaN(pNumber) && pNumber > 0) {
-      //   return problem
-      // }
-      return problem
+      return problem !== '0' ? problem : ''
     },
     closePopover: utils.closePopover
   },
