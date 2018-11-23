@@ -129,7 +129,9 @@ class RunCompiled extends GridAnimator {
 
   _initializeStep () {
     const freeHint = this.lastFrame.pathAndContinent.builtContinent.freeHint
-    this._showFreeHint(freeHint)
+    if (this.lastFrame === null) {
+      this._showFreeHint(freeHint)
+    }
     this.levelControl._setContinent(this.lastFrame)
     this._hideCongrats()
     this.constructor(this.context)

@@ -68,7 +68,7 @@ import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 
 export default {
   mounted () {
-    // this.handleFreeHint()
+    this.handleFreeHint()
   },
   computed: {
     videoControl () {
