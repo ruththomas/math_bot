@@ -76,7 +76,7 @@ export default {
       this.$store.dispatch('addMessage', messageBuilder)
     },
     editFunction (evt, func) {
-      this.toggleEditFunction(func.index)
+      this.toggleEditFunction(this.levelControl.findFunctionIndex(func.created_id))
       this.$store.dispatch('updateEditFunctionEvent', evt.target)
     },
     createPlaceHolders (size) {

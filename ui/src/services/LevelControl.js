@@ -104,6 +104,13 @@ class LevelControl extends Ws {
     return parsed
   }
 
+  findFunctionIndex (createdId) {
+    return this.functions.activeFuncs.reduce((atIndex, func, ind) => {
+      if (func.created_id === createdId) atIndex = ind
+      return atIndex
+    }, 0)
+  }
+
   updateFunction (func) {
     this._wsOnMessage(() => {}) // doing nothing with response for now
     this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))

@@ -38,6 +38,7 @@
             :collection="activeFunctions"
             :origin="'functions'"
             :data-created-id="func.created_id"
+            :data-index="ind"
             @click.native="editFunction($event, func, ind)"
           ></function-box>
         </draggable>
