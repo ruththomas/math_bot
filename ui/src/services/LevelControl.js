@@ -84,7 +84,6 @@ class LevelControl extends Ws {
   }
 
   deactivateFunction (func) {
-
     // clear function fields
     Object.assign(func, {
       func: []
