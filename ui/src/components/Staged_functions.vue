@@ -1,6 +1,5 @@
 <template>
   <div class="staged-functions-container">
-    <active-drop></active-drop>
     <div class="staged-functions-header">
       <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
     </div>
@@ -29,7 +28,6 @@
 import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
 import PuzzlePieces from './Puzzle_pieces'
-import ActiveDrop from './Activate_drop'
 import BuildUtils from '../services/BuildFunction'
 
 export default {
@@ -81,8 +79,7 @@ export default {
   components: {
     draggable,
     FunctionBox,
-    PuzzlePieces,
-    ActiveDrop
+    PuzzlePieces
   }
 }
 </script>

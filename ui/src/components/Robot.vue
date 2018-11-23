@@ -17,6 +17,8 @@
         <grid></grid>
       </div>
 
+      <active-drop></active-drop>
+
       <div class="row box" style="padding: 0;">
         <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
         <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
@@ -47,6 +49,7 @@ import StepCongrats from './Step_congrats'
 import VideoHint from './Video_hint'
 import api from '../services/api'
 import LevelCongrats from './Level_congrats'
+import ActiveDrop from './Activate_drop'
 export default {
   mounted () {
     this.$store.dispatch('updateVideoHint', this)
@@ -170,7 +173,8 @@ export default {
     PopoverBucket,
     StepCongrats,
     LevelCongrats,
-    VideoHint
+    VideoHint,
+    ActiveDrop
   }
 }
 </script>
