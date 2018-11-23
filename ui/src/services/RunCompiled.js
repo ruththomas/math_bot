@@ -213,7 +213,8 @@ class RunCompiled extends GridAnimator {
   }
 
   _resetStep () {
-    this.levelControl.getContinent(this.levelControl.path, () => {
+    this.levelControl.getContinent(this.levelControl.path, (res) => {
+      $store.state.levelControl._resetContinent({pathAndContinent: res})
       this.constructor(this.context)
     })
   }
@@ -316,7 +317,7 @@ class RunCompiled extends GridAnimator {
         if (startRunning) startRunning()
       }
     })
-    this.compilerControl.send(this.levelControl.continent.problem.encryptedProblem, false, mbl, create)
+    this.compilerControl.send({problem: this.levelControl.continent.problem.encryptedProblem, halt: false, mbl: mbl, create: create})
   }
 }
 

@@ -145,6 +145,7 @@ export default {
 
       .row {
         margin: 0;
+        width: 100%;
       }
 
       .box {

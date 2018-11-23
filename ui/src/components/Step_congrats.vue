@@ -2,6 +2,7 @@
   <b-modal
     id="step-congrats-modal"
     ref="step-congrats-modal"
+    :no-close-on-backdrop="true"
   >
     <div slot="modal-header">
       <img class="dialog-button close-congrats" @click="closeCongrats" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">

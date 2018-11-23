@@ -10,10 +10,10 @@ class CompilerControl extends Ws {
 
   haltProgram (cb) {
     this._wsOnMessage(cb)
-    this.send(0, '0', false, true)
+    this.send({halt: true})
   }
 
-  send (problem, halt, mbl, create) {
+  send ({problem, halt, mbl, create}) {
     const prepReq = {
       steps: this._compilerTake,
       problem: problem,
