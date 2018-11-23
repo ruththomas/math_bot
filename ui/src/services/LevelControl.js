@@ -84,6 +84,10 @@ class LevelControl extends Ws {
   }
 
   deactivateFunction (func) {
+    // clear function fields
+    Object.assign(func, {
+      func: []
+    })
     this._wsOnMessage((updated) => {
       this._setFunctions(updated.preparedFunctions)
     })

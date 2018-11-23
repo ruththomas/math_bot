@@ -35,11 +35,17 @@ export default {
   mounted () {
   },
   computed: {
+    confirmDeactiveFunction () {
+      return this.$store.getters.getConfirmDeactiveFunction
+    },
     levelControl () {
       return this.$store.getters.getLevelControl
     },
     stagedFunctions () {
       return this.levelControl.functions.stagedFunctions
+        .filter(func => {
+          return func.created_id !== this.confirmDeactiveFunction.created_id
+        })
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
@@ -70,12 +76,16 @@ export default {
     confirmDeactivateFunction (evt) {
       const {oldIndex, newIndex} = evt
       const func = this.levelControl.functions.activeFuncs[oldIndex]
-      func.category = 'staged'
-      func.index = newIndex
-      // func.func = []
+
+      // if user drags command function ignore
+      if (!func) return
+
+      Object.assign(func, {
+        category: 'staged',
+        index: newIndex
+      })
       this.$store.dispatch('confirmDeactivateFunction', func)
       this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
-      // this.levelControl.deactivateFunction(func)
     }
   },
   components: {
