@@ -87,7 +87,6 @@ class LevelControl extends Ws {
 
     // clear function fields
     Object.assign(func, {
-      name: '',
       func: []
     })
     this._wsOnMessage((updated) => {
