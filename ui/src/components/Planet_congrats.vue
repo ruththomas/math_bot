@@ -121,10 +121,13 @@ export default {
   $Numbers-color: rgba(74, 144, 226, 1);
   $Recursion-color: rgba(255, 152, 177, 1);
   $Conditionals-color: rgba(80, 227, 194, 1);
+  $Coordinates-color: rgba(185, 80, 86, 1);
   $Addition-color: rgba(41, 254, 28, 1);
   $Subtraction-color: rgba(253, 254, 137, 1);
   $Multiplication-color: rgba(254, 151, 78, 1);
   $Division-color: rgba(64, 169, 254, 1);
+  $Exponents-color: rgba(185, 62, 167, 1);
+  $Roots-color: rgba(54, 63, 185, 1);
   $planet-1-size: 23vmin;
   $planet-2-size: 16vmin;
   $planet-3-size: 20vmin;
@@ -195,6 +198,10 @@ export default {
             background: radial-gradient(circle at $gradient-size $gradient-size, $Conditionals-color, $planet-gradient);
           }
 
+          .Coordinates {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Coordinates-color, $planet-gradient);
+          }
+
           .Addition {
             background: radial-gradient(circle at $gradient-size $gradient-size, $Addition-color, $planet-gradient);
           }
@@ -209,6 +216,14 @@ export default {
 
           .Division {
             background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+          }
+
+          .Exponents {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Exponents-color, $planet-gradient);
+          }
+
+          .Roots {
+            background: radial-gradient(circle at $gradient-size $gradient-size, $Roots-color, $planet-gradient);
           }
         }
 

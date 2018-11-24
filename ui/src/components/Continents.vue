@@ -107,10 +107,13 @@ export default {
   $Numbers-color: rgba(74, 144, 226, 1);
   $Recursion-color: rgba(255, 152, 177, 1);
   $Conditionals-color: rgba(80, 227, 194, 1);
+  $Coordinates-color: rgba(185, 80, 86, 1);
   $Addition-color: rgba(41, 254, 28, 1);
   $Subtraction-color: rgba(253, 254, 137, 1);
   $Multiplication-color: rgba(254, 151, 78, 1);
   $Division-color: rgba(64, 169, 254, 1);
+  $Exponents-color: rgba(185, 62, 167, 1);
+  $Roots-color: rgba(54, 63, 185, 1);
   $inactive-color: rgba(104, 104, 104, 1);
   $planet-gradient: rgba(0, 0, 0, 1);
   $gradient-size: 100px;
@@ -185,6 +188,10 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Conditionals-color, $planet-gradient);
   }
 
+  .step-next-planet.Coordinates {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Coordinates-color, $planet-gradient);
+  }
+
   .step-next-planet.Addition {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Addition-color, $planet-gradient);
   }
@@ -198,7 +205,15 @@ export default {
   }
 
   .step-next-planet.Division {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+     background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+   }
+
+  .step-next-planet.Exponents {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Exponents-color, $planet-gradient);
+  }
+
+  .step-next-planet.Roots {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Roots-color, $planet-gradient);
   }
 
   .BasicProgramming.selected {
@@ -221,6 +236,10 @@ export default {
     box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Conditionals-color;
   }
 
+  .Coordinates.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Coordinates-color;
+  }
+
   .Addition.selected {
     box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Addition-color;
   }
@@ -235,6 +254,14 @@ export default {
 
   .Division.selected {
     box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Division-color;
+  }
+
+  .Exponents.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Exponents-color;
+  }
+
+  .Roots.selected {
+    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Roots-color;
   }
 
   .step-image-stars {
