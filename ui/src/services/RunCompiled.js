@@ -245,6 +245,7 @@ class RunCompiled extends GridAnimator {
       } else {
         this._showStepCongrats()
       }
+      this.compilerControl.haltProgram(() => {})
       this._updateGalaxyData()
     })
   }
