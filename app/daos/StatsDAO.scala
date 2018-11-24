@@ -3,6 +3,7 @@ package daos
 import java.util.Date
 
 import actors.messages.level.{LayerStatistic, Stats}
+import akka.http.scaladsl.util.FastFuture
 import com.google.inject.Inject
 import level_gen.models._
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
@@ -58,15 +59,17 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   }
 
   private def incContinent(path: String): TokenId = path.init + (path.last.asDigit + 1).toString
-  private def incPlanet(path: String): TokenId = path.take(3) + (path(3).asDigit + 1).toString + path.last
-  private def incStarSystem(path: String): TokenId = path.take(2) + (path(2).asDigit + 1).toString + path.drop(3)
-  private def incGalaxy(path: String): TokenId = path.head + (path(1).asDigit + 1).toString + path.drop(4)
-  private def incSuperCluster(path: String): TokenId = (path.head.asDigit + 1).toString + path.tail
+  private def incPlanet(path: String): TokenId =
+    path.take(3) + (path(3).asDigit + 1).toString + path.drop(4)
+  private def incStarSystem(path: String): TokenId =
+    path.take(2) + (path(2).asDigit + 1).toString + path.drop(3) + "0"
+  private def incGalaxy(path: String): TokenId = path.head + (path(1).asDigit + 1).toString + path.drop(4) + "00"
+  private def incSuperCluster(path: String): TokenId = (path.head.asDigit + 1).toString + path.tail + "000"
 
   private def computeNewPath(stats: Stats,
                              position: Int = 4)(path: String = incContinent(stats.currentPath)): String = {
     stats.list.get(path) match {
-      case Some(t) =>
+      case Some(_) =>
         path
       case None =>
         val zeroLast = path.take(position) + path.drop(position + 1).split("").map(_ => 0).mkString("")
