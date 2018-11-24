@@ -159,6 +159,11 @@ class LevelControl extends Ws {
     return this.galaxy.starSystems[path[2]].planets[path[3]].continents.length - 1 === Number(path.slice(4))
   }
 
+  isLastPlanet (pathToCheck) {
+    const path = pathToCheck || this.path
+    return this.galaxy.starSystems[path[2]].planets.length - 1 === Number(path[3])
+  }
+
   isEndOfGame (pathToCheck) {
     const path = pathToCheck || this.path
     return this.galaxy.starSystems.length - 1 === Number(path[2])

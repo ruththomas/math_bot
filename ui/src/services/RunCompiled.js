@@ -236,8 +236,12 @@ class RunCompiled extends GridAnimator {
     return this.initializeAnimation(frame, async () => {
       this.lastFrame = frame
       this.robot.setState('success')
-      if ($store.state.levelControl.isLastContinent()) {
-        $router.push({path: '/profile', query: {showCongrats: JSON.stringify(frame)}})
+      const isLastPlanet = $store.state.levelControl.isLastPlanet()
+      const isLastContinent = $store.state.levelControl.isLastContinent()
+      if (isLastContinent && isLastPlanet) {
+        $router.push({path: '/profile', query: Object.assign({congratsShow: 'star-system-congrats'}, this.lastFrame)})
+      } else if (isLastContinent) {
+        $router.push({path: '/profile', query: Object.assign({congratsShow: 'planet-congrats'}, this.lastFrame)})
       } else {
         this._showStepCongrats()
       }
