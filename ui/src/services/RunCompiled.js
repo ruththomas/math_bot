@@ -129,7 +129,9 @@ class RunCompiled extends GridAnimator {
 
   _initializeStep () {
     const freeHint = this.lastFrame.pathAndContinent.builtContinent.freeHint
-    if (freeHint) this._showFreeHint(freeHint)
+    if (this.lastFrame === null) {
+      this._showFreeHint(freeHint)
+    }
     this.levelControl._setContinent(this.lastFrame)
     this._hideCongrats()
     this.constructor(this.context)
@@ -213,7 +215,8 @@ class RunCompiled extends GridAnimator {
   }
 
   _resetStep () {
-    this.levelControl.getContinent(this.levelControl.path, () => {
+    this.levelControl.getContinent(this.levelControl.path, (res) => {
+      $store.state.levelControl._resetContinent({pathAndContinent: res})
       this.constructor(this.context)
     })
   }
@@ -233,11 +236,16 @@ class RunCompiled extends GridAnimator {
     return this.initializeAnimation(frame, async () => {
       this.lastFrame = frame
       this.robot.setState('success')
-      if ($store.state.levelControl.isLastContinent()) {
-        $router.push({path: '/profile', query: {showCongrats: JSON.stringify(frame)}})
+      const isLastPlanet = $store.state.levelControl.isLastPlanet()
+      const isLastContinent = $store.state.levelControl.isLastContinent()
+      if (isLastContinent && isLastPlanet) {
+        $router.push({path: '/profile', query: Object.assign({congratsShow: 'star-system-congrats'}, this.lastFrame)})
+      } else if (isLastContinent) {
+        $router.push({path: '/profile', query: Object.assign({congratsShow: 'planet-congrats'}, this.lastFrame)})
       } else {
         this._showStepCongrats()
       }
+      this.compilerControl.haltProgram(() => {})
       this._updateGalaxyData()
     })
   }
@@ -316,7 +324,7 @@ class RunCompiled extends GridAnimator {
         if (startRunning) startRunning()
       }
     })
-    this.compilerControl.send(this.levelControl.continent.problem.encryptedProblem, false, mbl, create)
+    this.compilerControl.send({problem: this.levelControl.continent.problem.encryptedProblem, halt: false, mbl: mbl, create: create})
   }
 }
 

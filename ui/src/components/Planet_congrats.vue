@@ -90,8 +90,8 @@ export default {
       this.runCompiled.stayOnLevel()
     },
     getCongratsData () {
-      const showCongrats = this.$route.query.showCongrats
-      this.congratsData = JSON.parse(showCongrats).pathAndContinent
+      const data = this.$route.query
+      this.congratsData = data.pathAndContinent
       this.$router.push({query: {}})
     }
   },

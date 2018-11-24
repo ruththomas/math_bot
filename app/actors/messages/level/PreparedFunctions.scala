@@ -192,7 +192,8 @@ object PreparedFunctions {
 
     val filteredFunctions = FilteredFunctions(main, cmds, actives, staged, continentStruct)
 
-    functionsDAO.replaceAll(functions.tokenId, Functions(functions.tokenId, List(main) ::: cmds ::: actives ::: staged))
+    functionsDAO.replaceAll(functions.tokenId,
+                            Functions(functions.tokenId, List(filteredFunctions.main) ::: cmds ::: actives ::: staged))
 
     new PreparedFunctions(
       main = filteredFunctions.main,

@@ -3,7 +3,6 @@ import Robot from './RobotState'
 import RunCompiled from './RunCompiled'
 import _ from 'underscore'
 import circular from 'circular-json'
-import $store from '../store/store'
 
 class LevelControl extends Ws {
   constructor () {
@@ -48,7 +47,7 @@ class LevelControl extends Ws {
     this.starSystem = starSystemData
   }
 
-  _setContinent ({pathAndContinent: {path, builtContinent}}, dontShowHint) {
+  _setContinent ({pathAndContinent: {path, builtContinent}}) {
     this.continent = builtContinent
     this.path = path
     const robotState = this.continent.initialRobotState
@@ -57,9 +56,6 @@ class LevelControl extends Ws {
     this.functions = this.continent.lambdas
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
-    if (!dontShowHint) {
-      $store.state.videoHintControl.showFreeHint(this.continent.freeHint)
-    }
   }
 
   _resetContinent ({pathAndContinent: {path, builtContinent}}) {
@@ -108,6 +104,13 @@ class LevelControl extends Ws {
     return parsed
   }
 
+  findFunctionIndex (createdId) {
+    return this.functions.activeFuncs.reduce((atIndex, func, ind) => {
+      if (func.created_id === createdId) atIndex = ind
+      return atIndex
+    }, 0)
+  }
+
   updateFunction (func) {
     this._wsOnMessage(() => {}) // doing nothing with response for now
     this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))
@@ -154,6 +157,11 @@ class LevelControl extends Ws {
   isLastContinent (pathToCheck) {
     const path = pathToCheck || this.path
     return this.galaxy.starSystems[path[2]].planets[path[3]].continents.length - 1 === Number(path.slice(4))
+  }
+
+  isLastPlanet (pathToCheck) {
+    const path = pathToCheck || this.path
+    return this.galaxy.starSystems[path[2]].planets.length - 1 === Number(path[3])
   }
 
   isEndOfGame (pathToCheck) {
