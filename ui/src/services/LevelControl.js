@@ -198,6 +198,7 @@ class LevelControl extends Ws {
           this._setPath(res)
           break
         case 'galaxyData':
+          console.log(res)
           this._setGalaxy(res)
           break
         case 'pathAndContinent':
