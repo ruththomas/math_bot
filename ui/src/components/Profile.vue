@@ -9,6 +9,7 @@
         @click="levelControl.updateStarSystem(ind)"
         class="btn-dark"
         :class="Number(starSystemShowing) === ind ? 'selected' : ''"
+        :disabled="!starSystem.stats.active"
       >{{starSystem.stats.name}}</b-button>
     </div>
     <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
