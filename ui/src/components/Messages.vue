@@ -31,8 +31,11 @@ export default {
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
     runCompiled () {
-      return this.$store.getters.getRunCompiled
+      return this.levelControl.runCompiled
     }
   },
   methods: {
