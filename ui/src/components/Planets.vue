@@ -16,8 +16,6 @@
 <script>
 export default {
   name: 'planets',
-  mounted () {
-  },
   computed: {
     permanentImages () {
       return this.$store.getters.getPermanentImages
@@ -41,27 +39,27 @@ export default {
   $Numbers-color: rgba(74, 144, 226, 1);
   $Recursion-color: rgba(255, 152, 177, 1);
   $Conditionals-color: rgba(80, 227, 194, 1);
-  $Coordinates-color: rgba(41, 254, 28, 1);
-  $Addition-color: rgba(253, 254, 137, 1);
-  $Subtraction-color: rgba(254, 151, 78, 1);
-  $Multiplication-color: rgba(64, 169, 254, 1);
-  $Division-color: transparent;
-  $Exponents-color: transparent;
-  $Roots-color: transparent;
+  $Coordinates-color: rgba(185, 80, 86, 1);
+  $Addition-color: rgba(41, 254, 28, 1);
+  $Subtraction-color: rgba(253, 254, 137, 1);
+  $Multiplication-color: rgba(254, 151, 78, 1);
+  $Division-color: rgba(64, 169, 254, 1);
+  $Exponents-color: rgba(185, 62, 167, 1);
+  $Roots-color: rgba(54, 63, 185, 1);
   $Refactor-color: transparent;
   $inactive-color: rgba(104, 104, 104, 1);
   $BasicProgramming-size: 23vmin;
-  $Coordinates-size: 10vmin;
+  $Coordinates-size: 13vmin;
   $Counting-size: 16vmin;
   $Numbers-size: 20vmin;
   $Recursion-size: 14vmin;
   $Conditionals-size: 12vmin;
-  $Addition-size: 5vmin;
-  $Subtraction-size: 5vmin;
-  $Multiplication-size: 5vmin;
-  $Division-size: 5vmin;
-  $Exponents-size: 5vmin;
-  $Roots-size: 5vmin;
+  $Addition-size: 11vmin;
+  $Subtraction-size: 10vmin;
+  $Multiplication-size: 13vmin;
+  $Division-size: 12vmin;
+  $Exponents-size: 15vmin;
+  $Roots-size: 9vmin;
   $Refactor-size: 5vmin;
   $planet-gradient: rgba(0, 0, 0, 1);
 
@@ -119,62 +117,62 @@ export default {
 
   .Coordinates {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Coordinates-color, $planet-gradient);
-    height: $Addition-size;
-    width: $Addition-size;
-    top: 0;
-    left: 0;
+    height: $Coordinates-size;
+    width: $Coordinates-size;
+    top: 80%;
+    left: 10%;
   }
 
   .Addition {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Addition-color, $planet-gradient);
     height: $Addition-size;
     width: $Addition-size;
-    top: 10%;
-    left: 0
+    top: 70%;
+    left: 65%;
   }
 
   .Subtraction {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Subtraction-color, $planet-gradient);
     height: $Subtraction-size;
     width: $Subtraction-size;
-    top: 20%;
-    left: 0;
+    top: 55%;
+    left: 35%;
   }
 
   .Multiplication {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Multiplication-color, $planet-gradient);
     height: $Multiplication-size;
     width: $Multiplication-size;
-    top: 30%;
-    left: 0;
+    top: 40%;
+    left: 70%;
   }
 
   .Division {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
     height: $Division-size;
     width: $Division-size;
-    top: 40%;
-    left: 0;
+    top: 30%;
+    left: 15%;
   }
 
   .Exponents {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
-    height: $Division-size;
-    width: $Division-size;
-    top: 50%;
-    left: 0;
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Exponents-color, $planet-gradient);
+    height: $Exponents-size;
+    width: $Exponents-size;
+    top: 13%;
+    left: 60%;
   }
 
   .Roots {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
-    height: $Division-size;
-    width: $Division-size;
-    top: 60%;
-    left: 0;
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Roots-color, $planet-gradient);
+    height: $Roots-size;
+    width: $Roots-size;
+    top: 8%;
+    left: 10%;
   }
 
   .Refactor {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Refactor-color, $planet-gradient);
     height: $Division-size;
     width: $Division-size;
     top: 70%;
@@ -218,6 +216,14 @@ export default {
 
   .Division.selected {
     box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Division-color;
+  }
+
+  .Exponents.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Exponents-color;
+  }
+
+  .Roots.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Roots-color;
   }
 
   .planet.inactive {
