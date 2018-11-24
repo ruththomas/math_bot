@@ -50,7 +50,7 @@ class VideoControl extends Ws {
 
   showHint () {
     this.getHint((res) => {
-      if (res.status !== 'no-videos') {
+      if (res.status !== 'no-hints') {
         $store.dispatch('addVideoTimer', res.remainingTime)
         this.setCurrentVideo(res.videoURL)
         this.showVideo()

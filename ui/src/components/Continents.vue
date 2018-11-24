@@ -46,6 +46,7 @@
           v-else-if="nextStarSystem && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
+          @click="goToRobot(nextStarSystem.planets[0].id + '0')"
         >
           <div class="col-6">
             <div class="step-info-text"><div>Next star system!</div> {{parseCamelCase(nextStarSystem.stats.name)}}</div>

@@ -25,7 +25,7 @@ object VideoResponseConvertFlow extends SocketResponseConvertFlow {
       case RemainingTimeList(_, remainingTimes) =>
         VideoResponse("success", remainingTimes = Some(remainingTimes))
       case remainingTime: RemainingTime => VideoResponse("success", remainingTime = Some(remainingTime))
-      case NoHints() => VideoResponse("success", message = Some("no hints taken for continent"))
+      case NoHints() => VideoResponse("no-hints", message = Some("no hints for continent"))
       case ActorFailed(message) => VideoResponse("failed", message = Some(message))
       case _ => VideoResponse("failed")
     }

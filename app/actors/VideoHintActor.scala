@@ -74,16 +74,25 @@ class VideoHintActor @Inject()(out: ActorRef,
     case GetVideo() =>
       for {
         path <- levelControl.getPath(tokenId)
-        videoIds = levelControl.getVideoIds(path)
-        hintsTaken <- videoHintDAO.updateOrAdd(tokenId, path, videoIds.length)
       } yield {
-        val hint = hintsTaken.list(path)
-        val count = hint.count
-        val videoId = if (count > videoIds.length - 1) videoIds.last else videoIds(count - 1)
-        val videoUrl = embedURL(videoId)
-        val timeStamp = hint.timeStamp
-        out ! HintPrepared(videoUrl,
-                           RemainingTime(path, count, hint.stars, calculateRemainingTime(timeStamp, starExpiration)))
+        val videoIds = levelControl.getVideoIds(path)
+        if (videoIds.nonEmpty) {
+          for {
+            hintsTaken <- videoHintDAO.updateOrAdd(tokenId, path, videoIds.length)
+          } yield {
+            val hint = hintsTaken.list(path)
+            val count = hint.count
+            val videoId = if (count > videoIds.length - 1) videoIds.last else videoIds(count - 1)
+            val videoUrl = embedURL(videoId)
+            val timeStamp = hint.timeStamp
+            out ! HintPrepared(
+              videoUrl,
+              RemainingTime(path, count, hint.stars, calculateRemainingTime(timeStamp, starExpiration))
+            )
+          }
+        } else {
+          out ! NoHints()
+        }
       }
     /*
      * GetHintsTaken - returns a list of hints taken with a remaining time in minutes
