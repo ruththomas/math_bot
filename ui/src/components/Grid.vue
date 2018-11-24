@@ -21,8 +21,12 @@
               ]"
               :key="'space:' + rInd + ':' + sInd"
             >
-              <span v-if="space.name === 'final answer'"
-                    class="problem single-digit-problem" style="z-index: 1000;">{{singleDigitProblem(problem)}}</span>
+              <span
+                v-if="space.name === 'final answer'"
+                class="problem"
+                :class="isMultiProblem(problem) ? 'multi-problem' : ''"
+                style="z-index: 1000;"
+              >{{blankZero(problem)}}</span>
               <b-img
                 v-if="space.name === 'final answer'"
                 class="portal glyphicon"
@@ -117,8 +121,11 @@ export default {
     }
   },
   methods: {
-    singleDigitProblem (problem) {
+    blankZero (problem) {
       return problem !== '0' ? problem : ''
+    },
+    isMultiProblem (problem) {
+      return problem.split(' ').length > 1
     },
     closePopover: utils.closePopover
   },
@@ -132,7 +139,7 @@ export default {
 
 <style scoped lang="scss">
   $click-color: #B8E986;
-  $grid-space-font-size: 2.5vmin;
+  $grid-space-font-size: 2vmin;
   $grid-space-size: 9vmin;
   $grid-border-radius: 4px;
   $grid-background: rgba(0, 0, 0, 0.6);
@@ -182,6 +189,42 @@ export default {
         height: 150%;
         top: -35%;
         z-index: 9;
+      }
+
+      .multi-problem {
+        position: absolute;
+        bottom: 100%;
+        background-color: #000000;
+        border-radius: 3px;
+        padding: 0 0.2em;
+        border: 1px solid $click-color;
+        animation: bounce 1s infinite alternate;
+      }
+
+      .multi-problem::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 0.5em solid transparent;
+        border-right: 0.5em solid transparent;
+        border-top: 0.5em solid #000000;
+        top: 96%;
+        left: 50%;
+        transform: translate(-50%, 0);
+      }
+
+      .multi-problem::before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 0.5em solid transparent;
+        border-right: 0.5em solid transparent;
+        border-top: 0.5em solid $click-color;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, 0);
       }
 
       &.grid-space-wall {
