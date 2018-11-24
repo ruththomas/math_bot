@@ -42,6 +42,40 @@
             />
           </div>
         </button>
+        <button
+          v-else-if="nextStarSystem && continents[continents.length - 1].stats.wins > 0"
+          type="button"
+          class="btn btn-dark btn-lg btn-block"
+        >
+          <div class="col-6">
+            <div class="step-info-text"><div>Next star system!</div> {{parseCamelCase(nextStarSystem.stats.name)}}</div>
+          </div>
+          <div class="col-6">
+            <img
+              class="step-next-planet"
+              :class="nextStarSystem.planets[0].stats.name"
+              :src="permanentImages.planets[nextStarSystem.planets[0].stats.name]"
+              alt="Planet"
+            />
+          </div>
+        </button>
+        <button
+          v-else-if="!nextStarSystem && !nextPlanet"
+          type="button"
+          class="btn btn-dark btn-lg btn-block"
+        >
+          <div class="col-6">
+            <div class="step-info-text"><div>You won!</div></div>
+          </div>
+          <div class="col-6">
+            <img
+              class="step-next-planet"
+              :src="permanentImages.instructionsRobot"
+              alt="Planet"
+              style="background-color: #ffffff; border-radius: 50%;"
+            />
+          </div>
+        </button>
       </div>
     </div>
   </div>
@@ -50,6 +84,7 @@
 <script>
 import utils from '../services/utils'
 import Stars from './Stars'
+import SocialSharing from './Social_sharing'
 
 export default {
   name: 'steps',
@@ -74,6 +109,9 @@ export default {
     },
     nextPlanet () {
       return this.levelControl.getNextPlanet()
+    },
+    nextStarSystem () {
+      return this.levelControl.getNextStarSystem()
     }
   },
   methods: {
@@ -91,14 +129,15 @@ export default {
     }
   },
   components: {
-    Stars
+    Stars,
+    SocialSharing
   },
   props: ['selectedPlanet', 'continents', 'planetName']
 }
 </script>
 
 <style scoped lang="scss">
-  $steps-font-size: 2.3vmin; // using vh for this font media queries all sizes
+  $steps-font-size: 2vmin;
   $gradient-size: 100px;
   $outer-shadow-blur: 50px;
   $outer-shadow-size: 1px;
@@ -158,7 +197,7 @@ export default {
 
       .step-info-text {
         width: 100%;
-        word-wrap: break-word;
+        height: 100%;
       }
     }
 
