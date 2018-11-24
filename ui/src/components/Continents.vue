@@ -48,7 +48,7 @@
           class="btn btn-dark btn-lg btn-block"
         >
           <div class="col-6">
-            <div class="step-info-text"><div>Next star system!</div> {{parseCamelCase(nextStarSystem.stats.name)}}</div>
+            <div class="small-font step-info-text"><div>Next star system!</div> {{parseCamelCase(nextStarSystem.stats.name)}}</div>
           </div>
           <div class="col-6">
             <img
@@ -158,6 +158,9 @@ export default {
   $gradient-size: 100px;
   $font-color: #ffffff;
 
+  .small-font {
+    font-size: 0.8em;
+  }
   .steps {
     position: absolute;
     top: 8%;
