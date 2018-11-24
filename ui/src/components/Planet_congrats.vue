@@ -11,7 +11,7 @@
         @click="quit" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
     </div>
     <div class="text-minor">
-      <div>You unlocked planet {{nextPlanet.stats.name}}</div>
+      <div>You unlocked planet</div>
       <div>{{parseCamelCase(nextPlanet.stats.name)}}!</div>
     </div>
     <div class="congrats-icon">
