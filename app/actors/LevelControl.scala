@@ -264,6 +264,17 @@ class LevelControl @Inject()(
       }).flatMap(s => s)
   }
 
+  private def calibrateContinentPath(stats: Stats, path: String): Future[String] = {
+    if (path.length > 4 && stats.list.contains(path)) {
+      FastFuture.successful(path)
+    } else {
+      val defaultPath = "00000"
+      for {
+        _ <- updatePath(stats.tokenId, defaultPath)
+      } yield defaultPath
+    }
+  }
+
   /*
    * Gets the continent data and current path
    * If path is omitted the current path in the db will be used
@@ -272,7 +283,8 @@ class LevelControl @Inject()(
   def getBuiltContinent(tokenId: TokenId, pathOpt: Option[String] = None): Future[PathAndContinent] = {
     for {
       stats <- getStats(tokenId)
-      continent <- createBuiltContinent(tokenId, pathOpt.getOrElse(stats.currentPath))
+      calibratedPath <- calibrateContinentPath(stats, pathOpt.getOrElse(stats.currentPath))
+      continent <- createBuiltContinent(tokenId, calibratedPath)
     } yield PathAndContinent(pathOpt.getOrElse(stats.currentPath), continent)
   }
 

@@ -2,6 +2,7 @@
   <div class="container profile">
     <div v-if="levelControl.galaxy !== null" class="star-system-nav">
       <level-congrats key="level-congrats"></level-congrats>
+      <star-system-congrats key="star-system-congrats"></star-system-congrats>
       <b-button
         v-for="(starSystem, ind) in levelControl.galaxy.starSystems"
         :key="'star-system/' + ind"
@@ -26,7 +27,8 @@
 import SplashScreen from './Splash_screen'
 import UserProfileControls from './User_profile_controls'
 import SocialSharing from './Social_sharing'
-import LevelCongrats from './Level_congrats'
+import LevelCongrats from './Planet_congrats'
+import StarSystemCongrats from './Star_system_congrats'
 import StarSystem from './Star_system'
 
 export default {
@@ -46,9 +48,15 @@ export default {
   },
   methods: {
     handleCongrats () {
-      const showCongrats = this.$route.query.showCongrats
-      if (showCongrats) {
-        this.$root.$emit('bv::show::modal', 'level-congrats-modal')
+      const data = this.$route.query
+      if (data) {
+        if (data.congratsShow === 'planet-congrats') {
+          this.$root.$emit('bv::show::modal', 'level-congrats-modal')
+        } else if (data.congratsShow === 'star-system-congrats') {
+          this.$root.$emit('bv::show::modal', 'star-system-congrats-modal')
+        } else {
+          this.$router.push({query: {}})
+        }
       }
     }
   },
@@ -57,7 +65,8 @@ export default {
     UserProfileControls,
     SocialSharing,
     LevelCongrats,
-    StarSystem
+    StarSystem,
+    StarSystemCongrats
   }
 }
 </script>
