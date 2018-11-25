@@ -49,17 +49,16 @@ export default {
     width: 100%;
     height: calc(#{$mascot-height} / 1.3);
     margin: 0;
-    z-index: 110;
 
     .help-button {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
       background-color: $grid-background;
       display: flex;
-      z-index: 100;
       position: absolute;
       right: 0;
       bottom: 0;
+      z-index: 111;
     }
 
     .mascot {
