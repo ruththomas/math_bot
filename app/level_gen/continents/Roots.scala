@@ -33,7 +33,7 @@ trait Roots extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "4",
+          problem = "sqrt(4)",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
@@ -69,7 +69,7 @@ trait Roots extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "9",
+          problem = "sqrt(9)",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
@@ -105,7 +105,7 @@ trait Roots extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "1",
+          problem = "sqrt(1)",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
@@ -141,7 +141,7 @@ trait Roots extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "4",
+          problem = "sqrt(4)",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
@@ -177,7 +177,7 @@ trait Roots extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "9",
+          problem = "sqrt(9)",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
@@ -213,7 +213,7 @@ trait Roots extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "4",
+          problem = "sqrt(4)",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
