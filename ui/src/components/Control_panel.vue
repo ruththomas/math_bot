@@ -49,6 +49,7 @@ export default {
     width: 100%;
     height: calc(#{$mascot-height} / 1.3);
     margin: 0;
+    z-index: 110;
 
     .help-button {
       border-bottom-left-radius: 0;
