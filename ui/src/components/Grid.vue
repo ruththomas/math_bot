@@ -22,9 +22,11 @@
               :key="'space:' + rInd + ':' + sInd"
             >
               <span
-                v-if="space.name === 'final answer'"
+                v-if="space.name === 'final answer' && robot.state !== 'running'"
                 class="problem"
-                :class="isMultiProblem(problem) ? 'multi-problem' : ''"
+                :class="[
+                  isMultiProblem(problem) ? 'multi-problem' : ''
+                ]"
                 style="z-index: 1000;"
               >{{blankZero(problem)}}</span>
               <b-img
@@ -46,8 +48,9 @@
               <b-popover
                 v-if="space.tools.length"
                 :target="`grid-cell-${rInd}-${sInd}`"
-                placement="auto"
+                placement="bottom"
                 triggers="click"
+                :show.sync="space.name === 'final answer'"
               >
                 <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover(`grid-cell-${rInd}-${sInd}`)" />
                 <div class="display-tools">
@@ -143,8 +146,10 @@ export default {
   $grid-space-size: 9vmin;
   $grid-border-radius: 4px;
   $grid-background: rgba(0, 0, 0, 0.6);
+  $popover-background: rgba(0, 0, 0, 1);
   $display-tool-size: 2vmin;
   $popover-btn-size: 2vmin;
+  $grid-space-border-color: rgba(255, 255, 255, 0.2);
 
   .grid {
     display: flex;
@@ -169,8 +174,8 @@ export default {
       align-items: center;
       height: $grid-space-size;
       width: $grid-space-size;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      border-top: 1px solid $grid-space-border-color;
+      border-right: 1px solid $grid-space-border-color;
       font-size: $grid-space-font-size;
       background: $grid-background;
 
@@ -193,12 +198,17 @@ export default {
 
       .multi-problem {
         position: absolute;
-        bottom: 100%;
-        background-color: #000000;
+        bottom: 70%;
+        background-color: $popover-background;
         border-radius: 3px;
         padding: 0 0.2em;
-        border: 1px solid $click-color;
+        color: $click-color;
+        font-size: 2.5vmin;
+        min-font-size: 16px;
         animation: bounce 1s infinite alternate;
+        box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
+        border: 1px solid $click-color;
+        z-index: 100;
       }
 
       .multi-problem::after {
@@ -208,7 +218,7 @@ export default {
         height: 0;
         border-left: 0.5em solid transparent;
         border-right: 0.5em solid transparent;
-        border-top: 0.5em solid #000000;
+        border-top: 0.5em solid $popover-background;
         top: 96%;
         left: 50%;
         transform: translate(-50%, 0);
@@ -298,4 +308,44 @@ export default {
     z-index: 10001;
     cursor: pointer;
   }
+</style>
+<style lang="scss">
+$popover-color: #F8E71C;
+
+.popover {
+}
+
+.arrow {
+  border: none;
+}
+
+.popover-body {
+  background-color: #000000;
+  border-radius: 3px;
+}
+
+.bs-popover-bottom .arrow::after,
+.bs-popover-auto[x-placement^="bottom"] .arrow::after,
+.bs-popover-bottom .arrow::before,
+.bs-popover-auto[x-placement^="bottom"] .arrow::before,
+.bs-popover-top .arrow::before,
+.bs-popover-auto[x-placement^="top"] .arrow::before,
+.bs-popover-top .arrow::after,
+.bs-popover-auto[x-placement^="top"] .arrow::after {
+  border-bottom-color: #000000!important;
+  border-top-color: #000000!important;
+  left: 0!important;
+}
+
+.bs-popover-left .arrow::before,
+.bs-popover-auto[x-placement^="left"] .arrow::before,
+.bs-popover-left .arrow::after,
+.bs-popover-auto[x-placement^="left"] .arrow::after,
+.bs-popover-right .arrow::before,
+.bs-popover-auto[x-placement^="right"] .arrow::before,
+.bs-popover-right .arrow::after,
+.bs-popover-auto[x-placement^="right"] .arrow::after {
+  border-left-color: #000000!important;
+  border-right-color: #000000!important;
+}
 </style>
