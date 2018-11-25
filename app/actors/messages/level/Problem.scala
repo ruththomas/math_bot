@@ -1,8 +1,9 @@
 package actors.messages.level
 
-import com.github.pdorobisz.mathexpressionevaluator.Evaluator
+// keep -> import com.github.pdorobisz.mathexpressionevaluator.Evaluator
+import exp4s.Exp4sProcessor._
 import play.api.libs.json.{JsPath, Json, Reads}
-import spire.math.Rational
+// keep ->  import spire.math.Rational
 import utils.Encryption._
 
 import scala.util.Random
@@ -54,12 +55,17 @@ object Problem {
       genRandom(prepL).toString
     })
 
+    this.apply(Some(p), encrypt("PROBLEM", p))
+
+    /*
+   * Old way, keeping around in case new way doesn't work out
     val validateP = Evaluator.evaluate(p)
 
     validateP.isSuccess match {
       case true => this.apply(Some(p), encrypt("PROBLEM", p))
       case false => this.apply(Some(s"$p is not a valid problem."), encrypt("PROBLEM", p))
     }
+   */
   }
 
   /*
@@ -70,11 +76,15 @@ object Problem {
    *   - if valid --> Rational(solution)
    *   - else Exception(Rational("This is why input is invalid"))
    * */
-  def evalProblem(prob: Problem): Rational = {
+  def evalProblem(prob: Problem): Double = {
+    forFormula(decrypt("PROBLEM", prob.encryptedProblem).replaceAll("\\s", ""))()()
+    /*
+   * original way, keeping around in case new way doesn't work out
     val e = Evaluator.evaluate(decrypt("PROBLEM", prob.encryptedProblem))
     e.isSuccess match {
       case true => e.toList.head
       case false => throw new Exception("invalid expression --> " + e.toString)
     }
+   */
   }
 }

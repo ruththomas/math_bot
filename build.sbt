@@ -7,12 +7,16 @@ lazy val GatlingTest = config("gatling") extend Test
 scalaVersion := "2.11.11"
 
 resolvers += "dl-john-ky" at "http://dl.john-ky.io/maven/releases"
+resolvers += "moma" at "https://github.com/prassee/moma/raw/master/snapshots"
 
 libraryDependencies ++= Seq(
   "com.netaporter" %% "scala-uri" % "0.4.14",
   "net.codingwell" %% "scala-guice" % "4.1.0",
   "org.reactivemongo" %% "play2-reactivemongo" % "0.12.5-play25",
   "com.github.pdorobisz" %% "math-expression-evaluator" % "1.0.0",
+  
+  "me.prassee" %% "exp4s" % "0.0.4",
+  
   "io.john-ky" %% "hashids-scala" % "1.1.2-2974446",
   filters,
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0",
