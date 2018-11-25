@@ -128,7 +128,7 @@ export default {
       return problem !== '0' ? problem : ''
     },
     isMultiProblem (problem) {
-      return problem.split(' ').length > 1
+      return problem.split(' ').length > 1 || problem.includes('sqrt')
     },
     closePopover: utils.closePopover
   },
