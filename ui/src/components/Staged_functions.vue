@@ -19,6 +19,7 @@
           :collection="stagedFunctions"
           :origin="'stagedFunctions'"
           :data-function-index="func.index"
+          :data-created-id="func.created_id"
         ></function-box>
       </draggable>
     </div>
