@@ -219,7 +219,7 @@ export default {
       transform: translateY(0px);
     }
     to {
-      transform: translateY(-5px);
+      transform: translateY(-1vmin);
     }
   }
   @-webkit-keyframes bounce {
@@ -227,7 +227,7 @@ export default {
       transform: translateY(0px);
     }
     to {
-      transform: translateY(-5px);
+      transform: translateY(-1vmin);
     }
   }
 

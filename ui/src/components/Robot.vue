@@ -181,7 +181,7 @@ export default {
         border-radius: 50%;
         height: 80%;
         width: 80%;
-        box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
+        box-shadow: 0 0 10px 1vmin rgba(0,0,0,1);
       }
     }
   }

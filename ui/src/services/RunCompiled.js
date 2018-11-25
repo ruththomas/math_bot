@@ -238,6 +238,7 @@ class RunCompiled extends GridAnimator {
       this.robot.setState('success')
       const isLastPlanet = $store.state.levelControl.isLastPlanet()
       const isLastContinent = $store.state.levelControl.isLastContinent()
+      $root.$emit('bv::hide::popover')
       if (isLastContinent && isLastPlanet) {
         $router.push({path: '/profile', query: Object.assign({congratsShow: 'star-system-congrats'}, this.lastFrame)})
       } else if (isLastContinent) {
