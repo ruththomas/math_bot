@@ -4,10 +4,10 @@
       <div class="func-param-form">
         <puzzle-pieces
           :id="'edit-function-displayed-func'"
-          :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayImage: editingFunction.displayImage}"
+          :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayName: editingFunction.displayName}"
           :piece-to-show="'closed'"
           :show-name="false"
-          @click.native="toggleImage"
+          @click.native="toggleFunctionImage"
         ></puzzle-pieces>
         <div
           class='function-control'
@@ -64,8 +64,6 @@
 
 <script>
 import draggable from 'vuedraggable'
-import {_} from 'underscore'
-import buildUtils from '../services/BuildFunction'
 import uid from 'uid'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
@@ -78,20 +76,29 @@ export default {
     this.functionDraggableOptions.group.put = true
   },
   computed: {
-    sizeLimit () {
-      return this.editingFunction.sizeLimit < 0 ? 10000 : this.editingFunction.sizeLimit
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
-    stats () {
-      return this.$store.getters.getStats
+    robot () {
+      return this.levelControl.robot
     },
-    editingIndex () {
-      return this.$store.getters.getEditingIndex
+    robotCarrying () {
+      return this.robot.robotCarrying
+    },
+    problem () {
+      return this.levelControl.continent.problem.problem
+    },
+    activeFunctions () {
+      return this.levelControl.functions.activeFuncs
     },
     editingFunction () {
       return this.activeFunctions[this.editingIndex]
     },
-    activeFunctions () {
-      return this.$store.getters.getActiveFunctions
+    editingIndex () {
+      return this.$store.getters.getEditingIndex
+    },
+    sizeLimit () {
+      return this.editingFunction.sizeLimit
     },
     colorSelected () {
       return this.colors[this.currentColor]
@@ -110,9 +117,6 @@ export default {
     },
     cmdImages () {
       return this.permanentImages.cmdImages
-    },
-    funcNcmdImages () {
-      return _.extend(this.funcImages, this.cmdImages)
     }
   },
   data () {
@@ -172,24 +176,21 @@ export default {
       return this.colors[this.currentColor].next
     },
     updateName () {
-      buildUtils._putFunc({
-        context: this,
-        funcToken: this.editingFunction
-      })
+      this.levelControl.updateFunctionProperties(this.editingFunction)
     },
     applyColorConditional () {
-      const level = this.stats.level
-      if (level !== 'BasicProgramming' && level !== 'Counting' && level !== 'Numbers' && level !== 'Recursion') {
-        buildUtils.adjustColor({
-          context: this,
-          color: this.findColor()
-        })
-      }
-      this.color = 'default'
+      const func = this.editingFunction
+      func.color = this.findColor()
+      this.levelControl.updateFunctionProperties(func)
+    },
+    toggleFunctionImage () {
+      const func = this.editingFunction
+      func.displayName = !func.displayName
+      this.levelControl.updateFunctionProperties(func)
     },
     deleteFuncContents () {
       this.closePopover('delete-function')
-      buildUtils.deleteFunction({context: this})
+      this.levelControl.deleteFunction(this.editingFunction)
     },
     animateVulnerable () {
       const $functions = $('.editFunction-drop-zone > .piece:not(.placeholder-piece)')
@@ -203,9 +204,6 @@ export default {
         }
       })
     },
-    toggleImage () {
-      buildUtils.toggleImage()
-    },
     fullMessage () {
       const messageBuilder = {
         type: 'success',
@@ -216,15 +214,8 @@ export default {
     togglePut (bool) {
       this.functionDraggableOptions.group.put = bool
     },
-    editFunction (evt, groupInd) {
-      if (!evt.hasOwnProperty('removed')) {
-        buildUtils.addToFunction({
-          context: this,
-          groupSize: this.groupSize,
-          groupInd: groupInd,
-          added: evt.hasOwnProperty('added') ? evt.added : evt.moved
-        })
-      }
+    editFunction () {
+      this.levelControl.updateFunction(this.editingFunction)
       if (this.editingFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
         this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
       }

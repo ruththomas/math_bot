@@ -1,11 +1,18 @@
 package compiler
 
+import compiler.mbl._
+import actors.messages.level.{Function, GridPart, Problem}
 import compiler.operations._
 import daos.CommandIds
-import models.{ FuncToken, GridMap, GridPart, Problem }
+import models.GridMap
 import play.api.libs.json._
 
 object Compiler {
+
+  private type TokenUserFunctions = Map[String, UserFunction]
+  private type NamedUserFunctions = Map[String, UserFunctionNamed]
+  private type LambdaUserFunctions = Map[Int, UserFunctionLambda]
+  type ErrorMessage = String
 
   private def cellTypeFromName(name: String) = name match {
     case "empty space floor" => CellType.EmptySpace
@@ -95,163 +102,235 @@ object Compiler {
     }
   }
 
-  def compile(main: FuncToken,
-              funcs: List[FuncToken],
-              commands: List[FuncToken],
+  def compile(main: Function,
+              funcs: List[Function],
+              commands: List[Function],
               grid: GridMap,
               problem: Problem): Option[GridAndProgram] = {
-    val funcTokens = funcs.map(token => token.created_id -> token).toMap + (main.created_id -> main)
-    val firstPass = fixReferences(convertToOps(main, funcTokens, Map.empty[String, UserFunction], commands))
-    processBoard(grid).map(g => GridAndProgram(g, new Program(firstPass._1.asInstanceOf[UserFunction].operations), problem))
+    val funcMap = funcs.map(token => token.created_id -> token).toMap
+    val cmdMap = commands.map(c => c.created_id -> c).toMap
+    val firstPassMain = convertToOps(main, funcMap, cmdMap)
+    val firstPassFuncs = funcs.map(convertToOps(_, funcMap, cmdMap))
+    fixReferences(
+      firstPassFuncs :+ firstPassMain,
+      lookUpReference(firstPassFuncs.map(uf => uf.created_id -> uf).toMap,
+                      Map.empty[String, UserFunction],
+                      Map.empty[Int, UserFunction])
+    )
+    processBoard(grid).map(g => GridAndProgram(g, firstPassMain, problem))
   }
 
-  // To avoid an infinite loop will processing user functions, user functions are sometimes placeholdered with refs.
-  // Before running the code, replace the refs with the functions
-  private def fixReferences(firstPass: (Operation, Map[String, UserFunction])) = {
+  private def lookUpReference(byCreatedId: Map[String, UserFunction],
+                              byName: Map[String, UserFunction],
+                              byLambda: Map[Int, UserFunction])(ref: UserFunctionRef) =
+    ref match {
+      case UserFunctionRefById(created_id) =>
+        byCreatedId.get(created_id)
+      case UserFunctionRefByName(name) =>
+        byName.get(name)
+      case UserFunctionRefByLambdaId(lambdaId) =>
+        byLambda.get(lambdaId)
+    }
 
-    val program = firstPass._1.asInstanceOf[UserFunction]
-
-    for {
-      f <- firstPass._2.values
-    } yield {
-      f.operations = f.operations.map {
-        case funcRef: UserFunctionRef => firstPass._2(funcRef.created_id)
-        case ifColor : IfColor =>
+  // Return a list of unmatched function references
+  private def checkReferences(functions: Seq[UserFunction],
+                              lookup: UserFunctionRef => Option[UserFunction]): Seq[UserFunctionRef] =
+    functions.flatMap { f =>
+      f.operations.flatMap {
+        case funcRef: UserFunctionRef =>
+          if (lookup(funcRef).isEmpty) Some(funcRef) else None
+        case ifColor: IfColor =>
           ifColor.operation match {
-            case funcRef : UserFunctionRef =>
-              ifColor.copy(operation = firstPass._2(funcRef.created_id))
+            case funcRef: UserFunctionRefById =>
+              if (lookup(funcRef).isEmpty) Some(funcRef) else None
+            case _ =>
+              None
+          }
+        case _ =>
+          None
+      }
+    }
+
+  // To avoid an infinite loop while processing user functions, user functions are sometimes replaced with refs.
+  // Before running the code, replace the refs with the functions.  This function works by side effect because it
+  // was simpler to write the fixup using mutable operations value. Unknown functions are replaced with a NoOperation
+  // as they should be discovered by an earlier check.
+  private def fixReferences(functions: Seq[UserFunction], lookup: UserFunctionRef => Option[UserFunction]): Unit = {
+
+    functions.foreach { f =>
+      f.operations = f.operations.map {
+        case funcRef: UserFunctionRef =>
+          lookup(funcRef).getOrElse(NoOperation)
+        case ifColor: IfColor =>
+          ifColor.operation match {
+            case funcRef: UserFunctionRefById =>
+              ifColor.copy(operation = lookup(funcRef).getOrElse(NoOperation))
             case _ =>
               ifColor
           }
         case other => other
       }
     }
-
-    program.operations = program.operations.map {
-      case funcRef: UserFunctionRef => firstPass._2(funcRef.created_id)
-      case ifColor : IfColor =>
-        ifColor.operation match {
-          case funcRef : UserFunctionRef =>
-            ifColor.copy(operation = firstPass._2(funcRef.created_id))
-          case _ =>
-            ifColor
-        }
-      case other => other
-    }
-    firstPass
   }
 
-  def convertToOps(
-                    token      : FuncToken,
-                    funcTokens : Map[String, FuncToken],
-                    userFuncs  : Map[String, UserFunction],
-                    commands   : List[FuncToken]) : (Operation, Map[String, UserFunction]) = {
-    token.created_id match {
-      case id if commands.map(t => t.created_id).contains(id) =>
-        val command = commands.find(c => c.created_id == id).map(c => c.commandId).getOrElse("unknown") match {
-          case Some(CommandIds.changeRobotDirection) => ChangeRobotDirection
-          case Some(CommandIds.moveRobotForwardOneSpot) => MoveRobotForwardOneSpot
-          case Some(CommandIds.setItemDown) => SetItemDown
-          case Some(CommandIds.pickUpItem) => PickUpItem
-          case _ => NoOperation
-        }
-        (command, userFuncs)
-      case id if funcTokens.contains(id) =>
-        token.color match {
-          case "default" =>
-            userFuncs.get(id) match {
-              case Some(uf) =>
-                (uf, userFuncs)
-              case None =>
-                val converted = convertFunction(token, funcTokens, userFuncs + (id -> UserFunctionRef(id)), commands)
-                val uf = new UserFunction(converted.operations)
-                (uf, converted.userFuncs.updated(token.created_id, uf))
-            }
-          case color =>
-            userFuncs.get(id) match {
-              case Some(uf) =>
-                (IfColor(color, uf), userFuncs)
-              case None =>
-                val converted = convertFunction(token.copy(color = "default"), funcTokens, userFuncs  + (id -> UserFunctionRef(id)), commands)
-                val uf = new UserFunction(converted.operations)
-                (IfColor(color, uf), converted.userFuncs.updated(token.created_id, uf))
-            }
-        }
-    }
-  }
-
-  case class Converted(operations : Seq[Operation], userFuncs : Map[String, UserFunction])
-
-  def convertFunction(
-                       funcToken : FuncToken,
-                       funcTokens: Map[String, FuncToken],
-                       userFuncs  : Map[String, UserFunction],
-                       commands   : List[FuncToken]
-                     ) : Converted = {
-    val operations = funcTokens(funcToken.created_id).func.get
-    operations.foldLeft[Converted](Converted(Seq.empty[Operation], userFuncs)) {
-      (converted, token) =>
-        val (op, funcs) = convertToOps(token, funcTokens, converted.userFuncs, commands)
-        Converted(converted.operations :+ op, funcs)
-    }
-  }
-
-
-  /*def convertToOps1(main: FuncToken,
-                   funcs: Map[String, (FuncToken, Option[UserFunction])],
-                   commands: List[FuncToken]
-                  ): (UserFunction, Map[String, (FuncToken, Option[UserFunction])]) =
-  {
-    var newFuncs = funcs
-    (
-      new UserFunction(
-        (for {
-          token <- main.func.getOrElse(List.empty[FuncToken])
-        } yield {
-          token.color match {
-            case "default" =>
-              token.created_id match {
-                case id if commands.map(t => t.created_id).contains(id) =>
-                  commands.find(c => c.created_id == id).map(c => c.commandId).getOrElse("unknown") match {
-                    case Some(CommandIds.changeRobotDirection) => ChangeRobotDirection
-                    case Some(CommandIds.moveRobotForwardOneSpot) => MoveRobotForwardOneSpot
-                    case Some(CommandIds.setItemDown) => SetItemDown
-                    case Some(CommandIds.pickUpItem) => PickUpItem
-                    case _ => NoOperation
-                  }
-                case id if funcs.contains(id) => {
-                  val (ft, ufOpt) = funcs(id)
-                  ufOpt match {
-                    case None =>
-                      newFuncs = newFuncs.updated(id, (ft, Some(new UserFunctionRef(id))))
-                      val (userFunction, convertedfuncs) = convertToOps(ft, newFuncs, commands)
-                      newFuncs = convertedfuncs.updated(id, (ft, Some(userFunction)))
-                      userFunction
-                    case Some(op) =>
-                      op
-                  }
+  private def convertToOps(function: Function, allFunctions: Map[String, Function], commands: Map[String, Function]) : UserFunctionById = {
+    function.func match {
+      case Some(functions) =>
+        UserFunctionById(
+          functions.map { f =>
+            f.created_id match {
+              case CommandIds.changeRobotDirection =>
+                ChangeRobotDirection
+              case CommandIds.moveRobotForwardOneSpot =>
+                MoveRobotForwardOneSpot
+              case CommandIds.pickUpItem =>
+                PickUpItem
+              case CommandIds.setItemDown =>
+                SetItemDown
+              case id if allFunctions.contains(id) =>
+                f.color match {
+                  case "default" =>
+                    UserFunctionRefById(id)
+                  case _ =>
+                    IfColor(f.color, UserFunctionRefById(id))
                 }
-                case _ => NoOperation
-              }
-            case color =>
-              val id = token.created_id
-              val (ft, ufOpt) = funcs(id)
-              IfColor(
-                color,
-                ufOpt match {
-                  case None =>
-                    newFuncs = newFuncs.updated(id, (ft, Some(new UserFunctionRef(id))))
-                    val (userFunction, convertedfuncs) = convertToOps(ft, newFuncs, commands)
-                    newFuncs = convertedfuncs.updated(id, (ft, Some(userFunction)))
-                    userFunction
-                  case Some(op) =>
-                    op
+              case _ =>
+                NoOperation
+            }
+          },
+          function.created_id
+        )
+
+      case _ =>
+        UserFunctionById(Seq(NoOperation), function.created_id)
+    }
+  }
+
+  private class LambdaCounter(var count: Int = 0) {
+    def inc: Int = {
+      count = count + 1
+      count
+    }
+  }
+
+  private val opsReduce =
+    new PartialFunction[List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]], (List[Operation], NamedUserFunctions, LambdaUserFunctions)] {
+      def isDefinedAt(ops: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]): Boolean =
+        !ops.exists(_.isRight)
+
+      def apply(
+          ops: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]
+      ): (List[Operation], NamedUserFunctions, LambdaUserFunctions) = {
+        val tl = ops.map(_.left.get)
+        (
+          tl.map(_._1).filterNot(o => o.equals(NoOperation)), // Gather all operations into a list without nops
+          tl.map(_._2).reduce(_ ++ _), // Combine all the named functions into one map
+          tl.map(_._3).reduce(_ ++ _) // Combine all the lambda functions into one map
+        )
+      }
+    }
+
+  private val errReduce = new PartialFunction[List[
+    Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]
+  ], Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]] {
+    def isDefinedAt(errors: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]): Boolean =
+      errors.exists(_.isRight)
+    def apply(
+        errors: List[Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage]]
+    ): Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage] =
+      errors.filter(_.isRight).head
+  }
+
+  // Converts parsed mbl into a program with functions and function references
+  private def convertMbl(
+      element: MblElement,
+      lc: LambdaCounter = new LambdaCounter()
+  ): Either[(Operation, NamedUserFunctions, LambdaUserFunctions), ErrorMessage] =
+    element match {
+      case MblList(Nil) =>
+        Left((NoOperation, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
+      case MblList(MblSymbol("defun") :: MblSymbol(name) :: elements) =>
+        (errReduce orElse (opsReduce andThen { c =>
+          val n = UserFunctionNamed(c._1, name)
+          Left((NoOperation, c._2 + (name -> n), c._3))
+        }))(elements.map(e => convertMbl(e, lc)))
+
+      case MblList(MblSymbol("if") :: MblQuoted(color) :: elements) =>
+        (errReduce orElse (opsReduce andThen { c =>
+          val l = UserFunctionLambda(c._1, lc.inc)
+          Left(
+            (
+              IfColor(color, l),
+              c._2,
+              c._3 + (l.id -> l)
+            )
+          )
+        }))(elements.map(e => convertMbl(e, lc)))
+
+      case MblList(elements) => // Usually the "main" function but if its not the outermost function, and shows up anywhere else it will just be executed inline as a kind of lambda
+        (errReduce orElse (opsReduce andThen { c =>
+          val l = UserFunctionLambda(c._1, lc.inc)
+          Left(
+            (
+              UserFunctionRefByLambdaId(l.id),
+              c._2,
+              c._3 + (l.id -> l)
+            )
+          )
+        }))(elements.map(e => convertMbl(e, lc)))
+      case MblSymbol("right") =>
+        Left((ChangeRobotDirection, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
+      case MblSymbol("pickup") =>
+        Left((PickUpItem, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
+      case MblSymbol("drop") =>
+        Left((SetItemDown, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
+      case MblSymbol("forward") =>
+        Left((MoveRobotForwardOneSpot, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
+      case MblSymbol(functionName) =>
+        Left(
+          (UserFunctionRefByName(functionName),
+           Map.empty[String, UserFunctionNamed],
+           Map.empty[Int, UserFunctionLambda])
+        )
+      case unknown =>
+        Right(s"Unknown element $unknown")
+    }
+
+  def compileMbl(mbl: String, grid: GridMap, problem: Problem): Either[GridAndProgram, ErrorMessage] = {
+    MblParser.parse(mbl) match {
+      case Left(mblList) =>
+        convertMbl(mblList) match {
+          case Left((topLevelOp, byNamed, byLambdaId)) =>
+            val program = topLevelOp match {
+              case uf: UserFunction => uf
+              case op: Operation => UserFunction(Seq(op))
+            }
+            checkReferences(byNamed.values.toSeq ++ byLambdaId.values.toSeq :+ program,
+                            lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId)) match {
+              case Nil =>
+                fixReferences(byNamed.values.toSeq ++ byLambdaId.values.toSeq :+ program,
+                              lookUpReference(Map.empty[String, UserFunction], byNamed, byLambdaId))
+                processBoard(grid).map(g => GridAndProgram(g, program, problem)) match {
+                  case Some(gp) => Left(gp)
+                  case None => Right("Unable to process grid")
                 }
-              )
-          }
-        }).toSeq
-      ),
-      newFuncs
-    )
-  }*/
+              case unknown =>
+                val printable = unknown.map {
+                  case UserFunctionRefByName(n) => s"named($n)" // Most common when a user misspells a function
+                  case UserFunctionRefByLambdaId(id) => s"lambda($id)" // Indicates a bug in the parser
+                  case UserFunctionRefById(id) =>
+                    s"icon($id)" // Won't appear until we can convert from simple to advanced editing
+                }
+                Right(
+                  s"Reference to unknown function${if (printable.length > 1) "" else "s"}: ${printable.mkString(", ")}"
+                )
+
+            }
+          case Right(error) =>
+            Right(error)
+        }
+      case Right(error) =>
+        Right(error)
+    }
+  }
 }

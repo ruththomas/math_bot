@@ -8,8 +8,8 @@ import play.api.libs.json.{JsValue, Json, OWrites}
 object AdminResponseConvertFlow extends SocketResponseConvertFlow {
   final case class AdminResponse(
       status: String,
-      userCount: Option[String],
-      message: Option[String]
+      userCount: Option[String] = None,
+      message: Option[String] = None
   )
   implicit val adminResponseWrites: OWrites[AdminResponse] = Json.format[AdminResponse]
 
@@ -18,8 +18,8 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
 
   override def responseToJson(msg: Any): JsValue = {
     Json.toJson[AdminResponse](msg match {
-      case UserCount(count) => AdminResponse(success, Some(count), None)
-      case ActorFailed(message) => AdminResponse(failed, None, Some(message))
+      case UserCount(count) => AdminResponse(success, userCount = Some(count))
+      case ActorFailed(message) => AdminResponse(failed, message = Some(message))
       case _ => AdminResponse(failed, None, None)
     })
   }

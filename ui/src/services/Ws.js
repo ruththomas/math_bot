@@ -1,30 +1,32 @@
-import urlEncode from 'urlencode'
 import Vue from 'vue'
 
 class Ws {
-  constructor () {
+  constructor (connection) {
+    this.connection = connection
     this._ws = null
   }
 
-  /*
-  * @deprecated
-  * checkWsCapable - tests that the browser is able to handle websockets
-  * - may be able to switch user to http route instead if not - not being used yet
-  * */
-  _checkWsCapable (cb) {
-    if ('WebSocket' in window) {
-      // console.log("WebSocket is supported by your Browser!");
-      cb()
-    } else {
-      console.log('WebSocket NOT supported by your Browser!')
-    }
+  _openSocket (cb) {
+    this._getWsPath(this.connection, path => {
+      this._ws = new WebSocket(path)
+      this._ws.onopen = () => {
+        console.log(`${this.connection.toUpperCase()} WS OPEN`)
+        if (cb) cb()
+      }
+      this._ws.onerror = (err) => {
+        console.error(`${this.connection.toUpperCase()} WS FAILED`, err)
+      }
+      this._ws.onclose = () => {
+        console.log(`${this.connection.toUpperCase()} WS CLOSED`)
+      }
+    })
   }
 
   /*
   * getWsPath - is called to get the correct ws path from the server
   * */
-  _getWsPath (tokenId, connection, cb) {
-    Vue.http.get('/api/wsPath/' + urlEncode(tokenId) + '/' + connection)
+  _getWsPath (connection, cb) {
+    Vue.http.get('/api/wsPath/' + connection)
       .then(res => res.data)
       .then(path => cb(path))
       .catch(console.error)
@@ -37,7 +39,13 @@ class Ws {
   }
 
   _send (options) {
-    this._ws.send(options)
+    if (this._ws === null || this._ws.readyState !== 1) {
+      this._openSocket(() => {
+        this._ws.send(options)
+      })
+    } else {
+      this._ws.send(options)
+    }
   }
 }
 

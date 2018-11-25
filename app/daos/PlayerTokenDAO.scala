@@ -1,17 +1,17 @@
 package daos
 
 import com.google.inject.Inject
-import models.{ FuncToken, Lambdas, PlayerToken, Stats, StepToken }
-import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
-import org.bson.codecs.configuration.{ CodecRegistries, CodecRegistry }
-import org.mongodb.scala.bson.codecs.{ DEFAULT_CODEC_REGISTRY, Macros }
+import models.StepToken
+import models.deprecatedPlayerToken.{CurrentStats, FuncToken, Lambdas, PlayerToken}
+import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
+import org.bson.codecs.configuration.{CodecRegistries, CodecRegistry}
+import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.result.{ DeleteResult, UpdateResult }
-import org.mongodb.scala.{ Completed, _ }
+import org.mongodb.scala.result.{DeleteResult, UpdateResult}
+import org.mongodb.scala.{Completed, _}
 import types.TokenId
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
   final val collectionLabel = "tokens"
@@ -23,7 +23,7 @@ class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionC
       fromProviders(
         Macros.createCodecProvider[PlayerToken](),
         Macros.createCodecProvider[Lambdas](),
-        Macros.createCodecProvider[Stats](),
+        Macros.createCodecProvider[CurrentStats](),
         Macros.createCodecProvider[FuncToken](),
         Macros.createCodecProvider[StepToken]()
       ),

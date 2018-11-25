@@ -1,7 +1,5 @@
 <template>
-  <splash-screen v-if="!Object.keys(stepData).length"></splash-screen>
-  <div class="container-fluid robot" data-aos="fade-in" v-else>
-    <video-hint></video-hint>
+  <div class="container-fluid robot" data-aos="fade-in">
     <div
       @click="goToProfile()"
       class="return-to-profile"
@@ -9,143 +7,100 @@
     >
       <img :src="handlePicture(userProfile.picture)" />
     </div>
-    <step-congrats key="step-congrats"></step-congrats>
-    <div class="container">
+    <step-congrats v-if="levelControl.continent !== null" key="step-congrats"></step-congrats>
+    <splash-screen v-if="levelControl.continent === null"></splash-screen>
+    <div v-else class="container">
 
       <div class="row" style="position: relative;">
         <trash></trash>
         <grid></grid>
+        <active-drop v-if="functionAreaShowing === 'addFunction'"></active-drop>
       </div>
+      <transition
+        name="custom-classes-transition"
+        enter-active-class="animated tada"
+        leave-active-class="animated bounceOutRight"
+      >
+        <div v-if="!advancedMode" class="row container" style="flex: 1;">
+          <div class="row" style="padding: 0; display: flex; flex: 1; position: relative; z-index: 1;">
+            <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+            <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
+          </div>
 
-      <active-drop></active-drop>
+          <div class="row" style="padding: 0; display: flex; flex: 1;">
+            <trash></trash>
+            <commands></commands>
+          </div>
+        </div>
 
-      <div class="row box" style="padding: 0;">
-        <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
-        <editmain v-if="functionAreaShowing === 'editMain'"></editmain>
-      </div>
-
-      <div class="row">
-        <trash></trash>
-        <commands></commands>
+        <div v-else class="row container" style="flex: 1;">
+          <advanced-mode></advanced-mode>
+        </div>
+      </transition>
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <span :style="{opacity: advancedMode ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Normal</span>
+        <toggle-button
+          @change="toggleAdvanced"
+          :color="{checked: 'rgba(255, 255, 255, 0.5)', unchecked: 'rgba(255, 255, 255, 0.5)', disabled: 'rgba(255, 255, 255, 0.5)'}"
+          :switch-color="{checked: 'linear-gradient(to left, #25EF02, #000000)', unchecked: 'linear-gradient(to left, #000000, #25EF02)'}"
+        />
+        <span :style="{opacity: !advancedMode ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
       </div>
     </div>
+    <confirm-deactivate-func></confirm-deactivate-func>
   </div>
 </template>
 
 <script>
-import Identicon from 'identicon.js'
-import md5 from 'md5'
 import Grid from './Grid'
 import Commands from './Commands'
-import Editmain from './Edit_main'
-import Editfunction from './Edit_function'
+import EditMain from './Edit_main'
 import Trash from './Trash'
 import Messages from './Messages'
 import ControlPanel from './Control_panel'
 import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
-import StepCongrats from './Step_congrats'
-import VideoHint from './Video_hint'
-import api from '../services/api'
-import LevelCongrats from './Level_congrats'
+import StepCongrats from './Continent_congrats'
+import LevelCongrats from './Planet_congrats'
+import AdvancedMode from './Advanced_mode'
+import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 import ActiveDrop from './Activate_drop'
+
 export default {
   mounted () {
-    this.$store.dispatch('updateVideoHint', this)
-    this.$store.dispatch('updateRunCompiled', this)
-    api.getStep({tokenId: this.tokenId, level: this.stats.level, step: this.stats.step}, stepData => {
-      this.runCompiled.initializeNextStep(stepData)
-    })
+    this.handleFreeHint()
   },
   computed: {
-    runCompiled () {
-      return this.$store.getters.getRunCompiled
+    videoControl () {
+      return this.$store.getters.getVideoHintControl
+    },
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
     userProfile () {
       return this.auth.userProfile
     },
-    tokenId () {
-      return this.$store.getters.getTokenId
-    },
-    stats () {
-      return this.$store.getters.getStats
-    },
-    stepData () {
-      return this.$store.getters.getStepData
-    },
     auth () {
       return this.$store.getters.getAuth
-    },
-    splashScreenShowing () {
-      return this.$store.getters.getSplashScreenShowing
-    },
-    gridMap () {
-      return this.stepData.gridMap
-    },
-    Functions () {
-      return this.$store.getters.getFunctions
-    },
-    currentFunction () {
-      return this.$store.getters.getCurrentFunction
-    },
-    programPanel () {
-      return this.$store.getters.getProgramPanelShowing
-    },
-    commands () {
-      return this.$store.getters.getCommands
-    },
-    congratsShowing () {
-      return this.$store.getters.getCongratsShowing
-    },
-    tryAgainShowing () {
-      return this.$store.getters.getTryAgainShowing
-    },
-    game () {
-      return this.$store.getters.getGame
-    },
-    userName () {
-      let currentUser = this.$store.getters.getCurrentUser
-      const loggedIn = this.$store.getters.getLoggedIn
-      if (loggedIn) {
-        if (currentUser.nickname) {
-          return new Identicon(md5(this.$store.getters.getCurrentUser.nickname), 30).toString()
-        }
-      }
-    },
-    loggedInShowing () {
-      return this.$store.getters.getLoggedInShowing
-    },
-    loggedIn () {
-      return this.$store.getters.getLoggedIn
-    },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    },
-    editFunctionShowing () {
-      return this.$store.getters.getEditFunctionShowing
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
     },
-    swiperSlide () {
-      return this.$store.getters.getSwiperSlide
-    },
-    activeFunctionGroups () {
-      return this.$store.getters.getActiveFunctionGroups
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
   },
   data () {
     return {
-      renderGrid: false
+      renderGrid: false,
+      advancedMode: false
     }
   },
   methods: {
-    showProgramPanel () {
-      this.$store.dispatch('controlProgramPanelShowing')
-    },
-    adjustSpeed () {
-      this.speed = this.speed === 500 ? 200 : 500
+    handleFreeHint () {
+      if (this.levelControl.continent !== null) return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
+      setTimeout(this.handleFreeHint, 10)
     },
     goToProfile () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
@@ -158,14 +113,17 @@ export default {
       } else {
         return picture
       }
+    },
+    toggleAdvanced (evt) {
+      this.advancedMode = evt.value
     }
   },
   components: {
+    ConfirmDeactivateFunc,
     Grid,
     Commands,
-    Editfunction,
     Trash,
-    Editmain,
+    EditMain,
     Messages,
     ControlPanel,
     SplashScreen,
@@ -173,7 +131,7 @@ export default {
     PopoverBucket,
     StepCongrats,
     LevelCongrats,
-    VideoHint,
+    AdvancedMode,
     ActiveDrop
   }
 }
@@ -181,22 +139,22 @@ export default {
 
 <style scoped lang="scss">
   $box-height: 18vmin;
-
+  label {
+    margin: 0;
+  }
   .robot {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
     background-size: cover;
     height: 100%;
-
     .container {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       height: 100%;
-
       .row {
         margin: 0;
+        width: 100%;
       }
-
       .box {
         background: transparent;
         position: relative;
@@ -215,12 +173,11 @@ export default {
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-
       img {
         border-radius: 50%;
         height: 80%;
         width: 80%;
-        box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
+        box-shadow: 0 0 10px 1vmin rgba(0,0,0,1);
       }
     }
   }

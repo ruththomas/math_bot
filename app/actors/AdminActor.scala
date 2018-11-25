@@ -8,7 +8,7 @@ import play.api.Environment
 import play.api.libs.ws.WSClient
 
 object AdminActor {
-  case class GetUserCount()
+  final case class GetUserCount()
   case class UserCount(count: String)
 
   def props(out: ActorRef, playerTokenDAO: PlayerTokenDAO, ws: WSClient, environment: Environment) =
@@ -20,7 +20,7 @@ class AdminActor @Inject()(out: ActorRef, playerTokenDAO: PlayerTokenDAO, ws: WS
   import AdminActor._
   import context.dispatcher
 
-  private final val className = "AdminActor"
+  private final val className = "LevelActor"
 
   override def receive: Receive = {
     case GetUserCount() =>

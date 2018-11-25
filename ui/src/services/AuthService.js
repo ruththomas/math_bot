@@ -15,38 +15,41 @@ export class AuthService {
     this._handleErr = this._handleErr.bind(this)
     this._resumeSession = this._resumeSession.bind(this)
     this._requestSession = this._requestSession.bind(this)
+    this._storeLastRoute = this._storeLastRoute.bind(this)
+    this._handleRoute = this._handleRoute.bind(this)
+
     this._resumeSession()
   }
 
   _storeLastRoute () {
-    localStorage.setItem('last_location', $router.history.current.fullPath)
-  }
-
-  _getUserToken () {
-    const tokenId = this.userProfile.sub || this.userProfile.user_id
-    api.getUserToken({tokenId: tokenId}, token => {
-      this.userToken = token
-      this.authenticated = true
-      window.onbeforeunload = this._storeLastRoute
-      const lastPath = localStorage.getItem('last_location')
-      this._getVideoHints()
-      if (lastPath && lastPath !== '/about' && lastPath !== '/auth') {
-        $router.push({path: lastPath})
-      } else {
-        $router.push({path: '/profile'})
+    window.onbeforeunload = () => {
+      const route = $router.history.current.fullPath
+      if (route === '/robot' || route === '/profile') {
+        localStorage.setItem('last_location', route)
       }
-    }, this._handleErr)
+    }
   }
 
-  _getVideoHints () {
-    api.videoHintSocket.requestHintsTaken((hints) => {
-      $store.dispatch('startExistingTimers', hints.remainingTimes)
-    }, this._handleErr)
+  _handleRoute () {
+    const storedRouteOpt = localStorage.getItem('last_location')
+    if (storedRouteOpt) {
+      $router.push({path: storedRouteOpt})
+    } else {
+      $router.push({path: '/profile'})
+    }
+  }
+
+  _handleAuthenticated () {
+    const tokenId = this.userProfile.sub || this.userProfile.user_id
+    this.authenticated = true
+    $store.dispatch('updateControls', tokenId)
+    this._storeLastRoute()
+    this._handleRoute()
   }
 
   _setProfile (profile) {
     this.userProfile = profile
-    this._getUserToken()
+    this._handleAuthenticated()
   }
 
   _resumeSession () {
@@ -54,9 +57,7 @@ export class AuthService {
       if (profileOrRequestSession.action && profileOrRequestSession.action === 'needsAuthorization') {
         this.requestSession = profileOrRequestSession
       } else {
-        this.userProfile = profileOrRequestSession
-        this.authenticated = true
-        this._getUserToken()
+        this._setProfile(profileOrRequestSession)
       }
     }, this._requestSession)
   }

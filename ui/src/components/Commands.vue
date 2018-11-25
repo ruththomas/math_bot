@@ -29,7 +29,6 @@
           @start="start"
           @change="moveFunction"
           @end="end"
-          @add="addToActiveFunc"
         >
           <function-box
             v-for="(func, ind) in activeFunctions"
@@ -39,6 +38,7 @@
             :collection="activeFunctions"
             :origin="'functions'"
             :data-created-id="func.created_id"
+            :data-index="ind"
             @click.native="editFunction($event, func, ind)"
           ></function-box>
         </draggable>
@@ -61,52 +61,30 @@ import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
 import uId from 'uid'
-import buildUtils from '../services/BuildFunction'
 import PuzzlePieces from './Puzzle_pieces'
 
 export default {
-  name: 'FunctionDrop',
+  name: 'Commands',
   mounted () {
   },
   computed: {
-    stagedFunctions () {
-      return this.$store.getters.getStagedFunctions
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
-    congratsShowing () {
-      return this.$store.getters.getCongratsShowing
+    commands () {
+      return this.levelControl.functions.cmds
     },
-    tryAgainShowing () {
-      return this.$store.getters.getTryAgainShowing
+    activeFunctions () {
+      return this.levelControl.functions.activeFuncs
     },
-    evt () {
-      return this.commandEvt
-    },
-    mainFunctionFunc () {
-      return this.$store.getters.getMainFunction.func
-    },
-    stepData () {
-      return this.$store.getters.getStepData
-    },
-    currentStepData () {
-      return this.$store.getters.getStepData
-    },
-    token () {
-      return this.$store.getters.getToken
+    runCompiled () {
+      return this.levelControl.runCompiled
     },
     editingIndex () {
       return this.$store.getters.getEditingIndex
     },
-    editingFunction () {
-      return this.$store.getters.getActiveFunctions[this.editingIndex]
-    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    },
-    commands () {
-      return this.$store.getters.getCommands
-    },
-    activeFunctions () {
-      return this.$store.getters.getActiveFunctions
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
@@ -122,12 +100,6 @@ export default {
     },
     funcImages () {
       return this.permanentImages.funcImages
-    },
-    swiperSlide () {
-      return this.$store.getters.getSwiperSlide
-    },
-    runCompiled () {
-      return this.$store.getters.getRunCompiled
     }
   },
   data () {
@@ -212,18 +184,12 @@ export default {
       this.$store.dispatch('toggleShowMesh', false)
     },
     moveFunction (evt) {
-      if (evt.moved) {
-        buildUtils.moveFunction({
-          oldIndex: evt.moved.oldIndex,
-          newIndex: evt.moved.newIndex
-        })
-      }
-    },
-    addToActiveFunc (evt) {
-      buildUtils.activateFunction({
-        stagedIndex: evt.oldIndex,
-        activeIndex: evt.newIndex
-      })
+      const element = evt.added || evt.moved
+      const newIndex = element.newIndex
+      const func = element.element
+      func.category = 'function'
+      func.index = newIndex
+      this.levelControl.activateFunction(func)
     }
   },
   components: {

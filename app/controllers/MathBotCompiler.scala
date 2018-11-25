@@ -1,34 +1,26 @@
 package controllers
 
-import java.net.URLDecoder
-
 import actors._
 import actors.convert_flow.{CompilerRequestConvertFlow, CompilerResponseConvertFlow, UpdateAccessFlow}
-import actors.messages.auth.SessionAuthorized
-import actors.messages.{ClientRobotState, PreparedStepData}
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import actors.messages.ClientRobotState
+import actors.messages.level.{PathAndContinent, Problem}
+import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
-import akka.pattern.ask
 import akka.stream.Materializer
-import akka.util.Timeout
 import com.google.inject.name.Named
 import compiler.processor.Frame
 import compiler.{Cell, Point}
 import configuration.CompilerConfiguration
+import daos.{PlayerAccountDAO, PlayerTokenDAO, SessionDAO}
 import javax.inject.Inject
 import loggers.MathBotLogger
-import daos.{PlayerAccountDAO, PlayerTokenDAO, SessionDAO}
 import models._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import play.api.{Configuration, Environment}
-import types.TokenId
 import utils.SecureIdentifier
-
-import scala.concurrent.Future
-import scala.concurrent.duration._
 
 object MathBotCompiler {
 
@@ -53,29 +45,25 @@ object MathBotCompiler {
 
   case class ClientFrame(robotState: ClientRobotState,
                          programState: String,
-                         stats: Option[Stats],
-                         stepData: Option[PreparedStepData]) {
+                         pathAndContinent: Option[PathAndContinent]) {
     def isSuccess() = programState == "success"
     def isFailure() = programState == "failure"
   }
 
   object ClientFrame {
-    def apply(frame: Frame, stats: Option[Stats] = None, stepData: Option[PreparedStepData] = None): ClientFrame =
-      ClientFrame(frame, "running", stats, stepData)
+    def apply(frame: Frame, pathAndContinent: Option[PathAndContinent] = None): ClientFrame =
+      ClientFrame(frame, "running", pathAndContinent)
 
     // stepData is the step data to render at this point
-    def success(frame: Frame, stats: Stats, stepData: PreparedStepData): ClientFrame =
-      ClientFrame(frame, "success", Some(stats), Some(stepData))
+    def success(frame: Frame, pathAndContinent: PathAndContinent): ClientFrame =
+      ClientFrame(frame, "success", Some(pathAndContinent))
 
     // stepData is the step data to render at this point
-    def failure(frame: Frame, stats: Stats, stepData: PreparedStepData): ClientFrame =
-      ClientFrame(frame, "failure", Some(stats), Some(stepData))
+    def failure(frame: Frame, pathAndContinent: PathAndContinent): ClientFrame =
+      ClientFrame(frame, "failure", Some(pathAndContinent))
 
-    def apply(frame: Frame,
-              programState: String,
-              stats: Option[Stats],
-              stepData: Option[PreparedStepData]): ClientFrame =
-      ClientFrame(ClientRobotState(frame), programState, stats, stepData)
+    def apply(frame: Frame, programState: String, pathAndContinent: Option[PathAndContinent]): ClientFrame =
+      ClientFrame(ClientRobotState(frame), programState, pathAndContinent)
   }
 
   case class CompilerResponse(frames: List[ClientFrame] = List.empty[ClientFrame],
@@ -93,23 +81,21 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                                   playerTokenDAO: PlayerTokenDAO,
                                   playerAccountDAO: PlayerAccountDAO,
                                   sessionDAO: SessionDAO,
-                                  @Named(ActorTags.playerAccount) playerAccountActor: ActorRef)
+                                  @Named(ActorTags.playerAccount) playerAccountActor: ActorRef,
+                                  levelControl: LevelControl)
     extends Controller
     with utils.SameOriginCheck {
-
-  val levelActor =
-    system.actorOf(LevelGenerationActor.props(playerTokenDAO, mathBotLogger, environment), "level-compiler-actor")
-  val statsActor = system.actorOf(StatsActor.props(system, playerTokenDAO, mathBotLogger), "stats-compiler-actor")
 
   val compilerConfiguration = CompilerConfiguration(
     maxProgramSteps = configuration.getInt("mathbot.maxProgramSteps").getOrElse(10000),
     maxEmptyLoopCount = configuration.getInt("mathbot.maxEmptyLoopCount").getOrElse(100)
   )
 
-  def wsPath(tokenId: TokenId, connection: String): Action[AnyContent] = Action { implicit request: RequestHeader =>
+  def wsPath(connection: String): Action[AnyContent] = Action { implicit request =>
     val url = connection match {
       case p if p == "compiler" => routes.MathBotCompiler.compileWs().webSocketURL()
       case p if p == "videohint" => routes.VideoHintController.videoSocket().webSocketURL()
+      case p if p == "level" => routes.LevelController.levelSocket().webSocketURL()
     }
     val changeSsl =
       if (url.contains("localhost")) url else url.replaceFirst("ws", "wss")
@@ -126,13 +112,8 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                 .via(
                   ActorFlow.actorRef(
                     out =>
-                      CompilerActor.props(out,
-                                          session.playerTokenId,
-                                          playerTokenDAO,
-                                          statsActor,
-                                          levelActor,
-                                          mathBotLogger,
-                                          compilerConfiguration)
+                      CompilerActor
+                        .props(out, session.playerTokenId, mathBotLogger, compilerConfiguration, levelControl)
                   )
                 )
                 .alsoTo(UpdateAccessFlow(session.playerTokenId, playerAccountActor))
@@ -140,45 +121,44 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
                   CompilerResponseConvertFlow()
                 )
             )
-          case None => Left(Unauthorized("Unable to locate player token"))
+          case None => Left(Unauthorized("Session invalid"))
         }
-      case None => FastFuture.successful(Left(Unauthorized("No session present")))
+      case None => FastFuture.successful(Left(Unauthorized("No cookie")))
     }
   }
 
-  def compile(encodedTokenId: String) = Action.async { implicit request =>
-    class FakeActor extends Actor {
+//  def compile(encodedTokenId: String) = Action.async { implicit request =>
+//    class FakeActor extends Actor {
+//
+//      override def receive: Receive = {
+//        case _ =>
+//      }
+//    }
+//
+//    val fakeActorProps = Props(new FakeActor)
+//    val fakeActor = system.actorOf(fakeActorProps)
+//
+//    implicit val timeout: Timeout = 500.seconds
+//
+//    request.body.asJson match {
+//      case Some(json) =>
+//        val sr = CompilerRequestConvertFlow.jsonToCommand(json)
+//
+//        val compilerProps =
+//          CompilerActor.props(fakeActor,
+//                              URLDecoder.decode(encodedTokenId, "UTF-8"),
+//                              playerTokenDAO,
+//                              levelActor,
+//                              mathBotLogger,
+//                              compilerConfiguration)
+//        val compiler = system.actorOf(compilerProps)
+//
+//        (compiler ? sr)
+//          .map(CompilerResponseConvertFlow.responseToJson)
+//          .map(Ok(_))
+//      case _ =>
+//        Future(NoContent)
+//    }
 
-      override def receive: Receive = {
-        case _ =>
-      }
-    }
-
-    val fakeActorProps = Props(new FakeActor)
-    val fakeActor = system.actorOf(fakeActorProps)
-
-    implicit val timeout: Timeout = 500.seconds
-
-    request.body.asJson match {
-      case Some(json) =>
-        val sr = CompilerRequestConvertFlow.jsonToCompilerCommand(json)
-
-        val compilerProps =
-          CompilerActor.props(fakeActor,
-                              URLDecoder.decode(encodedTokenId, "UTF-8"),
-                              playerTokenDAO,
-                              statsActor,
-                              levelActor,
-                              mathBotLogger,
-                              compilerConfiguration)
-        val compiler = system.actorOf(compilerProps)
-
-        (compiler ? sr)
-          .map(CompilerResponseConvertFlow.responseToJson)
-          .map(Ok(_))
-      case _ =>
-        Future(NoContent)
-    }
-
-  }
+//  }
 }

@@ -31,8 +31,11 @@ export default {
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
     runCompiled () {
-      return this.$store.getters.getRunCompiled
+      return this.levelControl.runCompiled
     }
   },
   methods: {
@@ -88,6 +91,7 @@ export default {
   .message {
     display: flex;
     width: 99%;
+    height: min-content!important;
     margin-top: 8px;
     border-radius: 2px;
     justify-content: center;

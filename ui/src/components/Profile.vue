@@ -1,9 +1,21 @@
 <template>
-  <div class="container profile" v-shortkey.once="['ctrl', 'space']" @shortkey="goToSandbox()">
-    <level-congrats key="level-congrats"></level-congrats>
-    <div class="row" style="height: 80%;">
-      <space :permanent-images="permanentImages"></space>
-      <steps :permanent-images="permanentImages"></steps>
+  <div class="container profile">
+    <div v-if="levelControl.galaxy !== null" class="star-system-nav">
+      <level-congrats key="level-congrats"></level-congrats>
+      <star-system-congrats key="star-system-congrats"></star-system-congrats>
+      <b-button
+        v-for="(starSystem, ind) in levelControl.galaxy.starSystems"
+        :key="'star-system/' + ind"
+        @click="levelControl.updateStarSystem(ind)"
+        class="btn-dark"
+        :class="Number(starSystemShowing) === ind ? 'selected' : ''"
+        :disabled="!starSystem.stats.active"
+      >{{starSystem.stats.name}}</b-button>
+    </div>
+    <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
+      <div class="star-systems">
+        <star-system></star-system>
+      </div>
     </div>
     <div class="col-8 controls" style="height: 20%;">
       <social-sharing :size="'1vmin'"></social-sharing>
@@ -15,78 +27,59 @@
 <script>
 import SplashScreen from './Splash_screen'
 import UserProfileControls from './User_profile_controls'
-import Steps from './Steps'
-import Space from './Space'
 import SocialSharing from './Social_sharing'
-import LevelCongrats from './Level_congrats'
-import api from '../services/api'
+import LevelCongrats from './Planet_congrats'
+import StarSystemCongrats from './Star_system_congrats'
+import StarSystem from './Star_system'
 
 export default {
   mounted () {
     this.handleCongrats()
   },
   computed: {
-    auth () {
-      return this.$store.getters.getAuth
+    starSystemShowing () {
+      return this.levelControl.path[2]
     },
-    splashScreenShowing () {
-      return this.$store.getters.getSplashScreenShowing
-    },
-    profileView () {
-      return this.$store.getters.getProfileView
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
-    },
-    stats () {
-      return this.$store.getters.getStats
-    },
-    currentUserName () {
-      let currentUser = this.$store.getters.getCurrentUser
-      if (currentUser === null) {
-        return 'Profile'
-      } else {
-        return currentUser.given_name || currentUser.nickname
-      }
-    },
-    step () {
-      return this.$store.getters.getStep
-    },
-    tokenId () {
-      return this.$store.getters.getTokenId
     }
   },
   methods: {
     handleCongrats () {
-      if (this.$route.query.showCongrats === 'true') {
-        this.$root.$emit('bv::show::modal', 'level-congrats-modal')
-        this.$router.push({query: {}})
+      const data = this.$route.query
+      if (data) {
+        if (data.congratsShow === 'planet-congrats') {
+          this.$root.$emit('bv::show::modal', 'level-congrats-modal')
+        } else if (data.congratsShow === 'star-system-congrats') {
+          this.$root.$emit('bv::show::modal', 'star-system-congrats-modal')
+        } else {
+          this.$router.push({query: {}})
+        }
       }
-    },
-    goToSandbox () {
-      this.$store.dispatch('updateRunCompiled', this)
-      api.switchLevel({tokenId: this.tokenId, level: 'Sandbox', step: '1'}, (res) => {
-        this.$store.dispatch('updateStats', res.body)
-        this.$router.push({path: '/robot'})
-      })
     }
   },
   components: {
     SplashScreen,
     UserProfileControls,
-    Steps,
-    Space,
     SocialSharing,
-    LevelCongrats
+    LevelCongrats,
+    StarSystem,
+    StarSystemCongrats
   }
 }
 </script>
 
 <style lang="scss">
+  $font-color: #ffffff;
   .profile {
     height: 100%;
     position: relative;
     .controls {
+      position: absolute;
+      bottom: 0;
       padding: 0;
       display: flex;
       .social-sharing {
@@ -96,6 +89,35 @@ export default {
           flex-direction: column;
           height: 100%;
         }
+      }
+    }
+    .row {
+      position: relative;
+      .star-systems {
+        height: 100%;
+        width: 100%;
+      }
+    }
+    .star-system-nav {
+      display: flex;
+      position: absolute;
+      z-index: 100;
+      right: 0;
+      justify-content: space-evenly;
+      .btn {
+        color: $font-color;
+        display: flex;
+        justify-content: center;
+        padding: 3%;
+        margin: 0.4em;
+        border-radius: 0.25rem!important;
+        background-color: #000000;
+        font-size: 1.1em;
+        opacity: 0.7;
+      }
+      .selected {
+        opacity: 1;
+        border: 1px solid #ffffff;
       }
     }
   }

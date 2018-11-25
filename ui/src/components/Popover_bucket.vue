@@ -23,9 +23,6 @@ export default {
     editFunctionEvent () {
       return this.$store.getters.getEditFunctionEvent
     },
-    editingIndex () {
-      return this.$store.getters.getEditingIndex
-    },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
     }

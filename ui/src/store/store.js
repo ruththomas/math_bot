@@ -5,10 +5,11 @@ import permanentImages from '../assets/assets'
 import Message from '../services/Message'
 import { AuthService } from '../services/AuthService'
 import utils from '../services/utils'
-// import api from '../services/api'
 import VideoTimer from '../services/VideoTimer'
 import RunCompiled from '../services/RunCompiled'
-import VideoHint from '../services/VideoHint'
+import CompilerControl from '../services/CompilerControl'
+import VideoControl from '../services/VideoControl'
+import LevelControl from '../services/LevelControl'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -82,21 +83,27 @@ export default new Vuex.Store({
       showing: false,
       videoURL: ''
     },
-    videoTimers: {},
     editFunctionEvent: {},
     authErrors: [],
     runCompiled: {},
-    videoHint: {}
+    videoHint: {},
+    confirmDeactiveFunction: {},
+    compilerControl: {},
+    videoTimers: {},
+    videoHintControl: {},
+    levelControl: {}
   },
   mutations: {
+    UPDATE_CONTROLS (state) {
+      state.compilerControl = new CompilerControl()
+      state.videoHintControl = new VideoControl(state)
+      state.levelControl = new LevelControl()
+    },
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
     },
     PUSH_AUTH_ERRORS (state, msg) {
       state.authErrors.push(msg)
-    },
-    UPDATE_VIDEO_HINT (state, context) {
-      state.videoHint = new VideoHint(context)
     },
     UPDATE_RUN_COMPILED (state, context) {
       state.runCompiled = new RunCompiled(context)
@@ -162,9 +169,6 @@ export default new Vuex.Store({
     UPDATE_STATS (state, stats) {
       state.auth.userToken.stats = stats
     },
-    CREATE_LOCK (state) {
-
-    },
     PUSH_RANDOM_IMAGE (state, image) {
       state.auth.userToken.randomImages.push(image)
     },
@@ -186,7 +190,7 @@ export default new Vuex.Store({
       state.auth.userToken.u_id = userData._id
     },
     CHANGE_ROBOT_SPEED (state) {
-      state.robot.adjustSpeed()
+      state.levelControl.robot.adjustSpeed()
     },
     CHANGE_FULLSCREEN (state) {
       state.fullscreen = !state.fullscreen
@@ -213,22 +217,31 @@ export default new Vuex.Store({
       state.swiperSlide = slide
     },
     ADD_MESSAGE: addMessage,
+    DELETE_ALL_MESSAGES (state) {
+      state.messageList = []
+    },
     REMOVE_MESSAGE (state, ind) {
       state.messageList[ind].delete()
     },
     DELETE_MESSAGES (state) {
       state.messageList.map(m => m.delete())
+    },
+    CONFIRM_DEACTIVATE_FUNCTION (state, _func) {
+      state.confirmDeactiveFunction = _func
     }
   },
   actions: {
+    confirmDeactivateFunction ({commit}, _func) {
+      commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
+    },
+    updateControls ({commit}, tokenId) {
+      commit('UPDATE_CONTROLS')
+    },
     clearAuthErrors ({commit}) {
       commit('CLEAR_AUTH_ERRORS')
     },
     pushAuthErrors ({commit}, msg) {
       commit('PUSH_AUTH_ERRORS', msg)
-    },
-    updateVideoHint ({commit}, context) {
-      commit('UPDATE_VIDEO_HINT', context)
     },
     updateRunCompiled ({commit}, context) {
       commit('UPDATE_RUN_COMPILED', context)
@@ -344,16 +357,23 @@ export default new Vuex.Store({
     removeMessage ({commit}, ind) {
       commit('REMOVE_MESSAGE', ind)
     },
+    deleteAllMessages ({commit}) {
+      commit('DELETE_ALL_MESSAGES')
+    },
     deleteMessages ({commit}) {
       commit('DELETE_MESSAGES')
     }
   },
   getters: {
+    getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,
+
+    getCompilerControl: state => state.compilerControl,
+    getVideoHintControl: state => state.videoHintControl,
+    getVideoTimers: state => state.videoTimers,
+    getLevelControl: state => state.levelControl,
     getAuthErrors: state => state.authErrors,
-    getVideoHint: state => state.videoHint,
     getRunCompiled: state => state.runCompiled,
     getEditFunctionEvent: state => state.editFunctionEvent,
-    getVideoTimers: state => state.videoTimers,
     getHintShowing: state => state.hintShowing,
     getCurrentUser: state => state.auth.userToken,
     getStepData: state => state.stepData,
