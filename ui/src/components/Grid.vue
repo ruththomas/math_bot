@@ -21,14 +21,21 @@
               ]"
               :key="'space:' + rInd + ':' + sInd"
             >
-              <span
+              <div
                 v-if="space.name === 'final answer' && robot.state !== 'running'"
-                class="problem"
+                class="problem exponent"
                 :class="[
                   isMultiProblem(problem) ? 'multi-problem' : ''
                 ]"
                 style="z-index: 1000;"
-              >{{blankZero(problem)}}</span>
+              >
+                <span v-if="problem.includes('sqrt')" class="square-root-problem">&#8730;{{extractSqrtValue(problem)}}</span>
+                <span v-else-if="problem.includes('^')" class="exponent-problem">{{extractExpValues(problem, 0)}}<span>{{extractExpValues(problem, 1)}}</span></span>
+                <span v-else>{{blankZero(problem)}}</span>
+              </div>
+                <!--4<span style="font-size: 1.5vmin;">4</span></span>-->
+                <!--&#8730;9</span>-->
+                <!--</span>-->
               <b-img
                 v-if="space.name === 'final answer'"
                 class="portal glyphicon"
@@ -130,6 +137,12 @@ export default {
     isMultiProblem (problem) {
       return problem.split(' ').length > 1 || problem.includes('sqrt')
     },
+    extractSqrtValue (exp) {
+      return exp.replace(/\D/g, '')
+    },
+    extractExpValues (exp, position) {
+      return exp.split('^')[position].trim()
+    },
     closePopover: utils.closePopover
   },
   components: {
@@ -150,6 +163,7 @@ export default {
   $display-tool-size: 2vmin;
   $popover-btn-size: 2vmin;
   $grid-space-border-color: rgba(255, 255, 255, 0.2);
+  $multi-problem-font-size: 2.5vmin;
 
   .grid {
     display: flex;
@@ -203,12 +217,18 @@ export default {
         border-radius: 3px;
         padding: 0 0.2em;
         color: $click-color;
-        font-size: 2.5vmin;
+        font-size: $multi-problem-font-size;
         min-font-size: 16px;
         animation: bounce 1s infinite alternate;
         box-shadow: 0 0 100px 2vmin rgba(0,0,0,1);
         border: 1px solid $click-color;
         z-index: 100;
+      }
+
+      .exponent-problem span {
+        position: relative;
+        top: -1vmin;
+        font-size: calc(#{$multi-problem-font-size} / 1.45);
       }
 
       .multi-problem::after {
