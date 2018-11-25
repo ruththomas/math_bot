@@ -37,7 +37,7 @@ class Robot {
     },
     {
       display: 'lightning',
-      speed: 1
+      speed: 60
     }
   ]
 
