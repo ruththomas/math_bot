@@ -52,112 +52,106 @@
 </template>
 
 <script>
-import Grid from './Grid'
-import Commands from './Commands'
-import EditMain from './Edit_main'
-import Trash from './Trash'
-import Messages from './Messages'
-import ControlPanel from './Control_panel'
-import SplashScreen from './Splash_screen'
-import RobotCarrying from './Robot_carrying'
-import PopoverBucket from './Popover_bucket'
-import StepCongrats from './Continent_congrats'
-import LevelCongrats from './Planet_congrats'
-import AdvancedMode from './Advanced_mode'
-import ConfirmDeactivateFunc from './Confirm_deactivate_func'
-
-export default {
-  mounted () {
-    this.handleFreeHint()
-  },
-  computed: {
-    videoControl () {
-      return this.$store.getters.getVideoHintControl
+  import Grid from './Grid'
+  import Commands from './Commands'
+  import EditMain from './Edit_main'
+  import Trash from './Trash'
+  import Messages from './Messages'
+  import ControlPanel from './Control_panel'
+  import SplashScreen from './Splash_screen'
+  import RobotCarrying from './Robot_carrying'
+  import PopoverBucket from './Popover_bucket'
+  import StepCongrats from './Continent_congrats'
+  import LevelCongrats from './Planet_congrats'
+  import AdvancedMode from './Advanced_mode'
+  import ConfirmDeactivateFunc from './Confirm_deactivate_func'
+  export default {
+    mounted () {
+      this.handleFreeHint()
     },
-    levelControl () {
-      return this.$store.getters.getLevelControl
-    },
-    userProfile () {
-      return this.auth.userProfile
-    },
-    auth () {
-      return this.$store.getters.getAuth
-    },
-    functionAreaShowing () {
-      return this.$store.getters.getFunctionAreaShowing
-    },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    }
-  },
-  data () {
-    return {
-      renderGrid: false,
-      advancedMode: false
-    }
-  },
-  methods: {
-    handleFreeHint () {
-      if (this.levelControl.continent !== null) return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
-      setTimeout(this.handleFreeHint, 10)
-    },
-    goToProfile () {
-      this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
-      this.$store.dispatch('deleteMessages')
-      this.$router.push({path: 'profile'})
-    },
-    handlePicture (picture) {
-      if (!picture || picture.match(/gravatar/)) {
-        return this.permanentImages.gravatar
-      } else {
-        return picture
+    computed: {
+      videoControl () {
+        return this.$store.getters.getVideoHintControl
+      },
+      levelControl () {
+        return this.$store.getters.getLevelControl
+      },
+      userProfile () {
+        return this.auth.userProfile
+      },
+      auth () {
+        return this.$store.getters.getAuth
+      },
+      functionAreaShowing () {
+        return this.$store.getters.getFunctionAreaShowing
+      },
+      permanentImages () {
+        return this.$store.getters.getPermanentImages
       }
     },
-    toggleAdvanced (evt) {
-      this.advancedMode = evt.value
+    data () {
+      return {
+        renderGrid: false,
+        advancedMode: false
+      }
+    },
+    methods: {
+      handleFreeHint () {
+        if (this.levelControl.continent !== null) return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
+        setTimeout(this.handleFreeHint, 10)
+      },
+      goToProfile () {
+        this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
+        this.$store.dispatch('deleteMessages')
+        this.$router.push({path: 'profile'})
+      },
+      handlePicture (picture) {
+        if (!picture || picture.match(/gravatar/)) {
+          return this.permanentImages.gravatar
+        } else {
+          return picture
+        }
+      },
+      toggleAdvanced (evt) {
+        this.advancedMode = evt.value
+      }
+    },
+    components: {
+      ConfirmDeactivateFunc,
+      Grid,
+      Commands,
+      Trash,
+      EditMain,
+      Messages,
+      ControlPanel,
+      SplashScreen,
+      RobotCarrying,
+      PopoverBucket,
+      StepCongrats,
+      LevelCongrats,
+      AdvancedMode
     }
-  },
-  components: {
-    ConfirmDeactivateFunc,
-    Grid,
-    Commands,
-    Trash,
-    EditMain,
-    Messages,
-    ControlPanel,
-    SplashScreen,
-    RobotCarrying,
-    PopoverBucket,
-    StepCongrats,
-    LevelCongrats,
-    AdvancedMode
   }
-}
 </script>
 
 <style scoped lang="scss">
   $box-height: 18vmin;
-
   label {
     margin: 0;
   }
-
   .robot {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
     background-size: cover;
     height: 100%;
-
     .container {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       height: 100%;
-
       .row {
         margin: 0;
         width: 100%;
       }
-
       .box {
         background: transparent;
         position: relative;
@@ -176,7 +170,6 @@ export default {
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-
       img {
         border-radius: 50%;
         height: 80%;
