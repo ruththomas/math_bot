@@ -166,6 +166,7 @@ export default {
     width: -moz-min-content;
     cursor: grab;
     border-radius: 3px;
+    z-index: 111;
 
     .text {
       position: absolute;
