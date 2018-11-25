@@ -136,6 +136,7 @@ export default {
     position: absolute;
     height: $piece-height;
     width: auto;
+
     .pointer {
       display: none;
     }

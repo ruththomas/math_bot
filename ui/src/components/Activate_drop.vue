@@ -67,10 +67,11 @@ export default {
 <style scoped lang="scss">
 $pointer-size: 2vmin;
 .active-drop {
-  position: absolute;
+  position: fixed;
+  /*background-color: #f0f0f0;*/
   height: 100%;
   width: 100%;
-  top: 0;
+  bottom: 0;
   left: 0;
   z-index: 100;
 }

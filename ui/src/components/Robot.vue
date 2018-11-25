@@ -22,7 +22,7 @@
         leave-active-class="animated bounceOutRight"
       >
         <div v-if="!advancedMode" class="row container" style="flex: 1;">
-          <div class="row" style="padding: 0; display: flex; flex: 1; position: relative; z-index: 1;">
+          <div class="row" style="padding: 0; display: flex; flex: 1; position: relative; z-index: 110;">
             <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
             <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
           </div>
@@ -154,6 +154,7 @@ export default {
       .row {
         margin: 0;
         width: 100%;
+        z-index: 111;
       }
       .box {
         background: transparent;
@@ -173,11 +174,11 @@ export default {
       align-items: center;
       justify-content: center;
       border-radius: 50%;
+      z-index: 112;
       img {
         border-radius: 50%;
         height: 80%;
         width: 80%;
-        box-shadow: 0 0 10px 1vmin rgba(0,0,0,1);
       }
     }
   }
