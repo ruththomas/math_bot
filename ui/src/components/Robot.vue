@@ -14,8 +14,8 @@
       <div class="row" style="position: relative;">
         <trash></trash>
         <grid></grid>
+        <active-drop v-if="functionAreaShowing === 'addFunction'"></active-drop>
       </div>
-
       <transition
         name="custom-classes-transition"
         enter-active-class="animated tada"
@@ -65,6 +65,7 @@ import StepCongrats from './Continent_congrats'
 import LevelCongrats from './Planet_congrats'
 import AdvancedMode from './Advanced_mode'
 import ConfirmDeactivateFunc from './Confirm_deactivate_func'
+import ActiveDrop from './Activate_drop'
 
 export default {
   mounted () {
@@ -130,34 +131,30 @@ export default {
     PopoverBucket,
     StepCongrats,
     LevelCongrats,
-    AdvancedMode
+    AdvancedMode,
+    ActiveDrop
   }
 }
 </script>
 
 <style scoped lang="scss">
   $box-height: 18vmin;
-
   label {
     margin: 0;
   }
-
   .robot {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
     background-size: cover;
     height: 100%;
-
     .container {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       height: 100%;
-
       .row {
         margin: 0;
         width: 100%;
       }
-
       .box {
         background: transparent;
         position: relative;
@@ -176,7 +173,6 @@ export default {
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-
       img {
         border-radius: 50%;
         height: 80%;

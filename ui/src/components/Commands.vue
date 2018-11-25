@@ -279,6 +279,7 @@ export default {
     background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
     margin-top: $commands-margin-top;
     background-size: contain;
+    background-repeat: no-repeat;
   }
 
   .rotate-to-x {

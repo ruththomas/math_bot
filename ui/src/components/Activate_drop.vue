@@ -10,7 +10,6 @@
 
 <script>
 import draggable from 'vuedraggable'
-import buildUtils from '../services/BuildFunction'
 export default {
   name: 'Activate_drop',
   computed: {
@@ -31,6 +30,9 @@ export default {
     },
     activeFunctions () {
       return this.levelControl.functions.activeFuncs
+    },
+    stagedFunctions () {
+      return this.levelControl.functions.stagedFunctions
     }
   },
   data () {
@@ -47,10 +49,13 @@ export default {
   },
   methods: {
     addToActiveFunc (evt) {
-      buildUtils.activateFunction({
-        stagedIndex: evt.oldIndex,
-        activeIndex: 0
-      })
+      const createdId = $(evt.item).attr('data-created-id')
+      const func = this.stagedFunctions.find((f) => f.created_id === createdId)
+      if (func) {
+        func.index = 0
+        func.category = 'function'
+        this.levelControl.activateFunction(func)
+      }
     }
   },
   components: {
@@ -62,7 +67,7 @@ export default {
 <style scoped lang="scss">
 $pointer-size: 2vmin;
 .active-drop {
-  position: fixed;
+  position: absolute;
   height: 100%;
   width: 100%;
   top: 0;
