@@ -177,6 +177,9 @@ class LevelControl extends Ws {
   updatePlanet (ind) {
     this.path = this.path.substr(0, 3) + ind + '0'
     this._updatePath()
+    $('.steps-container').animate({
+      scrollTop: 0
+    }, 1000)
   }
 
   getNextStarSystem () {
