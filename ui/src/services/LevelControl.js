@@ -26,7 +26,7 @@ class LevelControl extends Ws {
     this._openSocket(this._init)
   }
 
-  mbl = ''
+  mbl = this._retreiveMbl()
   path = '00000'
   galaxy = null
   continent = null
@@ -34,6 +34,18 @@ class LevelControl extends Ws {
   functions = null
   gridMap = null
   runCompiled = null
+
+  // temporary until solved server side
+  storeMbl () {
+    console.log('MBL hit')
+    localStorage.setItem('mbl', this.mbl)
+  }
+
+  // temporary until solved server side
+  _retreiveMbl () {
+    const mbl = localStorage.getItem('mbl')
+    return mbl !== null ? mbl : ''
+  }
 
   _setPath ({path}) {
     this.path = path

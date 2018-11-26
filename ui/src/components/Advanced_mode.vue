@@ -1,6 +1,6 @@
 <template>
 <div class="advanced-mode">
-  <codemirror v-model="levelControl.mbl" :options="editorOptions"></codemirror>
+  <codemirror v-model="levelControl.mbl" :options="editorOptions" @changes="levelControl.storeMbl()"></codemirror>
   <control-bar
     :wipe-function="runCompiled.clearMbl"
     :start="runCompiled.startMbl"
@@ -26,7 +26,7 @@ export default {
   data () {
     return {
       editorOptions: {
-        tabSize: 4,
+        tabSize: 2,
         styleActiveLine: true,
         lineNumbers: true,
         lineWrapping: false,
