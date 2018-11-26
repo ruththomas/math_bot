@@ -49,7 +49,7 @@ object ContinentControl {
 
 class ContinentControl(parameters: List[String], description: String, functions: Functions) {
   import ContinentControl._
-  val listedFunctions = functions.list.values.toList
+  val listedFunctions: List[Function] = functions.list.values.toList
 
   def success(frame: Frame, problem: Problem): Boolean = {
     isFinalSpot(frame) && totalDropped(frame, problem) && checkParams(parameters, listedFunctions)
