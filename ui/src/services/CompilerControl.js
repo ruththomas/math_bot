@@ -13,9 +13,9 @@ class CompilerControl extends Ws {
     this.send({halt: true})
   }
 
-  send ({problem, halt, mbl, create}) {
+  send ({problem, halt, mbl, create, steps = this._compilerTake}) {
     const prepReq = {
-      steps: this._compilerTake,
+      steps: steps,
       problem: problem,
       halt: halt,
       create: create
