@@ -23,14 +23,10 @@ class LevelControl @Inject()(
    * */
   private def updateStats(stats: Stats): Future[Stats] = {
     val shouldMatch = Stats("").list
-    if (stats.list.toList.length != shouldMatch.toList.length) {
-
-      val updatedUserStats = stats.copy(list = shouldMatch.map { ls =>
-        ls._1 -> stats.list.getOrElse(ls._1, ls._2)
-      })
-
-      statsDAO.replace(updatedUserStats)
-    } else FastFuture.successful(stats)
+    val updatedUserStats = stats.copy(list = shouldMatch.map { ls =>
+      ls._1 -> stats.list.getOrElse(ls._1, ls._2)
+    })
+    statsDAO.replace(updatedUserStats)
   }
 
   /*
