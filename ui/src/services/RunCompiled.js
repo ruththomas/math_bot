@@ -247,7 +247,7 @@ class RunCompiled extends GridAnimator {
         this._showStepCongrats()
       }
       this.compilerControl.haltProgram(() => {})
-      this._updateGalaxyData()
+      setTimeout(this._updateGalaxyData, 50)
     })
   }
 
@@ -321,11 +321,17 @@ class RunCompiled extends GridAnimator {
         this._mblError(compiled.error)
         this.robot.setState('failure')
       } else {
-        this.robotFrames = this.robotFrames.concat(compiled.frames)
+        this.robotFrames = this.robotFrames.concat(this.robot.robotSpeed.display === 'lightning' ? compiled.frames.pop() : compiled.frames)
         if (startRunning) startRunning()
       }
     })
-    this.compilerControl.send({problem: this.levelControl.continent.problem.encryptedProblem, halt: false, mbl: mbl, create: create})
+    this.compilerControl.send({
+      problem: this.levelControl.continent.problem.encryptedProblem,
+      halt: false,
+      mbl: mbl,
+      create: create,
+      steps: this.robot.robotSpeed.display === 'lightning' ? 10100 : undefined
+    })
   }
 }
 
