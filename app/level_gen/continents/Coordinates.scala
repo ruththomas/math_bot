@@ -84,11 +84,11 @@ trait Coordinates extends LevelGenTags {
       continentStruct = Some(
         ContinentStruct(
           gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  (R)   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| ($) |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "(R) |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| ($) [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -121,8 +121,8 @@ trait Coordinates extends LevelGenTags {
       continentStruct = Some(
         ContinentStruct(
           gridMap = List(
-            "(R) |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "(R) |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| ($) [10] [100] [1g] [10g]"
@@ -160,9 +160,9 @@ trait Coordinates extends LevelGenTags {
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  (R)",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] ($) [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| ($) |E|  |E|   (R)  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -232,9 +232,9 @@ trait Coordinates extends LevelGenTags {
       continentStruct = Some(
         ContinentStruct(
           gridMap = List(
+            "|E| |E| |E| |E| |E| |E| (R)  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| ($) |E| |E| |E| |E|  |E|   |E|  (R)",
+            "|E| ($) |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
