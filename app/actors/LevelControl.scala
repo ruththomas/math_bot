@@ -22,11 +22,13 @@ class LevelControl @Inject()(
    * Checks if levels have been added or removed then updates the stats
    * */
   private def updateStats(stats: Stats): Future[Stats] = {
-    val shouldMatch = Stats("").list.toList
-    if (stats.list.toList.length != shouldMatch.length) {
-      val filteredUserStats = stats.list.filter(s => shouldMatch.exists(_._1 == s._1))
-      val shouldMatchDiff = shouldMatch.diff(filteredUserStats.toList).toMap
-      val updatedUserStats = stats.copy(list = filteredUserStats ++ shouldMatchDiff)
+    val shouldMatch = Stats("").list
+    if (stats.list.toList.length != shouldMatch.toList.length) {
+
+      val updatedUserStats = stats.copy(list = shouldMatch.map { ls =>
+        ls._1 -> stats.list.getOrElse(ls._1, ls._2)
+      })
+
       statsDAO.replace(updatedUserStats)
     } else FastFuture.successful(stats)
   }
