@@ -91,6 +91,7 @@ object Stats {
           listStats += (s"0${galaxy._2}${starSystem._2}${planet._2}" -> LayerStatistic(
             name = planet._1.name,
             active = {
+              // checks if last level of basic programming has been beat to unlock next star system
               if (starSystem._2 == 1 && planet._2 == 0) {
                 checkLastLevelBasicProgramming(originalStats)
               } else {
@@ -105,6 +106,7 @@ object Stats {
             listStats += (s"0${galaxy._2}${starSystem._2}${planet._2}${continent._2}" -> LayerStatistic(
               name = continent._1.name,
               active = {
+                // checks if last level of basic programming has been beat to unlock next star system
                 if (starSystem._2 == 1 && continent._2 == 0) {
                   checkLastLevelBasicProgramming(originalStats)
                 } else {
