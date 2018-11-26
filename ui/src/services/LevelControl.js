@@ -37,7 +37,6 @@ class LevelControl extends Ws {
 
   // temporary until solved server side
   storeMbl () {
-    console.log('MBL hit')
     localStorage.setItem('mbl', this.mbl)
   }
 
