@@ -46,6 +46,8 @@ export default {
   $Division-color: rgba(64, 169, 254, 1);
   $Exponents-color: rgba(185, 62, 167, 1);
   $Roots-color: rgba(54, 63, 185, 1);
+  $BlankSlate-color: rgba(54, 63, 185, 1);
+  $PracticeArithmetic-color: rgba(185, 62, 167, 1);
   $Refactor-color: transparent;
   $inactive-color: rgba(104, 104, 104, 1);
   $BasicProgramming-size: 23vmin;
@@ -61,6 +63,8 @@ export default {
   $Exponents-size: 15vmin;
   $Roots-size: 9vmin;
   $Refactor-size: 5vmin;
+  $BlankSlate-size: 10vmin;
+  $PracticeArithmetic-size: 20vmin;
   $planet-gradient: rgba(0, 0, 0, 1);
 
   .space {
@@ -178,6 +182,23 @@ export default {
     top: 70%;
     left: 0;
   }
+
+  .BlankSlate {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $BlankSlate-color, $planet-gradient);
+    height: $BlankSlate-size;
+    width: $BlankSlate-size;
+    top: 10%;
+    left: 10%;
+  }
+
+  .PracticeArithmetic {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $PracticeArithmetic-color, $planet-gradient);
+    height: $PracticeArithmetic-size;
+    width: $PracticeArithmetic-size;
+    top: 50%;
+    left: 50%;
+  }
+
   .BasicProgramming.selected {
     box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $BasicProgramming-color;
   }
@@ -224,6 +245,14 @@ export default {
 
   .Roots.selected {
     box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Roots-color;
+  }
+
+  .BlankSlate.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $BlankSlate-color;
+  }
+
+  .PracticeArithmetic.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $PracticeArithmetic-color;
   }
 
   .planet.inactive {

@@ -26,7 +26,7 @@
           </div>
         </button>
         <button
-          v-if="nextPlanet && continents[continents.length - 1].stats.wins > 0"
+          v-if="nextPlanet && currentStarSystem.stats.name !== 'Sandbox' && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextPlanet.id + '0')">
@@ -43,7 +43,7 @@
           </div>
         </button>
         <button
-          v-else-if="nextStarSystem && continents[continents.length - 1].stats.wins > 0"
+          v-else-if="nextStarSystem && nextStarSystem.stats.name !== 'Sandbox' && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextStarSystem.planets[0].id + '0')"
@@ -61,7 +61,7 @@
           </div>
         </button>
         <button
-          v-else-if="!nextStarSystem && !nextPlanet"
+          v-else-if="nextStarSystem && nextStarSystem.stats.name === 'Sandbox'"
           type="button"
           class="btn btn-dark btn-lg btn-block"
         >
@@ -104,6 +104,9 @@ export default {
     },
     selectedContinent () {
       return this.levelControl.path.slice(4)
+    },
+    currentStarSystem () {
+      return this.levelControl.getCurrentStarSystem()
     },
     path () {
       return this.levelControl.path
@@ -193,6 +196,7 @@ export default {
       .btn-group-vertical {
         min-height: min-content;
         width: 100%;
+        justify-content: flex-start;
 
         #selected-step {
           border: 2px solid pink;
@@ -260,51 +264,51 @@ export default {
   }
 
   .BasicProgramming.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $BasicProgramming-color;
+    border: 2px solid $BasicProgramming-color;
   }
 
   .Counting.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Counting-color;
+    border: 2px solid $Counting-color;
   }
 
   .Numbers.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Numbers-color;
+    border: 2px solid $Numbers-color;
   }
 
   .Recursion.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Recursion-color;
+    border: 2px solid $Recursion-color;
   }
 
   .Conditionals.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Conditionals-color;
+    border: 2px solid $Conditionals-color;
   }
 
   .Coordinates.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Coordinates-color;
+    border: 2px solid $Coordinates-color;
   }
 
   .Addition.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Addition-color;
+    border: 2px solid $Addition-color;
   }
 
   .Subtraction.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Subtraction-color;
+    border: 2px solid $Subtraction-color;
   }
 
   .Multiplication.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Multiplication-color;
+    border: 2px solid $Multiplication-color;
   }
 
   .Division.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Division-color;
+    border: 2px solid $Division-color;
   }
 
   .Exponents.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Exponents-color;
+    border: 2px solid $Exponents-color;
   }
 
   .Roots.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Roots-color;
+    border: 2px solid $Roots-color;
   }
 
   .step-image-stars {

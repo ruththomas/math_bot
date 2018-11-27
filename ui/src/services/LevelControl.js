@@ -22,6 +22,7 @@ class LevelControl extends Ws {
     this._resetContinent = this._resetContinent.bind(this)
     this._prepFunc = this._prepFunc.bind(this)
     this._setFunctions = this._setFunctions.bind(this)
+    this.getCurrentStarSystem = this.getCurrentStarSystem.bind(this)
 
     this._openSocket(this._init)
   }
@@ -193,6 +194,10 @@ class LevelControl extends Ws {
     $('.steps-container').animate({
       scrollTop: 0
     }, 1000)
+  }
+
+  getCurrentStarSystem () {
+    return this.galaxy.starSystems[Number(this.path[2])]
   }
 
   getNextStarSystem () {

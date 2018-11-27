@@ -19,30 +19,37 @@ object Stats {
 
   def makePath(str: String): Array[Int] = str.split("").map(_.toInt)
 
+  private def isFreePlay(starSystem: CelestialSystem): Option[Boolean] = {
+    starSystem.starSystemStruct.map(_.freePlay)
+  }
+
   // New stats
   def apply(tId: TokenId): Stats = {
     val listStats: mutable.Map[String, LayerStatistic] =
       mutable.Map("0" -> LayerStatistic("SuperCluster1", active = true))
 
-    superCluster.children.zipWithIndex.map { g =>
-      listStats += (s"0${g._2}" -> LayerStatistic(
-        name = g._1.name,
-        active = g._2 == 0
+    superCluster.children.zipWithIndex.map { galaxy =>
+      listStats += (s"0${galaxy._2}" -> LayerStatistic(
+        name = galaxy._1.name,
+        active = galaxy._2 == 0
       ))
-      g._1.children.zipWithIndex.map { s =>
-        listStats += (s"0${g._2}${s._2}" -> LayerStatistic(
-          name = s._1.name,
-          active = g._2 == 0 && s._2 == 0
+      galaxy._1.children.zipWithIndex.map { starSystem =>
+        listStats += (s"0${galaxy._2}${starSystem._2}" -> LayerStatistic(
+          name = starSystem._1.name,
+          active = isFreePlay(starSystem._1)
+            .getOrElse(galaxy._2 == 0 && starSystem._2 == 0)
         ))
-        s._1.children.zipWithIndex.map { p =>
-          listStats += (s"0${g._2}${s._2}${p._2}" -> LayerStatistic(
-            name = p._1.name,
-            active = g._2 == 0 && s._2 == 0 && p._2 == 0
+        starSystem._1.children.zipWithIndex.map { planet =>
+          listStats += (s"0${galaxy._2}${starSystem._2}${planet._2}" -> LayerStatistic(
+            name = planet._1.name,
+            active = isFreePlay(starSystem._1)
+              .getOrElse(galaxy._2 == 0 && starSystem._2 == 0 && planet._2 == 0)
           ))
-          p._1.children.zipWithIndex.map { c =>
-            listStats += (s"0${g._2}${s._2}${p._2}${c._2}" -> LayerStatistic(
-              name = p._1.name,
-              active = g._2 == 0 && s._2 == 0 && p._2 == 0 && c._2 == 0
+          planet._1.children.zipWithIndex.map { continent =>
+            listStats += (s"0${galaxy._2}${starSystem._2}${planet._2}${continent._2}" -> LayerStatistic(
+              name = planet._1.name,
+              active = isFreePlay(starSystem._1)
+                .getOrElse(galaxy._2 == 0 && starSystem._2 == 0 && planet._2 == 0 && continent._2 == 0)
             ))
           }
         }
@@ -80,10 +87,12 @@ object Stats {
           name = starSystem._1.name,
           active = {
             // checks if last level of basic programming has been beat to unlock next star system
-            if (starSystem._2 == 1) {
-              checkLastLevelBasicProgramming(originalStats)
-            } else {
-              galaxy._2 == 0 && starSystem._2 == 0
+            isFreePlay(starSystem._1).getOrElse {
+              if (starSystem._2 == 1) {
+                checkLastLevelBasicProgramming(originalStats)
+              } else {
+                galaxy._2 == 0 && starSystem._2 == 0
+              }
             }
           }
         ))
@@ -92,13 +101,15 @@ object Stats {
             name = planet._1.name,
             active = {
               // checks if last level of basic programming has been beat to unlock next star system
-              if (starSystem._2 == 1 && planet._2 == 0) {
-                checkLastLevelBasicProgramming(originalStats)
-              } else {
-                originalStats.levels
-                  .get(planet._1.name)
-                  .flatMap(p => p.find(_._2.prevStep == "None").map(_._2.active))
-                  .getOrElse(false)
+              isFreePlay(starSystem._1).getOrElse {
+                if (starSystem._2 == 1 && planet._2 == 0) {
+                  checkLastLevelBasicProgramming(originalStats)
+                } else {
+                  originalStats.levels
+                    .get(planet._1.name)
+                    .flatMap(p => p.find(_._2.prevStep == "None").map(_._2.active))
+                    .getOrElse(false)
+                }
               }
             }
           ))
@@ -107,13 +118,15 @@ object Stats {
               name = continent._1.name,
               active = {
                 // checks if last level of basic programming has been beat to unlock next star system
-                if (starSystem._2 == 1 && continent._2 == 0) {
-                  checkLastLevelBasicProgramming(originalStats)
-                } else {
-                  originalStats.levels
-                    .get(planet._1.name)
-                    .flatMap(_.get(continent._1.name).map(_.active))
-                    .getOrElse(false)
+                isFreePlay(starSystem._1).getOrElse {
+                  if (starSystem._2 == 1 && continent._2 == 0) {
+                    checkLastLevelBasicProgramming(originalStats)
+                  } else {
+                    originalStats.levels
+                      .get(planet._1.name)
+                      .flatMap(_.get(continent._1.name).map(_.active))
+                      .getOrElse(false)
+                  }
                 }
               },
               timesPlayed = originalStats.levels
