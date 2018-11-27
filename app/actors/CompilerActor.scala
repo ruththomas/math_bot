@@ -14,7 +14,7 @@ import loggers.MathBotLogger
 import models._
 import types.TokenId
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.concurrent.duration._
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
