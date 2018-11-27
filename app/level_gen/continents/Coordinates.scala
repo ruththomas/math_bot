@@ -88,7 +88,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| ($) |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| ($) [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
