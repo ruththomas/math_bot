@@ -133,9 +133,19 @@ class LevelControl @Inject()(
       case None => celestialSystem.children.flatMap(getAllAssignedStaged)
     }
 
+  def getStarSystemData(p: String): CelestialSystem = {
+    val path = Stats.makePath(p)
+    superCluster
+      .children(path(1))
+      .children(path(2))
+  }
+
   def getPlanetData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
-    superCluster.children(path(1)).children(path(2)).children(path(3))
+    superCluster
+      .children(path(1))
+      .children(path(2))
+      .children(path(3))
   }
 
   def getContinentData(p: String): CelestialSystem = {

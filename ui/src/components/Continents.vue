@@ -26,7 +26,7 @@
           </div>
         </button>
         <button
-          v-if="nextPlanet && continents[continents.length - 1].stats.wins > 0"
+          v-if="nextPlanet && currentStarSystem.stats.name !== 'Sandbox' && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextPlanet.id + '0')">
@@ -43,7 +43,7 @@
           </div>
         </button>
         <button
-          v-else-if="nextStarSystem && continents[continents.length - 1].stats.wins > 0"
+          v-else-if="nextStarSystem && nextStarSystem.stats.name !== 'Sandbox' && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextStarSystem.planets[0].id + '0')"
@@ -61,7 +61,7 @@
           </div>
         </button>
         <button
-          v-else-if="!nextStarSystem && !nextPlanet"
+          v-else-if="nextStarSystem && nextStarSystem.stats.name === 'Sandbox'"
           type="button"
           class="btn btn-dark btn-lg btn-block"
         >
@@ -104,6 +104,9 @@ export default {
     },
     selectedContinent () {
       return this.levelControl.path.slice(4)
+    },
+    currentStarSystem () {
+      return this.levelControl.getCurrentStarSystem()
     },
     path () {
       return this.levelControl.path
@@ -193,6 +196,7 @@ export default {
       .btn-group-vertical {
         min-height: min-content;
         width: 100%;
+        justify-content: flex-start;
 
         #selected-step {
           border: 2px solid pink;

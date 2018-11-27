@@ -1,5 +1,6 @@
 package actors.messages.level
 
+import actors.LevelControl
 import actors.VideoHintActor.embedURL
 import daos.FunctionsDAO
 import level_gen.models.{CelestialSystem, ContinentStruct}
