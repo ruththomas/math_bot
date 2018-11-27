@@ -260,51 +260,51 @@ export default {
   }
 
   .BasicProgramming.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $BasicProgramming-color;
+    border: 2px solid $BasicProgramming-color;
   }
 
   .Counting.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Counting-color;
+    border: 2px solid $Counting-color;
   }
 
   .Numbers.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Numbers-color;
+    border: 2px solid $Numbers-color;
   }
 
   .Recursion.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Recursion-color;
+    border: 2px solid $Recursion-color;
   }
 
   .Conditionals.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Conditionals-color;
+    border: 2px solid $Conditionals-color;
   }
 
   .Coordinates.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Coordinates-color;
+    border: 2px solid $Coordinates-color;
   }
 
   .Addition.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Addition-color;
+    border: 2px solid $Addition-color;
   }
 
   .Subtraction.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Subtraction-color;
+    border: 2px solid $Subtraction-color;
   }
 
   .Multiplication.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Multiplication-color;
+    border: 2px solid $Multiplication-color;
   }
 
   .Division.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Division-color;
+    border: 2px solid $Division-color;
   }
 
   .Exponents.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Exponents-color;
+    border: 2px solid $Exponents-color;
   }
 
   .Roots.selected {
-    box-shadow: inset 0 0 $outer-shadow-blur $outer-shadow-size $Roots-color;
+    border: 2px solid $Roots-color;
   }
 
   .step-image-stars {
