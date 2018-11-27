@@ -86,7 +86,7 @@ trait Coordinates extends LevelGenTags {
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E|  (R)   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| ($) |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| ($) [10] [100] [1g] [10g]"
           ),
