@@ -1,8 +1,8 @@
-package actors.messages
+package models.compiler
 
 import compiler.Point
-import compiler.processor.{AnimationType, Frame}
-import controllers.MathBotCompiler.ClientGrid
+import compiler.processor.{ AnimationType, Frame }
+import play.api.libs.json.{ JsPath, Writes }
 
 case class ClientRobotState(location: Point,
                             orientation: String,
@@ -11,6 +11,17 @@ case class ClientRobotState(location: Point,
                             grid: Option[ClientGrid])
 
 object ClientRobotState {
+
+  import play.api.libs.functional.syntax._
+
+  implicit val robotStateWrite: Writes[ClientRobotState] = (
+    (JsPath \ "location").write[Point] and
+      (JsPath \ "orientation").write[String] and
+      (JsPath \ "holding").write[List[String]] and
+      (JsPath \ "animation").write[Option[AnimationType.Value]] and
+      (JsPath \ "grid").write[Option[ClientGrid]]
+    )(unlift(ClientRobotState.unapply))
+
   def apply(frame: Frame): ClientRobotState = new ClientRobotState(
     location = frame.robotLocation.map(l => Point(l.x, l.y)).getOrElse(Point(0, 0)),
     orientation = frame.robotLocation.map(l => l.orientation).getOrElse("0"),

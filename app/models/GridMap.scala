@@ -1,7 +1,7 @@
 package models
 
-import actors.messages.level.{GridPart, Problem, ToolList}
-import compiler.processor.Frame
+import actors.messages.level.{ GridPart, Problem, ToolList }
+import _root_.compiler.processor.Frame
 
 /*
  * Only used in compiler.
