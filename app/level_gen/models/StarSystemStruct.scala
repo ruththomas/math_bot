@@ -6,5 +6,6 @@ object StarSystemStruct {
 }
 
 case class StarSystemStruct(
-    description: String
+    description: String,
+    freePlay: Boolean
 )

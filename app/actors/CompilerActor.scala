@@ -13,7 +13,7 @@ import models._
 import models.compiler.{ClientFrame, ClientRobotState, ClientTrace}
 import types.TokenId
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.concurrent.duration._
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(

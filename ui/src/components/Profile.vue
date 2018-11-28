@@ -108,7 +108,6 @@ export default {
         color: $font-color;
         display: flex;
         justify-content: center;
-        padding: 3%;
         margin: 0.4em;
         border-radius: 0.25rem!important;
         background-color: #000000;

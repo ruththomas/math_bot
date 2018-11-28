@@ -67,4 +67,17 @@ trait Planets extends Continents with LevelGenTags {
       children = rootsChildren
     )
   )
+
+  val sandboxChildren = List(
+    CelestialSystem(
+      name = "BlankSlate",
+      kind = planet,
+      children = blankSlateChildren
+    ),
+    CelestialSystem(
+      name = "PracticeArithmetic",
+      kind = planet,
+      children = practiceArithmeticChildren
+    )
+  )
 }
