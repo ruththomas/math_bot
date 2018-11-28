@@ -52,7 +52,6 @@
       @mousedown="runCompiled.resetIfFailure"
     >
     </div>
-  <!--v-if="stagedFunctions.length && stepData.stagedEnabled">-->
   </div>
 </template>
 
@@ -100,6 +99,11 @@ export default {
     },
     funcImages () {
       return this.permanentImages.funcImages
+    }
+  },
+  watch: {
+    functionAreaShowing (area) {
+      this.functionOptions.sort = area !== 'addFunction'
     }
   },
   data () {
