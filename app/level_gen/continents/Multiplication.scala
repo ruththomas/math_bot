@@ -33,9 +33,9 @@ trait Multiplication extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "2 * 1",
+          problem = "2 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -71,7 +71,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "5 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -107,7 +107,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -143,7 +143,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "8 * 1",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -179,7 +179,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -215,7 +215,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -251,7 +251,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 * 4",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -287,7 +287,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -323,7 +323,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 * 3",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -359,7 +359,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -395,7 +395,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -431,7 +431,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -467,7 +467,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 * 1",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -503,7 +503,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 * 3",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -539,7 +539,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 * 2",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -575,7 +575,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 * 3",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -611,7 +611,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 * 4",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
@@ -647,7 +647,7 @@ trait Multiplication extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 * 9",
           clearMain = false,
-          initFocus = List("Walk"),
+          initFocus = List.empty[String],
           videoHints = List.empty[String],
           freeHint = None
         )
