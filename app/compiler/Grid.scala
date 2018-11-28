@@ -1,16 +1,20 @@
 package compiler
 
 import compiler.processor.RobotLocation
+import play.api.libs.json.{ Json, OFormat }
 
 object CellType extends Enumeration {
   val EmptySpace, Wall, FinalAnswer, RobotHolding = Value
 }
 
 case class Point(x: Int, y: Int) {
-  def asTuple = (x, y)
+  def asTuple : (Int, Int) = (x, y)
 }
 
 object Point {
+
+  implicit val pointWrites : OFormat[Point] = Json.format[Point]
+
   def apply(coords: (Int, Int)): Point = Point(coords._1, coords._2)
 }
 

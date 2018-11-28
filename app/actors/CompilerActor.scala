@@ -4,14 +4,13 @@ import actors.messages._
 import actors.messages.level.Problem
 import akka.actor.{Actor, ActorRef, Props}
 import akka.util.Timeout
-import compiler.operations.NoOperation
-import compiler.processor.{Frame, Processor, Register}
+import compiler.processor.{Frame, Processor}
 import compiler.{Compiler, GridAndProgram, Point}
 import configuration.CompilerConfiguration
-import controllers.MathBotCompiler
 import javax.inject.Inject
 import loggers.MathBotLogger
 import models._
+import models.compiler.{ClientFrame, ClientRobotState, ClientTrace}
 import types.TokenId
 
 import scala.concurrent.ExecutionContextExecutor
@@ -22,8 +21,6 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     config: CompilerConfiguration,
     levelControl: LevelControl
 ) extends Actor {
-
-  import MathBotCompiler._
 
   private implicit val ec: ExecutionContextExecutor = context.dispatcher
 
@@ -61,9 +58,9 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
       pathAndContinent <- levelControl.advanceStats(tokenId, isSuccess)
     } yield {
       if (isSuccess) {
-        List(MathBotCompiler.ClientFrame.success(frame, pathAndContinent))
+        List(ClientFrame.success(frame, pathAndContinent))
       } else {
-        List(MathBotCompiler.ClientFrame.failure(frame, pathAndContinent))
+        List(ClientFrame.failure(frame, pathAndContinent))
       }
     }
   }
@@ -72,9 +69,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
     for {
       pathAndContinent <- levelControl.advanceStats(tokenId, success = true)
     } yield {
-      MathBotCompiler.ClientFrame(ClientRobotState(Point(0, 0), "0", List.empty[String]),
-                                  "failure",
-                                  Some(pathAndContinent))
+      ClientFrame(ClientRobotState(Point(0, 0), "0", List.empty[String]),
+                  "failure",
+                  Some(pathAndContinent),
+                  Seq.empty[ClientTrace])
     }
   }
 
@@ -267,8 +265,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
         case Nil =>
           // It's an empty program, or one that consists of only empty functions
           for {
-            lastFrame <- createLastFrame(currentCompiler,
-                                         Frame(NoOperation, Register(), currentCompiler.program.grid, None, None))
+            lastFrame <- createLastFrame(currentCompiler, Frame.nopFrame(currentCompiler.program.grid))
           } yield sendFrames(currentCompiler, lastFrame)
           context.become(createCompile())
       }
