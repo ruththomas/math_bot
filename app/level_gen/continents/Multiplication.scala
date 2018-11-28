@@ -69,7 +69,7 @@ trait Multiplication extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "5 * 2",
+          problem = "3 * 2",
           clearMain = false,
           initFocus = List.empty[String],
           videoHints = List.empty[String],
