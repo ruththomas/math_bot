@@ -72,11 +72,12 @@ export default {
   },
   methods: {
     deactivateFunction () {
-      this.levelControl.deactivateFunction(this.confirmDeactiveFunction)
+      this.levelControl.deactivateFunction(Object.assign(this.confirmDeactiveFunction, {category: 'staged'}))
       this.hide()
       this.$store.dispatch('confirmDeactivateFunction', {})
     },
     hide () {
+      this.levelControl.functions.stagedFunctions = this.levelControl.functions.stagedFunctions.filter((f) => f.category === 'staged')
       this.$root.$emit('bv::hide::modal', 'confirm-deactivate-func')
     }
   },

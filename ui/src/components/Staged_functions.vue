@@ -42,9 +42,6 @@ export default {
     },
     stagedFunctions () {
       return this.levelControl.functions.stagedFunctions
-        .filter(func => {
-          return func.created_id !== this.confirmDeactiveFunction.created_id
-        })
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
@@ -80,7 +77,6 @@ export default {
       if (!func) return
 
       Object.assign(func, {
-        category: 'staged',
         index: newIndex
       })
       this.$store.dispatch('confirmDeactivateFunction', func)
