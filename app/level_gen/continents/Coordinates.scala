@@ -290,11 +290,12 @@ trait Coordinates extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "1 + 2",
+          problem = "0",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
-          freeHint = None
+          freeHint = None,
+          evalEachFrame = Some(true)
         )
       )
     ),
@@ -621,11 +622,12 @@ trait Coordinates extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "1 + 2",
+          problem = "0",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
-          freeHint = None
+          freeHint = None,
+          evalEachFrame = Some(true)
         )
       )
     ),
@@ -661,7 +663,8 @@ trait Coordinates extends LevelGenTags {
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
-          freeHint = None
+          freeHint = None,
+          evalEachFrame = Some(true)
         )
       )
     )
