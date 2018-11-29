@@ -7,7 +7,7 @@
       v-on:enter="enter"
       v-on:leave="leave"
     >
-      <div v-for="(message, ind) in messageList"
+      <p v-for="(message, ind) in messageList"
            class="message"
            :class="message.type"
            :id="'message-' + ind"
@@ -15,7 +15,7 @@
            @click="removeMessage(ind)"
       >
         {{ message.msg }}
-      </div>
+      </p>
     </transition-group>
   </div>
 </template>

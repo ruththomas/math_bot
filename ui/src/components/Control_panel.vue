@@ -60,7 +60,6 @@ export default {
       bottom: 0;
       z-index: 111;
     }
-
     .mascot {
       position: relative;
       top: calc(#{$mascot-height} / 2.9);
