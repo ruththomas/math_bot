@@ -50,7 +50,7 @@ object PreparedFunctions {
   }
 
   private def indexEm(functions: List[Function]): List[Function] =
-    functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2))
+    functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2, sizeLimit = fNi._1.clientSizeLimit))
 
   private def isAllowedActive(func: Function, continentStruct: ContinentStruct) = continentStruct.allowedActives match {
     case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)

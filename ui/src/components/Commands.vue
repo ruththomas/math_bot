@@ -52,7 +52,6 @@
       @mousedown="runCompiled.resetIfFailure"
     >
     </div>
-  <!--v-if="stagedFunctions.length && stepData.stagedEnabled">-->
   </div>
 </template>
 
