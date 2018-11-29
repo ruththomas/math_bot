@@ -286,7 +286,7 @@ trait Roots extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "sqrt(1)",
+          problem = "sqrt(8)",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
@@ -466,7 +466,7 @@ trait Roots extends LevelGenTags {
             "setItemDown"
           ),
           specialParameters = List.empty[String],
-          problem = "sqrt(9)",
+          problem = "sqrt(8)",
           clearMain = false,
           initFocus = List("Walk"),
           videoHints = List.empty[String],
