@@ -96,7 +96,8 @@ class LevelControl extends Ws {
     Object.assign(func, {
       displayName: false,
       name: '',
-      func: []
+      func: [],
+      color: 'default'
     })
     this._wsOnMessage((updated) => {
       this._setFunctions(updated.preparedFunctions)
