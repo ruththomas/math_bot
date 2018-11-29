@@ -57,7 +57,7 @@
 
   <img
     v-if="robot.state === 'failure'"
-    class="reset play button noDrag dialog-button"
+    class="reset play button noDrag dialog-button pulse"
     :src="permanentImages.buttons.resetButton"
     alt="Reset button" @click="runCompiled.reset"
     data-toggle="tooltip" title="Reset program"/>

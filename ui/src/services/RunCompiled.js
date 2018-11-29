@@ -165,15 +165,17 @@ class RunCompiled extends GridAnimator {
     const dis = this
     const failedMessage = {
       type: 'success',
-      msg: 'Not quite, a hint might help',
+      msg: `Not quite, a hint might help. Click on any icon to restart.`,
       handlers () {
         const $helpButton = $('.help-button')
-
+        const $pulseEle = $('<div class="pulse" style="position: absolute; height: 100%; width: 100%; top: 0; left: 0;"></div>')
         return {
           runBeforeAppend () {
+            $helpButton.append($pulseEle)
             $helpButton.addClass('background-alert')
           },
           runOnDelete () {
+            $('.help-button .pulse').remove()
             $helpButton.removeClass('background-alert')
           },
           closeControl: dis._closeMessageRobotHome()
