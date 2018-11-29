@@ -72,8 +72,7 @@ import PuzzlePieces from './Puzzle_pieces'
 
 export default {
   mounted () {
-    this.togglePut(this.functions.length < this.sizeLimit)
-    this.functionDraggableOptions.group.put = true
+    this.setPut()
   },
   computed: {
     levelControl () {
@@ -191,6 +190,7 @@ export default {
     deleteFuncContents () {
       this.closePopover('delete-function')
       this.levelControl.deleteFunction(this.editingFunction)
+      this.setPut(true)
     },
     animateVulnerable () {
       const $functions = $('.editFunction-drop-zone > .piece:not(.placeholder-piece)')
@@ -211,14 +211,17 @@ export default {
       }
       this.$store.dispatch('addMessage', messageBuilder)
     },
-    togglePut (bool) {
+    setPut (bool = this.functions.length < this.editingFunction.sizeLimit) {
       this.functionDraggableOptions.group.put = bool
+      if (!bool) {
+        this.fullMessage()
+      }
     },
     editFunction () {
-      this.levelControl.updateFunction(this.editingFunction)
-      if (this.editingFunction.sizeLimit < 10000 && this.editingFunction.sizeLimit > 0) {
-        this.togglePut(this.functions.length < this.editingFunction.sizeLimit)
+      if (this.functions.length <= this.editingFunction.sizeLimit) {
+        this.levelControl.updateFunction(this.editingFunction)
       }
+      this.setPut()
     },
     closeEditFunction () {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
