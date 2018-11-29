@@ -256,6 +256,402 @@ trait Exponents extends LevelGenTags {
           freeHint = None
         )
       )
+    ),
+    CelestialSystem(
+      name = "8",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "3 ^ 1",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "9",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "1 ^ 3",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "10",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "3 ^ 2",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "11",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "3 ^ 2",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "12",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "2 ^ 2",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "13",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "1 ^ 2",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "14",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "2 ^ 2",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "15",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "3 ^ 2",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "16",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "2 ^ 2",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "17",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "1 ^ 3",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
+    ),
+    CelestialSystem(
+      name = "18",
+      kind = continent,
+      continentStruct = Some(
+        ContinentStruct(
+          gridMap = List(
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+          ),
+          description = "Place the correct amount on the portal",
+          mainMax = -1,
+          robotOrientation = 0,
+          stagedEnabled = true,
+          activeEnabled = true,
+          stagedQty = -1,
+          assignedStaged = List.empty[AssignedFunction],
+          preBuiltActive = List.empty[AssignedFunction],
+          allowedActives = None,
+          cmdsAvailable = List(
+            "moveRobotForwardOneSpot",
+            "changeRobotDirection",
+            "pickUpItem",
+            "setItemDown"
+          ),
+          specialParameters = List.empty[String],
+          problem = "3 ^ 2",
+          clearMain = false,
+          initFocus = List("Walk"),
+          videoHints = List.empty[String],
+          freeHint = None
+        )
+      )
     )
   )
 }
