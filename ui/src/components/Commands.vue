@@ -101,11 +101,6 @@ export default {
       return this.permanentImages.funcImages
     }
   },
-  watch: {
-    functionAreaShowing (area) {
-      this.functionOptions.sort = area !== 'addFunction'
-    }
-  },
   data () {
     return {
       commandEvt: null,

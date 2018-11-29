@@ -52,7 +52,7 @@ export default {
       draggableOptions: {
         group: {
           name: 'commands-staged',
-          pull: true,
+          pull: 'clone',
           put: ['commands-slide'],
           revertClone: true
         },
@@ -70,16 +70,17 @@ export default {
       this.$store.dispatch('updateEditingIndex', null)
     },
     confirmDeactivateFunction (evt) {
-      const {oldIndex, newIndex} = evt
-      const func = this.levelControl.functions.activeFuncs[oldIndex]
+      const createdId = $(evt.item).attr('data-created-id')
+      const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
 
       // if user drags command function ignore
       if (!func) return
 
-      Object.assign(func, {
-        index: newIndex
-      })
-      this.$store.dispatch('confirmDeactivateFunction', func)
+      this.$store.dispatch('confirmDeactivateFunction',
+        Object.assign(func, {
+          index: evt.newIndex
+        })
+      )
       this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
     }
   },

@@ -38,7 +38,7 @@
     v-if="robot.state === 'home' || robot.state === 'paused'"
     class="play noDrag dialog-button"
     :src="permanentImages.buttons.playButton"
-    alt="Play button" @click="[start(), togglePut(true), closeHint()]"
+    alt="Play button" @click="[start(), closeHint()]"
     data-toggle="tooltip" title="Run program" />
 
   <img
@@ -107,7 +107,7 @@ export default {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
     }
   },
-  props: ['wipeFunction', 'togglePut', 'start']
+  props: ['wipeFunction', 'start']
 }
 </script>
 

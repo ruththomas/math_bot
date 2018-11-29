@@ -32,4 +32,6 @@ case class Function(
     category: String,
     commandId: String,
     sizeLimit: Int = -1
-)
+) {
+  def clientSizeLimit: Int = if (this.sizeLimit < 0) 10000 else this.sizeLimit
+}

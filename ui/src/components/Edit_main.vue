@@ -14,7 +14,6 @@
     ></function-drop>
     <control-bar
       :wipe-function="wipeFunction"
-      :toggle-put="togglePut"
       :start="runCompiled.start"
     ></control-bar>
   </div>
@@ -29,7 +28,7 @@ import ControlBar from './Control_bar'
 
 export default {
   mounted () {
-    // this.togglePut(this.mainFunctionFunc.length < this.stepData.mainMax)
+    this.setPut()
   },
   computed: {
     levelControl () {
@@ -70,20 +69,21 @@ export default {
       }
       this.$store.dispatch('addMessage', messageBuilder)
     },
-    togglePut (bool) {
+    setPut (bool = this.mainFunction.func.length < this.levelControl.continent.mainMax) {
       this.mainDraggableOptions.group.put = bool
-    },
-    editFunction () {
-      this.levelControl.updateFunction(this.mainFunction)
-      const mainBalance = this.mainFunction.func.length < this.levelControl.continent.mainMax
-      this.togglePut(mainBalance)
-      if (!mainBalance) {
+      if (!bool) {
         this.fullMessage()
       }
     },
+    editFunction () {
+      if (this.mainFunction.func.length <= this.levelControl.continent.mainMax) {
+        this.levelControl.updateFunction(this.mainFunction)
+      }
+      this.setPut()
+    },
     wipeFunction () {
       this.levelControl.deleteMain()
-      this.togglePut(true)
+      this.setPut(true)
     },
     add () {
       buildUtils._positionBar()
