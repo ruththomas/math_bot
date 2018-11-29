@@ -29,13 +29,11 @@
                 ]"
                 style="z-index: 1000;"
               >
-                <span v-if="problem.includes('sqrt')" class="square-root-problem">&#8730;{{extractSqrtValue(problem)}}</span>
+                <span v-if="problem.includes('sqrt')" class="square-root-problem">&#8730;{{extractInteger(problem)}}</span>
+                <span v-else-if="problem.includes('cbrt')" class="square-root-problem">&#8731;{{extractInteger(problem)}}</span>
                 <span v-else-if="problem.includes('^')" class="exponent-problem">{{extractExpValues(problem, 0)}}<span>{{extractExpValues(problem, 1)}}</span></span>
                 <span v-else>{{blankZero(problem)}}</span>
               </div>
-                <!--4<span style="font-size: 1.5vmin;">4</span></span>-->
-                <!--&#8730;9</span>-->
-                <!--</span>-->
               <b-img
                 v-if="space.name === 'final answer'"
                 class="portal glyphicon"
@@ -135,9 +133,9 @@ export default {
       return problem !== '0' ? problem : ''
     },
     isMultiProblem (problem) {
-      return problem.split(' ').length > 1 || problem.includes('sqrt')
+      return problem.split(' ').length > 1 || problem.includes('sqrt') || problem.includes('cbrt')
     },
-    extractSqrtValue (exp) {
+    extractInteger (exp) {
       return exp.replace(/\D/g, '')
     },
     extractExpValues (exp, position) {
