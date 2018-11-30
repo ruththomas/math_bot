@@ -12,7 +12,6 @@ import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Indexes._
 import org.mongodb.scala.model.Updates._
-import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -43,7 +42,7 @@ class PlayerAccountDAO @Inject()(
 
   def put(pa: PlayerAccount): Future[Completed] = collection.insertOne(pa).toFuture()
 
-  def find(tokenId: TokenId): Future[Option[PlayerAccount]] =
+  def find(tokenId: String): Future[Option[PlayerAccount]] =
     collection.find(equal(tokenIdLabel.name, tokenId)).headOption()
 
   def setAdmin(tokenId: Option[String], email: Option[String], isAdmin: Boolean): Future[Option[PlayerAccount]] =
@@ -56,7 +55,7 @@ class PlayerAccountDAO @Inject()(
         .toFutureOption()
     } yield result
 
-  def updateAccess(tokenId: TokenId): Future[Option[PlayerAccount]] =
+  def updateAccess(tokenId: String): Future[Option[PlayerAccount]] =
     for {
       result <- collection
         .findOneAndUpdate(equal(tokenIdLabel.name, tokenId),
@@ -64,7 +63,7 @@ class PlayerAccountDAO @Inject()(
         .toFutureOption()
     } yield result
 
-  def updateMaxLevelAndStep(tokenId: TokenId, ml: String, ms: String): Future[Option[PlayerAccount]] =
+  def updateMaxLevelAndStep(tokenId: String, ml: String, ms: String): Future[Option[PlayerAccount]] =
     for {
       result <- collection
         .findOneAndUpdate(equal(tokenIdLabel.name, tokenId), combine(set(maxLevel.name, ml), set(maxStep.name, ms)))

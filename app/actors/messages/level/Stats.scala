@@ -4,7 +4,6 @@ import level_gen.SuperClusters
 import level_gen.models.CelestialSystem
 import models.deprecatedPlayerToken.CurrentStats
 import play.api.libs.json.{Json, OFormat}
-import types._
 
 import scala.collection.mutable
 
@@ -13,7 +12,7 @@ object Stats {
 
   def superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
-  final val tokenIdLabel: TokenId = "tokenId"
+  final val tokenIdLabel: String = "tokenId"
   final val currentPathLabel: String = "currentPath"
   final val listLabel: String = "list"
 
@@ -24,7 +23,7 @@ object Stats {
   }
 
   // New stats
-  def apply(tId: TokenId): Stats = {
+  def apply(tId: String): Stats = {
     val listStats: mutable.Map[String, LayerStatistic] =
       mutable.Map("0" -> LayerStatistic("SuperCluster1", active = true))
 
@@ -73,7 +72,7 @@ object Stats {
   }
 
   // Converts legacy stats to new stats
-  def apply(tokenId: TokenId, originalStats: CurrentStats): Stats = {
+  def apply(tokenId: String, originalStats: CurrentStats): Stats = {
     val listStats: mutable.Map[String, LayerStatistic] =
       mutable.Map("0" -> LayerStatistic("SuperCluster1", active = true))
 
@@ -152,7 +151,7 @@ object Stats {
 }
 
 case class Stats(
-    tokenId: TokenId,
+    tokenId: String,
     currentPath: String,
     list: Map[String, LayerStatistic]
 ) {

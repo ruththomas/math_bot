@@ -8,7 +8,6 @@ import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
 import play.api.Environment
 import play.api.libs.ws.WSClient
-import types._
 
 object LevelActor {
   final case class GetSuperCluster(name: String)
@@ -16,14 +15,14 @@ object LevelActor {
   final case class GetStats()
   final case class GetSuperClusterData()
   final case class GetGalaxyData(pathOpt: Option[String])
-  final case class GetStarSystemData(pathOpt: Option[StarSystemId])
+  final case class GetStarSystemData(pathOpt: Option[String])
   final case class GetPlanetData()
   final case class ChangeLevel(path: String)
   final case class UpdateStats()
   final case class CreateContinentData(functions: Functions, path: String)
   final case class UpdateFunction(functions: Function)
   final case class CreateStatsAndContinent()
-  final case class GetContinentData(pathOpt: Option[ContinentId])
+  final case class GetContinentData(pathOpt: Option[String])
   final case class GetPath()
   final case class RunWon(success: Boolean)
   final case class Init()
@@ -35,7 +34,7 @@ object LevelActor {
   final case class Unlock()
 
   def props(out: ActorRef,
-            tokenId: TokenId,
+            tokenId: String,
             statsDAO: StatsDAO,
             lambdasDAO: FunctionsDAO,
             playerTokenDAO: PlayerTokenDAO,
@@ -46,7 +45,7 @@ object LevelActor {
 }
 
 class LevelActor @Inject()(out: ActorRef,
-                           tokenId: TokenId,
+                           tokenId: String,
                            statsDAO: StatsDAO,
                            functionsDAO: FunctionsDAO,
                            playerTokenDAO: PlayerTokenDAO,

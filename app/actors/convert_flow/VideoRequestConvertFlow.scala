@@ -5,7 +5,6 @@ import actors.messages._
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import play.api.libs.json.{JsValue, Json, Reads}
-import types.{LevelName, StepName}
 
 object VideoRequestConvertFlow extends SocketRequestConvertFlow {
   final case class VideoRequest(action: String, path: Option[String] = None)

@@ -10,7 +10,6 @@ import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.{MongoCollection, MongoDatabase, _}
-import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,10 +31,10 @@ class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
   val collection: MongoCollection[HintsTaken] =
     mathbotDb.getCollection[HintsTaken](collectionLabel).withCodecRegistry(codecRegistry)
 
-  def getHints(tokenId: TokenId): Future[Option[HintsTaken]] =
+  def getHints(tokenId: String): Future[Option[HintsTaken]] =
     collection.find(equal(tokenIdField, tokenId)).first().toFutureOption()
 
-  def updateOrAdd(tokenId: TokenId, path: String, videoCount: Int): Future[HintsTaken] = {
+  def updateOrAdd(tokenId: String, path: String, videoCount: Int): Future[HintsTaken] = {
     for {
       hints <- collection.find(equal(tokenIdField, tokenId)).first().toFutureOption()
       updatedOrAdded <- hints match {
@@ -49,7 +48,7 @@ class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
     } yield updatedOrAdded
   }
 
-  def insert(tokenId: TokenId, path: String, videoCount: Int): Future[HintsTaken] = {
+  def insert(tokenId: String, path: String, videoCount: Int): Future[HintsTaken] = {
     val timeStamp: Long = Instant.now.getEpochSecond
     val hintTaken = HintTaken(path, timeStamp, 1, calculateStars(3, videoCount))
     val hintsTaken = HintsTaken(tokenId, Map(path -> hintTaken))
@@ -58,7 +57,7 @@ class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
     } yield hintsTaken
   }
 
-  def insertHint(tokenId: TokenId, path: String, videoCount: Int): Future[HintsTaken] = {
+  def insertHint(tokenId: String, path: String, videoCount: Int): Future[HintsTaken] = {
     val timeStamp: Long = Instant.now.getEpochSecond
     val hintTaken = HintTaken(path, timeStamp, 1, calculateStars(3, videoCount))
     for {
@@ -72,7 +71,7 @@ class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
     } yield hintsTaken
   }
 
-  def updateHint(tokenId: TokenId, path: String, videoCount: Int): Future[HintsTaken] = {
+  def updateHint(tokenId: String, path: String, videoCount: Int): Future[HintsTaken] = {
     val timeStamp: Long = Instant.now.getEpochSecond
     for {
       stars <- collection.find(equal(tokenIdField, tokenId)).first().toFutureOption().map {
@@ -101,16 +100,16 @@ class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
     } yield updated
   }
 
-  def replaceList(tokenId: TokenId, list: Map[String, HintTaken]): Future[HintsTaken] = {
+  def replaceList(tokenId: String, list: Map[String, HintTaken]): Future[HintsTaken] = {
     collection
       .findOneAndUpdate(equal(tokenIdField, tokenId), set(listLabel, list))
       .toFuture()
   }
 
-  def getHint(tokenId: TokenId, path: String): Future[Option[HintTaken]] =
+  def getHint(tokenId: String, path: String): Future[Option[HintTaken]] =
     collection.find(equal(s"$tokenIdField", tokenId)).first().toFutureOption().map(_.map(_.list.get(path)).head)
 
-  def reset(tokenId: TokenId, path: String): Future[HintTaken] = {
+  def reset(tokenId: String, path: String): Future[HintTaken] = {
     collection
       .findOneAndUpdate(
         equal(

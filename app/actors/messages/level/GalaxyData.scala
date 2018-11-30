@@ -1,6 +1,5 @@
 package actors.messages.level
 import play.api.libs.json.{Json, OFormat}
-import types.GalaxyId
 
 object GalaxyData {
   implicit val format: OFormat[GalaxyData] = Json.format[GalaxyData]
@@ -16,4 +15,4 @@ object GalaxyData {
   }
 }
 
-case class GalaxyData(id: GalaxyId, starSystems: List[StarSystemData])
+case class GalaxyData(id: String, starSystems: List[StarSystemData])

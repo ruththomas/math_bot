@@ -8,7 +8,6 @@ import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.result.DeleteResult
 import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase, _}
-import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +33,7 @@ case class AdminAuthDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: Executi
     collection.find(equal("adminAuthId", adminAuthId)).first().toFutureOption()
   }
 
-  def findByTokenId(tokenId: TokenId): Future[Option[AdminAuth]] = {
+  def findByTokenId(tokenId: String): Future[Option[AdminAuth]] = {
     collection.find(equal("tokenId", tokenId)).first().toFutureOption()
   }
 

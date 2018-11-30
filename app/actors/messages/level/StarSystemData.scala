@@ -1,6 +1,5 @@
 package actors.messages.level
 import play.api.libs.json.{Json, OFormat}
-import types.{StarSystemId, TokenId}
 
 object StarSystemData {
   implicit val format: OFormat[StarSystemData] = Json.format[StarSystemData]
@@ -29,7 +28,7 @@ object StarSystemData {
 }
 
 case class StarSystemData(
-    id: StarSystemId,
+    id: String,
     stats: LayerStatistic,
     planets: Option[List[PlanetData]]
 )
