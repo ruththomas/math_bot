@@ -163,9 +163,9 @@ class RunCompiled extends GridAnimator {
 
   _failedMessage () {
     const dis = this
-    const failedMessage = {
+    const failedMessage1 = {
       type: 'success',
-      msg: `Not quite, a hint might help. Click on any icon to restart.`,
+      msg: `Not quite, a hint might help.`,
       handlers () {
         const $helpButton = $('.help-button')
         const $controlBar = $('.control-bar')
@@ -192,7 +192,13 @@ class RunCompiled extends GridAnimator {
         }
       }
     }
-    this._addMessage(failedMessage)
+    const failedMessage2 = {
+      type: 'success',
+      msg: ' Click on any icon to restart.',
+      closeControl: dis._closeMessageRobotHome()
+    }
+    this._addMessage(failedMessage2)
+    this._addMessage(failedMessage1)
   }
 
   _mainEmptyMessage (emptyFuncs) {
