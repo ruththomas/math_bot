@@ -195,7 +195,11 @@ class RunCompiled extends GridAnimator {
     const failedMessage2 = {
       type: 'success',
       msg: ' Click on any icon to restart.',
-      closeControl: dis._closeMessageRobotHome()
+      handlers () {
+        return {
+          closeControl: dis._closeMessageRobotHome()
+        }
+      }
     }
     this._addMessage(failedMessage2)
     this._addMessage(failedMessage1)
