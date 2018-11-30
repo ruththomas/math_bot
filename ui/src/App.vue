@@ -147,9 +147,9 @@ export default {
   }
 
   .pulse {
-    box-shadow: 0 0 0 rgb(184, 233, 134);
-    animation: pulse 1s;
-    animation-iteration-count: 2;
+    -webkit-animation-name: pulse;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-iteration-count: 2;
   }
 
   .pointer {
@@ -215,6 +215,14 @@ export default {
     background-color: $click-color!important;
   }
 
+  .flash {
+    animation-duration: 2s;
+  }
+
+  .tada {
+    animation-duration: 2s;
+  }
+
   @keyframes bounce {
     from {
       transform: translateY(0px);
@@ -232,15 +240,18 @@ export default {
     }
   }
 
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgb(184, 233, 134);
+  @-webkit-keyframes pulse {
+    from {
+      -webkit-transform: scale(1.0);
+      opacity: 0.75;
     }
-    70% {
-      box-shadow: 0 0 0 50px rgba(184, 233, 134, 0);
+    50% {
+      -webkit-transform: scale(1.2);
+      opacity: 1.0;
     }
-    100% {
-      box-shadow: 0 0 0 0 rgba(184, 233, 134, 0);
+    to {
+      -webkit-transform: scale(1.0);
+      opacity: 0.75;
     }
   }
 
