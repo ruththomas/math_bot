@@ -4,7 +4,9 @@
     class="piece"
     :class="[func.placeholder ? 'piece-placeholder' : '', pieceToShow === 'closed' ? 'piece-closed'
       : pieceToShow === 'start' ? 'piece-start'
-      : 'piece-middle-or-end']"
+      : 'piece-middle-or-end',
+      func.created_id
+    ]"
     @click="method ? method($event, func, ind) : ''"
     @mousedown="runCompiled.resetIfFailure"
     data-toggle="tooltip" :title="func.name"
@@ -56,8 +58,8 @@
         </g>
       </g>
     </svg>
-    <img v-if="!func.displayName" :src="funcAndCmdImages[func.image]" />
-    <span class="text" v-else v-html="nameHtml"></span>
+    <img v-if="!func.name.length || !func.displayName" :src="funcAndCmdImages[func.image]" />
+    <span class="text" v-else v-html="name"></span>
     <div
       v-if="pieceToShow === 'closed' && showName  "
       class="piece-name"
@@ -75,7 +77,6 @@ import _ from 'underscore'
 export default {
   name: 'puzzle_pieces',
   mounted () {
-    this.nameHtml = this.makeNameHtml(this.name)
   },
   computed: {
     levelControl () {
@@ -100,32 +101,19 @@ export default {
       return this.runCompiled.robot.state
     },
     name () {
-      return this.func.name
-    }
-  },
-  watch: {
-    name (n) {
-      this.nameHtml = this.makeNameHtml(n)
-    }
-  },
-  data () {
-    return {
-      nameHtml: this.name
+      return this.makeNameHtml(this.func.name)
     }
   },
   methods: {
     makeNameHtml (name) {
       if (name) {
-        const $text = $(`#${this.id} > .text`)
-        const width = $text.width()
-        const height = $text.height()
         const text = name.trim()
         return text.split(' ').map((w, _, words) => {
           if (words.length === 1 || w.length > 7) {
             const amtToIncrease = w.length === 1 ? '-20px' : '3px'
-            return `<p style="margin: 0; font-size: calc(${width / w.length}px + ${amtToIncrease});">${w}</p>`
+            return `<p style="margin: 0; font-size: calc(7.5vmin / ${w.length} + ${amtToIncrease});">${w}</p>`
           } else if (words.length > 3) {
-            return `<p style="margin: 0; font-size: calc(${height / words.length}px);">${w}</p>`
+            return `<p style="margin: 0; font-size: calc(7.5vmin / ${words.length});">${w}</p>`
           } else {
             return `<p style="margin: 0; font-size: 2vmin">${w}</p>`
           }
@@ -174,7 +162,7 @@ export default {
       width: 100%;
       height: 100%;
       color: white;
-      font-size: 1.9vmin;
+      /*font-size: 1.9vmin;*/
       line-height: 1;
       display: flex;
       flex-direction: column;
