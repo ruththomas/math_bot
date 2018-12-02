@@ -8,7 +8,6 @@ import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
 import level_gen.models.CelestialSystem
 import models.deprecatedPlayerToken.PlayerToken
-import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,7 +31,7 @@ class LevelControl @Inject()(
   /*
    * Assembles galaxy data back into its nested data structure
    * */
-  def getGalaxyData(tokenId: TokenId, path: Option[String]): Future[GalaxyData] = {
+  def getGalaxyData(tokenId: String, path: Option[String]): Future[GalaxyData] = {
     statsDAO.findStats(tokenId).flatMap {
       case Some(stats) =>
         FastFuture.successful(GalaxyData(stats, path.getOrElse(stats.currentPath)))
@@ -43,7 +42,7 @@ class LevelControl @Inject()(
   /*
    * Assembles star system data back into its nested data structure
    * */
-  def getStarSystemData(tokenId: TokenId, path: Option[String]): Future[StarSystemData] = {
+  def getStarSystemData(tokenId: String, path: Option[String]): Future[StarSystemData] = {
     statsDAO.findStats(tokenId).flatMap {
       case Some(stats) =>
         FastFuture.successful(StarSystemData(stats, path.getOrElse(stats.currentPath)))
@@ -51,7 +50,7 @@ class LevelControl @Inject()(
     }
   }
 
-  def getPath(tokenId: TokenId): Future[String] = {
+  def getPath(tokenId: String): Future[String] = {
     for {
       stats <- getStats(tokenId)
     } yield stats.currentPath
@@ -61,7 +60,7 @@ class LevelControl @Inject()(
    * Creates built continent ready for the client to render
    * also includes functions for that continent
    * */
-  private def createBuiltContinent(tokenId: TokenId, path: String): Future[BuiltContinent] = {
+  private def createBuiltContinent(tokenId: String, path: String): Future[BuiltContinent] = {
     getFunctions(tokenId).map { functions =>
       val continent = getContinentData(path)
       val collectedPreBuilts = gatherAssignedStagedAndPrebuiltActive(path)
@@ -167,7 +166,7 @@ class LevelControl @Inject()(
   /*
    * Gets all functions for user
    * */
-  private def getFunctions(tokenId: TokenId): Future[Functions] = {
+  private def getFunctions(tokenId: String): Future[Functions] = {
     for {
       playerToken <- playerTokenDAO.getToken(tokenId)
       functions <- functionsDAO.find(tokenId)
@@ -194,7 +193,7 @@ class LevelControl @Inject()(
    * this is the most efficient way to update a function.
    * Not good for updating color, name, or displayImage. Use updateFunctionProperties instead.
    * */
-  def updateFunction(tokenId: TokenId, function: Function): Future[Function] =
+  def updateFunction(tokenId: String, function: Function): Future[Function] =
     for {
       _ <- functionsDAO.updateFunction(tokenId, function)
     } yield function
@@ -203,7 +202,7 @@ class LevelControl @Inject()(
    * Updates all instances of passed in functions then returns updated PathAndContinent
    * for client to update all instances of function
    * */
-  def updateFunctionProperties(tokenId: TokenId, function: Function): Future[PathAndContinent] = {
+  def updateFunctionProperties(tokenId: String, function: Function): Future[PathAndContinent] = {
     for {
       functions <- getFunctions(tokenId)
       _ <- functionsDAO.replaceAll(
@@ -238,7 +237,7 @@ class LevelControl @Inject()(
    * Passed in function index should be new index in list
    * Passed in function category should be new list (staged or active)
    * */
-  def activateDeactivateFunction(tokenId: TokenId, function: Function): Future[PreparedFunctions] = {
+  def activateDeactivateFunction(tokenId: String, function: Function): Future[PreparedFunctions] = {
     for {
       functions <- getFunctions(tokenId)
       path <- getPath(tokenId)
@@ -248,7 +247,7 @@ class LevelControl @Inject()(
   /*
    * Gets a users stats
    * */
-  def getStats(tokenId: TokenId): Future[Stats] = {
+  def getStats(tokenId: String): Future[Stats] = {
     (for {
       stats <- statsDAO.findStats(tokenId)
       playerToken <- playerTokenDAO.getToken(tokenId)
@@ -288,7 +287,7 @@ class LevelControl @Inject()(
    * If path is omitted the current path in the db will be used
    * This is the main function used by the outside to get a built continent
    * */
-  def getBuiltContinent(tokenId: TokenId, pathOpt: Option[String] = None): Future[PathAndContinent] = {
+  def getBuiltContinent(tokenId: String, pathOpt: Option[String] = None): Future[PathAndContinent] = {
     for {
       stats <- getStats(tokenId)
       calibratedPath <- calibrateContinentPath(stats, pathOpt.getOrElse(stats.currentPath))
@@ -300,7 +299,7 @@ class LevelControl @Inject()(
    * Advances the user stats to the next level if success is true otherwise
    * updates times played and last played.
    * */
-  def advanceStats(tokenId: TokenId, success: Boolean): Future[PathAndContinent] = {
+  def advanceStats(tokenId: String, success: Boolean): Future[PathAndContinent] = {
     for {
       _ <- getStats(tokenId) // ensures user definitely exists in table
       newPath <- statsDAO.incrementWinsAndTimedPlayed(tokenId, success)
@@ -311,7 +310,7 @@ class LevelControl @Inject()(
   /*
    * Used to update path in db
    * */
-  def updatePath(tokenId: TokenId, path: String): Future[String] =
+  def updatePath(tokenId: String, path: String): Future[String] =
     for {
       _ <- statsDAO.updatePath(tokenId, path)
     } yield path
@@ -320,7 +319,7 @@ class LevelControl @Inject()(
    * Used to unlock all levels
    * In the future this should be part of the admin screen
    * */
-  def unlock(tokenId: TokenId): Future[Stats] = {
+  def unlock(tokenId: String): Future[Stats] = {
     for {
       _ <- getStats(tokenId)
       unlocked <- statsDAO.unlock(tokenId)

@@ -11,20 +11,19 @@ import com.google.inject.Inject
 import daos.{StatsDAO, VideoHintDAO}
 import play.api.Environment
 import play.api.libs.ws.WSClient
-import types.{LevelName, StepName, TokenId, URL}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object VideoHintActor {
   final case class GetVideo()
   final case class GetHintsTaken()
-  final case class HintPrepared(videoUrl: URL, remainingTime: RemainingTime)
+  final case class HintPrepared(videoUrl: String, remainingTime: RemainingTime)
   final case class RemainingTime(continentId: String, videoCount: Int, stars: Int, remainingTime: Long)
-  final case class RemainingTimeList(tokenId: TokenId, list: List[RemainingTime])
+  final case class RemainingTimeList(tokenId: String, list: List[RemainingTime])
   final case class GetHintData(path: String)
   final case class NoHints()
 
-  def embedURL(videoId: String): URL = s"https://www.youtube.com/embed/$videoId?rel=0"
+  def embedURL(videoId: String): String = s"https://www.youtube.com/embed/$videoId?rel=0"
 
   def generateTimestamp: Long = Instant.now.getEpochSecond
 
@@ -48,7 +47,7 @@ object VideoHintActor {
   }
 
   def props(out: ActorRef,
-            tokenId: TokenId,
+            tokenId: String,
             statsDAO: StatsDAO,
             levelControl: LevelControl,
             videoHintDAO: VideoHintDAO,
@@ -58,7 +57,7 @@ object VideoHintActor {
 }
 
 class VideoHintActor @Inject()(out: ActorRef,
-                               tokenId: TokenId,
+                               tokenId: String,
                                statsDAO: StatsDAO,
                                levelControl: LevelControl,
                                videoHintDAO: VideoHintDAO,

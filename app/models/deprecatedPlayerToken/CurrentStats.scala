@@ -4,18 +4,17 @@ import models.StepToken
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json.{JsPath, Reads, _}
-import types.{LevelName, StepName}
 
 object CurrentStats {
   val statsReads: Reads[CurrentStats] = (
-    (JsPath \ "level").read[LevelName] and
-    (JsPath \ "step").read[StepName] and
+    (JsPath \ "level").read[String] and
+    (JsPath \ "step").read[String] and
     (JsPath \ "levels").read[Map[String, Map[String, StepToken]]]
   )(CurrentStats.apply _)
 
   val statsWrites: Writes[CurrentStats] = (
-    (JsPath \ "level").write[LevelName] and
-    (JsPath \ "step").write[StepName] and
+    (JsPath \ "level").write[String] and
+    (JsPath \ "step").write[String] and
     (JsPath \ "levels").write[Map[String, Map[String, StepToken]]]
   )(unlift(CurrentStats.unapply))
 
@@ -24,7 +23,7 @@ object CurrentStats {
 }
 
 case class CurrentStats(
-    level: LevelName,
-    step: StepName,
+    level: String,
+    step: String,
     levels: Map[String, Map[String, StepToken]]
 )

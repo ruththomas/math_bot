@@ -163,26 +163,46 @@ class RunCompiled extends GridAnimator {
 
   _failedMessage () {
     const dis = this
-    const failedMessage = {
+    const failedMessage1 = {
       type: 'success',
-      msg: `Not quite, a hint might help. Click on any icon to restart.`,
+      msg: `Not quite, a hint might help.`,
       handlers () {
         const $helpButton = $('.help-button')
-        const $pulseEle = $('<div class="pulse" style="position: absolute; height: 100%; width: 100%; top: 0; left: 0;"></div>')
+        const $controlBar = $('.control-bar')
+        const $trash = $('.trash')
+        const $editMain = $('.edit-main .piece')
         return {
           runBeforeAppend () {
-            $helpButton.append($pulseEle)
             $helpButton.addClass('background-alert')
+            $helpButton.addClass('animated flash')
+            $controlBar.addClass('hidden-bar')
+            $trash.hide()
+            $editMain.hide()
+            setTimeout(() => {
+              $controlBar.removeClass('hidden-bar')
+              $trash.show()
+              $editMain.show()
+            }, 2005)
           },
           runOnDelete () {
-            $('.help-button .pulse').remove()
+            $helpButton.removeClass('flash')
             $helpButton.removeClass('background-alert')
           },
           closeControl: dis._closeMessageRobotHome()
         }
       }
     }
-    this._addMessage(failedMessage)
+    const failedMessage2 = {
+      type: 'success',
+      msg: ' Click on any icon to restart.',
+      handlers () {
+        return {
+          closeControl: dis._closeMessageRobotHome()
+        }
+      }
+    }
+    this._addMessage(failedMessage2)
+    this._addMessage(failedMessage1)
   }
 
   _mainEmptyMessage (emptyFuncs) {

@@ -4,7 +4,7 @@
       <div class="func-param-form">
         <puzzle-pieces
           :id="'edit-function-displayed-func'"
-          :func="{name: editingFunction.name, image: editingFunction.image, color: editingFunction.color, displayName: editingFunction.displayName}"
+          :func="editingFunction"
           :piece-to-show="'closed'"
           :show-name="false"
           @click.native="toggleFunctionImage"

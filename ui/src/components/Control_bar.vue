@@ -57,7 +57,7 @@
 
   <img
     v-if="robot.state === 'failure'"
-    class="reset play button noDrag dialog-button pulse"
+    class="reset play button noDrag dialog-button animated flash"
     :src="permanentImages.buttons.resetButton"
     alt="Reset button" @click="runCompiled.reset"
     data-toggle="tooltip" title="Reset program"/>
@@ -130,6 +130,10 @@ $danger-color: #F25C5C;
   z-index: -1;
 }
 
+.hidden-bar {
+  background-color: transparent;
+}
+
 .red-bar {
   background-color: #FF0000;
 }
@@ -144,10 +148,11 @@ $danger-color: #F25C5C;
 
 .play {
   border-radius: 50%;
-  right: 0;
+  right: -1px;
 }
 
 .reset {
+  width: auto;
 }
 
 .play-border {

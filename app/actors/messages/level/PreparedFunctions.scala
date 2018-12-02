@@ -52,11 +52,12 @@ object PreparedFunctions {
   private def indexEm(functions: List[Function]): List[Function] =
     functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2, sizeLimit = fNi._1.clientSizeLimit))
 
-  private def isAllowedActive(func: Function, continentStruct: ContinentStruct) = continentStruct.allowedActives match {
-    case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
-    case Some(allowed) if allowed.isEmpty => false
-    case None => true
-  }
+  private def isAllowedFunction(func: Function, continentStruct: ContinentStruct): Boolean =
+    continentStruct.allowedActives match {
+      case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
+      case Some(allowed) if allowed.isEmpty => false
+      case None => true
+    }
 
   private object FilteredFunctions {
     def apply(
@@ -71,15 +72,15 @@ object PreparedFunctions {
           _.take(continentStruct.maxMain)
             .filter(
               f =>
-                f.category == Categories.command || (f.category != Categories.command && isAllowedActive(
+                f.category == Categories.command || (f.category != Categories.command && isAllowedFunction(
                   f,
                   continentStruct
                 ))
             )
         }),
         cmds = cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId)),
-        actives = actives.filter(isAllowedActive(_, continentStruct)),
-        staged = staged.filter(isAllowedActive(_, continentStruct))
+        actives = actives.filter(isAllowedFunction(_, continentStruct)),
+        staged = staged.filter(isAllowedFunction(_, continentStruct))
       )
   }
 
@@ -129,7 +130,7 @@ object PreparedFunctions {
         finished.staged
       )
     } else {
-      // activate function
+      // activate/deactivate function
       val finished = function.category match {
         case Categories.function => // activate function
           val insertAt: Int = {
@@ -140,6 +141,9 @@ object PreparedFunctions {
           }
           val updatedActives = indexEm(actives.take(insertAt) ::: List(function) ::: actives.drop(insertAt))
           val updatedStaged = indexEm(staged.filterNot(_.created_id == function.created_id))
+
+          // if staged functions is less than 50 add a new function
+
           functionsDAO.replaceAll(
             functions.tokenId,
             Functions(

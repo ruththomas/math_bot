@@ -5,14 +5,13 @@ import actors.messages.level.{HintTaken, HintsTaken}
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import play.api.libs.json.{JsValue, Json, Writes}
-import types.URL
 
 object VideoResponseConvertFlow extends SocketResponseConvertFlow {
   implicit val remainingTimeWrites = Json.format[RemainingTime]
 
   final case class VideoResponse(status: String,
                                  message: Option[String] = None,
-                                 videoURL: Option[URL] = None,
+                                 videoURL: Option[String] = None,
                                  remainingTimes: Option[List[RemainingTime]] = None,
                                  remainingTime: Option[RemainingTime] = None)
 

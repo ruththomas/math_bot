@@ -11,17 +11,15 @@ import javax.inject.Inject
 import loggers.MathBotLogger
 import models._
 import models.compiler.{ClientFrame, ClientRobotState, ClientTrace}
-import types.TokenId
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.concurrent.duration._
 
-class CompilerActor @Inject()(out: ActorRef, tokenId: TokenId)(
+class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
     logger: MathBotLogger,
     config: CompilerConfiguration,
     levelControl: LevelControl
 ) extends Actor {
-
   private implicit val ec: ExecutionContextExecutor = context.dispatcher
 
   implicit val timeout: Timeout = 5000.minutes

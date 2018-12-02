@@ -6,11 +6,9 @@ import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistr
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase, SingleObservable}
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
-import org.mongodb.scala.bson.collection.mutable.Document
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.UpdateResult
-import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,13 +27,13 @@ class FunctionsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
   val collection: MongoCollection[Functions] =
     mathbotDb.getCollection[Functions](collectionLabel).withCodecRegistry(codecRegistry)
 
-  def find(tokenId: TokenId): Future[Option[Functions]] =
+  def find(tokenId: String): Future[Option[Functions]] =
     collection.find(equal(tokenIdLabel, tokenId)).first().toFutureOption()
 
   def insert(functions: Functions): Future[Option[Completed]] =
     collection.insertOne(functions).toFutureOption()
 
-  def updateFunction(tokenId: TokenId, function: Function): Future[Option[Functions]] =
+  def updateFunction(tokenId: String, function: Function): Future[Option[Functions]] =
     collection
       .findOneAndUpdate(
         equal(tokenIdLabel, tokenId),
@@ -46,6 +44,6 @@ class FunctionsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
       )
       .toFutureOption()
 
-  def replaceAll(tokenId: TokenId, functions: Functions): Future[Option[UpdateResult]] =
+  def replaceAll(tokenId: String, functions: Functions): Future[Option[UpdateResult]] =
     collection.replaceOne(equal(tokenIdLabel, tokenId), functions).toFutureOption()
 }

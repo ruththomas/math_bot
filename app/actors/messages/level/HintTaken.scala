@@ -1,7 +1,6 @@
 package actors.messages.level
 
 import play.api.libs.json.Json
-import types.ContinentId
 
 object HintTaken {
   implicit val hintTakenFormat = Json.format[HintTaken]
@@ -15,7 +14,7 @@ object HintTaken {
  * HintTaken
  * */
 case class HintTaken(
-    continentId: ContinentId,
+    continentId: String,
     timeStamp: Long,
     count: Int,
     stars: Int

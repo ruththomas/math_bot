@@ -1,5 +1,3 @@
 package actors.messages.playeraccount
 
-import types.TokenId
-
-case class UpdateMaxLevelAndStep(tokenId : TokenId, level : String, step : String)
+case class UpdateMaxLevelAndStep(tokenId: String, level: String, step: String)

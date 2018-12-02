@@ -4,7 +4,6 @@ import DefaultFunctions._
 import actors.messages.AssignedFunction
 import models.deprecatedPlayerToken.{FuncToken, Lambdas}
 import play.api.libs.json.{Json, OFormat}
-import types.TokenId
 
 object Functions {
   implicit val format: OFormat[Functions] = Json.format[Functions]
@@ -48,7 +47,7 @@ object Functions {
   private def indexEm(functions: List[FuncToken]): List[FuncToken] =
     functions.zipWithIndex.map(fNi => fNi._1.copy(index = Some(fNi._2)))
 
-  def apply(tokenId: TokenId, l: Lambdas, assigned: List[AssignedFunction]): Functions = { // Legacy account, swap from lambdas to functions
+  def apply(tokenId: String, l: Lambdas, assigned: List[AssignedFunction]): Functions = { // Legacy account, swap from lambdas to functions
     val lambdas = updateCreatedIds(l, assigned)
     val main = convertFuncList(indexEm(List(lambdas.main.copy(`type` = Some(Categories.main)))))
     val actives = convertFuncList(
@@ -77,16 +76,16 @@ object Functions {
   }
 
   def apply( // new account
-      tokenId: TokenId
+      tokenId: String
   ): Functions = new Functions(tokenId)
 
   def apply( // remapping listed functions
-            tokenId: TokenId,
+            tokenId: String,
             listed: List[Function]): Functions = new Functions(tokenId, listed.map(f => f.created_id -> f).toMap)
 }
 
 case class Functions(
-    tokenId: TokenId,
+    tokenId: String,
     list: Map[String, Function] =
       (main :: cmds ::: funcs).zipWithIndex.map(f => f._1.copy(index = f._2)).map(f => (f.created_id, f)).toMap
 ) {

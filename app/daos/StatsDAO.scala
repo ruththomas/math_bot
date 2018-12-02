@@ -13,7 +13,6 @@ import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.UpdateResult
 import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase}
-import types.TokenId
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,12 +41,12 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   def replace(stats: Stats): Future[Stats] =
     collection.replaceOne(equal(tokenIdLabel, stats.tokenId), stats).toFutureOption().map(_ => stats)
 
-  def findStats(tokenId: TokenId): Future[Option[Stats]] = {
+  def findStats(tokenId: String): Future[Option[Stats]] = {
     val p = collection.find(equal(tokenIdLabel, tokenId))
     p.first().toFutureOption()
   }
 
-  def updateCurrentLevel(tokenId: TokenId, path: String): Future[Option[UpdateResult]] = {
+  def updateCurrentLevel(tokenId: String, path: String): Future[Option[UpdateResult]] = {
     collection
       .updateOne(
         equal(tokenIdLabel, tokenId),
@@ -58,13 +57,13 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       .toFutureOption()
   }
 
-  private def incContinent(path: String): TokenId = path.init + (path.last.asDigit + 1).toString
-  private def incPlanet(path: String): TokenId =
+  private def incContinent(path: String): String = path.init + (path.last.asDigit + 1).toString
+  private def incPlanet(path: String): String =
     path.take(3) + (path(3).asDigit + 1).toString + path.drop(4)
-  private def incStarSystem(path: String): TokenId =
+  private def incStarSystem(path: String): String =
     path.take(2) + (path(2).asDigit + 1).toString + path.drop(3) + "0"
-  private def incGalaxy(path: String): TokenId = path.head + (path(1).asDigit + 1).toString + path.drop(4) + "00"
-  private def incSuperCluster(path: String): TokenId = (path.head.asDigit + 1).toString + path.tail + "000"
+  private def incGalaxy(path: String): String = path.head + (path(1).asDigit + 1).toString + path.drop(4) + "00"
+  private def incSuperCluster(path: String): String = (path.head.asDigit + 1).toString + path.tail + "000"
 
   private def computeNewPath(stats: Stats,
                              position: Int = 4)(path: String = incContinent(stats.currentPath)): String = {
@@ -84,7 +83,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     }
   }
 
-  def incrementWinsAndTimedPlayed(tokenId: TokenId, incrementWins: Boolean): Future[String] = {
+  def incrementWinsAndTimedPlayed(tokenId: String, incrementWins: Boolean): Future[String] = {
     val newDate = new Date()
     (for {
       stats <- collection.find(equal(tokenIdLabel, tokenId))
@@ -137,11 +136,11 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     } yield nextPath).toFuture().map(_.head)
   }
 
-  def updatePath(tokenId: TokenId, path: String): Future[Stats] = {
+  def updatePath(tokenId: String, path: String): Future[Stats] = {
     collection.findOneAndUpdate(equal(tokenIdLabel, tokenId), set(currentPathLabel, path)).toFuture()
   }
 
-  def unlock(tokenId: TokenId): Future[Stats] =
+  def unlock(tokenId: String): Future[Stats] =
     for {
       stats <- findStats(tokenId)
       updated = stats.map(ss => ss.copy(list = ss.list.mapValues(s => s.copy(active = true, wins = 1))))
