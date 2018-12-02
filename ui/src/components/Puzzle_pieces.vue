@@ -58,7 +58,7 @@
         </g>
       </g>
     </svg>
-    <img v-if="!func.name.length || !func.displayName" :src="funcAndCmdImages[func.image]" />
+    <img v-if="func.name !== undefined && (!func.name.length || !func.displayName)" :src="funcAndCmdImages[func.image]" />
     <span class="text" v-else v-html="name"></span>
     <div
       v-if="pieceToShow === 'closed' && showName  "
