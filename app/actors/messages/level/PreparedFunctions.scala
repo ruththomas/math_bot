@@ -3,6 +3,7 @@ import actors.messages.AssignedFunction
 import daos.FunctionsDAO
 import level_gen.models.ContinentStruct
 import play.api.libs.json.{Json, OFormat}
+import utils.Implicits._
 
 object PreparedFunctions {
   implicit val format: OFormat[PreparedFunctions] = Json.format[PreparedFunctions]
@@ -89,6 +90,27 @@ object PreparedFunctions {
                                        actives: List[Function],
                                        staged: List[Function])
 
+  private def addMoreStaged(actives: List[Function], staged: List[Function]): List[Function] = {
+    if (staged.length == 50) staged
+    else {
+      val imageName =
+        ((actives ::: staged).filter(_.created_id.startsWith("2")).flatMap(_.image.toIntOpt).max + 1).toString
+      val newStaged = DefaultFunctions.funcs.head.copy(
+        created_id = s"200000$imageName",
+        image = imageName
+      )
+      addMoreStaged(actives, staged :+ newStaged)
+    }
+  }
+
+  private def trimStaged(staged: List[Function]): List[Function] = {
+    if (staged.length == 50) staged
+    else {
+      val toRemove = staged.filter(f => f.created_id.startsWith("2") && f.image.toIntOpt.nonEmpty).maxBy(_.image.toInt)
+      trimStaged(staged.filterNot(_.created_id == toRemove.created_id))
+    }
+  }
+
   /*
    * For activating or deactivating a function
    * Function index should be the functions new position
@@ -140,15 +162,16 @@ object PreparedFunctions {
             else filteredFunctions.actives(function.index).index
           }
           val updatedActives = indexEm(actives.take(insertAt) ::: List(function) ::: actives.drop(insertAt))
-          val updatedStaged = indexEm(staged.filterNot(_.created_id == function.created_id))
+          val updatedStaged = staged.filterNot(_.created_id == function.created_id)
 
           // if staged functions is less than 50 add a new function
+          val newStagedAdded = indexEm(addMoreStaged(updatedActives, updatedStaged))
 
           functionsDAO.replaceAll(
             functions.tokenId,
             Functions(
               functions.tokenId,
-              List(functions.main) ::: cmds ::: updatedActives ::: updatedStaged
+              List(functions.main) ::: cmds ::: updatedActives ::: newStagedAdded
             )
           )
           FilteredFunctions(functions.main, cmds, updatedActives, updatedStaged, continentStruct)
@@ -164,14 +187,18 @@ object PreparedFunctions {
           }
           val updatedMain =
             functions.main.copy(func = functions.main.func.map(filterDeactivated))
-          val updatedStaged = indexEm(staged.take(insertAt) ::: List(function) ::: staged.drop(insertAt))
+          val updatedStaged = staged.take(insertAt) ::: List(function) ::: staged.drop(insertAt)
           val updatedActives = indexEm(
             filterDeactivated(actives)
               .map(f => f.copy(func = f.func.map(filterDeactivated)))
           )
+
+          // If staged is more than 50 trim excess
+          val newStagedTrimmed = indexEm(trimStaged(updatedStaged))
+
           functionsDAO.replaceAll(
             functions.tokenId,
-            Functions(functions.tokenId, List(updatedMain) ::: cmds ::: updatedActives ::: updatedStaged)
+            Functions(functions.tokenId, List(updatedMain) ::: cmds ::: updatedActives ::: newStagedTrimmed)
           )
           FilteredFunctions(updatedMain, cmds, updatedActives, updatedStaged, continentStruct)
       }
