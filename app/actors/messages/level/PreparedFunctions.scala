@@ -50,7 +50,7 @@ object PreparedFunctions {
   }
 
   private def indexEm(functions: List[Function]): List[Function] =
-    functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2, sizeLimit = fNi._1.clientSizeLimit))
+    functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2, sizeLimit = fNi._1.clientSizeLimit)).sortBy(_.index)
 
   private def isAllowedFunction(func: Function, continentStruct: ContinentStruct): Boolean =
     continentStruct.allowedActives match {
