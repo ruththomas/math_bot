@@ -23,6 +23,7 @@
         :func="confirmDeactiveFunction"
         :piece-to-show="'closed'"
         :show-name="'true'"
+        :size="'10vmin'"
       >
       </puzzle-pieces>
 
