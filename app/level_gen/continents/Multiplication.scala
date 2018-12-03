@@ -36,7 +36,7 @@ trait Multiplication extends LevelGenTags {
           problem = "2 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("ppkafvWniJE"),
           freeHint = None
         )
       )
@@ -72,7 +72,7 @@ trait Multiplication extends LevelGenTags {
           problem = "3 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("Tvb8xXFWsUQ"),
           freeHint = None
         )
       )
@@ -108,7 +108,7 @@ trait Multiplication extends LevelGenTags {
           problem = "4 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("7G-P2mHhpUA"),
           freeHint = None
         )
       )
@@ -144,7 +144,7 @@ trait Multiplication extends LevelGenTags {
           problem = "8 * 1",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("z4oUZIRGMFA"),
           freeHint = None
         )
       )
@@ -180,7 +180,7 @@ trait Multiplication extends LevelGenTags {
           problem = "4 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("7G-P2mHhpUA"),
           freeHint = None
         )
       )
@@ -216,7 +216,7 @@ trait Multiplication extends LevelGenTags {
           problem = "3 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("Tvb8xXFWsUQ"),
           freeHint = None
         )
       )
@@ -252,7 +252,7 @@ trait Multiplication extends LevelGenTags {
           problem = "2 * 4",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("PXvp81TuhQY", "2tuaC-SdCJw"),
           freeHint = None
         )
       )
@@ -288,7 +288,7 @@ trait Multiplication extends LevelGenTags {
           problem = "4 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("7G-P2mHhpUA"),
           freeHint = None
         )
       )
@@ -324,7 +324,7 @@ trait Multiplication extends LevelGenTags {
           problem = "2 * 3",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("8yOP_lpxA2A", "Yk3ABZWYKYQ"),
           freeHint = None
         )
       )
@@ -360,7 +360,7 @@ trait Multiplication extends LevelGenTags {
           problem = "2 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("ppkafvWniJE"),
           freeHint = None
         )
       )
@@ -396,7 +396,7 @@ trait Multiplication extends LevelGenTags {
           problem = "3 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("Tvb8xXFWsUQ"),
           freeHint = None
         )
       )
@@ -432,7 +432,7 @@ trait Multiplication extends LevelGenTags {
           problem = "4 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("7G-P2mHhpUA"),
           freeHint = None
         )
       )
@@ -468,7 +468,7 @@ trait Multiplication extends LevelGenTags {
           problem = "1 * 1",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("Sr8QUWOdh24"),
           freeHint = None
         )
       )
@@ -504,7 +504,7 @@ trait Multiplication extends LevelGenTags {
           problem = "2 * 3",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("8yOP_lpxA2A", "Yk3ABZWYKYQ"),
           freeHint = None
         )
       )
@@ -540,7 +540,7 @@ trait Multiplication extends LevelGenTags {
           problem = "4 * 2",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("7G-P2mHhpUA"),
           freeHint = None
         )
       )
@@ -576,7 +576,7 @@ trait Multiplication extends LevelGenTags {
           problem = "3 * 3",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("aoMlhKGn5yI"),
           freeHint = None
         )
       )
@@ -612,7 +612,7 @@ trait Multiplication extends LevelGenTags {
           problem = "2 * 4",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("PXvp81TuhQY", "2tuaC-SdCJw"),
           freeHint = None
         )
       )
@@ -648,7 +648,7 @@ trait Multiplication extends LevelGenTags {
           problem = "1 * 9",
           clearMain = false,
           initFocus = List.empty[String],
-          videoHints = List.empty[String],
+          videoHints = List("bI-JMwQrq0k", "eiYAQ8o-ZfE"),
           freeHint = None
         )
       )

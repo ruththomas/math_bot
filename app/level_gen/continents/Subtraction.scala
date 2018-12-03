@@ -35,8 +35,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 - 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("Um2NctlzVN0"),
           freeHint = None
         )
       )
@@ -71,8 +71,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "5 - 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("O-Ha5dLqPlY"),
           freeHint = None
         )
       )
@@ -107,8 +107,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 - 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("cS9jmUcvO0U"),
           freeHint = None
         )
       )
@@ -143,8 +143,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "8 - 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("KLa7DiXFXGE"),
           freeHint = None
         )
       )
@@ -179,8 +179,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "6 - 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("owjkOZjrpEw"),
           freeHint = None
         )
       )
@@ -215,8 +215,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "5 - 4",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("p2XMi7paiv4"),
           freeHint = None
         )
       )
@@ -251,8 +251,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "7 - 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("O1a0ovj96a8"),
           freeHint = None
         )
       )
@@ -287,8 +287,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 - 4",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("qPCxUeOuXn4"),
           freeHint = None
         )
       )
@@ -323,8 +323,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "6 - 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("SnWWZiZhEGk"),
           freeHint = None
         )
       )
@@ -359,8 +359,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 - 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("39JonuJeLWc"),
           freeHint = None
         )
       )
@@ -395,8 +395,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 - 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("cUIy67SSrSM"),
           freeHint = None
         )
       )
@@ -431,8 +431,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 - 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("cS9jmUcvO0U"),
           freeHint = None
         )
       )
@@ -467,8 +467,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 - 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("CA7hdeUv34g"),
           freeHint = None
         )
       )
@@ -503,8 +503,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "8 - 6",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("lsK7HLN4eUI"),
           freeHint = None
         )
       )
@@ -539,8 +539,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "7 - 5",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("Y3J26uTCHbc"),
           freeHint = None
         )
       )
@@ -575,8 +575,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "9 - 6",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("rnVUXdUUJ5g"),
           freeHint = None
         )
       )
@@ -611,8 +611,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "6 - 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("owjkOZjrpEw"),
           freeHint = None
         )
       )
@@ -647,8 +647,8 @@ trait Subtraction extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "7 - 5",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("Y3J26uTCHbc"),
           freeHint = None
         )
       )

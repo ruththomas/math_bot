@@ -35,8 +35,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("ydFF5zInf0g"),
           freeHint = None
         )
       )
@@ -71,8 +71,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("WBYvnlDIf4w"),
           freeHint = None
         )
       )
@@ -107,8 +107,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("zmKzvOe2_VY"),
           freeHint = None
         )
       )
@@ -143,8 +143,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 ^ 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("fhRgMSskpq8"),
           freeHint = None
         )
       )
@@ -179,8 +179,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("ydFF5zInf0g"),
           freeHint = None
         )
       )
@@ -215,8 +215,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("WBYvnlDIf4w"),
           freeHint = None
         )
       )
@@ -251,8 +251,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 ^ 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("4jKByB8iQdk"),
           freeHint = None
         )
       )
@@ -287,8 +287,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 ^ 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("fhRgMSskpq8"),
           freeHint = None
         )
       )
@@ -323,8 +323,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 ^ 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("4jKByB8iQdk"),
           freeHint = None
         )
       )
@@ -359,8 +359,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("WBYvnlDIf4w"),
           freeHint = None
         )
       )
@@ -395,8 +395,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("WBYvnlDIf4w"),
           freeHint = None
         )
       )
@@ -431,8 +431,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("ydFF5zInf0g"),
           freeHint = None
         )
       )
@@ -467,8 +467,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("zmKzvOe2_VY"),
           freeHint = None
         )
       )
@@ -503,8 +503,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("ydFF5zInf0g"),
           freeHint = None
         )
       )
@@ -539,8 +539,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("WBYvnlDIf4w"),
           freeHint = None
         )
       )
@@ -575,8 +575,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("ydFF5zInf0g"),
           freeHint = None
         )
       )
@@ -611,8 +611,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 ^ 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("4jKByB8iQdk"),
           freeHint = None
         )
       )
@@ -647,8 +647,8 @@ trait Exponents extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "3 ^ 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("WBYvnlDIf4w"),
           freeHint = None
         )
       )
