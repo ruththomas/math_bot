@@ -35,8 +35,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "9 / 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("fD9NKD_pL_I"),
           freeHint = None
         )
       )
@@ -71,8 +71,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "8 / 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("P9ijq_7a7_M"),
           freeHint = None
         )
       )
@@ -107,8 +107,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 / 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("0UxfRBDWbts"),
           freeHint = None
         )
       )
@@ -143,8 +143,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "6 / 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("olV6It6P9D4"),
           freeHint = None
         )
       )
@@ -179,8 +179,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 / 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("dJPwXUYtaAI"),
           freeHint = None
         )
       )
@@ -215,8 +215,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "7 / 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("2c7DIBVQN74"),
           freeHint = None
         )
       )
@@ -251,8 +251,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "8 / 4",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("MjHJ6DV1l9g"),
           freeHint = None
         )
       )
@@ -287,8 +287,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "5 / 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("_G73JWQfwPc"),
           freeHint = None
         )
       )
@@ -323,8 +323,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 / 4",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("rmV7KFe1iPs"),
           freeHint = None
         )
       )
@@ -359,8 +359,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "2 / 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("F_88AGIEO0U"),
           freeHint = None
         )
       )
@@ -395,8 +395,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "9 / 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("fD9NKD_pL_I"),
           freeHint = None
         )
       )
@@ -431,8 +431,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "8 / 4",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("MjHJ6DV1l9g"),
           freeHint = None
         )
       )
@@ -467,8 +467,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "7 / 1",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("2c7DIBVQN74"),
           freeHint = None
         )
       )
@@ -503,8 +503,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "8 / 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("P9ijq_7a7_M"),
           freeHint = None
         )
       )
@@ -539,8 +539,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "6 / 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("YrdnD4igIhs"),
           freeHint = None
         )
       )
@@ -575,8 +575,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "4 / 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("dJPwXUYtaAI"),
           freeHint = None
         )
       )
@@ -611,8 +611,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "6 / 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("olV6It6P9D4"),
           freeHint = None
         )
       )
@@ -647,8 +647,8 @@ trait Division extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "9 / 3",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("fD9NKD_pL_I"),
           freeHint = None
         )
       )

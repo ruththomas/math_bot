@@ -35,8 +35,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(4)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("e74jGknaZXM"),
           freeHint = None
         )
       )
@@ -71,8 +71,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(9)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("rdG49Ple81Y"),
           freeHint = None
         )
       )
@@ -107,8 +107,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(1)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("tmXdXQ_vqV8"),
           freeHint = None
         )
       )
@@ -143,8 +143,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(4)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("e74jGknaZXM"),
           freeHint = None
         )
       )
@@ -179,8 +179,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(9)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("rdG49Ple81Y"),
           freeHint = None
         )
       )
@@ -215,8 +215,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(1)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("tmXdXQ_vqV8"),
           freeHint = None
         )
       )
@@ -252,8 +252,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(4)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("e74jGknaZXM"),
           freeHint = None
         )
       )
@@ -288,8 +288,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "cbrt(8)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("bmtjgPkY0nU"),
           freeHint = None
         )
       )
@@ -324,8 +324,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(9)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("rdG49Ple81Y"),
           freeHint = None
         )
       )
@@ -360,8 +360,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(4)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("e74jGknaZXM"),
           freeHint = None
         )
       )
@@ -396,8 +396,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(4)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("e74jGknaZXM"),
           freeHint = None
         )
       )
@@ -432,8 +432,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(1)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("tmXdXQ_vqV8"),
           freeHint = None
         )
       )
@@ -468,8 +468,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "cbrt(8)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("bmtjgPkY0nU"),
           freeHint = None
         )
       )
@@ -504,8 +504,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(1)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("tmXdXQ_vqV8"),
           freeHint = None
         )
       )
@@ -540,8 +540,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(4)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("e74jGknaZXM"),
           freeHint = None
         )
       )
@@ -576,8 +576,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(1)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("tmXdXQ_vqV8"),
           freeHint = None
         )
       )
@@ -612,8 +612,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(9)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("rdG49Ple81Y"),
           freeHint = None
         )
       )
@@ -648,8 +648,8 @@ trait Roots extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "sqrt(4)",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("e74jGknaZXM"),
           freeHint = None
         )
       )

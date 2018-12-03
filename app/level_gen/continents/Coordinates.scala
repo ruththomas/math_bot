@@ -35,8 +35,8 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "1 + 2",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("7HsTgJq7Ir0", "qBB6_IS3THU", "sgfjPCRt33g"),
           freeHint = None
         )
       )
@@ -54,7 +54,7 @@ trait Coordinates extends LevelGenTags {
             "($) |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -71,10 +71,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("aFkFxgIhIhI"),
+          freeHint = None
         )
       )
     ),
@@ -91,7 +90,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -108,10 +107,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("-b8Ii57XREA"),
+          freeHint = None
         )
       )
     ),
@@ -128,7 +126,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| ($) [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -145,10 +143,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("FOp1-UPtQEc"),
+          freeHint = None
         )
       )
     ),
@@ -165,7 +162,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -182,10 +179,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("nAYeSfUjLj8"),
+          freeHint = None
         )
       )
     ),
@@ -202,7 +198,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -219,10 +215,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("wcVNnhnqaCc"),
+          freeHint = None
         )
       )
     ),
@@ -239,7 +234,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -256,8 +251,8 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("uwR5lrMaUSE"),
           freeHint = None
         )
       )
@@ -275,7 +270,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -292,10 +287,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("G_zAgyv8C48"),
+          freeHint = None
         )
       )
     ),
@@ -312,7 +306,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| ($) [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -329,10 +323,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("FOp1-UPtQEc"),
+          freeHint = None
         )
       )
     ),
@@ -349,7 +342,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -366,10 +359,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("nAYeSfUjLj8"),
+          freeHint = None
         )
       )
     ),
@@ -386,7 +378,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -403,10 +395,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("wcVNnhnqaCc"),
+          freeHint = None
         )
       )
     ),
@@ -423,7 +414,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -440,10 +431,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("-b8Ii57XREA"),
+          freeHint = None
         )
       )
     ),
@@ -460,7 +450,7 @@ trait Coordinates extends LevelGenTags {
             "($) |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -477,10 +467,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("aFkFxgIhIhI"),
+          freeHint = None
         )
       )
     ),
@@ -497,7 +486,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -514,8 +503,8 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
+          initFocus = List.empty[String],
+          videoHints = List("uwR5lrMaUSE"),
           freeHint = None
         )
       )
@@ -533,7 +522,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -550,10 +539,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("wcVNnhnqaCc"),
+          freeHint = None
         )
       )
     ),
@@ -570,7 +558,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -587,10 +575,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("nAYeSfUjLj8"),
+          freeHint = None
         )
       )
     ),
@@ -607,7 +594,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -624,10 +611,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("G_zAgyv8C48"),
+          freeHint = None
         )
       )
     ),
@@ -644,7 +630,7 @@ trait Coordinates extends LevelGenTags {
             "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
           ),
           description = "Place the correct amount on the portal",
-          mainMax = -1,
+          mainMax = 1,
           robotOrientation = 0,
           stagedEnabled = true,
           activeEnabled = true,
@@ -661,10 +647,9 @@ trait Coordinates extends LevelGenTags {
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
-          initFocus = List("Walk"),
-          videoHints = List.empty[String],
-          freeHint = None,
-          evalEachFrame = Some(true)
+          initFocus = List.empty[String],
+          videoHints = List("nYlx6ogp9RA"),
+          freeHint = None
         )
       )
     )
