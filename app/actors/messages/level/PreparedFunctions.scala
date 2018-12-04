@@ -91,7 +91,7 @@ object PreparedFunctions {
                                        staged: List[Function])
 
   private def addMoreStaged(actives: List[Function], staged: List[Function]): List[Function] = {
-    if (staged.length == 50) staged
+    if (staged.length > 50) staged
     else {
       val imageName =
         ((actives ::: staged).filter(_.created_id.startsWith("2")).flatMap(_.image.toIntOpt).max + 1).toString
@@ -104,10 +104,10 @@ object PreparedFunctions {
   }
 
   private def trimStaged(staged: List[Function]): List[Function] = {
-    if (staged.length == 50) staged
+    if (staged.length < 50) staged
     else {
-      val toRemove = staged.filter(f => f.created_id.startsWith("2") && f.image.toIntOpt.nonEmpty).maxBy(_.image.toInt)
-      trimStaged(staged.filterNot(_.created_id == toRemove.created_id))
+      val toRemove = staged.filter(f => f.created_id.startsWith("2")).flatMap(_.image.toIntOpt).max
+      trimStaged(staged.filterNot(_.image == toRemove.toString))
     }
   }
 
@@ -141,7 +141,7 @@ object PreparedFunctions {
         functions.tokenId,
         Functions(
           functions.tokenId,
-          List(functions.main) ::: cmds ::: updatedActives ::: functions.staged
+          List(functions.main) ::: cmds ::: updatedActives ::: indexEm(functions.staged)
         )
       )
 
@@ -187,18 +187,16 @@ object PreparedFunctions {
           }
           val updatedMain =
             functions.main.copy(func = functions.main.func.map(filterDeactivated))
-          val updatedStaged = staged.take(insertAt) ::: List(function) ::: staged.drop(insertAt)
+          val trimmedStaged = trimStaged(staged)
+          val updatedStaged = indexEm(trimmedStaged.take(insertAt) ::: List(function) ::: trimmedStaged.drop(insertAt))
           val updatedActives = indexEm(
             filterDeactivated(actives)
               .map(f => f.copy(func = f.func.map(filterDeactivated)))
           )
 
-          // If staged is more than 50 trim excess
-          val newStagedTrimmed = indexEm(trimStaged(updatedStaged))
-
           functionsDAO.replaceAll(
             functions.tokenId,
-            Functions(functions.tokenId, List(updatedMain) ::: cmds ::: updatedActives ::: newStagedTrimmed)
+            Functions(functions.tokenId, List(updatedMain) ::: cmds ::: updatedActives ::: updatedStaged)
           )
           FilteredFunctions(updatedMain, cmds, updatedActives, updatedStaged, continentStruct)
       }
@@ -218,8 +216,8 @@ object PreparedFunctions {
     val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, cmds, functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
     val main = functions.main
-    val actives = indexEm(preBuiltActives ::: functions.actives.sortBy(_.index))
-    val staged = indexEm(assignedStaged ::: functions.staged.sortBy(_.index))
+    val actives = indexEm(preBuiltActives ::: functions.actives)
+    val staged = indexEm(addMoreStaged(actives, assignedStaged ::: functions.staged))
 
     val filteredFunctions = FilteredFunctions(main, cmds, actives, staged, continentStruct)
 
