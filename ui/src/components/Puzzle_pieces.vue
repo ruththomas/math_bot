@@ -10,7 +10,6 @@
     @click="method ? method($event, func, ind) : ''"
     @mousedown="runCompiled.resetIfFailure"
     data-toggle="tooltip" :title="func.name"
-    :style="size ? {height: size, width: size} : {}"
   >
     <svg v-if="pieceToShow === 'closed'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <rect rx="5" ry="5" height="100" width="100" fill="#000000" :stroke="convertColor(func.color)" stroke-width="2" />
@@ -59,7 +58,7 @@
         </g>
       </g>
     </svg>
-    <img v-if="func.name !== undefined && (!func.name.length || !func.displayName)" :src="funcAndCmdImages[func.image]" />
+    <img v-if="!func.name.length || !func.displayName" :src="funcAndCmdImages[func.image]" />
     <span class="text" v-else v-html="name"></span>
     <div
       v-if="pieceToShow === 'closed' && showName  "
@@ -138,7 +137,7 @@ export default {
       }
     }
   },
-  props: ['id', 'ind', 'func', 'pieceToShow', 'showName', 'method', 'size']
+  props: ['id', 'ind', 'func', 'pieceToShow', 'showName', 'method']
 }
 </script>
 

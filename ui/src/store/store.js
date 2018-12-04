@@ -10,6 +10,7 @@ import RunCompiled from '../services/RunCompiled'
 import CompilerControl from '../services/CompilerControl'
 import VideoControl from '../services/VideoControl'
 import LevelControl from '../services/LevelControl'
+import AdminControl from '../services/AdminControl'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -91,13 +92,16 @@ export default new Vuex.Store({
     compilerControl: {},
     videoTimers: {},
     videoHintControl: {},
-    levelControl: {}
+    levelControl: {},
+    adminControl: {}
   },
   mutations: {
+
     UPDATE_CONTROLS (state) {
       state.compilerControl = new CompilerControl()
       state.videoHintControl = new VideoControl(state)
       state.levelControl = new LevelControl()
+      state.adminControl = new AdminControl()
     },
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
@@ -228,6 +232,9 @@ export default new Vuex.Store({
     },
     CONFIRM_DEACTIVATE_FUNCTION (state, _func) {
       state.confirmDeactiveFunction = _func
+    },
+    REQUEST_ADMIN (state, result) {
+      state.requestAdmin = result
     }
   },
   actions: {
@@ -366,7 +373,7 @@ export default new Vuex.Store({
   },
   getters: {
     getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,
-
+    getAdminControl: state => state.adminControl,
     getCompilerControl: state => state.compilerControl,
     getVideoHintControl: state => state.videoHintControl,
     getVideoTimers: state => state.videoTimers,
