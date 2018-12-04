@@ -18,12 +18,12 @@
 
     <div class="row d-flex justify-content-center align-items-center">
       <puzzle-pieces
-        v-if="confirmDeactiveFunction.name"
         :id="confirmDeactiveFunction.id"
         :ind="confirmDeactiveFunction.ind"
         :func="confirmDeactiveFunction"
         :piece-to-show="'closed'"
         :show-name="'true'"
+        :size="'10vmin'"
       >
       </puzzle-pieces>
 
