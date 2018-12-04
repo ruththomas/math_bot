@@ -37,7 +37,7 @@ trait Subtraction extends LevelGenTags {
           clearMain = false,
           initFocus = List.empty[String],
           videoHints = List("Um2NctlzVN0"),
-          freeHint = None
+          freeHint = Some("Um2NctlzVN0")
         )
       )
     ),

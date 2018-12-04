@@ -37,7 +37,7 @@ trait Addition extends LevelGenTags {
           clearMain = false,
           initFocus = List.empty[String],
           videoHints = List("HiFTav92mgA"),
-          freeHint = None
+          freeHint = Some("HiFTav92mgA")
         )
       )
     ),
