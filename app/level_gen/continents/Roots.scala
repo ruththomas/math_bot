@@ -37,7 +37,7 @@ trait Roots extends LevelGenTags {
           clearMain = false,
           initFocus = List.empty[String],
           videoHints = List("e74jGknaZXM"),
-          freeHint = None
+          freeHint = Some("e74jGknaZXM")
         )
       )
     ),
