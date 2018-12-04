@@ -94,10 +94,12 @@ object PreparedFunctions {
     if (staged.length > 50) staged
     else {
       val imageName =
-        ((actives ::: staged).filter(_.created_id.startsWith("2")).flatMap(_.image.toIntOpt).max + 1).toString
+      (actives ::: staged).filter(_.created_id.startsWith("2")).flatMap(_.image.toIntOpt).max + 1
       val newStaged = DefaultFunctions.funcs.head.copy(
-        created_id = s"200000$imageName",
-        image = imageName
+        created_id = s"200000${imageName.toString}",
+        image = imageName.toString,
+        name = if (imageName > 101) s"Name me ${imageName.toString}" else "",
+        displayName = Some(imageName > 101)
       )
       addMoreStaged(actives, staged :+ newStaged)
     }
