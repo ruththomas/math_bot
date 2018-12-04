@@ -37,7 +37,7 @@ trait Multiplication extends LevelGenTags {
           clearMain = false,
           initFocus = List.empty[String],
           videoHints = List("ppkafvWniJE"),
-          freeHint = None
+          freeHint = Some("ppkafvWniJE")
         )
       )
     ),

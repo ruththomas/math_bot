@@ -37,7 +37,7 @@ trait Division extends LevelGenTags {
           clearMain = false,
           initFocus = List.empty[String],
           videoHints = List("fD9NKD_pL_I"),
-          freeHint = None
+          freeHint = Some("fD9NKD_pL_I")
         )
       )
     ),

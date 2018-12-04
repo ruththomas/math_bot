@@ -81,6 +81,7 @@ class LevelControl extends Ws {
   }
 
   _setFunctions (functions) {
+    // console.log('staged length', functions.stagedFunctions.length)
     this.functions = functions
   }
 

@@ -37,7 +37,7 @@ trait Exponents extends LevelGenTags {
           clearMain = false,
           initFocus = List.empty[String],
           videoHints = List("ydFF5zInf0g"),
-          freeHint = None
+          freeHint = Some("ydFF5zInf0g")
         )
       )
     ),
