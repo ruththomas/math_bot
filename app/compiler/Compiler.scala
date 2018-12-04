@@ -1,11 +1,10 @@
 package compiler
 
+import actors.messages.level.{ Function, GridPart, Problem }
 import compiler.mbl._
-import actors.messages.level.{Function, GridPart, Problem}
 import compiler.operations._
 import daos.CommandIds
 import models.GridMap
-import play.api.libs.json._
 
 object Compiler {
 
@@ -42,7 +41,7 @@ object Compiler {
                     Some(
                       Cell(
                         cellTypeFromName(name),
-                        tools.map(tool => Element(tool.original, tool.name, tool.image, tool.color, tool.value))
+                        tools.map(tool => Element(tool.original, tool.name, tool.image, Colors.from(tool.color).getOrElse(Colors.emptyColor), tool.value))
                       )
                     )
                   case GridPart(name, _, _) if name == "wall" => Some(Cell(CellType.Wall))
@@ -59,47 +58,6 @@ object Compiler {
         convertedToElements.toMap
       )
     )
-  }
-
-  def processBoard(jBoard: JsArray): Option[Grid] = {
-    val convertedToElements = jBoard.value map { row =>
-      row.asInstanceOf[JsArray].value map { cell =>
-        val f = cell.asInstanceOf[JsObject].value
-        (
-          f.get("robotSpot").exists(_.asInstanceOf[JsBoolean].value),
-          f.get("tools").map(_.asInstanceOf[JsArray].value) map { tools =>
-            tools.map(_.asInstanceOf[JsObject]) map { v =>
-              Element(
-                v.value.get("original").exists(_.asInstanceOf[JsBoolean].value),
-                v.value.get("name").map(_.asInstanceOf[JsString].value).get,
-                v.value.get("image").map(_.asInstanceOf[JsString].value).get,
-                v.value.get("color").map(_.asInstanceOf[JsString].value).get,
-                v.value.get("value").map(_.asInstanceOf[JsNumber].value.toInt).get
-              )
-            }
-          },
-          f.get("name").map(_.asInstanceOf[JsString].value).getOrElse("empty space")
-        )
-      } zip Stream.from(0)
-    } zip Stream.from(0) flatMap (v => v._1.map(u => (v._2, u._2) -> u._1))
-
-    def isNonEmptyCell(cell: ((Int, Int), (Boolean, Option[Seq[Element]], String))): Boolean = cell match {
-      case ((_, _), (_, Some(_ :: _), _)) => true
-      case ((_, _), (true, _, _)) => true
-      case ((_, _), (_, _, "final answer")) => true
-      case _ => false
-    }
-
-    convertedToElements.find(_._2._1).map(_._1) map { robotLocation =>
-      Grid(
-        Point(robotLocation),
-        "0",
-        convertedToElements
-          .filter(isNonEmptyCell)
-          .map(v => v._1 -> Cell(cellType = cellTypeFromName(v._2._3), contents = v._2._2.get.toList))
-          .toMap
-      )
-    }
   }
 
   def compile(main: Function,
@@ -192,7 +150,7 @@ object Compiler {
                   case "default" =>
                     UserFunctionRefById(id)
                   case _ =>
-                    IfColor(f.color, UserFunctionRefById(id))
+                    IfColor(Colors.from(f.color).getOrElse(Colors.anyColor), UserFunctionRefById(id))
                 }
               case _ =>
                 NoOperation
@@ -255,17 +213,22 @@ object Compiler {
           Left((NoOperation, c._2 + (name -> n), c._3))
         }))(elements.map(e => convertMbl(e, lc)))
 
-      case MblList(MblSymbol("if") :: MblQuoted(color) :: elements) =>
-        (errReduce orElse (opsReduce andThen { c =>
-          val l = UserFunctionLambda(c._1, lc.inc)
-          Left(
-            (
-              IfColor(color, l),
-              c._2,
-              c._3 + (l.id -> l)
-            )
-          )
-        }))(elements.map(e => convertMbl(e, lc)))
+      case MblList(MblSymbol("if") :: MblQuoted(colorStr) :: elements) =>
+        Colors.from(colorStr) match {
+          case Some(color) =>
+            (errReduce orElse (opsReduce andThen { c =>
+              val l = UserFunctionLambda(c._1, lc.inc)
+              Left(
+                (
+                  IfColor(color, l),
+                  c._2,
+                  c._3 + (l.id -> l)
+                )
+              )
+            }))(elements.map(e => convertMbl(e, lc)))
+          case None =>
+            Right(s"Invalid color '$colorStr'")
+        }
 
       case MblList(elements) => // Usually the "main" function but if its not the outermost function, and shows up anywhere else it will just be executed inline as a kind of lambda
         (errReduce orElse (opsReduce andThen { c =>

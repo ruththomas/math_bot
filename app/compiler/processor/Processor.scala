@@ -1,7 +1,7 @@
 package compiler.processor
 
-import compiler.operations.{ChangeRobotDirection, MoveRobotForwardOneSpot, _}
-import compiler.{Grid, GridAndProgram}
+import compiler.operations.{ ChangeRobotDirection, MoveRobotForwardOneSpot, _ }
+import compiler.{ Colors, Grid, GridAndProgram }
 import configuration.CompilerConfiguration
 
 import scala.annotation.tailrec
@@ -39,7 +39,9 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
               state.currentRegister.peek() match {
                 case Some(element) if element.color == color =>
                   execute(state, Some((conditionalOperation, operation._2)), post, emptyLoopCount + 1)
-                case Some(_) if color == "grey" =>
+                case Some(_) if color == Colors.anyColor =>
+                  execute(state, Some((conditionalOperation, operation._2)), post, emptyLoopCount + 1)
+                case None if color == Colors.emptyColor =>
                   execute(state, Some((conditionalOperation, operation._2)), post, emptyLoopCount + 1)
                 case _ =>
                   execute(state, post.headOption, post.drop(1), emptyLoopCount + 1) // Skip the operation inside the if
