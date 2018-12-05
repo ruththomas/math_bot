@@ -91,7 +91,7 @@ class LevelControl extends Ws {
       case 'any':
         return '#696969'
       case 'empty':
-        return '#000000'
+        return '#353535'
       case 'white':
         return '#ffffff'
       case 'blue':
@@ -105,7 +105,7 @@ class LevelControl extends Ws {
       case 'red':
         return '#F25C5C'
       default:
-        return '#ffffff'
+        return '#FFD700' // color name changed in server, checkout `app/compiler/Colors.scala` for new pallet
     }
   }
 

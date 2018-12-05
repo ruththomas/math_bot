@@ -216,7 +216,7 @@ export default {
   $piece-height: 7.5vmin;
   $dialog-button-size: 3.5vmin;
   $white: #ffffff;
-  $black: #000000;
+  $black: #353535;
   $blue: #4A90E2;
   $purple: #CA7AFF;
   $green: #50E3C2;
@@ -278,7 +278,6 @@ export default {
     }
     .empty {
       background: $black;
-      border: 1px solid #ffffff;
     }
     .white {
       background: $white;
@@ -353,4 +352,5 @@ export default {
     z-index: 10001;
     cursor: pointer;
   }
+
 </style>

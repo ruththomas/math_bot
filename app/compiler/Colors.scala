@@ -9,6 +9,7 @@ object Colors extends Enumeration {
 
   val anyColor = Color("any")
   val emptyColor = Color("empty")
+  // if this color (white) changes name please update `convertColors` function in `actors/messages/PreparedFunctions.scala` to the new default color
   val white = Color("white")
   val blue = Color("blue")
   val purple = Color("purple")
