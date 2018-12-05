@@ -1,6 +1,7 @@
 package controllers
 
 import actors.convert_flow.{AdminRequestConvertFlow, AdminResponseConvertFlow}
+import actors.messages.admin.LevelStats
 import actors.{ActorTags, AdminActor}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
@@ -12,7 +13,7 @@ import daos._
 import email.{AdminApprovedEmail, AdminVerificationEmail}
 import models.AdminAuth
 import play.api.Environment
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.streams.ActorFlow
 import play.api.libs.ws._
 import play.api.mvc._
@@ -26,6 +27,7 @@ class AdminController @Inject()(
     val playerAccountDAO: PlayerAccountDAO,
     val adminAuthDAO: AdminAuthDAO,
     val sessionDAO: SessionDAO,
+    val statsDAO: StatsDAO,
     val auth0LegacyDAO: Auth0LegacyDao,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
     implicit val system: ActorSystem,
@@ -51,7 +53,15 @@ class AdminController @Inject()(
                   AdminRequestConvertFlow()
                     .via(
                       ActorFlow.actorRef { out =>
-                        AdminActor.props(out, playerAccountDAO, playerTokenDAO, auth0LegacyDAO, sessionDAO, ws, environment)
+                        AdminActor
+                          .props(out,
+                                 playerAccountDAO,
+                                 playerTokenDAO,
+                                 auth0LegacyDAO,
+                                 sessionDAO,
+                                 statsDAO,
+                                 ws,
+                                 environment)
                       }
                     )
                     .via(AdminResponseConvertFlow())
@@ -134,4 +144,13 @@ class AdminController @Inject()(
       case None => FastFuture.successful(BadRequest("Missing email query parameter"))
     }
   }
+
+  def levelStats(): Action[AnyContent] = Action.async { implicit request =>
+    statsDAO.levelStats(Some("00000")).map {
+      case p: Seq[LevelStats] =>
+        Ok(Json.toJson(p))
+    }
+
+  }
+
 }

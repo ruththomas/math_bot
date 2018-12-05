@@ -20,11 +20,11 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 class PlayerAccountDAO @Inject()(
-                                  db: MongoDatabase,
-                                  aLogger: SemanticLog,
-                                  aCodecs: Seq[Codec[_]] = Seq.empty[Codec[_]],
-                                  aProviders: Seq[CodecProvider]
-                                )(implicit val ec: ExecutionContext) {
+    db: MongoDatabase,
+    aLogger: SemanticLog,
+    aCodecs: Seq[Codec[_]] = Seq.empty[Codec[_]],
+    aProviders: Seq[CodecProvider]
+)(implicit val ec: ExecutionContext) {
   private val collectionLabel = 'playeraccount
   private val tokenIdLabel = 'tokenId
   private val emailLabel = 'email
@@ -34,7 +34,6 @@ class PlayerAccountDAO @Inject()(
   private val maxLevel = 'maxLevel
   private val maxStep = 'maxStep
   private val createdLabel = 'created
-
 
   private val codecRegistry = fromRegistries(
     fromProviders(
@@ -52,11 +51,9 @@ class PlayerAccountDAO @Inject()(
     db.getCollection[PlayerAccount](collectionLabel.name)
       .withCodecRegistry(codecRegistry)
 
-
   val userAccountSignupCollection: MongoCollection[UserAccountSignups] =
     db.getCollection[UserAccountSignups](collectionLabel.name)
       .withCodecRegistry(codecRegistry)
-
 
   def put(pa: PlayerAccount): Future[Completed] = collection.insertOne(pa).toFuture()
 
@@ -77,7 +74,7 @@ class PlayerAccountDAO @Inject()(
     for {
       result <- collection
         .findOneAndUpdate(equal(tokenIdLabel.name, tokenId),
-          combine(currentDate(lastAccess.name), inc(timesAccessed.name, 1)))
+                          combine(currentDate(lastAccess.name), inc(timesAccessed.name, 1)))
         .toFutureOption()
     } yield result
 
@@ -97,7 +94,6 @@ class PlayerAccountDAO @Inject()(
 
   def count: Future[Long] = collection.count().toFuture()
 
-
   private final val signupsPerDayQueryText =
     """
       |
@@ -111,13 +107,15 @@ class PlayerAccountDAO @Inject()(
 
   def signupsPerDay: Future[Seq[UserAccountSignups]] = {
 
-
-    userAccountSignupCollection.aggregate(List(
-      this.signupsPerDayQuery
-    )).toFuture()
+    userAccountSignupCollection
+      .aggregate(
+        List(
+          this.signupsPerDayQuery
+        )
+      )
+      .toFuture
 
   }
-
 
   private final val DAY_IN_MS = 1000 * 60 * 60 * 24
   private final val sevenDays = 7 * DAY_IN_MS
@@ -129,6 +127,5 @@ class PlayerAccountDAO @Inject()(
     collection.count(gt(lastAccess.name, date)).toFuture
 
   }
-
 
 }

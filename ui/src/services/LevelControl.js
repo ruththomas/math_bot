@@ -219,7 +219,6 @@ class LevelControl extends Ws {
   }
 
   _handleUnlockAllLevels (res) {
-
     this.unlockedAllLevels = true
   }
 

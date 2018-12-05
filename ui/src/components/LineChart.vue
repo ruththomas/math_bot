@@ -101,7 +101,7 @@ export default {
   data () {
     return {
       chart: null,
-      minDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+      minDate: new Date(new Date().getTime() - 86400 * 1000 * 7 * 4), // 28 days
       maxDate: new Date(),
       x: [],
       y: [],
@@ -224,9 +224,9 @@ export default {
       //   height: width * 0.5,
       //   width
       // },
-      transition: {
-        duration: 500
-      },
+      // transition: {
+      //   duration: 500
+      // },
       data: {
         x: 'x',
         columns: [

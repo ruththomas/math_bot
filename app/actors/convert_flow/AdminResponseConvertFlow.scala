@@ -1,7 +1,8 @@
 package actors.convert_flow
 
-import actors.AdminActor.{ActiveUserCount, Last7DaysLogins, SignupsPerDay, UserCount}
+import actors.AdminActor._
 import actors.messages.ActorFailed
+import actors.messages.admin.{CurrentPath, LevelStats}
 import actors.messages.playeraccount.UserAccountSignups
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
@@ -10,13 +11,15 @@ import play.api.libs.json.{JsValue, Json, OWrites}
 object AdminResponseConvertFlow extends SocketResponseConvertFlow {
 
   final case class AdminResponse(
-                                  status: String,
-                                  userCount: Option[Long] = None,
-                                  message: Option[String] = None,
-                                  userAccountSignups: Option[Seq[UserAccountSignups]] = None,
-                                  last7DaysLoginCount: Option[Long] = None,
-                                  activeUserCount: Option[Long] = None
-                                )
+      status: String,
+      userCount: Option[Long] = None,
+      message: Option[String] = None,
+      userAccountSignups: Option[Seq[UserAccountSignups]] = None,
+      last7DaysLoginCount: Option[Long] = None,
+      activeUserCount: Option[Long] = None,
+      currentPath: Option[Seq[CurrentPath]] = None,
+      levelStats: Option[Seq[LevelStats]] = None
+  )
 
   implicit val adminResponseWrites: OWrites[AdminResponse] = Json.format[AdminResponse]
 
@@ -29,6 +32,9 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
       case ActiveUserCount(count) => AdminResponse(success, None, None, None, None, Some(count))
       case UserCount(count) => AdminResponse(success, userCount = Some(count))
       case SignupsPerDay(signups) => AdminResponse(success, None, None, Some(signups))
+      case CurrentPathResult(currentPaths) =>
+        AdminResponse(success, None, None, None, None, None, Some(currentPaths), None)
+      case LevelStatsResult(levelStats) => AdminResponse(success, None, None, None, None, None, None, Some(levelStats))
       case ActorFailed(message) => AdminResponse(failed, message = Some(message))
       case _ => AdminResponse(failed)
     })

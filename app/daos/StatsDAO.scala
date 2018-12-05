@@ -2,12 +2,13 @@ package daos
 
 import java.util.Date
 
+import actors.messages.admin.{CurrentPath, LevelStats}
 import actors.messages.level.{LayerStatistic, Stats}
-import akka.http.scaladsl.util.FastFuture
 import com.google.inject.Inject
 import level_gen.models._
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
+import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
@@ -34,6 +35,30 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
 
   val collection: MongoCollection[Stats] =
     mathbotDb.getCollection[Stats](collectionLabel).withCodecRegistry(codecRegistry)
+
+  val currentPathCollection: MongoCollection[CurrentPath] =
+    mathbotDb
+      .getCollection[CurrentPath](collectionLabel)
+      .withCodecRegistry(
+        fromRegistries(
+          fromProviders(
+            Macros.createCodecProvider[CurrentPath]()
+          ),
+          DEFAULT_CODEC_REGISTRY
+        )
+      )
+
+  val levelStatsCollection: MongoCollection[LevelStats] =
+    mathbotDb
+      .getCollection[LevelStats](collectionLabel)
+      .withCodecRegistry(
+        fromRegistries(
+          fromProviders(
+            Macros.createCodecProvider[LevelStats]()
+          ),
+          DEFAULT_CODEC_REGISTRY
+        )
+      )
 
   def insert(stats: Stats): Future[Option[Completed]] =
     collection.insertOne(stats).toFutureOption()
@@ -146,4 +171,77 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       updated = stats.map(ss => ss.copy(list = ss.list.mapValues(s => s.copy(active = true, wins = 1))))
       _ <- collection.replaceOne(equal(tokenIdLabel, tokenId), updated.get).toFuture()
     } yield updated.get
+
+  val playerAccounts = BsonDocument("""
+                                      |   { $lookup: {
+                                      |        from: "playeraccount",
+                                      |        localField: "tokenId",
+                                      |        foreignField: "tokenId",
+                                      |        as: "user",
+                                      |      },
+                                      |    }
+                                    """.stripMargin)
+  val nonAdminAccounts = BsonDocument("""
+                                        | { $match: {
+                                        |
+                                        |    "user.isAdmin": false
+                                        |  }
+                                        | }
+                                      """.stripMargin)
+
+  val currentPathGroup = BsonDocument(f"""
+                                       | { $$group: {
+                                       |   _id: "$$currentPath",
+                                       |   count: { $$sum: 1 }
+                                       |  }
+                                       | }
+            """.stripMargin)
+  def currentPath: Future[Seq[CurrentPath]] = {
+
+    currentPathCollection
+      .aggregate(
+        Seq(
+          playerAccounts,
+          nonAdminAccounts,
+          currentPathGroup
+        )
+      )
+      .toFuture
+
+  }
+
+  def levelStats(func: Option[String]): Future[Seq[LevelStats]] = {
+
+    val _func = func.getOrElse("00000")
+    val _levelStats =
+      f"""
+         |{
+         |    $$group: {
+         |      _id: '$$list.${_func}.name' ,
+         |      timesPlayed: { $$sum: '$$list.${_func}.timesPlayed' },
+         |      timesPlayedAvg: { $$avg: '$$list.${_func}.timesPlayed' },
+         |      timesPlayedMax: { $$max: '$$list.${_func}.timesPlayed' },
+         |      wins: { $$sum: '$$list.${_func}.wins' },
+         |      winsAvg: { $$avg: '$$list.${_func}.wins' },
+         |      winsMax: { $$max: '$$list.${_func}.wins' },
+         |
+         |    }
+         |  }
+       """.stripMargin
+
+    levelStatsCollection
+      .aggregate(
+        Seq(
+          playerAccounts,
+          nonAdminAccounts,
+          BsonDocument(_levelStats),
+          BsonDocument(f"""
+              | {
+              |   $$addFields: { level: '${_func}'}
+              | }
+            """.stripMargin)
+        )
+      )
+      .toFuture
+  }
 }

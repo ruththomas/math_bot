@@ -1,9 +1,10 @@
 package actors
 import actors.messages.ActorFailed
+import actors.messages.admin.{CurrentPath, LevelStats}
 import actors.messages.playeraccount.UserAccountSignups
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
-import daos.{Auth0LegacyDao, PlayerAccountDAO, PlayerTokenDAO, SessionDAO}
+import daos._
 import play.api.Environment
 import play.api.libs.ws.WSClient
 
@@ -12,6 +13,10 @@ object AdminActor {
   final case class GetActiveUserCount()
   final case class GetSignupsPerDay()
   final case class GetLoginsLast7Days()
+  final case class GetLevelStats(level: Option[String])
+  final case class GetCurrentPath()
+  final case class CurrentPathResult(currentPaths: Seq[CurrentPath])
+  final case class LevelStatsResult(levelStats: Seq[LevelStats])
   final case class SignupsPerDay(result: Seq[UserAccountSignups])
   final case class Last7DaysLogins(logins: Long)
   final case class UserCount(count: Long)
@@ -22,9 +27,10 @@ object AdminActor {
             playerTokenDAO: PlayerTokenDAO,
             auth0LegacyDao: Auth0LegacyDao,
             sessionDao: SessionDAO,
+            statsDAO: StatsDAO,
             ws: WSClient,
             environment: Environment) =
-    Props(new AdminActor(out, playerAccountDAO, playerTokenDAO, auth0LegacyDao, sessionDao, ws, environment))
+    Props(new AdminActor(out, playerAccountDAO, playerTokenDAO, auth0LegacyDao, sessionDao, statsDAO, ws, environment))
 }
 
 class AdminActor @Inject()(out: ActorRef,
@@ -32,6 +38,7 @@ class AdminActor @Inject()(out: ActorRef,
                            playerTokenDAO: PlayerTokenDAO,
                            auth0LegacyDao: Auth0LegacyDao,
                            sessionDAO: SessionDAO,
+                           statsDAO: StatsDAO,
                            ws: WSClient,
                            environment: Environment)
     extends Actor {
@@ -54,9 +61,17 @@ class AdminActor @Inject()(out: ActorRef,
         }
 
     case GetActiveUserCount() =>
+      sessionDAO.count.map { count =>
+        out ! ActiveUserCount(count)
+      }
 
-      sessionDAO.count.map {
-        count => out ! ActiveUserCount(count)
+    case GetCurrentPath() =>
+      statsDAO.currentPath.map { currentPaths =>
+        out ! CurrentPathResult(currentPaths)
+      }
+    case GetLevelStats(level) =>
+      statsDAO.levelStats(level).map { levelStats =>
+        out ! LevelStatsResult(levelStats)
       }
     case GetUserCount() =>
       for {

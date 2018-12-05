@@ -5,13 +5,17 @@ export default class AdminControl extends Ws {
     userCount: 'user-count',
     activeUserCount: 'active-user-count',
     signups: 'signups',
-    loginsLastWeek: 'logins-last-week'
+    loginsLastWeek: 'logins-last-week',
+    levelStats: 'level-stats',
+    currentPath: 'current-path'
   }
 
   userCount = 0
   activeUserCount = 0
   last7DaysLoginCount = 0
   userAccountSignups = []
+  levelStats = {}
+  currentPath = []
 
   constructor () {
     super('admin')
@@ -74,8 +78,17 @@ export default class AdminControl extends Ws {
     }))
   }
 
+  getLevelStats (_id) {
+    this._send(JSON.stringify({action: this.actions.levelStats, level: _id}))
+  }
+
+  getCurrentPath () {
+    this._send(JSON.stringify({action: this.actions.currentPath}))
+  }
+
   handleSocketResponse (result) {
-    const {activeUserCount = -1, status = 'failure', last7DaysLoginCount = '-1', userAccountSignups = [], userCount = '-1'} = result
+    const {activeUserCount = -1, status = 'failure', last7DaysLoginCount = '-1', userAccountSignups = [], userCount = '-1', currentPath = [], levelStats = []} = result
+
     if (status !== 'success') {
       console.error('socket error', result)
       return false
@@ -100,6 +113,15 @@ export default class AdminControl extends Ws {
 
     if (userAccountSignups.length) {
       this.userAccountSignups = userAccountSignups
+    }
+
+    if (currentPath.length) {
+      this.currentPath = currentPath
+    }
+
+    if (levelStats.length) {
+      this.levelStats[levelStats[0].level] = levelStats[0]
+
     }
   }
 }
