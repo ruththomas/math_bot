@@ -8,6 +8,7 @@ import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase, SingleObser
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
+import org.mongodb.scala.model.Projections._
 import org.mongodb.scala.result.UpdateResult
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,6 +30,14 @@ class FunctionsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
 
   def find(tokenId: String): Future[Option[Functions]] =
     collection.find(equal(tokenIdLabel, tokenId)).first().toFutureOption()
+
+  def findFunction(tokenId: String, createdId: String): Future[Option[Function]] =
+    for {
+      functions <- collection
+        .find(equal(tokenIdLabel, tokenId))
+        .first()
+        .toFuture()
+    } yield functions.list.get(createdId)
 
   def insert(functions: Functions): Future[Option[Completed]] =
     collection.insertOne(functions).toFutureOption()
