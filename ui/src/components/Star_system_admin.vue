@@ -1,47 +1,36 @@
 <template>
   <div class="star-system-admin animated fadeIn">
 
-    <div class="row" v-if="starSystem">
-      <h3>Active Star system
+    <div class="row mb-3">
 
-        <small>
-          {{starSystem.stats.name}}
-        </small>
-      </h3>
+
+      <div class="input-group">
+        <label>
+          star system
+        </label>
+        <select @change="changeStarSystem" class="form-control-sm">
+          <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
+            {{star.stats.name}}
+          </option>
+        </select>
+      </div>
     </div>
 
-    <div class="row" v-if="planet">
-      <h3> Active Planet
-        <small>{{planet.stats.name}}</small>
-      </h3>
-
-    </div>
-
-    <div class="row">
-
-      <label>
-        star system
-      </label>
-      <select @change="changeStarSystem">
-        <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
-          {{star.stats.name}}
-        </option>
-      </select>
-    </div>
-
-    <div class="row">
-      <label>
+    <div class="row mb-3">
+     <div class="input-group">
+       <label>
          planets
-      </label>
-      <select
-        @change="changeActivePlanet"
-      >
-        <option
+       </label>
+       <select
+         @change="changeActivePlanet"
+       >
+         <option
 
-          v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
-          {{planet.stats.name}}
-        </option>
-      </select>
+           v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
+           {{planet.stats.name}}
+         </option>
+       </select>
+     </div>
     </div>
 
     <div v-if="planet.continents.length">
