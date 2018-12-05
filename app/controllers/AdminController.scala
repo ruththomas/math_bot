@@ -145,12 +145,4 @@ class AdminController @Inject()(
     }
   }
 
-  def levelStats(): Action[AnyContent] = Action.async { implicit request =>
-    statsDAO.levelStats(Some("00000")).map {
-      case p: Seq[LevelStats] =>
-        Ok(Json.toJson(p))
-    }
-
-  }
-
 }

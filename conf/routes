@@ -16,7 +16,6 @@ POST        /api/admin/requestAdmin                                             
 GET         /api/admin/approved                                                    controllers.AdminController.acceptOrDeny(isAccepted: Boolean = true)
 GET         /api/admin/rejected                                                    controllers.AdminController.acceptOrDeny(isAccepted: Boolean = false)
 GET         /api/admin/revoke                                                      controllers.AdminController.revokeAdmin
-
 # Auth
 GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
 POST        /api/auth/resumeSession                                                controllers.AuthController.resumeSession
