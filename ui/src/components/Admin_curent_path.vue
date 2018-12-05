@@ -16,16 +16,16 @@
 
 import c3 from 'c3'
 
-const ar = [
-  {
-    '_id': '00004',
-    'count': 1
-  },
-  {
-    '_id': '00003',
-    'count': 2
-  }
-]
+// const ar = [
+//   {
+//     '_id': '00004',
+//     'count': 1
+//   },
+//   {
+//     '_id': '00003',
+//     'count': 2
+//   }
+// ]
 export default {
   name: 'Admin_curent_path',
   data () {
@@ -36,6 +36,15 @@ export default {
   mounted () {
     this.generateChart()
   },
+  // fixme: watch data
+
+  // watch: {
+  //   y (newData, oldData) {
+  //     this.chart.load({
+  //       columns: ['count'].concat(...newData)
+  //     })
+  //   }
+  // },
 
   computed: {
 

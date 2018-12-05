@@ -121,7 +121,6 @@ export default class AdminControl extends Ws {
 
     if (levelStats.length) {
       this.levelStats[levelStats[0].level] = levelStats[0]
-
     }
   }
 }

@@ -158,13 +158,6 @@ export default {
   },
   methods: {
 
-    setActiveContinent (_active) {
-      this.activeContinent = _active
-    },
-
-    setActiveStarSystem (_active) {
-      this.activeStarSystem = _active
-    },
     updateActive (_active) {
       this.activeDisplay = _active
     },
@@ -191,9 +184,9 @@ export default {
         }
 
         this._fetchData().then(() => {
-          // this.userCountInterval = setInterval(() => {
-          //   this._fetchData()
-          // }, 1000 * 15)
+          this.userCountInterval = setInterval(() => {
+            this._fetchData()
+          }, 1000 * 15)
         })
       }).catch(err => {
         console.error(err)
