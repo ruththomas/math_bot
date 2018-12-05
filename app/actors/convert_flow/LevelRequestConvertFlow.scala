@@ -52,6 +52,8 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
       case Some(LevelRequest(action, Some(function), _, _, _))
           if action == "activate-function" || action == "deactivate-function" =>
         ActivateDeactivateFunction(function)
+      case Some(LevelRequest(action, Some(function), _, _, _)) if action == "update-function-color" =>
+        ChangeFunctionColor(function)
       case _ => ActorFailed("Bad json input")
     }
   }

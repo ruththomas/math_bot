@@ -16,7 +16,13 @@ class LevelControl @Inject()(
     functionsDAO: FunctionsDAO,
     playerTokenDAO: PlayerTokenDAO
 )(implicit ec: ExecutionContext) {
+  import compiler.Colors.listedColors
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
+
+  private def nextColor(currentColor: String): String = {
+    listedColors.lift(listedColors.indexWhere(_.name == currentColor) + 1).getOrElse(listedColors.head).name
+  }
+
   /*
    * Checks if levels have been added or removed then updates the stats
    * */
@@ -213,6 +219,22 @@ class LevelControl @Inject()(
         )
       )
       pathAndContinent <- getBuiltContinent(tokenId)
+    } yield pathAndContinent
+  }
+
+  def changeFunctionColor(tokenId: String, function: Function): Future[PathAndContinent] = {
+    for {
+      funcOpt <- functionsDAO.findFunction(tokenId, function.created_id)
+      pathAndContinent <- funcOpt match {
+        case Some(func) =>
+          updateFunctionProperties(
+            tokenId,
+            func.copy(
+              color = nextColor(func.color)
+            )
+          )
+        case None => getBuiltContinent(tokenId)
+      }
     } yield pathAndContinent
   }
 

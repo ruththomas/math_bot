@@ -16,5 +16,7 @@ object Colors extends Enumeration {
   val pink = Color("pink")
   val red = Color("red")
 
-  val allColors = Set(anyColor, emptyColor, white, blue, purple, green, pink, red)
+  val allColors: Set[Color] = Set(anyColor, emptyColor, white, blue, purple, green, pink, red)
+  // Guarantees order
+  val listedColors: List[Color] = List(anyColor, emptyColor, white, blue, purple, green, pink, red)
 }

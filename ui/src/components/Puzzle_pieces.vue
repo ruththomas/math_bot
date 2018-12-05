@@ -64,7 +64,7 @@
     <div
       v-if="pieceToShow === 'closed' && showName  "
       class="piece-name"
-      :style="{background: convertColor(func.color)}"
+      :class="func.color"
     >
       <span :style="{opacity: func.name === '' ? 0 : 1}">
         {{func.name === '' ? 'name me' : func.name}}
@@ -122,19 +122,10 @@ export default {
       }
     },
     convertColor (color) {
-      const hexCodes = {
-        default: '#FFFFFF',
-        grey: '#696969',
-        green: '#50E3C2',
-        blue: '#4A90E2',
-        pink: '#FF98B1',
-        red: '#F25C5C',
-        purple: '#CA7AFF'
-      }
       if (this.func.placeholder) {
-        return hexCodes.default
+        return this.levelControl.getColorHex('white')
       } else {
-        return hexCodes[color]
+        return this.levelControl.getColorHex(color)
       }
     }
   },
@@ -147,6 +138,13 @@ export default {
   $piece-height: 7.5vmin;
   $click-color: #B8E986;
   $danger-color: #F25C5C;
+  $white: #ffffff;
+  $black: #000000;
+  $blue: #4A90E2;
+  $purple: #CA7AFF;
+  $green: #50E3C2;
+  $pink: #FF98B1;
+  $red: #F25C5C;
 
   .piece {
     position: relative;
@@ -198,6 +196,36 @@ export default {
       background-color: #ffffff;
       z-index: 2;
       position: relative;
+    }
+
+    .any {
+      background: #696969!important; /* For browsers that do not support gradients */
+      background: -webkit-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Safari 5.1 to 6.0 */
+      background: -o-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Opera 11.1 to 12.0 */
+      background: -moz-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Firefox 3.6 to 15 */
+      background: linear-gradient(to right, $blue, $purple, $green, $pink, $red)!important; /* Standard syntax (must be last) */
+    }
+    .empty {
+      background: $black;
+      color: $white;
+    }
+    .white {
+      background: $white;
+    }
+    .blue {
+      background: $blue;
+    }
+    .purple {
+      background: $purple;
+    }
+    .green {
+      background: $green;
+    }
+    .pink {
+      background: $pink;
+    }
+    .red {
+      background: $red;
     }
   }
 

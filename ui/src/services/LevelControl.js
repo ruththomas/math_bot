@@ -23,6 +23,7 @@ class LevelControl extends Ws {
     this._prepFunc = this._prepFunc.bind(this)
     this._setFunctions = this._setFunctions.bind(this)
     this.getCurrentStarSystem = this.getCurrentStarSystem.bind(this)
+    this.updateFunctionColor = this.updateFunctionColor.bind(this)
 
     this._openSocket(this._init)
   }
@@ -85,6 +86,29 @@ class LevelControl extends Ws {
     this.functions = functions
   }
 
+  getColorHex (color) {
+    switch (color) {
+      case 'any':
+        return '#696969'
+      case 'empty':
+        return '#000000'
+      case 'white':
+        return '#ffffff'
+      case 'blue':
+        return '#4A90E2'
+      case 'purple':
+        return '#CA7AFF'
+      case 'green':
+        return '#50E3C2'
+      case 'pink':
+        return '#FF98B1'
+      case 'red':
+        return '#F25C5C'
+      default:
+        return '#ffffff'
+    }
+  }
+
   activateFunction (func) {
     this._wsOnMessage((updated) => {
       this._setFunctions(updated.preparedFunctions)
@@ -135,6 +159,11 @@ class LevelControl extends Ws {
   updateFunctionProperties (func) {
     this._wsOnMessage(this._resetContinent)
     this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
+  }
+
+  updateFunctionColor (func) {
+    this._wsOnMessage(this._resetContinent)
+    this._send(JSON.stringify({action: 'update-function-color', 'function': this._prepFunc(func)}))
   }
 
   getPath () {
