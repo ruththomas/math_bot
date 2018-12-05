@@ -7,127 +7,76 @@
 
       <div class="container">
 
-          <star_system_admin></star_system_admin>
+        <div class="row">
+          <div class="col-sm-3">
 
+            <ul class="list-group">
+              <li class="list-group-item" @click="updateActive('users')" :class="activeDisplay === 'users' ? 'active' : null">Users</li>
+              <li class="list-group-item" @click="updateActive('levels')" :class="activeDisplay === 'levels' ? 'active' : null">Levels</li>
+            </ul>
+          </div>
+          <div class="col-sm-9">
+            <div class="row mb-3">
+              <b-btn
+                class="text-capitalize"
+                @click="unlockLevels" :disabled="levelControl.unlockedAllLevels">
+                {{levelControl.unlockedAllLevels ? "Levels unlocked!" : 'unlock all levels'}}
+              </b-btn>
+            </div>
 
-        <!--<div class="row">-->
-          <!--<div class="col-sm-3">-->
+            <div v-if="activeDisplay === 'levels'">
 
-            <!--<ul class="list-group">-->
-              <!--<li class="list-group-item" @click="updateActive('users')" :class="activeDisplay === 'users' ? 'active' : null">Users</li>-->
-              <!--<li class="list-group-item" @click="updateActive('levels')" :class="activeDisplay === 'levels' ? 'active' : null">Levels</li>-->
-            <!--</ul>-->
-          <!--</div>-->
-          <!--<div class="col-sm-9">-->
-            <!--<div class="row mb-3">-->
-              <!--<b-btn-->
-                <!--class="text-capitalize"-->
-                <!--@click="unlockLevels" :disabled="levelControl.unlockedAllLevels">-->
-                <!--{{levelControl.unlockedAllLevels ? "Levels unlocked!" : 'unlock all levels'}}-->
-              <!--</b-btn>-->
-            <!--</div>-->
+              <star_system_admin></star_system_admin>
 
-            <!--<div v-if="activeDisplay === 'levels'">-->
+            </div>
 
-              <!--<div class="row d-flex justify-content-center align-items-center">-->
+            <div v-if="activeDisplay === 'users' && userAccountSignups.length">
 
-                <!--<ul class="nav">-->
+              <div class="row mb-3 d-flex justify-content-between align-items-center">
 
-                <!--<li class="nav-item">-->
-                  <!--<a @click="setActiveStarSystem('basicProgramming')">Basic Programming</a>-->
-                <!--</li>-->
-                <!--<li class="nav-item">-->
-                  <!--<a @click="setActiveStarSystem('singleDigitiArithmatic')">Single Digit Arithmatic</a>-->
-                <!--</li>-->
-                <!--</ul>-->
-              <!--</div>-->
-              <!--<div class="row">-->
-                <!--<div class="col-xs-6">-->
-                  <!--<ul class="list-group">-->
-                    <!--{{activeStarSystem}} Levels-->
-                    <!--<li-->
-                      <!--@click="setActiveContinent('1')"-->
-                      <!--class="list-group-item" :class="activeContinent === '1' ? 'active' : null">-->
-                      <!--1-->
-                    <!--</li>-->
-                    <!--<li class="list-group-item">-->
-                      <!--2-->
-                    <!--</li>-->
-                  <!--</ul>-->
-                <!--</div>-->
-                <!--<div class="col-xs-6">-->
-                  <!--<ul class="list-group">-->
-                    <!--<li class="list-group-item">-->
-                      <!--Wins 12-->
-                    <!--</li>-->
-                    <!--<li class="list-group-item">-->
-                      <!--maxWins 999-->
-                    <!--</li>-->
-                    <!--<li class="list-group-item">-->
-                      <!--avg wins 1.3-->
-                    <!--</li>-->
-                    <!--<li class="list-group-item">-->
-                      <!--timesPlayed 1000-->
-                    <!--</li>-->
-                    <!--<li class="list-group-item">-->
-                      <!--timesPlayed avg: 10000-->
-                    <!--</li>-->
-                    <!--<li class="list-group-item">-->
-                      <!--timesPlayedMax: 9999999-->
-                    <!--</li>-->
-                  <!--</ul>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
+                <div class="card">
+                  <div class="card-header">Users</div>
+                  <div class="card-body">
 
-            <!--<div v-if="activeDisplay === 'users' && userAccountSignups.length">-->
+                    <h5 class="card-title" id="userCount">{{ userCount.toLocaleString() }}</h5>
+                    <p class="card-text">
+                      All time
+                    </p>
+                  </div>
+                </div>
 
-              <!--<div class="row mb-3 d-flex justify-content-between align-items-center">-->
+                <div class="card">
+                  <div class="card-header">Logins</div>
+                  <div class="card-body">
+                    <h5 class="card-title" id="last7DaysLoginCount">
+                      {{last7DaysLoginCount.toLocaleString()}}
+                    </h5>
+                    <p class="card-text">
+                      Last 7 days
+                    </p>
+                  </div>
+                </div>
+                <div class="card" style="width: 18rem;">
+                  <div class="card-header">
+                    Active Users
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title" id="activeUserCount">
+                      {{activeUserCount.toLocaleString()}}
+                    </h5>
+                    <p class="card-text">
+                      Right Now
+                    </p>
+                  </div>
 
-                <!--<div class="card">-->
-                  <!--<div class="card-header">Users</div>-->
-                  <!--<div class="card-body">-->
+                </div>
+              </div>
 
-                    <!--<h5 class="card-title" id="userCount">{{ userCount.toLocaleString() }}</h5>-->
-                    <!--<p class="card-text">-->
-                      <!--All time-->
-                    <!--</p>-->
-                  <!--</div>-->
-                <!--</div>-->
-
-                <!--<div class="card">-->
-                  <!--<div class="card-header">Logins</div>-->
-                  <!--<div class="card-body">-->
-                    <!--<h5 class="card-title" id="last7DaysLoginCount">-->
-                      <!--{{last7DaysLoginCount.toLocaleString()}}-->
-                    <!--</h5>-->
-                    <!--<p class="card-text">-->
-                      <!--Last 7 days-->
-                    <!--</p>-->
-                  <!--</div>-->
-                <!--</div>-->
-                <!--<div class="card" style="width: 18rem;">-->
-                  <!--<div class="card-header">-->
-                    <!--Active Users-->
-                  <!--</div>-->
-                  <!--<div class="card-body">-->
-                    <!--<h5 class="card-title" id="activeUserCount">-->
-                      <!--{{activeUserCount.toLocaleString()}}-->
-                    <!--</h5>-->
-                    <!--<p class="card-text">-->
-                      <!--Right Now-->
-                    <!--</p>-->
-                  <!--</div>-->
-
-                <!--</div>-->
-              <!--</div>-->
-
-              <!--<div class="row mb-3">-->
-                <!--<line-chart-->
-                  <!--:data="userAccountSignups"-->
-                <!--&gt;</line-chart>-->
-              <!--</div>-->
-
+              <div class="row mb-3">
+                <line-chart
+                  :data="userAccountSignups"
+                ></line-chart>
+              </div>
 
               <div class="row" v-if="adminControl.currentPath.length > 0">
                 <div class="col-xs-12">
@@ -135,14 +84,14 @@
                 </div>
               </div>
 
-              <!--<div class="row">-->
-                <!--<div class="col-md-8 offset-md-2">-->
-                  <!--<user-signup-calendar></user-signup-calendar>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
+              <div class="row">
+                <div class="col-md-8 offset-md-2">
+                  <user-signup-calendar></user-signup-calendar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>

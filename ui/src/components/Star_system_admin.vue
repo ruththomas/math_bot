@@ -1,13 +1,20 @@
 <template>
   <div class="star-system-admin animated fadeIn">
 
-    <div class="row">
+    <div class="row" v-if="starSystem">
       <h3>Active Star system
 
         <small>
           {{starSystem.stats.name}}
         </small>
       </h3>
+    </div>
+
+    <div class="row" v-if="planet">
+      <h3> Active Planet
+        <small>{{planet.stats.name}}</small>
+      </h3>
+
     </div>
 
     <div class="row">
@@ -26,39 +33,37 @@
       <label>
          planets
       </label>
-      <select>
+      <select
+        @change="changeActivePlanet"
+      >
         <option
-          @change="changeActivePlanet"
+
           v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
           {{planet.stats.name}}
         </option>
       </select>
     </div>
 
-    <div class="row d-flex justify-content-center">
+    <div v-if="planet.continents.length">
 
       <h3>Level Stats</h3>
-      <ul class="list-group">
 
-        <li v-for="s in levelStats" :key="s._id" class="list-group-item">
+        <div class="row d-flex">
+          <div v-for="(s, i) in levelStats" :key="s._id + i" class="card m-3" style="width: 18rem;">
 
-          <h3>level: {{s.level}}</h3>
-          <p>timesPlayed: {{s.timesPlayed}}</p>
-          <p>timesPlayedAvg: {{s.timesPlayedAvg}}</p>
-          <p>timesPlayedMax: {{s.timesPlayedMax}}</p>
-          <p>wins: {{s.wins}}</p>
-          <p>winsAvg: {{s.winsAvg}}</p>
-          <p>winsMax: {{s.winsMax}}</p>
+            <div class="card-header">level: {{s.level}}</div>
 
-        </li>
-      </ul>
-      <!--<b-btn-->
-        <!--v-for="(starSystem, ind) in levelStats"-->
-        <!--:key="'star-system/' + ind"-->
-        <!--@click="updateStarSystem(ind)"-->
-        <!--:class="Number(starSystemShowing) === ind ? 'selected' : ''"-->
-        <!--:disabled="!starSystem.stats.active"-->
-      <!--&gt;{{starSystem.stats.name}}</b-btn>-->
+            <div class="card-body">
+              <p>timesPlayed: {{s.timesPlayed}}</p>
+              <p>timesPlayedAvg: {{s.timesPlayedAvg}}</p>
+              <p>timesPlayedMax: {{s.timesPlayedMax}}</p>
+              <p>wins: {{s.wins}}</p>
+              <p>winsAvg: {{s.winsAvg}}</p>
+              <p>winsMax: {{s.winsMax}}</p>
+            </div>
+
+          </div>
+        </div>
     </div>
 
   </div>
@@ -206,53 +211,53 @@ export default {
   methods: {
 
     changeActivePlanet (e) {
+      this.activePlanet = e.target.value
 
+      this.getLevelStats()
     },
     changeStarSystem (e) {
-      console.log('changeStarSystem', e.target.value)
       this.activeStarSystem = e.target.value
+
+      this.changeActivePlanet({target: {value: this.activeStarSystem + '0'}})
+    },
+    getLevelStats () {
+      const conts = this.planet.continents.map(i => i.id)
+
+      Promise.all(conts.map(continent => this.adminControl.getLevelStats(continent)))
     }
   },
   mounted () {
     setTimeout(() => {
       this.getLevelStats()
-      console.log(Array.from(this.starSystem))
-    }, 3000)
+    }, 500)
   },
   data () {
     return {
-      activeStarSystem: '000'
+      activeStarSystem: '000',
+      activePlanet: '0000'
     }
   },
 
   computed: {
 
     levelStats () {
-      return this.adminControl.levelStats
+      return Object.values(this.adminControl.levelStats).filter(level => {
+        const ids = this.planet.continents.map(cont => cont.id)
+        return ids.includes(level.level)
+      })
     },
 
-    getLevelStats () {
-      const conts = this.starSystem.planets[this.selectedPlanet].continents.map(i => i.id)
-
-      Promise.all(conts.map(continent => this.adminControl.getLevelStats(continent)))
-    },
-    continents () {
-      return this.starSystem.planets[this.selectedPlanet].continents
-    },
     adminControl () {
       return this.$store.getters.getAdminControl
     },
     levelControl () {
       return this.$store.getters.getLevelControl
     },
-    selectedPlanet () {
-      return this.levelControl.path[3]
-    },
     starSystem () {
       return this.levelControl.galaxy.starSystems.find(star => star.id === this.activeStarSystem)
     },
-    planets () {
-      return this.starSystem.planets
+    planet () {
+      return this.starSystem.planets.find(planet => planet.id === this.activePlanet)
     }
   },
   components: {
