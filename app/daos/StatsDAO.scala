@@ -172,7 +172,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       _ <- collection.replaceOne(equal(tokenIdLabel, tokenId), updated.get).toFuture()
     } yield updated.get
 
-  val playerAccounts = BsonDocument("""
+  private val playerAccounts = BsonDocument("""
                                       |   { $lookup: {
                                       |        from: "playeraccount",
                                       |        localField: "tokenId",
@@ -181,7 +181,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
                                       |      },
                                       |    }
                                     """.stripMargin)
-  val nonAdminAccounts = BsonDocument("""
+  private val nonAdminAccounts = BsonDocument("""
                                         | { $match: {
                                         |
                                         |    "user.isAdmin": false
@@ -189,7 +189,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
                                         | }
                                       """.stripMargin)
 
-  val currentPathGroup = BsonDocument(f"""
+  private val currentPathGroup = BsonDocument(f"""
                                        | { $$group: {
                                        |   _id: "$$currentPath",
                                        |   count: { $$sum: 1 }
@@ -237,7 +237,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
           BsonDocument(_levelStats),
           BsonDocument(f"""
               | {
-              |   $$addFields: { level: '${_func}'}
+              |   $$addFields: { id: '${_func}'}
               | }
             """.stripMargin)
         )

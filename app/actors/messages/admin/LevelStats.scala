@@ -8,7 +8,7 @@ case class LevelStats(_id: String,
                       wins: Int,
                       winsAvg: Double,
                       winsMax: Int,
-                      level: String)
+                      id: String)
 
 object LevelStats {
 

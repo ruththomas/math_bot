@@ -19,7 +19,7 @@ object AdminRequestConvertFlow extends SocketRequestConvertFlow {
       case Some(AdminRequest(action, _)) if action == "active-user-count" => GetActiveUserCount()
       case Some(AdminRequest(action, _)) if action == "signups" => GetSignupsPerDay()
       case Some(AdminRequest(action, _)) if action == "logins-last-week" => GetLoginsLast7Days()
-      case Some(AdminRequest(action, level)) if action == "level-stats" => GetLevelStats(level)
+      case Some(AdminRequest(action, id)) if action == "level-stats" => GetLevelStats(id)
       case Some(AdminRequest(action, _)) if action == "current-path" => GetCurrentPath()
       case _ => ActorFailed("Bad json input")
     }

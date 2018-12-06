@@ -78,7 +78,8 @@ export default {
         data: {
           columns: [
             ['count'].concat(this.y)
-          ]
+          ],
+          type: 'bar'
           // axes: {
           //   data2: 'y2' // ADD
           // }

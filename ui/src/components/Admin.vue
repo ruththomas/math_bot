@@ -149,8 +149,6 @@ export default {
     return {
       userCountInterval: null,
       activeDisplay: 'users',
-      activeStarSystem: 'Programming',
-      activeContinent: '1'
     }
   },
   mounted () {
@@ -186,7 +184,7 @@ export default {
         this._fetchData().then(() => {
           this.userCountInterval = setInterval(() => {
             this._fetchData()
-          }, 1000 * 15)
+          }, 1000 * 60)
         })
       }).catch(err => {
         console.error(err)
@@ -278,6 +276,11 @@ export default {
   .star-system-container {
 
     height: 50vh;
+  }
+
+  .list-group-item {
+
+    cursor: pointer;
   }
 
 </style>

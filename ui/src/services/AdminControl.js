@@ -1,5 +1,7 @@
 import Ws from './Ws'
 
+import _ from 'underscore'
+
 export default class AdminControl extends Ws {
   actions = {
     userCount: 'user-count',
@@ -14,7 +16,7 @@ export default class AdminControl extends Ws {
   activeUserCount = 0
   last7DaysLoginCount = 0
   userAccountSignups = []
-  levelStats = {}
+  levelStats = []
   currentPath = []
 
   constructor () {
@@ -120,7 +122,11 @@ export default class AdminControl extends Ws {
     }
 
     if (levelStats.length) {
-      this.levelStats[levelStats[0].level] = levelStats[0]
+      const _levelStats = this.levelStats.slice()
+
+      _levelStats.push(levelStats[0])
+
+      this.levelStats = _.uniq(_levelStats, i => i.id)
     }
   }
 }
