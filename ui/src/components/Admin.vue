@@ -102,9 +102,9 @@
 import UserSignupCalendar from './UserSignupCalendar'
 import UserGravatar from './UserGravatar'
 import SplashScreen from './Splash_screen'
-import Star_system from './Star_system'
-import Star_system_admin from './Admin_level_stats'
-import Admin_curent_path from './Admin_curent_path'
+import StarSystem from './Star_system'
+import StarSystemAdmin from './Admin_level_stats'
+import AdminCurentPath from './Admin_curent_path'
 import UserSignupsChart from './Admin_user_signups_chart'
 import LevelStats from './Admin_level_stats'
 
@@ -233,9 +233,9 @@ export default {
   },
   components: {
     UserSignupsChart,
-    Admin_curent_path,
-    Star_system_admin,
-    Star_system,
+    StarSystem,
+    StarSystemAdmin,
+    AdminCurentPath,
     UserGravatar,
     UserSignupCalendar,
     SplashScreen,

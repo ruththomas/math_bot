@@ -1,4 +1,3 @@
-import {_} from 'underscore'
 
 class FunctionGroupsCalc {
   constructor ({eleRobot, eleFunctions, functions}) {

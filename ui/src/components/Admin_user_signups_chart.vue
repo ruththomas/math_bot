@@ -129,7 +129,10 @@ export default {
     totalSignups () {
       let signups = this.data.map(i => i.signups)
       const _total = []
-      signups.reduce((prev, curr, i) => _total[i] = prev + curr, 0)
+      signups.reduce((prev, curr, i) => {
+        _total[i] = prev + curr
+        return _total[i]
+      }, 0)
 
       return _total
     }
