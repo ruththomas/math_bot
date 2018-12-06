@@ -1,5 +1,6 @@
 package actors.messages.level
 
+import compiler.Colors
 import play.api.libs.json.{Json, OFormat}
 
 object Function {
@@ -22,7 +23,7 @@ object Function {
 
 case class Function(
     created_id: String,
-    color: String = "default",
+    color: String = Colors.white.name,
     func: Option[List[Function]],
     displayName: Option[Boolean] = None,
     set: Boolean = false,

@@ -1,6 +1,6 @@
 package compiler
 
-import actors.messages.level.{ Function, GridPart, Problem }
+import actors.messages.level.{Function, GridPart, Problem}
 import compiler.mbl._
 import compiler.operations._
 import daos.CommandIds
@@ -41,7 +41,14 @@ object Compiler {
                     Some(
                       Cell(
                         cellTypeFromName(name),
-                        tools.map(tool => Element(tool.original, tool.name, tool.image, Colors.from(tool.color).getOrElse(Colors.emptyColor), tool.value))
+                        tools.map(
+                          tool =>
+                            Element(tool.original,
+                                    tool.name,
+                                    tool.image,
+                                    Colors.from(tool.color).getOrElse(Colors.emptyColor),
+                                    tool.value)
+                        )
                       )
                     )
                   case GridPart(name, _, _) if name == "wall" => Some(Cell(CellType.Wall))
@@ -131,7 +138,9 @@ object Compiler {
     }
   }
 
-  private def convertToOps(function: Function, allFunctions: Map[String, Function], commands: Map[String, Function]) : UserFunctionById = {
+  private def convertToOps(function: Function,
+                           allFunctions: Map[String, Function],
+                           commands: Map[String, Function]): UserFunctionById = {
     function.func match {
       case Some(functions) =>
         UserFunctionById(
@@ -147,7 +156,7 @@ object Compiler {
                 SetItemDown
               case id if allFunctions.contains(id) =>
                 f.color match {
-                  case "default" =>
+                  case "white" =>
                     UserFunctionRefById(id)
                   case _ =>
                     IfColor(Colors.from(f.color).getOrElse(Colors.anyColor), UserFunctionRefById(id))
@@ -207,7 +216,8 @@ object Compiler {
     element match {
       case MblList(Nil) =>
         Left((NoOperation, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
-      case MblList(MblSymbol("defun") :: MblSymbol(name) :: elements) =>
+
+      case MblList(MblSymbol(name) :: MblSymbol("=>") :: elements) =>
         (errReduce orElse (opsReduce andThen { c =>
           val n = UserFunctionNamed(c._1, name)
           Left((NoOperation, c._2 + (name -> n), c._3))

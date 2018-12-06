@@ -9,6 +9,7 @@ object Colors extends Enumeration {
 
   val anyColor = Color("any")
   val emptyColor = Color("empty")
+  // if this color (white) changes name please update `convertColors` function in `actors/messages/PreparedFunctions.scala` to the new default color
   val white = Color("white")
   val blue = Color("blue")
   val purple = Color("purple")
@@ -16,5 +17,7 @@ object Colors extends Enumeration {
   val pink = Color("pink")
   val red = Color("red")
 
-  val allColors = Set(anyColor, emptyColor, white, blue, purple, green, pink, red)
+  val allColors: Set[Color] = Set(anyColor, emptyColor, white, blue, purple, green, pink, red)
+  // Guarantees order
+  val listedColors: List[Color] = List(anyColor, emptyColor, white, blue, purple, green, pink, red)
 }

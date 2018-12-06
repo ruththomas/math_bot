@@ -6,6 +6,7 @@ import play.api.libs.json.{Json, OFormat}
 import utils.Implicits._
 
 object PreparedFunctions {
+  import compiler.Colors._
   implicit val format: OFormat[PreparedFunctions] = Json.format[PreparedFunctions]
 
   private def getFunctionIds(listedFunctions: List[Function]): List[String] = listedFunctions.map(_.created_id)
@@ -114,6 +115,19 @@ object PreparedFunctions {
   }
 
   /*
+   * Converts any color not found in color pallet to white
+   * As long as the color `white` is found in `compiler/Colors.scala`
+   * this function will revert function colors that aren't otherwise
+   * found in Colors.scala
+   * */
+  private def convertColors(functions: List[Function]): List[Function] = functions.map { f =>
+    f.copy(
+      color = allColors.find(_.name == f.color).getOrElse(white).name,
+      func = f.func.map(convertColors)
+    )
+  }
+
+  /*
    * For activating or deactivating a function
    * Function index should be the functions new position
    * Function category should be the functions new category
@@ -214,17 +228,19 @@ object PreparedFunctions {
   def apply(functions: Functions, continentStruct: ContinentStruct, functionsDAO: FunctionsDAO): PreparedFunctions = {
     val listedFunctions = functions.listed
     val functionIds = getFunctionIds(listedFunctions)
-    val cmds = functions.commands.sortBy(_.index)
+    val cmds = convertColors(functions.commands).sortBy(_.index)
     val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, cmds, functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
-    val main = functions.main
-    val actives = indexEm(preBuiltActives ::: functions.actives)
-    val staged = indexEm(addMoreStaged(actives, assignedStaged ::: functions.staged))
+    val main = functions.main.copy(func = functions.main.func.map(convertColors))
+    val actives = indexEm(convertColors(preBuiltActives ::: functions.actives))
+    val staged = indexEm(convertColors(addMoreStaged(actives, assignedStaged ::: functions.staged)))
 
     val filteredFunctions = FilteredFunctions(main, cmds, actives, staged, continentStruct)
 
-    functionsDAO.replaceAll(functions.tokenId,
-                            Functions(functions.tokenId, List(filteredFunctions.main) ::: cmds ::: actives ::: staged))
+    functionsDAO.replaceAll(
+      functions.tokenId,
+      Functions(functions.tokenId, List(filteredFunctions.main) ::: cmds ::: actives ::: staged)
+    )
 
     new PreparedFunctions(
       main = filteredFunctions.main,

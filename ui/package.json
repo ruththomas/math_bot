@@ -7,12 +7,19 @@
     "Mr T <iammistert@protonmail.com>",
     "Console Rastling <console.rastling@protonmail.com>"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint::fix",
+      "pre-push": "npm run lint::fix"
+    }
+  },
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 0.0.0.0",
     "start": "npm run dev",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
+    "lint::fix": "eslint --fix --ext .js,.vue src",
     "build": "node build/build.js"
   },
   "dependencies": {
@@ -106,6 +113,7 @@
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
+    "husky": "^1.2.0",
     "inject-loader": "^3.0.0",
     "karma": "^1.4.1",
     "karma-coverage": "^1.1.1",
