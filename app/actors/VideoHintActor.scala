@@ -105,7 +105,7 @@ class VideoHintActor @Inject()(out: ActorRef,
           case Some(hintsTaken) =>
             val resetList = hintsTaken.list.map { ht =>
               if (calculateRemainingTime(ht._2.timeStamp, starExpiration) == 0) {
-                ht._1 -> ht._2.copy(count = 0)
+                ht._1 -> ht._2.copy(count = 0, stars = 3)
               } else ht
             }
             for {
