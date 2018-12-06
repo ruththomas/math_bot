@@ -37,7 +37,7 @@ trait Coordinates extends LevelGenTags {
           clearMain = false,
           initFocus = List.empty[String],
           videoHints = List("7HsTgJq7Ir0", "qBB6_IS3THU", "sgfjPCRt33g"),
-          freeHint = Some("sgfjPCRt33g")
+          freeHint = Some("k-zYgHXyArg")
         )
       )
     ),
