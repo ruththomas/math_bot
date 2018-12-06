@@ -32,6 +32,7 @@ object LevelActor {
   final case class UpdateFunctionProperties(function: Function)
   final case class ActivateDeactivateFunction(function: Function)
   final case class Unlock()
+  final case class ChangeFunctionColor(function: Function)
 
   def props(out: ActorRef,
             tokenId: String,
@@ -152,6 +153,13 @@ class LevelActor @Inject()(out: ActorRef,
       for {
         preparedFunctions <- levelControl.activateDeactivateFunction(tokenId, function)
       } yield out ! preparedFunctions
+    /*
+     * Updates every instance of a functions color
+     * */
+    case ChangeFunctionColor(function) =>
+      for {
+        pathAndContinent <- levelControl.changeFunctionColor(tokenId, function)
+      } yield out ! pathAndContinent
     case Unlock() =>
       for {
         updated <- levelControl.unlock(tokenId)

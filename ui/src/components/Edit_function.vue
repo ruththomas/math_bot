@@ -11,7 +11,7 @@
         ></puzzle-pieces>
         <div
           class='function-control'
-          :style="{'background-color': colorSelected.hex}"
+          :class="editingFunction.color"
           @click="applyColorConditional"
         >
         </div>
@@ -99,11 +99,8 @@ export default {
     sizeLimit () {
       return this.editingFunction.sizeLimit
     },
-    colorSelected () {
-      return this.colors[this.currentColor]
-    },
     currentColor () {
-      return this.editingFunction.color
+      return this.levelControl.getColorHex(this.editingFunction.color)
     },
     functions () {
       return this.editingFunction.func
@@ -126,37 +123,6 @@ export default {
         created_id: '12345',
         name: ''
       },
-      color: this.currentColor,
-      colors: {
-        default: {
-          hex: '#FFFFFF',
-          next: 'grey'
-        },
-        grey: {
-          hex: '#696969',
-          next: 'blue'
-        },
-        blue: {
-          hex: '#4A90E2',
-          next: 'purple'
-        },
-        purple: {
-          hex: '#CA7AFF',
-          next: 'green'
-        },
-        green: {
-          hex: '#50E3C2',
-          next: 'pink'
-        },
-        pink: {
-          hex: '#FF98B1',
-          next: 'red'
-        },
-        red: {
-          hex: '#F25C5C',
-          next: 'default'
-        }
-      },
       functionDraggableOptions: {
         group: {
           name: 'commands-slide',
@@ -171,16 +137,11 @@ export default {
     }
   },
   methods: {
-    findColor () {
-      return this.colors[this.currentColor].next
-    },
     updateName () {
       this.levelControl.updateFunctionProperties(this.editingFunction)
     },
     applyColorConditional () {
-      const func = this.editingFunction
-      func.color = this.findColor()
-      this.levelControl.updateFunctionProperties(func)
+      this.levelControl.updateFunctionColor(this.editingFunction)
     },
     toggleFunctionImage () {
       const func = this.editingFunction
@@ -254,6 +215,13 @@ export default {
   $danger-color: #F25C5C;
   $piece-height: 7.5vmin;
   $dialog-button-size: 3.5vmin;
+  $white: #ffffff;
+  $black: #353535;
+  $blue: #4A90E2;
+  $purple: #CA7AFF;
+  $green: #50E3C2;
+  $pink: #FF98B1;
+  $red: #F25C5C;
 
   .edit-function {
     position: relative;
@@ -301,6 +269,34 @@ export default {
     z-index: 1001;
     font-size: 2vmin;
     width: 90%;
+    .any {
+      background: #696969!important; /* For browsers that do not support gradients */
+      background: -webkit-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Safari 5.1 to 6.0 */
+      background: -o-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Opera 11.1 to 12.0 */
+      background: -moz-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Firefox 3.6 to 15 */
+      background: linear-gradient(to right, $blue, $purple, $green, $pink, $red)!important; /* Standard syntax (must be last) */
+    }
+    .empty {
+      background: $black;
+    }
+    .white {
+      background: $white;
+    }
+    .blue {
+      background: $blue;
+    }
+    .purple {
+      background: $purple;
+    }
+    .green {
+      background: $green;
+    }
+    .pink {
+      background: $pink;
+    }
+    .red {
+      background: $red;
+    }
 
     .function-control {
       height: 1.3em;
@@ -356,4 +352,5 @@ export default {
     z-index: 10001;
     cursor: pointer;
   }
+
 </style>
