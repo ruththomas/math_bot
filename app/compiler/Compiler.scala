@@ -216,7 +216,8 @@ object Compiler {
     element match {
       case MblList(Nil) =>
         Left((NoOperation, Map.empty[String, UserFunctionNamed], Map.empty[Int, UserFunctionLambda]))
-      case MblList(MblSymbol("defun") :: MblSymbol(name) :: elements) =>
+
+      case MblList(MblSymbol(name) :: MblSymbol("=>") :: elements) =>
         (errReduce orElse (opsReduce andThen { c =>
           val n = UserFunctionNamed(c._1, name)
           Left((NoOperation, c._2 + (name -> n), c._3))
