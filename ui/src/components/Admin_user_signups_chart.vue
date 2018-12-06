@@ -96,7 +96,7 @@ import c3 from 'c3'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
-  name: 'LineChart',
+  name: 'UserSignupsChart',
   props: ['data'],
   data () {
     return {

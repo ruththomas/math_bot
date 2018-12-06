@@ -196,7 +196,7 @@ import Planets from './Planets'
 //   }
 // }
 export default {
-  name: 'Star_system_admin',
+  name: 'LevelStats',
 
   methods: {
 
@@ -213,12 +213,10 @@ export default {
     getLevelStats () {
       const ids = this.planet.continents.map(i => i.id)
 
-      ids.map(continentId => this.adminControl.getLevelStats(continentId))
+      Promise.all(ids.map(continentId => this.adminControl.getLevelStats(continentId)))
     }
   },
   mounted () {
-
-    console.log(this.starSystem)
     this.getLevelStats()
   },
   data () {

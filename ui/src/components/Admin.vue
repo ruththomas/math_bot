@@ -26,7 +26,7 @@
 
             <div v-if="activeDisplay === 'levels'">
 
-              <star_system_admin></star_system_admin>
+              <level-stats></level-stats>
 
             </div>
 
@@ -73,9 +73,9 @@
               </div>
 
               <div class="row mb-3">
-                <line-chart
+                <user-signups-chart
                   :data="userAccountSignups"
-                ></line-chart>
+                ></user-signups-chart>
               </div>
 
               <div class="row" v-if="adminControl.currentPath.length > 0">
@@ -100,12 +100,13 @@
 
 <script>
 import UserSignupCalendar from './UserSignupCalendar'
-import LineChart from './LineChart'
 import UserGravatar from './UserGravatar'
 import SplashScreen from './Splash_screen'
 import Star_system from './Star_system'
-import Star_system_admin from './Star_system_admin'
+import Star_system_admin from './Admin_level_stats'
 import Admin_curent_path from './Admin_curent_path'
+import UserSignupsChart from './Admin_user_signups_chart'
+import LevelStats from './Admin_level_stats'
 
 export default {
   name: 'Admin',
@@ -148,7 +149,7 @@ export default {
   data () {
     return {
       userCountInterval: null,
-      activeDisplay: 'users',
+      activeDisplay: 'users'
     }
   },
   mounted () {
@@ -231,13 +232,14 @@ export default {
     }
   },
   components: {
+    UserSignupsChart,
     Admin_curent_path,
     Star_system_admin,
     Star_system,
     UserGravatar,
-    LineChart,
     UserSignupCalendar,
-    SplashScreen
+    SplashScreen,
+    LevelStats
 
   }
 }
