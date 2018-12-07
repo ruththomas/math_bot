@@ -21,6 +21,7 @@ object AdminRequestConvertFlow extends SocketRequestConvertFlow {
       case Some(AdminRequest(action, _)) if action == "logins-last-week" => GetLoginsLast7Days()
       case Some(AdminRequest(action, id)) if action == "level-stats" => GetLevelStats(id)
       case Some(AdminRequest(action, _)) if action == "current-path" => GetCurrentPath()
+      case Some(AdminRequest(action, _)) if action == "max-level" => GetMaxLevel()
       case _ => ActorFailed("Bad json input")
     }
   }

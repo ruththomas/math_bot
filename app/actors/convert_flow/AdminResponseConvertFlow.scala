@@ -3,7 +3,7 @@ package actors.convert_flow
 import actors.AdminActor._
 import actors.messages.ActorFailed
 import actors.messages.admin.{CurrentPath, LevelStats}
-import actors.messages.playeraccount.UserAccountSignups
+import actors.messages.playeraccount.{MaxLevel, UserAccountSignups}
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import play.api.libs.json.{JsValue, Json, OWrites}
@@ -18,7 +18,8 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
       last7DaysLoginCount: Option[Long] = None,
       activeUserCount: Option[Long] = None,
       currentPath: Option[Seq[CurrentPath]] = None,
-      levelStats: Option[Seq[LevelStats]] = None
+      levelStats: Option[Seq[LevelStats]] = None,
+      maxLevel: Option[Seq[MaxLevel]] = None
   )
 
   implicit val adminResponseWrites: OWrites[AdminResponse] = Json.format[AdminResponse]
@@ -34,6 +35,7 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
       case SignupsPerDay(signups) => AdminResponse(success, None, None, Some(signups))
       case CurrentPathResult(currentPaths) =>
         AdminResponse(success, None, None, None, None, None, Some(currentPaths), None)
+      case UserMaxLevel(maxLevel) => AdminResponse(success, None, None, None, None, None, None, None, Some(maxLevel))
       case LevelStatsResult(levelStats) => AdminResponse(success, None, None, None, None, None, None, Some(levelStats))
       case ActorFailed(message) => AdminResponse(failed, message = Some(message))
       case _ => AdminResponse(failed)

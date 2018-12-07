@@ -1,8 +1,9 @@
 package daos
 
 import java.util.Date
+import org.mongodb.scala.bson.collection.mutable.Document
 
-import actors.messages.playeraccount.{SignupDate, UserAccountSignups}
+import actors.messages.playeraccount.{MaxLevel, SignupDate, UserAccountSignups}
 import com.google.inject.Inject
 import loggers.SemanticLog
 import models._
@@ -40,7 +41,8 @@ class PlayerAccountDAO @Inject()(
       Seq(
         // Macros.createCodecProvider[PlayerAccount](),
         Macros.createCodecProvider[SignupDate](),
-        Macros.createCodecProvider[UserAccountSignups]()
+        Macros.createCodecProvider[UserAccountSignups](),
+        Macros.createCodecProvider[MaxLevel]()
       ) ++ aProviders: _*
     ),
     CodecRegistries.fromCodecs(aCodecs: _*),
@@ -53,6 +55,14 @@ class PlayerAccountDAO @Inject()(
 
   val userAccountSignupCollection: MongoCollection[UserAccountSignups] =
     db.getCollection[UserAccountSignups](collectionLabel.name)
+      .withCodecRegistry(codecRegistry)
+
+  val maxLevelCollection: MongoCollection[MaxLevel] =
+    db.getCollection[MaxLevel](collectionLabel.name)
+      .withCodecRegistry(codecRegistry)
+
+  val _collection: MongoCollection[Document] =
+    db.getCollection[Document](collectionLabel.name)
       .withCodecRegistry(codecRegistry)
 
   def put(pa: PlayerAccount): Future[Completed] = collection.insertOne(pa).toFuture()
@@ -94,16 +104,14 @@ class PlayerAccountDAO @Inject()(
 
   def count: Future[Long] = collection.count().toFuture()
 
-  private final val signupsPerDayQueryText =
-    """
+  private final val signupsPerDayQuery =
+    BsonDocument("""
       |
       |{$group: {
       |      _id: {month: {$month: "$created"}, day: {$dayOfMonth: "$created"}, year: {$year: "$created"}},
       |      signups: {$sum: 1},
       |    }
-      |  }""".stripMargin
-
-  private final val signupsPerDayQuery = BsonDocument(this.signupsPerDayQueryText)
+      |  }""".stripMargin)
 
   def signupsPerDay: Future[Seq[UserAccountSignups]] = {
 
@@ -126,6 +134,39 @@ class PlayerAccountDAO @Inject()(
 
     collection.count(gt(lastAccess.name, date)).toFuture
 
+  }
+
+  def maxLevelStats: Future[Seq[MaxLevel]] = {
+
+    println("hi")
+
+    val _maxLevel =
+      f"""
+        |{
+        |    $$group: {
+        |        _id: "$$maxLevel",
+        |        count: { $$sum: 1 }
+        |    }
+        |}
+      """.stripMargin
+
+    val admin =
+      """
+        |{
+        |    $match: {
+        |        isAdmin: false
+        |    }
+        |}
+      """.stripMargin
+
+    maxLevelCollection
+      .aggregate(
+        Seq(
+          BsonDocument(admin),
+          BsonDocument(_maxLevel)
+        )
+      )
+      .toFuture
   }
 
 }

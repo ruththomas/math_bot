@@ -47,6 +47,9 @@ class LevelControl @Inject()(
 
   /*
    * Assembles star system data back into its nested data structure
+   *
+   *
+   * TODO USE
    * */
   def getStarSystemData(tokenId: String, path: Option[String]): Future[StarSystemData] = {
     statsDAO.findStats(tokenId).flatMap {
@@ -145,6 +148,8 @@ class LevelControl @Inject()(
       .children(path(2))
   }
 
+  // todo use
+
   def getPlanetData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
     superCluster
@@ -153,6 +158,7 @@ class LevelControl @Inject()(
       .children(path(3))
   }
 
+  // todo use
   def getContinentData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
     superCluster

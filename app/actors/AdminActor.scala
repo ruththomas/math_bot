@@ -1,7 +1,7 @@
 package actors
 import actors.messages.ActorFailed
 import actors.messages.admin.{CurrentPath, LevelStats}
-import actors.messages.playeraccount.UserAccountSignups
+import actors.messages.playeraccount.{MaxLevel, UserAccountSignups}
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
 import daos._
@@ -10,6 +10,9 @@ import play.api.libs.ws.WSClient
 
 object AdminActor {
   final case class GetUserCount()
+  final case class GetMaxLevel()
+
+  final case class UserMaxLevel(maxLevel: Seq[MaxLevel])
   final case class GetActiveUserCount()
   final case class GetSignupsPerDay()
   final case class GetLoginsLast7Days()
@@ -49,6 +52,13 @@ class AdminActor @Inject()(out: ActorRef,
   private final val className = "AdminActor"
 
   override def receive: Receive = {
+
+    case GetMaxLevel() =>
+      println("hello")
+      playerAccountDAO.maxLevelStats.map { maxLevels =>
+        println("hello result")
+        out ! UserMaxLevel(maxLevels)
+      }
 
     case GetLoginsLast7Days() =>
       playerAccountDAO.last7DaysLoginCount.map { logins =>
