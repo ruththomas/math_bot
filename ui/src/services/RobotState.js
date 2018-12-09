@@ -46,7 +46,7 @@ class Robot {
   ]
 
   _updateSelf () {
-    this.$store.dispatch('updateRobot', this)
+    $store.state.levelControl.robot = this
   }
 
   setState (state) {
