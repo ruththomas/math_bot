@@ -101,7 +101,7 @@ export default {
       })
     },
     adjustSpeed () {
-      this.$store.dispatch('changeRobotSpeed')
+      this.levelControl.robot.adjustSpeed()
     },
     closeHint () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
