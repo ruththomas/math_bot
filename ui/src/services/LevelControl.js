@@ -24,6 +24,7 @@ class LevelControl extends Ws {
     this._setFunctions = this._setFunctions.bind(this)
     this.getCurrentStarSystem = this.getCurrentStarSystem.bind(this)
     this.updateFunctionColor = this.updateFunctionColor.bind(this)
+    this._positionBar = this._positionBar.bind(this)
 
     this._openSocket(this._init)
   }
@@ -69,6 +70,7 @@ class LevelControl extends Ws {
     this.functions = this.continent.lambdas
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
+    setTimeout(this._positionBar, 500)
   }
 
   _resetContinent ({pathAndContinent: {path, builtContinent}}) {
@@ -84,6 +86,18 @@ class LevelControl extends Ws {
   _setFunctions (functions) {
     // console.log('staged length', functions.stagedFunctions.length)
     this.functions = functions
+  }
+
+  _positionBar () {
+    const $mainDropZone = $('.edit-main > .function-drop > .function-drop-drop-zone')
+    if ($mainDropZone.length) {
+      const $bar = $('.bar')
+      const mainDropZoneHalf = $mainDropZone.height() / 2
+      const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
+      const barOffsetTop = $bar.offset().top
+      const barPosTop = $bar.position().top
+      $bar.animate({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'}, 100)
+    }
   }
 
   getColorHex (color) {
@@ -152,7 +166,7 @@ class LevelControl extends Ws {
   }
 
   updateFunction (func) {
-    this._wsOnMessage(() => {}) // doing nothing with response for now
+    this._wsOnMessage(this._positionBar) // doing nothing with response for now
     this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))
   }
 
