@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import buildUtils from '../services/BuildFunction'
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
@@ -86,17 +85,14 @@ export default {
       this.setPut(true)
     },
     add () {
-      buildUtils._positionBar()
     },
     moving () {
       this.$store.dispatch('updateTrashVisible', true)
       this.$store.dispatch('toggleShowMesh', true)
-      buildUtils._positionBar()
     },
     end () {
       this.$store.dispatch('toggleShowMesh', false)
       this.$store.dispatch('updateTrashVisible', false)
-      buildUtils._positionBar()
     }
   },
   components: {
