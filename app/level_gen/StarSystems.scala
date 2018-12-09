@@ -13,6 +13,10 @@ trait StarSystems extends Planets with LevelGenTags {
       kind = starSystem,
       children = arithmeticChildren
     ),
+    // 2 Digit
+    // 5 Digit
+    // 1 Decimal
+    // 2 Decimals
     CelestialSystem(
       name = "Just Fun",
       kind = starSystem,
