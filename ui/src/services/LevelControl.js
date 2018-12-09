@@ -96,7 +96,7 @@ class LevelControl extends Ws {
       const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
       const barOffsetTop = $bar.offset().top
       const barPosTop = $bar.position().top
-      $bar.css({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'})
+      $bar.animate({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'}, 100)
     }
   }
 

@@ -28,6 +28,7 @@ import ControlBar from './Control_bar'
 export default {
   mounted () {
     this.setPut()
+    setTimeout(this.levelControl._positionBar, 500)
   },
   computed: {
     levelControl () {
