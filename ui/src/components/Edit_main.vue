@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import buildUtils from '../services/BuildFunction'
 import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
@@ -29,6 +28,7 @@ import ControlBar from './Control_bar'
 export default {
   mounted () {
     this.setPut()
+    setTimeout(this.levelControl._positionBar, 500)
   },
   computed: {
     levelControl () {
@@ -86,17 +86,14 @@ export default {
       this.setPut(true)
     },
     add () {
-      buildUtils._positionBar()
     },
     moving () {
       this.$store.dispatch('updateTrashVisible', true)
       this.$store.dispatch('toggleShowMesh', true)
-      buildUtils._positionBar()
     },
     end () {
       this.$store.dispatch('toggleShowMesh', false)
       this.$store.dispatch('updateTrashVisible', false)
-      buildUtils._positionBar()
     }
   },
   components: {
