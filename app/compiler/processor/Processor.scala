@@ -18,7 +18,7 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
     val trace = initialGridAndProgram.program match {
       case uf: UserFunction => TraceTag(uf, 0)
     }
-    execute(state, Some((initialGridAndProgram.program, trace)), Seq.empty[(Operation, TraceTag)], 0)
+    execute(state, Some((Initial, TraceTag(UserFunction(), -1))), Seq((initialGridAndProgram.program, trace)), 0)
   }
 
   @tailrec
@@ -107,6 +107,9 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
             state.currentRegister = state.currentRegister.copy(animation = Some(AnimationType.Bumped))
             Frame(operation._1, state.currentRegister, state.currentGrid, operation._2, Some(state.currentGrid.getRobotLocation))
         }
+
+      case Initial =>
+        Frame(operation._1, state.currentRegister, state.currentGrid, operation._2, Some(state.currentGrid.getRobotLocation))
 
       case _ => Frame(operation._1, state.currentRegister, state.currentGrid, operation._2)
     }
