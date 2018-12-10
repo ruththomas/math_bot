@@ -1,6 +1,5 @@
 package actors.messages.level
 
-import actors.LevelControl
 import actors.VideoHintActor.embedURL
 import daos.FunctionsDAO
 import level_gen.models.{CelestialSystem, ContinentStruct}
@@ -31,8 +30,8 @@ object BuiltContinent {
 
   case class InitialRobotState(location: Map[String, Int], orientation: String, holding: List[String])
 
-  import daos.DefaultCommands._
   import Problem._
+  import daos.DefaultCommands._
 
   def freeHintUrl(idOpt: Option[String]): Option[String] = idOpt match {
     case Some(id) => Some(embedURL(id))

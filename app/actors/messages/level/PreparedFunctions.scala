@@ -79,10 +79,11 @@ object PreparedFunctions {
                   continentStruct
                 ))
             )
+            .sortBy(_.index)
         }),
-        cmds = cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId)),
-        actives = actives.filter(isAllowedFunction(_, continentStruct)),
-        staged = staged.filter(isAllowedFunction(_, continentStruct))
+        cmds = cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId)).sortBy(_.index),
+        actives = actives.filter(isAllowedFunction(_, continentStruct)).sortBy(_.index),
+        staged = staged.filter(isAllowedFunction(_, continentStruct)).sortBy(_.index)
       )
   }
 
@@ -137,9 +138,9 @@ object PreparedFunctions {
             continentStruct: ContinentStruct,
             function: Function,
             functionsDAO: FunctionsDAO): PreparedFunctions = {
-    val actives = functions.actives.sortBy(_.index)
-    val staged = functions.staged.sortBy(_.index)
-    val cmds = functions.commands.sortBy(_.index)
+    val actives = functions.actives
+    val staged = functions.staged
+    val cmds = functions.commands
 
     val filteredFunctions = FilteredFunctions(functions.main, cmds, actives, staged, continentStruct)
 
@@ -157,7 +158,7 @@ object PreparedFunctions {
         functions.tokenId,
         Functions(
           functions.tokenId,
-          List(functions.main) ::: cmds ::: updatedActives ::: indexEm(functions.staged)
+          List(functions.main) ::: cmds ::: updatedActives ::: functions.staged
         )
       )
 
@@ -233,7 +234,7 @@ object PreparedFunctions {
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
     val main = functions.main.copy(func = functions.main.func.map(convertColors))
     val actives = indexEm(convertColors(preBuiltActives ::: functions.actives))
-    val staged = indexEm(convertColors(addMoreStaged(actives, assignedStaged ::: functions.staged)))
+    val staged = indexEm(convertColors(addMoreStaged(functions.actives, assignedStaged ::: functions.staged)))
 
     val filteredFunctions = FilteredFunctions(main, cmds, actives, staged, continentStruct)
 

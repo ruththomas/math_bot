@@ -68,6 +68,9 @@ class LevelControl extends Ws {
     const robotSpeed = this.robot === null ? 0 : this.robot.robotSpeed
     this.robot = new Robot(Object.assign(robotState, {robotSpeed: robotSpeed}))
     this.functions = this.continent.lambdas
+    // console.log(this.functions.activeFuncs.map(f => {
+    //   return {name: f.name, index: f.index, createdId: f.created_id}
+    // }))
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
     setTimeout(this._positionBar, 500)
@@ -85,6 +88,9 @@ class LevelControl extends Ws {
 
   _setFunctions (functions) {
     // console.log('staged length', functions.stagedFunctions.length)
+    // console.log(functions.activeFuncs.map(f => {
+    //   return {name: f.name, index: f.index, createdId: f.created_id}
+    // }))
     this.functions = functions
   }
 
