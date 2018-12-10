@@ -29,7 +29,11 @@ class LevelControl @Inject()(
   private def updateStats(stats: Stats): Future[Stats] = {
     val shouldMatch = Stats("").list
     val updatedUserStats = stats.copy(list = shouldMatch.map { ls =>
-      ls._1 -> stats.list.getOrElse(ls._1, ls._2)
+      ls._1 -> stats.list
+        .getOrElse(ls._1, ls._2)
+        .copy(
+          name = ls._2.name
+        )
     })
     statsDAO.replace(updatedUserStats)
   }
