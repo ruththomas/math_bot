@@ -9,6 +9,10 @@ class Robot {
     this.robotFacing = orientation || 0
     this.robotLocation = location || {x: 2, y: 2}
     this.robotSpeed = robotSpeed || this._robotSpeeds[0]
+    this.robotStartPos = Object.assign({}, {
+      orientation: orientation,
+      location: location
+    })
 
     this.trash = []
   }

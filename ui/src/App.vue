@@ -102,6 +102,8 @@ export default {
     height: $dialog-button-size;
     width: $dialog-button-size;
     cursor: pointer;
+    background-color: $click-color;
+    border-radius: 50%;
   }
 
   .button-effect {
@@ -267,6 +269,18 @@ export default {
     80% { transform: translate(-1px, -1px) rotate(1deg); }
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+
+  @keyframes rotate180-left {
+    100% {
+      transform:rotate(-180deg);
+    }
+  }
+
+  @keyframes rotate180-right {
+    100% {
+      transform:rotate(180deg);
+    }
   }
 
   ::-webkit-scrollbar {

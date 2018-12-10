@@ -7,6 +7,8 @@ import { $root } from '../main'
 class RunCompiled extends GridAnimator {
   constructor () {
     super()
+    this.currentFrame = -1
+    this.forward = true
     this.robotFrames = []
     this.levelControl = $store.state.levelControl
     this.compilerControl = $store.state.compilerControl
@@ -22,6 +24,7 @@ class RunCompiled extends GridAnimator {
     this.pause = this.pause.bind(this)
     this.stop = this.stop.bind(this)
     this.reset = this.reset.bind(this)
+    this.setDirection = this.setDirection.bind(this)
     this._resetStep = this._resetStep.bind(this)
     this._waitForFrames = this._waitForFrames.bind(this)
     this.initializeNextStep = this.initializeNextStep.bind(this)
@@ -89,6 +92,7 @@ class RunCompiled extends GridAnimator {
   stop () {
     this._stopMessage()
     this.robot.setState('stopped')
+    this.reset()
   }
 
   reset () {
@@ -299,26 +303,30 @@ class RunCompiled extends GridAnimator {
         } else {
           this._waitForFrames(50)
         }
-      } else if (this.robot.state === 'stopped') {
-        this._stopRobot()
       }
     })
   }
 
+  setDirection () {
+    this.forward = !this.forward
+  }
+
+  _nextCurrent () {
+    this.currentFrame = this.forward ? this.currentFrame + 1 : Math.max(this.currentFrame - 1, 0)
+    return this.currentFrame
+  }
+
   async _processFrames (_) {
     // console.log('frames ~ ', this.robotFrames.slice())
-    const current = this.robotFrames.shift()
+    const current = this.robotFrames[this._nextCurrent()]
     this._controlAsk()
     const run = await this[`_${current.programState}`](current)
     run(current)
   }
 
   _controlAsk () {
-    if (this.robotFrames.length > 0 && this.robotFrames.length < 20) {
-      const last = this.robotFrames[this.robotFrames.length - 1]
-      if (this.robotFrames.length < 20 && last.programState === 'running') {
-        this._askCompiler()
-      }
+    if (this.robotFrames.length - this.currentFrame < 20) {
+      this._askCompiler()
     }
   }
 
@@ -343,7 +351,7 @@ class RunCompiled extends GridAnimator {
         this._mblError(compiled.error)
         this.robot.setState('failure')
       } else {
-        this.robotFrames = this.robotFrames.concat(this.robot.robotSpeed.display === 'lightning' ? compiled.frames.pop() : compiled.frames)
+        this.robotFrames = this.robotFrames.concat(compiled.frames)
         if (startRunning) startRunning()
       }
     })

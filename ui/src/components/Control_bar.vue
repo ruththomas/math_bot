@@ -22,6 +22,11 @@
     </div>
   </b-popover>
 
+  <!--<b-form-input -->
+    <!--:id="`type-${type}`" -->
+    <!--:type="type">-->
+  <!--</b-form-input>-->
+
   <div
     v-if="robot.state !== 'failure'"
     class="speed dialog-button"
@@ -49,7 +54,7 @@
     data-toggle="tooltip" title="Pause program" />
 
   <img
-    v-if="robot.state === 'running'"
+    v-if="robot.state === 'running' || robot.state === 'paused'"
     class="stop button noDrag dialog-button"
     :src="permanentImages.buttons.stopButton"
     alt="Stop button" @click="runCompiled.stop"
@@ -60,6 +65,14 @@
     class="reset play button noDrag dialog-button animated flash"
     :src="permanentImages.buttons.resetButton"
     alt="Reset button" @click="runCompiled.reset"
+    data-toggle="tooltip" title="Reset program"/>
+
+  <img
+    v-if="robot.state === 'running'|| robot.state === 'paused'"
+    class="direction noDrag dialog-button"
+    :class="runCompiled.forward ? 'direction-rotate-forward' : 'direction-rotate-back'"
+    :src="permanentImages.buttons.direction"
+    alt="Reset button" @click="runCompiled.setDirection"
     data-toggle="tooltip" title="Reset program"/>
 </div>
 </template>
@@ -160,15 +173,29 @@ $danger-color: #F25C5C;
 }
 
 .stop {
-  right: 10vmin;
+  right: 8vmin;
 }
 
 .trash {
   left: 0;
 }
 
+.direction {
+  right: 12vmin;
+}
+
+.direction-rotate-back {
+  transition: .3s;
+  transform: rotate(180deg)
+}
+
+.direction-rotate-forward {
+  transition: .3s;
+  transform: rotate(0)
+}
+
 .speed {
-  right: 5vmin;
+  right: 4vmin;
   background-color: #B8E986;
   border-radius: 50%;
   display: flex;
