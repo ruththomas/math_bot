@@ -79,7 +79,6 @@ object PreparedFunctions {
                   continentStruct
                 ))
             )
-            .sortBy(_.index)
         }),
         cmds = cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId)).sortBy(_.index),
         actives = actives.filter(isAllowedFunction(_, continentStruct)).sortBy(_.index),
