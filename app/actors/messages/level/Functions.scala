@@ -91,7 +91,7 @@ case class Functions(
 ) {
   def listed: List[Function] = this.list.values.toList
   def main: Function = this.list.values.toList.filter(_.category == Categories.main).head
-  def staged: List[Function] = this.list.values.toList.filter(_.category == Categories.staged)
-  def actives: List[Function] = this.list.values.toList.filter(_.category == Categories.function)
-  def commands: List[Function] = this.list.values.toList.filter(_.category == Categories.command)
+  def staged: List[Function] = this.list.values.toList.filter(_.category == Categories.staged).sortBy(_.index)
+  def actives: List[Function] = this.list.values.toList.filter(_.category == Categories.function).sortBy(_.index)
+  def commands: List[Function] = this.list.values.toList.filter(_.category == Categories.command).sortBy(_.index)
 }
