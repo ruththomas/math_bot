@@ -11,7 +11,8 @@
 
 <script>
 import ControlBar from './Control_bar'
-import 'codemirror/mode/commonlisp/commonlisp.js'
+import 'codemirror/lib/codemirror.js'
+import '../services/commonlisp.js'
 import 'codemirror/theme/monokai.css'
 export default {
   name: 'Advanced_mode',
