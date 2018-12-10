@@ -12,7 +12,7 @@
 <script>
 import ControlBar from './Control_bar'
 import 'codemirror/lib/codemirror.js'
-import '../services/commonlisp.js'
+import '../services/mathbot-lang.js'
 import 'codemirror/theme/monokai.css'
 export default {
   name: 'Advanced_mode',
@@ -32,7 +32,7 @@ export default {
         lineNumbers: true,
         lineWrapping: false,
         line: true,
-        mode: 'text/x-common-lisp',
+        mode: 'text/x-mathbot-lang',
         theme: 'monokai'
       }
     }
