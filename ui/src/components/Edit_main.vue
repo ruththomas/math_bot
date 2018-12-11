@@ -106,16 +106,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $edit-main-side-padding: 16%;
   $edit-main-top-bottom-padding: 0;
   $click-color: #B8E986;
+  $dialog-button-size: 3.5vmin;
 
   .edit-main {
     position: relative;
     width: 100%;
     margin: 0 auto;
     height: 100%;
-    padding: $edit-main-top-bottom-padding $edit-main-side-padding $edit-main-top-bottom-padding $edit-main-side-padding;
+    padding: $edit-main-top-bottom-padding 0 $edit-main-top-bottom-padding $dialog-button-size;
     z-index: 1000;
   }
 

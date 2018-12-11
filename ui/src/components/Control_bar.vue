@@ -27,53 +27,57 @@
     <!--:type="type">-->
   <!--</b-form-input>-->
 
-  <div
-    v-if="robot.state !== 'failure'"
-    class="speed dialog-button"
-    @click="adjustSpeed"
-    data-toggle="tooltip"
-    title="Adjust speed">
-    <i v-if="robotSpeedDisplay === 'lightning'" class="fa fa-bolt"></i>
-    <span v-else>
-        {{ robotSpeedDisplay }}
-      </span>
-  </div>
+  <!--<div style="position: absolute; right: 8vmin; height: 1vmin; width: 1vmin; background-color: #F25C5C; border-radius: 50%;"></div>-->
 
-  <img
-    v-if="robot.state === 'home' || robot.state === 'paused'"
-    class="play noDrag dialog-button"
-    :src="permanentImages.buttons.playButton"
-    alt="Play button" @click="[start(), closeHint()]"
-    data-toggle="tooltip" title="Run program" />
+  <!--<div-->
+    <!--v-if="robot.state !== 'failure'"-->
+    <!--class="speed dialog-button"-->
+    <!--@click="adjustSpeed"-->
+    <!--data-toggle="tooltip"-->
+    <!--title="Adjust speed">-->
+    <!--<i v-if="robotSpeedDisplay === 'lightning'" class="fa fa-bolt"></i>-->
+    <!--<span v-else>-->
+        <!--{{ robotSpeedDisplay }}-->
+      <!--</span>-->
+  <!--</div>-->
 
-  <img
-    v-else-if="robot.state === 'running'"
-    class="play noDrag dialog-button"
-    :src="permanentImages.buttons.pauseButton"
-    alt="Pause button" @click="runCompiled.pause"
-    data-toggle="tooltip" title="Pause program" />
+  <!--<img-->
+    <!--v-if="robot.state === 'home' || robot.state === 'paused'"-->
+    <!--class="play noDrag dialog-button"-->
+    <!--:src="permanentImages.buttons.playButton"-->
+    <!--alt="Play button" @click="[start(), closeHint()]"-->
+    <!--data-toggle="tooltip" title="Run program" />-->
 
-  <img
-    v-if="robot.state === 'running' || robot.state === 'paused'"
-    class="stop button noDrag dialog-button"
-    :src="permanentImages.buttons.stopButton"
-    alt="Stop button" @click="runCompiled.stop"
-    data-toggle="tooltip" title="Stop program"/>
+  <!--<img-->
+    <!--v-else-if="robot.state === 'running'"-->
+    <!--class="play noDrag dialog-button"-->
+    <!--:src="permanentImages.buttons.pauseButton"-->
+    <!--alt="Pause button" @click="runCompiled.pause"-->
+    <!--data-toggle="tooltip" title="Pause program" />-->
 
-  <img
-    v-if="robot.state === 'failure'"
-    class="reset play button noDrag dialog-button animated flash"
-    :src="permanentImages.buttons.resetButton"
-    alt="Reset button" @click="runCompiled.reset"
-    data-toggle="tooltip" title="Reset program"/>
+  <!--<img-->
+    <!--v-if="robot.state === 'running' || robot.state === 'paused'"-->
+    <!--class="stop button noDrag dialog-button"-->
+    <!--:src="permanentImages.buttons.stopButton"-->
+    <!--alt="Stop button" @click="runCompiled.stop"-->
+    <!--data-toggle="tooltip" title="Stop program"/>-->
 
-  <img
-    v-if="robot.state === 'running'|| robot.state === 'paused'"
-    class="direction noDrag dialog-button"
-    :class="runCompiled.forward ? 'direction-rotate-forward' : 'direction-rotate-back'"
-    :src="permanentImages.buttons.direction"
-    alt="Reset button" @click="runCompiled.setDirection"
-    data-toggle="tooltip" title="Reset program"/>
+  <!--v-if="robot.state === 'failure'"-->
+  <!--<img-->
+    <!--class="reset play button noDrag dialog-button animated flash"-->
+    <!--:src="permanentImages.buttons.resetButton"-->
+    <!--alt="Reset button" @click="runCompiled.reset"-->
+    <!--data-toggle="tooltip" title="Reset program"/>-->
+
+  <!--<img-->
+    <!--v-if="robot.state === 'running'|| robot.state === 'paused'"-->
+    <!--class="direction noDrag dialog-button"-->
+    <!--:class="runCompiled.forward ? 'direction-rotate-forward' : 'direction-rotate-back'"-->
+    <!--:src="permanentImages.buttons.direction"-->
+    <!--alt="Reset button" @click="runCompiled.setDirection"-->
+    <!--data-toggle="tooltip" title="Reset program"/>-->
+
+  <div class="end-cap"></div>
 </div>
 </template>
 
@@ -141,6 +145,14 @@ $danger-color: #F25C5C;
   align-items: center;
   justify-content: center;
   z-index: -1;
+
+  .end-cap {
+    position: absolute;
+    height: 3vmin;
+    width: 1px;
+    left: 100%;
+    background-color: $click-color;
+  }
 }
 
 .hidden-bar {
@@ -157,15 +169,18 @@ $danger-color: #F25C5C;
   cursor: pointer;
   position: absolute;
   float: right;
+  border-radius: 50%;
+  background-color: $click-color;
 }
 
 .play {
   border-radius: 50%;
-  right: -1px;
+  right: 15vmin;
 }
 
 .reset {
   width: auto;
+  right: -1px;
 }
 
 .play-border {

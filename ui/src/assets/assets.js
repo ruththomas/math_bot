@@ -220,10 +220,12 @@ module.exports = {
     planet35: 'https://res.cloudinary.com/sheouth/image/upload/v1543769013/moreplanets/noun_Planet_1652590_000000.png'
   },
   buttons: {
-    playButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342823/buttons/Play_Button.png',
+    playButton: 'https://res.cloudinary.com/doohickey/image/upload/v1544488287/noun_play_1507475_FFFFFF_mhn4zd.svg',
+    // playButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342823/buttons/Play_Button.png',
     pauseButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/pauseButton.png',
     stopButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/stopButton.png',
-    resetButton: 'http://res.cloudinary.com/doohickey/image/upload/v1538313442/resetbutton_jy9hvk.png',
+    resetButton: 'https://res.cloudinary.com/doohickey/image/upload/v1544488368/noun_reset_299645_FFFFFF_stmkvm.svg',
+    // resetButton: 'http://res.cloudinary.com/doohickey/image/upload/v1538313442/resetbutton_jy9hvk.png',
     xButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/xButton.png',
     direction: 'https://res.cloudinary.com/doohickey/image/upload/v1544473634/noun_fast_forward_1459279_000000_fweg2w.svg',
     xButtonTransparent: 'https://res.cloudinary.com/doohickey/image/upload/c_scale,w_30/v1536602587/noun_X_1890803_000000_jtu1k7.svg',
