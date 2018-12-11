@@ -16,7 +16,7 @@ class LevelControl @Inject()(
     functionsDAO: FunctionsDAO,
     playerTokenDAO: PlayerTokenDAO
 )(implicit ec: ExecutionContext) {
-  import compiler.Colors.listedColors
+  import compiler.ElementKinds.listedColors
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
   private def nextColor(currentColor: String): String = {
