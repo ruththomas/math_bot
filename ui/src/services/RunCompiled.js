@@ -311,8 +311,12 @@ class RunCompiled extends GridAnimator {
     run(current)
   }
 
+  _lastFrame () {
+    return this.robotFrames[this.robotFrames.length - 1]
+  }
+
   _controlAsk () {
-    if (this.robotFrames.length - this.currentFrame < 20) {
+    if (this._lastFrame().programState === 'running' && this.robotFrames.length - this.currentFrame < 50) {
       this._askCompiler()
     }
   }
