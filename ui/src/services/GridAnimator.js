@@ -61,7 +61,7 @@ class GridAnimator {
         setTimeout(() => {
           this._removeAnimations()
           resolve()
-        }, this.robotSpeed.speed)
+        }, this.robotSpeed)
       })
     }
   }

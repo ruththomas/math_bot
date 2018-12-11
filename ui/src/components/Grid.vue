@@ -75,6 +75,7 @@
             <RobotCarrying></RobotCarrying>
           </div>
         </div>
+        <grid-controls></grid-controls>
       </div>
       <splash-screen v-else></splash-screen>
     </div>
@@ -86,6 +87,7 @@ import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
 import utils from '../services/utils'
 import ControlPanel from './Control_panel'
+import GridControls from './Grid_controls'
 
 export default {
   mounted () {
@@ -144,6 +146,7 @@ export default {
     closePopover: utils.closePopover
   },
   components: {
+    GridControls,
     SplashScreen,
     RobotCarrying,
     ControlPanel
@@ -173,6 +176,10 @@ export default {
     .grid-map {
       position: relative;
       border-radius: $grid-border-radius 0 $grid-border-radius $grid-border-radius;
+    }
+
+    .row {
+      justify-content: center;
     }
   }
 
