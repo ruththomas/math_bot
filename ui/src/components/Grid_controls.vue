@@ -35,7 +35,8 @@ export default {
         'process-style': {
           'background-color': 'transparent'
         },
-        tooltip: false
+        tooltip: false,
+        clickable: false
       }
     }
   },
@@ -62,7 +63,6 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-top: 1px solid $grid-space-border-color;
 
   .buttons {
     width: 50%;

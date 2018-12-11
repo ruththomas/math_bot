@@ -1,16 +1,10 @@
 <template>
 <div class="advanced-mode">
   <codemirror v-model="levelControl.mbl" :options="editorOptions" @changes="levelControl.storeMbl()"></codemirror>
-  <control-bar
-    :wipe-function="runCompiled.clearMbl"
-    :start="runCompiled.startMbl"
-    :toggle-put="(n) => {}"
-  ></control-bar>
 </div>
 </template>
 
 <script>
-import ControlBar from './Control_bar'
 import 'codemirror/lib/codemirror.js'
 import '../services/mathbot-lang.js'
 import 'codemirror/theme/monokai.css'
@@ -38,7 +32,6 @@ export default {
     }
   },
   components: {
-    ControlBar
   }
 }
 </script>
