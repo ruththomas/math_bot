@@ -30,6 +30,7 @@ class LevelControl extends Ws {
   }
 
   mbl = this._retreiveMbl()
+  mode = 'normal'
   path = '00000'
   galaxy = null
   continent = null

@@ -29,7 +29,6 @@ class RunCompiled extends GridAnimator {
     this._waitForFrames = this._waitForFrames.bind(this)
     this.initializeNextStep = this.initializeNextStep.bind(this)
     this.resetIfFailure = this.resetIfFailure.bind(this)
-    this.startMbl = this.startMbl.bind(this)
     this.clearMbl = this.clearMbl.bind(this)
     this._updateGalaxyData = this._updateGalaxyData.bind(this)
     this._deleteAllMessages = this._deleteAllMessages.bind(this)
@@ -64,20 +63,16 @@ class RunCompiled extends GridAnimator {
     $store.state.levelControl.mbl = ''
   }
 
-  startMbl () {
-    this.start($store.state.levelControl.mbl)
-  }
-
-  start (mbl) {
+  start () {
     const emptyFuncs = this._testForEmptyFunctions()
-    console.log('speed', this.robot.robotSpeed)
-    if (emptyFuncs.length) {
+    const normalMode = $store.state.levelControl.mode === 'normal'
+    if (normalMode && emptyFuncs.length) {
       this._mainEmptyMessage(emptyFuncs)
     } else if (this.robot.state !== 'paused') {
       this.robotFrames = []
       this._deleteAllMessages()
       this.robot.setState('running')
-      this._askCompiler(mbl, true, this._processFrames)
+      this._askCompiler(!normalMode ? $store.state.levelControl.mbl : false, true, this._processFrames)
     } else {
       this.robot.setState('running')
       this._processFrames()
