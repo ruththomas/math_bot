@@ -149,7 +149,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $edit-main-top-bottom-padding: 0;
   $click-color: #B8E986;
   $dialog-button-size: 3.5vmin;
 
@@ -158,7 +157,7 @@ export default {
     width: 100%;
     margin: 0 auto;
     height: 100%;
-    padding: $edit-main-top-bottom-padding 0 $edit-main-top-bottom-padding $dialog-button-size;
+    padding: 0 $dialog-button-size;
     z-index: 1000;
 
     $bar-height: 1px;
@@ -169,7 +168,7 @@ export default {
     .bar {
       position: absolute;
       left: 0;
-      right: 0;
+      right: $dialog-button-size;
       top: calc(50%);
       height: $bar-height;
       background-color: #B8E986;
