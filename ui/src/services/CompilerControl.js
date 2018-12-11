@@ -3,7 +3,7 @@ import Ws from './Ws'
 class CompilerControl extends Ws {
   constructor () {
     super('compiler')
-    this._compilerTake = 10
+    this._compilerTake = 100
 
     this._openSocket()
   }
