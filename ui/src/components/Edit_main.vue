@@ -30,7 +30,7 @@
              @click="[animateVulnerable(), closePopover('main-delete-function')]"
         />
         <div class="button-effect trash-confirm"  @click="[animateVulnerable(), wipeFunction(), closePopover('main-delete-function')]">
-          <img class="dialog-button btn-trash" :src="permanentImages.openTrashCan" />
+          <img class="dialog-button" :src="permanentImages.openTrashCan" />
         </div>
       </b-popover>
       <div class="end-cap"></div>
@@ -151,6 +151,10 @@ export default {
 <style scoped lang="scss">
   $click-color: #B8E986;
   $dialog-button-size: 3.5vmin;
+  $bar-height: 1px;
+  $click-color: #B8E986;
+  $dialog-button-size: 3.5vmin;
+  $danger-color: #F25C5C;
 
   .edit-main {
     position: relative;
@@ -159,11 +163,6 @@ export default {
     height: 100%;
     padding: 0 $dialog-button-size;
     z-index: 1000;
-
-    $bar-height: 1px;
-    $click-color: #B8E986;
-    $dialog-button-size: 3.5vmin;
-    $danger-color: #F25C5C;
 
     .bar {
       position: absolute;
@@ -201,7 +200,6 @@ export default {
       position: absolute;
       float: right;
       border-radius: 50%;
-      background-color: $click-color;
     }
 
     .play {
@@ -255,28 +253,24 @@ export default {
     .x {
       float: left;
     }
+  }
 
-    .trash-confirm {
+  .trash-confirm {
+    background-color: $danger-color;
+    box-shadow: 0 2px 10px 0 $danger-color;
+    animation: shake 0.8s;
+    animation-iteration-count: infinite;
+    margin: 1vmin;
+  }
 
-      animation: shake 0.8s;
-      animation-iteration-count: infinite;
-      margin: 3vmin;
-    }
-    .close-popover {
-      float: right;
-      display: flex;
-      position: absolute;
-      bottom: calc(100% - #{$dialog-button-size} / 2);
-      right:  calc(#{-$dialog-button-size} / 2);
-      z-index: 10001;
-      cursor: pointer;
-    }
-
-    .btn-trash {
-
-      background-color: $danger-color;
-      box-shadow: 0 2px 10px 0 $danger-color;
-    }
+  .close-popover {
+    float: right;
+    display: flex;
+    position: absolute;
+    bottom: calc(100% - #{$dialog-button-size} / 2);
+    right:  calc(#{-$dialog-button-size} / 2);
+    z-index: 10001;
+    cursor: pointer;
   }
 
   .deactivate-edit-main {
