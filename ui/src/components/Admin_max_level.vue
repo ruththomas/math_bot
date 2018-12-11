@@ -1,13 +1,13 @@
 <template>
 
-    <div class="card" style="width: 100%; min-width: 30rem;">
-      <div class="card-header">
+  <div class="card" style="width: 100%; min-width: 30rem;">
+    <div class="card-header">
 
-        <h3>User Current Path</h3>
-      </div>
-      <div class="card-body">
-        <div id="current_path_chart"></div>
-      </div>
+      <h3>How Max Levels Are Distributed</h3>
+    </div>
+    <div class="card-body">
+      <div id="current_path_chart"></div>
+    </div>
   </div>
 
 </template>
@@ -27,7 +27,7 @@ import c3 from 'c3'
 //   }
 // ]
 export default {
-  name: 'Admin_curent_path',
+  name: 'AdminMaxLevel',
   data () {
     return {
       chart: null
@@ -53,17 +53,13 @@ export default {
     },
 
     x () {
-      return this.adminControl.currentPath.map(i => i._id)
+      return this.adminControl.maxLevel.map(i => i._id)
     },
     y () {
-      return this.adminControl.currentPath.map(i => i.count)
+      return this.adminControl.maxLevel.map(i => i.count)
     }
   },
   methods: {
-
-    getCurrentPath () {
-      this.adminControl.getCurrentPath()
-    },
 
     generateChart () {
       this.chart = c3.generate({
@@ -91,7 +87,7 @@ export default {
           },
           y: {
             label: { // ADD
-              text: 'currentPath',
+              text: 'number of users',
               position: 'outer-middle'
             }
           }
@@ -105,5 +101,6 @@ export default {
 
 <style scoped>
   @import '~c3/c3.min.css';
+
 
 </style>

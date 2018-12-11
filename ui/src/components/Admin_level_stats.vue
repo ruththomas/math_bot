@@ -1,67 +1,76 @@
 <template>
-  <div class="star-system-admin animated fadeIn" v-if="adminControl.levelStats.length">
+  <div class="star-system-admin">
 
-    <div class="row mb-3">
+    <div class="row mb-3" v-if="adminControl.maxLevel.length > 0">
+      <admin-max-level></admin-max-level>
+    </div>
 
-      <div class="input-group">
-        <label for="starSystems">
-          star system
-        </label>
-        <select @change="changeStarSystem" class="form-control-sm" id="starSystems" name="starSystems">
-          <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
-            {{star.stats.name}}
-          </option>
-        </select>
+
+    <div v-if="adminControl.levelStats.length">
+
+      <div class="row mb-3">
+
+        <div class="input-group">
+          <label for="starSystems">
+            star system
+          </label>
+          <select @change="changeStarSystem" class="form-control-sm" id="starSystems" name="starSystems">
+            <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
+              {{star.stats.name}}
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
 
-    <div class="row mb-3">
-     <div class="input-group">
-       <label for="planets">
-         planets
-       </label>
-       <select
-         id="planets"
-         name="planets"
-         @change="changeActivePlanet"
-       >
-         <option
+      <div class="row mb-3">
+        <div class="input-group">
+          <label for="planets">
+            planets
+          </label>
+          <select
+            id="planets"
+            name="planets"
+            @change="changeActivePlanet"
+          >
+            <option
 
-           v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
-           {{planet.stats.name}}
-         </option>
-       </select>
-     </div>
-    </div>
+              v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
+              {{planet.stats.name}}
+            </option>
+          </select>
+        </div>
+      </div>
 
       <h3>Level Stats</h3>
 
-        <div class="row d-flex">
-          <div
-            v-for="(continent) in adminControl.levelStats" :key="continent.id" class="card m-3" style="width: 18rem;"
-            v-show="continentIds.includes(continent.id)"
-          >
+      <div class="row d-flex">
+        <div
+          v-for="(continent) in adminControl.levelStats" :key="continent.id" class="card m-3" style="width: 18rem;"
+          v-show="continentIds.includes(continent.id)"
+        >
 
-            <div class="card-header">level: {{continent.id}}</div>
+          <div class="card-header">level: {{continent.id}}</div>
 
-            <div class="card-body">
-              <p>timesPlayed: {{continent.timesPlayed}}</p>
-              <p>timesPlayedAvg: {{continent.timesPlayedAvg}}</p>
-              <p>timesPlayedMax: {{continent.timesPlayedMax}}</p>
-              <p>wins: {{continent.wins}}</p>
-              <p>winsAvg: {{continent.winsAvg}}</p>
-              <p>winsMax: {{continent.winsMax}}</p>
-            </div>
-
+          <div class="card-body">
+            <p>timesPlayed: {{continent.timesPlayed}}</p>
+            <p>timesPlayedAvg: {{continent.timesPlayedAvg}}</p>
+            <p>timesPlayedMax: {{continent.timesPlayedMax}}</p>
+            <p>wins: {{continent.wins}}</p>
+            <p>winsAvg: {{continent.winsAvg}}</p>
+            <p>winsMax: {{continent.winsMax}}</p>
           </div>
+
         </div>
+      </div>
     </div>
+  </div>
 
 </template>
 
 <script>
 import Continents from './Continents'
 import Planets from './Planets'
+import AdminMaxLevel from './Admin_max_level'
 
 export default {
   name: 'LevelStats',
@@ -73,10 +82,10 @@ export default {
       this.getLevelStats()
     },
     changeStarSystem (e) {
-      const {target: {value}} = e
+      const { target: { value } } = e
       this.activeStarSystem = value
 
-      this.changeActivePlanet({target: {value: value + '0'}})
+      this.changeActivePlanet({ target: { value: value + '0' } })
     },
     getLevelStats () {
       const ids = this.planet.continents.map(i => i.id)
@@ -113,6 +122,7 @@ export default {
     }
   },
   components: {
+    AdminMaxLevel,
     Continents,
     Planets
   }
@@ -125,6 +135,7 @@ export default {
     height: 100%;
     width: 100%;
     position: relative;
+
     .header {
       position: absolute;
       color: white;

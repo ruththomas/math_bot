@@ -1,5 +1,5 @@
 <template>
-  <div class="admin" data-aos="zoom-in">
+  <div class="admin">
     <div class="container-fluid">
       <div class="row my-3">
         <user-gravatar></user-gravatar>
@@ -11,8 +11,12 @@
           <div class="col-sm-3">
 
             <ul class="list-group">
-              <li class="list-group-item" @click="updateActive('users')" :class="activeDisplay === 'users' ? 'active' : null">Users</li>
-              <li class="list-group-item" @click="updateActive('levels')" :class="activeDisplay === 'levels' ? 'active' : null">Levels</li>
+              <li class="list-group-item" @click="updateActive('users')"
+                  :class="activeDisplay === 'users' ? 'active' : null">Users
+              </li>
+              <li class="list-group-item" @click="updateActive('levels')"
+                  :class="activeDisplay === 'levels' ? 'active' : null">Levels
+              </li>
             </ul>
           </div>
           <div class="col-sm-9">
@@ -20,7 +24,7 @@
               <b-btn
                 class="text-capitalize"
                 @click="unlockLevels" :disabled="levelControl.unlockedAllLevels">
-                {{levelControl.unlockedAllLevels ? "Levels unlocked!" : 'unlock all levels'}}
+                {{levelControl.unlockedAllLevels ? 'Levels unlocked!' : 'unlock all levels'}}
               </b-btn>
             </div>
 
@@ -31,64 +35,7 @@
             </div>
 
             <div v-if="activeDisplay === 'users' && userAccountSignups.length">
-
-              <div class="row mb-3 d-flex justify-content-between align-items-center">
-
-                <div class="card">
-                  <div class="card-header">Users</div>
-                  <div class="card-body">
-
-                    <h5 class="card-title" id="userCount">{{ userCount.toLocaleString() }}</h5>
-                    <p class="card-text">
-                      All time
-                    </p>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">Logins</div>
-                  <div class="card-body">
-                    <h5 class="card-title" id="last7DaysLoginCount">
-                      {{last7DaysLoginCount.toLocaleString()}}
-                    </h5>
-                    <p class="card-text">
-                      Last 7 days
-                    </p>
-                  </div>
-                </div>
-                <div class="card" style="width: 18rem;">
-                  <div class="card-header">
-                    Active Users
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title" id="activeUserCount">
-                      {{activeUserCount.toLocaleString()}}
-                    </h5>
-                    <p class="card-text">
-                      Right Now
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <user-signups-chart
-                  :data="userAccountSignups"
-                ></user-signups-chart>
-              </div>
-
-              <div class="row" v-if="adminControl.currentPath.length > 0">
-                <div class="col-xs-12">
-                  <admin_curent_path></admin_curent_path>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-8 offset-md-2">
-                  <user-signup-calendar></user-signup-calendar>
-                </div>
-              </div>
+              <admin-users></admin-users>
             </div>
           </div>
         </div>
@@ -99,53 +46,21 @@
 </template>
 
 <script>
-import UserSignupCalendar from './UserSignupCalendar'
+import UserSignupCalendar from './Admin_user_signup_calandar'
 import UserGravatar from './UserGravatar'
 import SplashScreen from './Splash_screen'
 import StarSystem from './Star_system'
-import StarSystemAdmin from './Admin_level_stats'
-import AdminCurentPath from './Admin_curent_path'
+import AdminCurentPath from './Admin_max_level'
 import UserSignupsChart from './Admin_user_signups_chart'
 import LevelStats from './Admin_level_stats'
+import AdminUsers from './Admin_users'
+
+// refresh data every x seconds
+const fetchDataInterval = 30 // seconds
 
 export default {
   name: 'Admin',
 
-  watch: {
-
-    userCount (newVal, oldVal) {
-      const userCount = document.getElementById('userCount')
-
-      if (!userCount) return
-      const klass = newVal > oldVal ? 'increment' : 'decrement'
-
-      userCount.classList.add(klass)
-
-      setTimeout(() => userCount.classList.remove(klass), 2000)
-    },
-
-    activeUserCount (newVal, oldVal) {
-      const userCount = document.getElementById('activeUserCount')
-
-      if (!userCount) return
-      const klass = newVal > oldVal ? 'increment' : 'decrement'
-
-      userCount.classList.add(klass)
-
-      setTimeout(() => userCount.classList.remove(klass), 2000)
-    },
-
-    last7DaysLoginCount (newVal, oldVal) {
-      const userCount = document.getElementById('last7DaysLoginCount')
-
-      if (!userCount) return
-      const klass = newVal > oldVal ? 'increment' : 'decrement'
-
-      userCount.classList.add(klass)
-
-      setTimeout(() => userCount.classList.remove(klass), 2000)
-    }
-  },
   data () {
     return {
       userCountInterval: null,
@@ -157,10 +72,12 @@ export default {
   },
   methods: {
 
+    // toggle view levels & users
     updateActive (_active) {
       this.activeDisplay = _active
     },
 
+    // unlock all levels for user
     unlockLevels () {
       this.levelControl.getUnlock()
     },
@@ -171,7 +88,8 @@ export default {
         this.adminControl.getUserCount(),
         this.adminControl.getActiveUserCount(),
         this.adminControl.getLastWeekLogins(),
-        this.adminControl.getCurrentPath()
+        // this.adminControl.getCurrentPath(),
+        this.adminControl.getMaxLevelStats()
       ])
     },
     handleRoute () {
@@ -185,7 +103,7 @@ export default {
         this._fetchData().then(() => {
           this.userCountInterval = setInterval(() => {
             this._fetchData()
-          }, 1000 * 60)
+          }, 1000 * fetchDataInterval)
         })
       }).catch(err => {
         console.error(err)
@@ -232,9 +150,9 @@ export default {
     }
   },
   components: {
+    AdminUsers,
     UserSignupsChart,
     StarSystem,
-    StarSystemAdmin,
     AdminCurentPath,
     UserGravatar,
     UserSignupCalendar,
@@ -247,32 +165,12 @@ export default {
 
 <style scoped lang="scss">
 
-  .card {
-
-    min-width: 10rem;
-    max-width: 10rem;
-  }
 
   .admin {
 
     height: 100vh;
     overflow-y: scroll;
     background: var(--light);
-  }
-
-  #userCount, #last7DaysLoginCount {
-
-    transition: all 0.3s ease-in-out;
-  }
-
-  #userCount.increment, #last7DaysLoginCount.increment {
-
-    color: limegreen;
-  }
-
-  #userCount.decrement, #last7DaysLoginCount.decrement {
-
-    color: red;
   }
 
   .star-system-container {

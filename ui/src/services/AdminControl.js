@@ -9,15 +9,18 @@ export default class AdminControl extends Ws {
     signups: 'signups',
     loginsLastWeek: 'logins-last-week',
     levelStats: 'level-stats',
-    currentPath: 'current-path'
+    currentPath: 'current-path',
+    maxLevel: 'max-level'
   }
 
   userCount = 0
   activeUserCount = 0
   last7DaysLoginCount = 0
   userAccountSignups = []
+  // todo: convert into obj
   levelStats = []
   currentPath = []
+  maxLevel = []
 
   constructor () {
     super('admin')
@@ -64,14 +67,15 @@ export default class AdminControl extends Ws {
    */
 
   getActiveUserCount () {
-    this._send(JSON.stringify({action: this.actions.activeUserCount})) // { status: 'success',userCount: "1"}
+    this._send(JSON.stringify({ action: this.actions.activeUserCount })) // { status: 'success',userCount: "1"}
   }
+
   getUserCount () {
-    this._send(JSON.stringify({action: this.actions.userCount})) // { status: 'success',userCount: "1"}
+    this._send(JSON.stringify({ action: this.actions.userCount })) // { status: 'success',userCount: "1"}
   }
 
   getDailySignups () {
-    this._send(JSON.stringify({action: this.actions.signups}))
+    this._send(JSON.stringify({ action: this.actions.signups }))
   }
 
   getLastWeekLogins () {
@@ -81,15 +85,15 @@ export default class AdminControl extends Ws {
   }
 
   getLevelStats (_id) {
-    this._send(JSON.stringify({action: this.actions.levelStats, level: _id}))
+    this._send(JSON.stringify({ action: this.actions.levelStats, level: _id }))
   }
 
-  getCurrentPath () {
-    this._send(JSON.stringify({action: this.actions.currentPath}))
+  getMaxLevelStats () {
+    this._send(JSON.stringify({ action: this.actions.maxLevel }))
   }
 
   handleSocketResponse (result) {
-    const {activeUserCount = -1, status = 'failure', last7DaysLoginCount = '-1', userAccountSignups = [], userCount = '-1', currentPath = [], levelStats = []} = result
+    const { activeUserCount = -1, status = 'failure', last7DaysLoginCount = '-1', userAccountSignups = [], userCount = '-1', currentPath = [], levelStats = [], maxLevel = [] } = result
 
     if (status !== 'success') {
       console.error('socket error', result)
@@ -121,12 +125,19 @@ export default class AdminControl extends Ws {
       this.currentPath = currentPath
     }
 
+    if (maxLevel.length) {
+      this.maxLevel = maxLevel.slice()
+      // console.log(Array.from(this.maxLevel))
+    }
+
     if (levelStats.length) {
       const _levelStats = this.levelStats.slice()
 
       _levelStats.push(levelStats[0])
 
       this.levelStats = _.uniq(_levelStats, i => i.id)
+
+      console.log('level stats', this.levelStats)
     }
   }
 }

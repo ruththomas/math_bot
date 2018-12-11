@@ -7,6 +7,7 @@
       <div class="card" style="width: 100%;">
 
         <div class="card-header">
+          <h3>Signups over time</h3>
 
           <div class="row d-flex justify-content-center align-items-center">
             <span style="font-size: 1.3rem;" class="m-3">
@@ -97,7 +98,6 @@ import Datepicker from 'vuejs-datepicker'
 
 export default {
   name: 'UserSignupsChart',
-  props: ['data'],
   data () {
     return {
       chart: null,
@@ -114,9 +114,16 @@ export default {
   },
   computed: {
 
+    data () {
+      return this.adminControl.userAccountSignups
+    },
+    adminControl () {
+      return this.$store.getters.getAdminControl
+    },
+
     signupsOverRange () {
       const d = this.data.filter(item => {
-        const {_id: {year, month, day}} = item
+        const { _id: { year, month, day } } = item
 
         const date = new Date(year, month, day)
 
@@ -201,13 +208,13 @@ export default {
     },
 
     setRange () {
-      const {minDate: min, maxDate: max} = this
+      const { minDate: min, maxDate: max } = this
 
-      this.chart.axis.range({max: {x: max}, min: {x: min}})
+      this.chart.axis.range({ max: { x: max }, min: { x: min } })
     },
     _build () {
       this.x = this.data.map(item => {
-        const {_id: {month, day, year}} = item
+        const { _id: { month, day, year } } = item
 
         return new Date(year, month, day)
       })
@@ -271,7 +278,7 @@ export default {
   },
   watch: {
     data (newData, oldData) {
-      const {signups, total} = this.activeCharts
+      const { signups, total } = this.activeCharts
 
       if (signups) {
         this.load('signups')
@@ -290,7 +297,7 @@ export default {
   @import '~c3/c3.min.css';
 
   /*.c3-line-total, .c3-line-signups {*/
-    /*stroke-width: 0;*/
+  /*stroke-width: 0;*/
   /*}*/
 
 </style>

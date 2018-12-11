@@ -1,15 +1,23 @@
 <template>
   <div>
 
-    <full-calendar class="user-signup-calendar"
-                   :events="data"
-                   @changeMonth="changeMonth"
-                   @eventClick="eventClick"
-                   @dayClick="dayClick"
-                   @moreClick="moreClick"
-    >
 
-    </full-calendar>
+   <div class="card">
+     <div class="card-header">
+      <h3> Signups over Time</h3>
+     </div>
+     <div class="card-body">
+       <full-calendar class="user-signup-calendar"
+                      :events="data"
+                      @changeMonth="changeMonth"
+                      @eventClick="eventClick"
+                      @dayClick="dayClick"
+                      @moreClick="moreClick"
+       >
+
+       </full-calendar>
+     </div>
+   </div>
   </div>
 </template>
 <script>
@@ -28,7 +36,7 @@ function mapSignupsToCalendar (signup) {
 export default {
   data () {
     return {
-      name: 'UserSignupCalendar'
+      name: 'AdminUserSignupCalendar'
       // fcEvents : demoEvents
     }
   },
