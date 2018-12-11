@@ -76,8 +76,12 @@ export default {
       this.levelControl.robot.setSpeed(400)
     },
     changeSpeed () {
-      this.levelControl.runCompiled.setDirection(this.sliderValue > 49)
-      this.levelControl.robot.setSpeed(this.convertToSpeed())
+      if (this.levelControl.robot.state === 'home') {
+        this.levelControl.runCompiled.start()
+      } else {
+        this.levelControl.runCompiled.setDirection(this.sliderValue > 49)
+        this.levelControl.robot.setSpeed(this.convertToSpeed())
+      }
     }
   },
   components: {
