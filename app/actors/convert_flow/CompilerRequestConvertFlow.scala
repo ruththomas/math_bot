@@ -18,7 +18,7 @@ object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
           case JsSuccess(CompilerRequest(_, _, Some(true), _, _), _) =>
             CompilerHalt()
           case JsSuccess(CompilerRequest(Some(steps), Some(problem), _, None, _), _) =>
-            CompilerExecute(steps, Problem(encryptedProblem = problem))
+            CompilerExecute(steps, Problem(encryptedProblem = problem)) // Should no longer be sent by client
           case JsSuccess(CompilerRequest(Some(steps), Some(problem), _, Some(true), None), _) =>
             CompilerCreate(steps, Problem(encryptedProblem = problem))
           case JsSuccess(CompilerRequest(Some(steps), Some(problem), _, Some(true), Some(mbl)), _) =>

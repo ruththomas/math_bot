@@ -1,12 +1,12 @@
 package actors.messages.level
-import compiler.CellType
+import compiler.{ CellType, Grid }
 import compiler.processor.Frame
 object ContinentControl {
-  private def isFinalSpot(frame: Frame) =
-    frame.board.currentCell().cellType == CellType.FinalAnswer
+  private def isFinalSpot(grid: Grid) =
+    grid.currentCell().cellType == CellType.FinalAnswer
 
-  private def totalDropped(frame: Frame, problem: Problem) = {
-    val spotSum = frame.board.currentCell().contents.map(_.value).sum
+  private def totalDropped(grid: Grid, problem: Problem) = {
+    val spotSum = grid.currentCell().contents.map(_.value).sum
     val solution = Problem.evalProblem(problem)
     spotSum == solution.toInt
   }
@@ -55,9 +55,9 @@ class ContinentControl(
   import ContinentControl._
   val listedFunctions: List[Function] = functions.list.values.toList
 
-  def success(frame: Frame, problem: Problem): Boolean = {
+  def success(grid : Grid, problem : Problem): Boolean = {
     if (parameters.contains("sandbox")) false
     else
-      isFinalSpot(frame) && totalDropped(frame, problem) && checkParams(parameters, listedFunctions)
+      isFinalSpot(grid) && totalDropped(grid, problem) && checkParams(parameters, listedFunctions)
   }
 }
