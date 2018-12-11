@@ -82,7 +82,7 @@ export default {
     },
     userAccountSignups () {
       return this.adminControl.userAccountSignups
-    },
+    }
   },
   watch: {
 
@@ -138,7 +138,6 @@ export default {
 
     color: red;
   }
-
 
   .card {
 

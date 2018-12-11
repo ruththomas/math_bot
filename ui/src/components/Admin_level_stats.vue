@@ -5,7 +5,6 @@
       <admin-max-level></admin-max-level>
     </div>
 
-
     <div v-if="adminControl.levelStats.length">
 
       <div class="row mb-3">

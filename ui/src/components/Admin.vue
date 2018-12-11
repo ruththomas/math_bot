@@ -165,7 +165,6 @@ export default {
 
 <style scoped lang="scss">
 
-
   .admin {
 
     height: 100vh;

@@ -102,5 +102,4 @@ export default {
 <style scoped>
   @import '~c3/c3.min.css';
 
-
 </style>

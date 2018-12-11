@@ -1,7 +1,6 @@
 <template>
   <div>
 
-
    <div class="card">
      <div class="card-header">
       <h3> Signups over Time</h3>
