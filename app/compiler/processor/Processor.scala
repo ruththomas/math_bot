@@ -1,7 +1,7 @@
 package compiler.processor
 
 import compiler.operations.{ ChangeRobotDirection, MoveRobotForwardOneSpot, _ }
-import compiler.{ Colors, Grid, GridAndProgram }
+import compiler.{ ElementKinds, Grid, GridAndProgram }
 import configuration.CompilerConfiguration
 
 import scala.annotation.tailrec
@@ -35,13 +35,13 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
             case uf: UserFunction =>
               val withTrace = uf.operations.zipWithIndex.map(t => (t._1, TraceTag(uf, t._2)))
               execute(state, withTrace.headOption, withTrace.tail ++: post, emptyLoopCount + 1)
-            case IfColor(color, conditionalOperation) =>
+            case IfElement(color, conditionalOperation) =>
               state.currentRegister.peek() match {
                 case Some(element) if element.color == color =>
                   execute(state, Some((conditionalOperation, operation._2)), post, emptyLoopCount + 1)
-                case Some(_) if color == Colors.anyColor =>
+                case Some(_) if color == ElementKinds.anyColor =>
                   execute(state, Some((conditionalOperation, operation._2)), post, emptyLoopCount + 1)
-                case None if color == Colors.emptyColor =>
+                case None if color == ElementKinds.emptyColor =>
                   execute(state, Some((conditionalOperation, operation._2)), post, emptyLoopCount + 1)
                 case _ =>
                   execute(state, post.headOption, post.drop(1), emptyLoopCount + 1) // Skip the operation inside the if
