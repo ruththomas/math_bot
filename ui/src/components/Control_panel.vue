@@ -4,7 +4,7 @@
 
     <div
       class="btn button-effect help-button"
-      @click="videoHintControl.showHint"
+      @click="[videoHintControl.showHint(), levelControl.runCompiled.reset()]"
     >
       <stars :continent-id="levelControl.path"></stars>
     </div>

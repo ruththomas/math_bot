@@ -9,9 +9,15 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint::fix",
-      "pre-push": "npm run lint::fix"
+      "pre-commit": "lint-staged",
+      "pre-push": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{js,vue}": [
+      "npm run lint::fix",
+      "git add"
+    ]
   },
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 0.0.0.0",
@@ -124,6 +130,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.31",
     "karma-webpack": "^2.0.2",
+    "lint-staged": "^6.1.1",
     "mocha": "^3.2.0",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.9.0",

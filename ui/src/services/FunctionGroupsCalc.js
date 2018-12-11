@@ -1,4 +1,3 @@
-
 class FunctionGroupsCalc {
   constructor ({eleRobot, eleFunctions, functions}) {
     this.activeFunctions = functions
