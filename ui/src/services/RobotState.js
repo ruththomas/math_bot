@@ -8,11 +8,7 @@ class Robot {
     this.robotCarrying = holding || []
     this.robotFacing = orientation || 0
     this.robotLocation = location || {x: 2, y: 2}
-    this.robotSpeed = robotSpeed || this._robotSpeeds[0]
-    this.robotStartPos = Object.assign({}, {
-      orientation: orientation,
-      location: location
-    })
+    this.robotSpeed = 400
 
     this.trash = []
   }
@@ -26,29 +22,6 @@ class Robot {
 
   _robotSpeedIndex = 0
 
-  _robotSpeeds = [
-    {
-      display: '1x',
-      speed: 400
-    },
-    {
-      display: '2x',
-      speed: 200
-    },
-    {
-      display: '3x',
-      speed: 100
-    },
-    {
-      display: '4x',
-      speed: 60
-    },
-    {
-      display: 'lightning',
-      speed: 1
-    }
-  ]
-
   _updateSelf () {
     $store.state.levelControl.robot = this
   }
@@ -58,10 +31,8 @@ class Robot {
     this._updateSelf()
   }
 
-  adjustSpeed () {
-    if (this._robotSpeedIndex === this._robotSpeeds.length - 1) this._robotSpeedIndex = 0
-    else this._robotSpeedIndex++
-    this.robotSpeed = this._robotSpeeds[this._robotSpeedIndex]
+  setSpeed (speed) {
+    this.robotSpeed = speed
   }
 
   /*

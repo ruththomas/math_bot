@@ -222,7 +222,8 @@ module.exports = {
   buttons: {
     playButton: 'https://res.cloudinary.com/doohickey/image/upload/v1544488287/noun_play_1507475_FFFFFF_mhn4zd.svg',
     // playButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342823/buttons/Play_Button.png',
-    pauseButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/pauseButton.png',
+    pauseButton: 'https://res.cloudinary.com/doohickey/image/upload/v1544541063/noun_pause_1651727_FFFFFF_tr5sb4.svg',
+    // pauseButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/pauseButton.png',
     stopButton: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522342824/buttons/stopButton.png',
     resetButton: 'https://res.cloudinary.com/doohickey/image/upload/v1544488368/noun_reset_299645_FFFFFF_stmkvm.svg',
     // resetButton: 'http://res.cloudinary.com/doohickey/image/upload/v1538313442/resetbutton_jy9hvk.png',

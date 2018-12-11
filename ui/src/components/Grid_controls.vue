@@ -5,10 +5,29 @@
     v-model="sliderValue"
     v-bind="sliderOptions"
     @drag-end="resetSpeed"
+    :disabled="levelControl.robot.state === 'failure'"
+    @callback="changeSpeed"
   ></vue-slider>
   <div class="buttons">
-    <img class="play dialog-button" :src="permanentImages.buttons.playButton" />
-    <img class="reset dialog-button" :src="permanentImages.buttons.resetButton" />
+    <img
+      v-if="levelControl.robot.state === 'running'"
+      :class="levelControl.robot.state === 'failure' ? 'disabled' : ''"
+      class="pause play dialog-button"
+      :src="permanentImages.buttons.pauseButton"
+      @click="levelControl.runCompiled.pause()"
+    >
+    <img
+      v-else
+      class="play dialog-button"
+      :class="levelControl.robot.state === 'failure' ? 'disabled' : ''"
+      :src="permanentImages.buttons.playButton"
+      @click="levelControl.robot.state !== 'failure' ? levelControl.runCompiled.start() : ''"
+    />
+    <img
+      class="reset dialog-button"
+      :src="permanentImages.buttons.resetButton"
+      @click="levelControl.runCompiled.reset()"
+    />
   </div>
 </div>
 </template>
@@ -18,6 +37,9 @@ import VueSlider from 'vue-slider-component'
 export default {
   name: 'Grid_controls',
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     }
@@ -41,8 +63,21 @@ export default {
     }
   },
   methods: {
+    convertToSpeed () {
+      if (this.sliderValue > 50) {
+        return Math.abs(this.sliderValue - 100) * 8
+      } else {
+        return this.sliderValue * 8
+      }
+    },
     resetSpeed () {
       this.sliderValue = 50
+      this.levelControl.runCompiled.setDirection(true)
+      this.levelControl.robot.setSpeed(400)
+    },
+    changeSpeed () {
+      this.levelControl.runCompiled.setDirection(this.sliderValue > 49)
+      this.levelControl.robot.setSpeed(this.convertToSpeed())
     }
   },
   components: {
@@ -72,6 +107,11 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
 
     .play {
       float: left;
+    }
+
+    .play.dialog-button.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .reset {
