@@ -75,13 +75,13 @@ export default {
       this.levelControl.runCompiled.pause()
     },
     changeSpeed () {
+      this.levelControl.runCompiled.setDirection(this.sliderValue > 50)
       if (this.levelControl.robot.state === 'home' || this.levelControl.robot.state === 'paused') {
         this.levelControl.runCompiled.start()
       } else if (this.sliderValue === 50) {
         this.levelControl.runCompiled.pause()
       } else {
         this.levelControl.robot.setState('running')
-        this.levelControl.runCompiled.setDirection(this.sliderValue > 50)
         this.levelControl.robot.setSpeed(this.convertToSpeed())
       }
     }
