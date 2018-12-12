@@ -138,8 +138,6 @@ class PlayerAccountDAO @Inject()(
 
   def maxLevelStats: Future[Seq[MaxLevel]] = {
 
-    println("hi")
-
     val _maxLevel =
       f"""
         |{
