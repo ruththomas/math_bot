@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3 class="text-left my-3">Summary</h3>
     <div class="row mb-3 d-flex justify-content-between align-items-center">
 
       <div class="card">
@@ -129,12 +130,12 @@ export default {
     transition: all 0.3s ease-in-out;
   }
 
-  #userCount.increment, #last7DaysLoginCount.increment {
+  .increment {
 
     color: limegreen;
   }
 
-  #userCount.decrement, #last7DaysLoginCount.decrement {
+  .decrement {
 
     color: red;
   }

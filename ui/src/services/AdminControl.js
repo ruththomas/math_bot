@@ -137,7 +137,7 @@ export default class AdminControl extends Ws {
 
       this.levelStats = _.uniq(_levelStats, i => i.id)
 
-      console.log('level stats', this.levelStats)
+      // console.log('level stats', this.levelStats)
     }
   }
 }
