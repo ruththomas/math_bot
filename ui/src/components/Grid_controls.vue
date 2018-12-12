@@ -72,12 +72,18 @@ export default {
     },
     resetSpeed () {
       this.sliderValue = 50
-      this.levelControl.runCompiled.setDirection(true)
-      this.levelControl.robot.setSpeed(400)
+      this.levelControl.runCompiled.pause()
     },
     changeSpeed () {
-      this.levelControl.runCompiled.setDirection(this.sliderValue > 49)
-      this.levelControl.robot.setSpeed(this.convertToSpeed())
+      this.levelControl.runCompiled.setDirection(this.sliderValue > 50)
+      if (this.levelControl.robot.state === 'home' || this.levelControl.robot.state === 'paused') {
+        this.levelControl.runCompiled.start()
+      } else if (this.sliderValue === 50) {
+        this.levelControl.runCompiled.pause()
+      } else {
+        this.levelControl.robot.setState('running')
+        this.levelControl.robot.setSpeed(this.convertToSpeed())
+      }
     }
   },
   components: {
