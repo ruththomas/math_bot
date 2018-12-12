@@ -80,7 +80,7 @@ class RunCompiled extends GridAnimator {
   }
 
   pause () {
-    this._pausedMessage()
+    // this._pausedMessage()
     this.forward = true
     this.robot.setSpeed(400)
     this.robot.setState('paused')
@@ -269,8 +269,8 @@ class RunCompiled extends GridAnimator {
   _failure (frame) {
     return this.initializeAnimation(frame, async () => {
       this.lastFrame = frame
-      this.robot.setState('failure')
-      this._failedMessage()
+      this.robot.setState('paused')
+      // this._failedMessage()
       this._updateGalaxyData()
     })
   }
@@ -301,7 +301,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _nextCurrent () {
-    this.currentFrame = this.forward ? this.currentFrame + 1 : Math.max(this.currentFrame - 1, 0)
+    this.currentFrame = Math.min(this.robotFrames.length - 1, this.forward ? this.currentFrame + 1 : Math.max(this.currentFrame - 1, 0))
     return this.currentFrame
   }
 

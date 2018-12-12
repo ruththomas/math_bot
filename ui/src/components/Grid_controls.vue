@@ -5,21 +5,18 @@
     v-model="sliderValue"
     v-bind="sliderOptions"
     @drag-end="resetSpeed"
-    :disabled="levelControl.robot.state === 'failure'"
     @callback="changeSpeed"
   ></vue-slider>
   <div class="buttons">
     <img
       v-if="levelControl.robot.state === 'running'"
-      :class="levelControl.robot.state === 'failure' ? 'disabled' : ''"
       class="pause play dialog-button"
       :src="permanentImages.buttons.pauseButton"
-      @click="levelControl.runCompiled.pause()"
+      @click="[levelControl.runCompiled._pausedMessage(), levelControl.runCompiled.pause()]"
     >
     <img
       v-else
       class="play dialog-button"
-      :class="levelControl.robot.state === 'failure' ? 'disabled' : ''"
       :src="permanentImages.buttons.playButton"
       @click="levelControl.robot.state !== 'failure' ? levelControl.runCompiled.start() : ''"
     />
