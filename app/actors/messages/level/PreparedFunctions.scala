@@ -6,7 +6,7 @@ import play.api.libs.json.{Json, OFormat}
 import utils.Implicits._
 
 object PreparedFunctions {
-  import compiler.Colors._
+  import compiler.ElementKinds._
   implicit val format: OFormat[PreparedFunctions] = Json.format[PreparedFunctions]
 
   private def getFunctionIds(listedFunctions: List[Function]): List[String] = listedFunctions.map(_.created_id)
