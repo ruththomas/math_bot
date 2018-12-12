@@ -102,8 +102,6 @@ export default {
     height: $dialog-button-size;
     width: $dialog-button-size;
     cursor: pointer;
-    background-color: $click-color;
-    border-radius: 50%;
   }
 
   .button-effect {

@@ -29,7 +29,6 @@ class RunCompiled extends GridAnimator {
     this._waitForFrames = this._waitForFrames.bind(this)
     this.initializeNextStep = this.initializeNextStep.bind(this)
     this.resetIfFailure = this.resetIfFailure.bind(this)
-    this.startMbl = this.startMbl.bind(this)
     this.clearMbl = this.clearMbl.bind(this)
     this._updateGalaxyData = this._updateGalaxyData.bind(this)
     this._deleteAllMessages = this._deleteAllMessages.bind(this)
@@ -64,20 +63,16 @@ class RunCompiled extends GridAnimator {
     $store.state.levelControl.mbl = ''
   }
 
-  startMbl () {
-    this.start($store.state.levelControl.mbl)
-  }
-
-  start (mbl) {
+  start () {
     const emptyFuncs = this._testForEmptyFunctions()
-
-    if (emptyFuncs.length) {
+    const normalMode = $store.state.levelControl.mode === 'normal'
+    if (normalMode && emptyFuncs.length) {
       this._mainEmptyMessage(emptyFuncs)
     } else if (this.robot.state !== 'paused') {
       this.robotFrames = []
       this._deleteAllMessages()
       this.robot.setState('running')
-      this._askCompiler(mbl, true, this._processFrames)
+      this._askCompiler(!normalMode ? $store.state.levelControl.mbl : false, true, this._processFrames)
     } else {
       this.robot.setState('running')
       this._processFrames()
@@ -86,6 +81,8 @@ class RunCompiled extends GridAnimator {
 
   pause () {
     this._pausedMessage()
+    this.forward = true
+    this.robot.setSpeed(400)
     this.robot.setState('paused')
   }
 
@@ -96,7 +93,7 @@ class RunCompiled extends GridAnimator {
   }
 
   reset () {
-    this.robot.state = 'home'
+    this.robot.setState('home')
     this._stopRobot()
   }
 
@@ -172,24 +169,16 @@ class RunCompiled extends GridAnimator {
       msg: `Not quite, a hint might help.`,
       handlers () {
         const $helpButton = $('.help-button')
-        const $controlBar = $('.control-bar')
-        const $trash = $('.trash')
-        const $editMain = $('.edit-main .piece')
+        const $reset = $('.reset.dialog-button')
         return {
           runBeforeAppend () {
             $helpButton.addClass('background-alert')
             $helpButton.addClass('animated flash')
-            $controlBar.addClass('hidden-bar')
-            $trash.hide()
-            $editMain.hide()
-            setTimeout(() => {
-              $controlBar.removeClass('hidden-bar')
-              $trash.show()
-              $editMain.show()
-            }, 2005)
+            $reset.addClass('animated flash')
           },
           runOnDelete () {
             $helpButton.removeClass('flash')
+            $reset.removeClass('flash')
             $helpButton.removeClass('background-alert')
           },
           closeControl: dis._closeMessageRobotHome()
@@ -307,8 +296,8 @@ class RunCompiled extends GridAnimator {
     })
   }
 
-  setDirection () {
-    this.forward = !this.forward
+  setDirection (forward = !this.forward) {
+    this.forward = forward
   }
 
   _nextCurrent () {
@@ -324,8 +313,12 @@ class RunCompiled extends GridAnimator {
     run(current)
   }
 
+  _lastFrame () {
+    return this.robotFrames[this.robotFrames.length - 1]
+  }
+
   _controlAsk () {
-    if (this.robotFrames.length - this.currentFrame < 20) {
+    if (this._lastFrame().programState === 'running' && this.robotFrames.length - this.currentFrame < 50) {
       this._askCompiler()
     }
   }
@@ -359,8 +352,7 @@ class RunCompiled extends GridAnimator {
       problem: this.levelControl.continent.problem.encryptedProblem,
       halt: false,
       mbl: mbl,
-      create: create,
-      steps: this.robot.robotSpeed.display === 'lightning' ? 10100 : undefined
+      create: create
     })
   }
 }

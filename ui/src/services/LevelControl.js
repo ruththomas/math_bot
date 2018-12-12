@@ -30,6 +30,7 @@ class LevelControl extends Ws {
   }
 
   mbl = this._retreiveMbl()
+  mode = 'normal'
   path = '00000'
   galaxy = null
   continent = null
@@ -65,8 +66,7 @@ class LevelControl extends Ws {
     this.continent = builtContinent
     this.path = path
     const robotState = this.continent.initialRobotState
-    const robotSpeed = this.robot === null ? 0 : this.robot.robotSpeed
-    this.robot = new Robot(Object.assign(robotState, {robotSpeed: robotSpeed}))
+    this.robot = new Robot(robotState)
     this.functions = this.continent.lambdas
     // console.log(this.functions.activeFuncs.map(f => {
     //   return {name: f.name, index: f.index, createdId: f.created_id}
