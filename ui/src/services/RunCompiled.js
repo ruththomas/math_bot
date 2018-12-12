@@ -166,7 +166,7 @@ class RunCompiled extends GridAnimator {
     const dis = this
     const failedMessage1 = {
       type: 'success',
-      msg: `Not quite, a hint might help.`,
+      msg: '',
       handlers () {
         const $helpButton = $('.help-button')
         const $reset = $('.reset.dialog-button')
@@ -185,25 +185,13 @@ class RunCompiled extends GridAnimator {
         }
       }
     }
-    const failedMessage2 = {
-      type: 'success',
-      msg: ' Click on any icon to restart.',
-      handlers () {
-        return {
-          closeControl: dis._closeMessageRobotHome()
-        }
-      }
-    }
-    this._addMessage(failedMessage2)
     this._addMessage(failedMessage1)
   }
 
-  _mainEmptyMessage (emptyFuncs) {
-    const emptyCount = emptyFuncs.length
-
+  _mainEmptyMessage () {
     const messageBuilder = {
       type: 'warn',
-      msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : `${emptyFuncs.length} of your functions ${emptyCount > 1 ? 'are' : 'is'} empty`,
+      msg: '',
       handlers () {
         const $bar = $('.bar')
 
@@ -270,7 +258,7 @@ class RunCompiled extends GridAnimator {
     return this.initializeAnimation(frame, async () => {
       this.lastFrame = frame
       this.robot.setState('paused')
-      // this._failedMessage()
+      this._failedMessage()
       this._updateGalaxyData()
     })
   }
