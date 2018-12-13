@@ -125,6 +125,42 @@ class LevelControl extends Ws {
         return '#FF98B1'
       case '10000':
         return '#F25C5C'
+      case '.1':
+        return '#CDF7F6'
+      case '.01':
+        return '#8FB8DE'
+      case '.001':
+        return '#9A94BC'
+      case '.0001':
+        return '#9B5094'
+      case '.00001':
+        return '#533A71'
+      case 'x':
+        return '#9CEC5B'
+      case 'y':
+        return '#F0F465'
+      case 'z':
+        return '#A3320B'
+      case '-.00001':
+        return '#E3BAC6'
+      case '-.0001':
+        return '#6B0504'
+      case '-.001':
+        return '#EC7357'
+      case '-.01':
+        return '#E1CE7A'
+      case '-.1':
+        return '#9D695A'
+      case '-1':
+        return '#78E0DC'
+      case '-10':
+        return '#A1CDF1'
+      case '-100':
+        return '#2D5D7B'
+      case '-1000':
+        return '#C2AFF0'
+      case '-10000':
+        return '#7D5C65'
       default:
         return '#FFD700' // color name changed in server, checkout `app/compiler/Colors.scala` for new pallet
     }
