@@ -63,7 +63,6 @@ class LevelControl extends Ws {
 
   _setContinent ({pathAndContinent: {path, builtContinent}}) {
     this.continent = builtContinent
-    console.log(builtContinent)
     this.path = path
     const robotState = this.continent.initialRobotState
     const robotSpeed = this.robot === null ? 0 : this.robot.robotSpeed
@@ -144,7 +143,7 @@ class LevelControl extends Ws {
       case '-.00001':
         return '#E3BAC6'
       case '-.0001':
-        return '#6B0504'
+        return '#FFF5B2'
       case '-.001':
         return '#EC7357'
       case '-.01':

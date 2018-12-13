@@ -168,7 +168,7 @@ module.exports = {
     '101': 'https://res.cloudinary.com/sheouth/image/upload/v1543680677/noun_airship_1820392_FFFFFF.png'
   },
   tools: {
-    '1': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348238/tools/noun_1241059_cc_xsu8cz.svg',
+    '1': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348238/tools/noun_1241059_cc_xsu8cz.svg'
   },
   stars: {
     5: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348009/stars/stars-5_mxzlcm.png',
