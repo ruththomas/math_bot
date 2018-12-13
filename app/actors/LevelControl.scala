@@ -16,11 +16,11 @@ class LevelControl @Inject()(
     functionsDAO: FunctionsDAO,
     playerTokenDAO: PlayerTokenDAO
 )(implicit ec: ExecutionContext) {
-  import compiler.ElementKinds.listedColors
+  import compiler.ElementKinds.listedElements
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
   private def nextColor(currentColor: String): String = {
-    listedColors.lift(listedColors.indexWhere(_.name == currentColor) + 1).getOrElse(listedColors.head).name
+    listedElements.lift(listedElements.indexWhere(_.name == currentColor) + 1).getOrElse(listedElements.head).name
   }
 
   /*

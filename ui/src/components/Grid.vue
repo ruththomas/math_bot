@@ -38,12 +38,17 @@
                 v-if="space.name === 'final answer'"
                 class="portal glyphicon"
                 :src="permanentImages.blackHole"></b-img>
-              <b-img
-                v-if="space.tools.length"
-                class="tool animated zoomIn"
+              <!--<b-img-->
+                <!--v-if="space.tools.length"-->
+                <!--class="tool animated zoomIn"-->
+                <!--v-for="(tool, tInd) in space.tools"-->
+                <!--:key="'tool:' + tInd + ':' + rInd + ':' + sInd"-->
+                <!--:src="toolImages[tool.name]"></b-img>-->
+              <tool
                 v-for="(tool, tInd) in space.tools"
                 :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
-                :src="toolImages[tool.image]"></b-img>
+                :denomination="tool.name"
+              ></tool>
               <b-img
                 class="robot animated"
                 v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
@@ -86,6 +91,7 @@ import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
 import utils from '../services/utils'
 import ControlPanel from './Control_panel'
+import Tool from './Tool'
 
 export default {
   mounted () {
@@ -146,7 +152,8 @@ export default {
   components: {
     SplashScreen,
     RobotCarrying,
-    ControlPanel
+    ControlPanel,
+    Tool
   }
 }
 </script>

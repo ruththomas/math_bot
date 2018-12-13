@@ -11,11 +11,11 @@ trait PracticeArithmetic extends LevelGenTags {
       continentStruct = Some(
         ContinentStruct(
           gridMap = List(
-            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "[-.00001] [-.0001] [-.001] [-.01] [-.1] [-1] [-10] [-100] [-1000] [-10000]",
+            "[x]       |E|      |E|     |E|    |E|   |E|  |E|   |E|    |E|     |E|",
+            "[y]       |E|      (R)     |E|    |E|   ($)  |E|   |E|    |E|     |E|",
+            "[z]       |E|      |E|     |E|    |E|   |E|  |E|   |E|    |E|     |E|",
+            "[.00001]  [.0001]  [.001]  [.01]  [.1]  [1]  [10]  [100]  [1000]  [10000]"
           ),
           description = "Practice you arithmetic functions!",
           mainMax = -1,

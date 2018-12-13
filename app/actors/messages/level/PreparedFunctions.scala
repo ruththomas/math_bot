@@ -116,13 +116,22 @@ object PreparedFunctions {
 
   /*
    * Converts any color not found in color pallet to white
-   * As long as the color `white` is found in `compiler/Colors.scala`
+   * As long as the color `white` is found in `compiler/ElementKinds.scala`
    * this function will revert function colors that aren't otherwise
-   * found in Colors.scala
+   * found in ElementKinds.scala
    * */
   private def convertColors(functions: List[Function]): List[Function] = functions.map { f =>
     f.copy(
-      color = allColors.find(_.name == f.color).getOrElse(white).name,
+      color = {
+        allColors.find(_.name == f.color) match {
+          case Some(e) if e.name == "blue" => one.name
+          case Some(e) if e.name == "purple" => ten.name
+          case Some(e) if e.name == "green" => hundred.name
+          case Some(e) if e.name == "pink" => thousand.name
+          case Some(e) if e.name == "red" => tenThousand.name
+          case _ => white.name
+        }
+      },
       func = f.func.map(convertColors)
     )
   }

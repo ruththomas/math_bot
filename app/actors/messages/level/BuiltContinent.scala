@@ -5,6 +5,7 @@ import daos.FunctionsDAO
 import level_gen.models.{CelestialSystem, ContinentStruct}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import compiler.ElementKinds._
 
 object BuiltContinent {
   def apply(functions: Functions, continent: CelestialSystem, functionsDAO: Option[FunctionsDAO]): BuiltContinent = {
@@ -18,7 +19,7 @@ object BuiltContinent {
       stagedEnabled = continentStruct.stagedEnabled,
       activeEnabled = continentStruct.activeEnabled,
       lambdas = PreparedFunctions(functions, continentStruct, functionsDAO.get),
-      toolList = ToolList(),
+      toolList = listedElements.map(ClientElement.apply),
       specialParameters = continentStruct.specialParameters,
       problem = problemGen(continentStruct.problem),
       initFocus = createInitFocus(continentStruct.initFocus),
@@ -115,7 +116,7 @@ object BuiltContinent {
     (JsPath \ "stagedEnabled").write[Boolean] and
     (JsPath \ "activeEnabled").write[Boolean] and
     (JsPath \ "lambdas").write[PreparedFunctions] and
-    (JsPath \ "toolList").write[ToolList] and
+    (JsPath \ "toolList").write[List[ClientElement]] and
     (JsPath \ "specialParameters").write[List[String]] and
     (JsPath \ "problem").write[Problem] and
     (JsPath \ "initFocus").write[List[String]] and
@@ -137,7 +138,7 @@ case class BuiltContinent(
     stagedEnabled: Boolean,
     activeEnabled: Boolean,
     lambdas: PreparedFunctions,
-    toolList: ToolList,
+    toolList: List[ClientElement],
     specialParameters: List[String],
     problem: Problem,
     initFocus: List[String],

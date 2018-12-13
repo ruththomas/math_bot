@@ -63,6 +63,7 @@ class LevelControl extends Ws {
 
   _setContinent ({pathAndContinent: {path, builtContinent}}) {
     this.continent = builtContinent
+    console.log(builtContinent)
     this.path = path
     const robotState = this.continent.initialRobotState
     const robotSpeed = this.robot === null ? 0 : this.robot.robotSpeed
@@ -114,15 +115,15 @@ class LevelControl extends Ws {
         return '#353535'
       case 'white':
         return '#ffffff'
-      case 'blue':
+      case '1':
         return '#4A90E2'
-      case 'purple':
+      case '10':
         return '#CA7AFF'
-      case 'green':
+      case '100':
         return '#50E3C2'
-      case 'pink':
+      case '1000':
         return '#FF98B1'
-      case 'red':
+      case '10000':
         return '#F25C5C'
       default:
         return '#FFD700' // color name changed in server, checkout `app/compiler/Colors.scala` for new pallet

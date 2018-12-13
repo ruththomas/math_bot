@@ -45,8 +45,8 @@ object Compiler {
                           tool =>
                             Element(tool.original,
                                     tool.name,
-                                    tool.image,
-                                    ElementKinds.from(tool.color).getOrElse(ElementKinds.emptyColor),
+                                    tool.name,
+                                    ElementKinds.from(tool.name).getOrElse(ElementKinds.emptyColor),
                                     tool.value)
                         )
                       )
