@@ -42,11 +42,9 @@ class LevelControl @Inject()(
    * Assembles galaxy data back into its nested data structure
    * */
   def getGalaxyData(tokenId: String, path: Option[String]): Future[GalaxyData] = {
-    statsDAO.findStats(tokenId).flatMap {
-      case Some(stats) =>
-        FastFuture.successful(GalaxyData(stats, path.getOrElse(stats.currentPath)))
-      case None => getStats(tokenId).map(stats => GalaxyData(stats, path.getOrElse("00000")))
-    }
+    for {
+      stats <- getStats(tokenId)
+    } yield GalaxyData(stats, path.getOrElse("00000"))
   }
 
   /*
@@ -56,11 +54,9 @@ class LevelControl @Inject()(
    * TODO USE
    * */
   def getStarSystemData(tokenId: String, path: Option[String]): Future[StarSystemData] = {
-    statsDAO.findStats(tokenId).flatMap {
-      case Some(stats) =>
-        FastFuture.successful(StarSystemData(stats, path.getOrElse(stats.currentPath)))
-      case None => getStats(tokenId).map(stats => StarSystemData(stats, path.getOrElse("00000")))
-    }
+    for {
+      stats <- getStats(tokenId)
+    } yield StarSystemData(stats, path.getOrElse("00000"))
   }
 
   def getPath(tokenId: String): Future[String] = {
@@ -144,6 +140,14 @@ class LevelControl @Inject()(
         continentStruct.assignedStaged ::: celestialSystem.children.flatMap(getAllAssignedStaged)
       case None => celestialSystem.children.flatMap(getAllAssignedStaged)
     }
+
+  def clientInit(tokenId: String): Future[(String, GalaxyData, PathAndContinent)] = {
+    for {
+      stats <- getStats(tokenId)
+      builtContinent <- createBuiltContinent(tokenId, stats.currentPath)
+    } yield
+      (stats.currentPath, GalaxyData(stats, stats.currentPath), PathAndContinent(stats.currentPath, builtContinent))
+  }
 
   def getStarSystemData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
