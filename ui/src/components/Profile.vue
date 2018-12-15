@@ -11,6 +11,7 @@
         :class="Number(starSystemShowing) === ind ? 'selected' : ''"
         :disabled="!starSystem.stats.active"
       >{{starSystem.stats.name}}</b-button>
+      <b-button class="btn-dark" @click="levelControl.getSandbox">Sandbox</b-button>
     </div>
     <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
       <div class="star-systems">
