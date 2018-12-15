@@ -118,11 +118,11 @@ class LevelActor @Inject()(out: ActorRef,
      * */
     case Init() =>
       for {
-        _ <- levelControl.getStats(tokenId) // this has to happen first to ensure stats added once
+        clientInit <- levelControl.clientInit(tokenId)
       } yield {
-        self ! GetPath()
-        self ! GetGalaxyData(None)
-        self ! GetContinentData(None)
+        out ! clientInit._1
+        out ! clientInit._2
+        out ! clientInit._3
       }
     /*
      * Updates top level function (not nest instances of function)
