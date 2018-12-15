@@ -16,5 +16,3 @@ trait Continents
     with Roots
     with Refactor
     with Coordinates
-    with BlankSlate
-    with PracticeArithmetic
