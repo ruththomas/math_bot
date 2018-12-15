@@ -37,7 +37,7 @@ object Sandbox extends LevelGenTags {
         clearMain = false,
         initFocus = List.empty[String],
         videoHints = List.empty[String],
-        freeHint = None
+        freeHint = Some("sZhPULEkN2k")
       )
     )
   )
