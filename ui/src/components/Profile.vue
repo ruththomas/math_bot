@@ -10,7 +10,10 @@
         class="btn-dark"
         :class="Number(starSystemShowing) === ind ? 'selected' : ''"
         :disabled="!starSystem.stats.active"
-      >{{starSystem.stats.name}}</b-button>
+      >
+        {{starSystem.stats.name}}
+        <i v-if="!starSystem.stats.active" class="fa fa-lock"></i>
+      </b-button>
       <b-button class="btn-dark" @click="levelControl.getSandbox">Sandbox</b-button>
     </div>
     <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
@@ -108,12 +111,16 @@ export default {
       .btn {
         color: $font-color;
         display: flex;
+        align-items: center;
         justify-content: center;
         margin: 0.4em;
         border-radius: 0.25rem!important;
         background-color: #000000;
         font-size: 1.1em;
-        opacity: 0.7;
+
+        i {
+          margin-left: 10%;
+        }
       }
       .selected {
         opacity: 1;
