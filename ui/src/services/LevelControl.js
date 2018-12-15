@@ -3,6 +3,7 @@ import Robot from './RobotState'
 import RunCompiled from './RunCompiled'
 import _ from 'underscore'
 import circular from 'circular-json'
+import $router from '../router'
 
 class LevelControl extends Ws {
   constructor () {
@@ -25,6 +26,7 @@ class LevelControl extends Ws {
     this.getCurrentStarSystem = this.getCurrentStarSystem.bind(this)
     this.updateFunctionColor = this.updateFunctionColor.bind(this)
     this._positionBar = this._positionBar.bind(this)
+    this.getSandbox = this.getSandbox.bind(this)
 
     this._openSocket(this._init)
   }
@@ -245,6 +247,14 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'get-continent', path: path || undefined}))
   }
 
+  resetContinent () {
+    this._wsOnMessage((res) => {
+      this._setContinent({pathAndContinent: res.pathAndContinent})
+      this.runCompiled = new RunCompiled()
+    })
+    this._send(JSON.stringify({action: 'reset-continent'}))
+  }
+
   deleteMain () {
     this.functions.main.func = []
     this.updateFunction(this.functions.main)
@@ -316,6 +326,14 @@ class LevelControl extends Ws {
       }
     })
     this._send(JSON.stringify({action: 'init'}))
+  }
+
+  getSandbox () {
+    this._wsOnMessage((res) => {
+      this._setContinent({pathAndContinent: res.pathAndContinent})
+      $router.push({path: '/robot'})
+    })
+    this._send(JSON.stringify({action: 'get-sandbox'}))
   }
 }
 

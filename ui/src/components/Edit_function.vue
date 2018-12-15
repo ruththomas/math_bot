@@ -115,6 +115,11 @@ export default {
       return this.permanentImages.cmdImages
     }
   },
+  watch: {
+    editingFunction () {
+      this.setPut()
+    }
+  },
   data () {
     return {
       func: {

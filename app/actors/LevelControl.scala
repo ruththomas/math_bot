@@ -8,7 +8,7 @@ import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
 import level_gen.models.CelestialSystem
 import models.deprecatedPlayerToken.PlayerToken
-
+import level_gen.sandbox.Sandbox._
 import scala.concurrent.{ExecutionContext, Future}
 
 class LevelControl @Inject()(
@@ -42,22 +42,18 @@ class LevelControl @Inject()(
    * Assembles galaxy data back into its nested data structure
    * */
   def getGalaxyData(tokenId: String, path: Option[String]): Future[GalaxyData] = {
-    statsDAO.findStats(tokenId).flatMap {
-      case Some(stats) =>
-        FastFuture.successful(GalaxyData(stats, path.getOrElse(stats.currentPath)))
-      case None => getStats(tokenId).map(stats => GalaxyData(stats, path.getOrElse("00000")))
-    }
+    for {
+      stats <- getStats(tokenId)
+    } yield GalaxyData(stats, path.getOrElse("00000"))
   }
 
   /*
    * Assembles star system data back into its nested data structure
    * */
   def getStarSystemData(tokenId: String, path: Option[String]): Future[StarSystemData] = {
-    statsDAO.findStats(tokenId).flatMap {
-      case Some(stats) =>
-        FastFuture.successful(StarSystemData(stats, path.getOrElse(stats.currentPath)))
-      case None => getStats(tokenId).map(stats => StarSystemData(stats, path.getOrElse("00000")))
-    }
+    for {
+      stats <- getStats(tokenId)
+    } yield StarSystemData(stats, path.getOrElse("00000"))
   }
 
   def getPath(tokenId: String): Future[String] = {
@@ -70,12 +66,16 @@ class LevelControl @Inject()(
    * Creates built continent ready for the client to render
    * also includes functions for that continent
    * */
-  private def createBuiltContinent(tokenId: String, path: String): Future[BuiltContinent] = {
+  private def createBuiltContinent(tokenId: String,
+                                   path: String,
+                                   isSandbox: Boolean = false): Future[BuiltContinent] = {
     getFunctions(tokenId).map { functions =>
-      val continent = getContinentData(path)
-      val collectedPreBuilts = gatherAssignedStagedAndPrebuiltActive(path)
-      statsDAO.updateCurrentLevel(tokenId, path)
-      val builtContinent =
+      if (isSandbox) {
+        BuiltContinent(functions, sandbox, Some(functionsDAO))
+      } else {
+        val continent = getContinentData(path)
+        val collectedPreBuilts = gatherAssignedStagedAndPrebuiltActive(path)
+        statsDAO.updateCurrentLevel(tokenId, path)
         BuiltContinent(
           functions,
           continent.copy(
@@ -85,7 +85,7 @@ class LevelControl @Inject()(
           ),
           Some(functionsDAO)
         )
-      builtContinent
+      }
     }
   }
 
@@ -141,6 +141,14 @@ class LevelControl @Inject()(
         continentStruct.assignedStaged ::: celestialSystem.children.flatMap(getAllAssignedStaged)
       case None => celestialSystem.children.flatMap(getAllAssignedStaged)
     }
+
+  def clientInit(tokenId: String): Future[(String, GalaxyData, PathAndContinent)] = {
+    for {
+      stats <- getStats(tokenId)
+      builtContinent <- createBuiltContinent(tokenId, stats.currentPath)
+    } yield
+      (stats.currentPath, GalaxyData(stats, stats.currentPath), PathAndContinent(stats.currentPath, builtContinent))
+  }
 
   def getStarSystemData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
@@ -294,7 +302,11 @@ class LevelControl @Inject()(
                 stats
             }
           )
-      }).flatMap(s => s)
+      }).flatMap {
+      _.flatMap { stats =>
+        calibrateContinentPath(stats, stats.currentPath).map(path => stats.copy(currentPath = path))
+      }
+    }
   }
 
   private def calibrateContinentPath(stats: Stats, path: String): Future[String] = {
@@ -315,10 +327,26 @@ class LevelControl @Inject()(
    * */
   def getBuiltContinent(tokenId: String, pathOpt: Option[String] = None): Future[PathAndContinent] = {
     for {
+      _ <- statsDAO.setIsSandbox(tokenId, bool = false)
       stats <- getStats(tokenId)
       calibratedPath <- calibrateContinentPath(stats, pathOpt.getOrElse(stats.currentPath))
       continent <- createBuiltContinent(tokenId, calibratedPath)
     } yield PathAndContinent(pathOpt.getOrElse(stats.currentPath), continent)
+  }
+
+  def resetContinent(tokenId: String): Future[PathAndContinent] = {
+    for {
+      stats <- getStats(tokenId)
+      calibratedPath <- calibrateContinentPath(stats, stats.currentPath)
+      continent <- createBuiltContinent(tokenId, calibratedPath, stats.isSandbox.getOrElse(false))
+    } yield PathAndContinent(calibratedPath, continent)
+  }
+
+  def compilerBuiltContinent(tokenId: String): Future[BuiltContinent] = {
+    for {
+      stats <- getStats(tokenId)
+      continent <- createBuiltContinent(tokenId, stats.currentPath, stats.isSandbox.getOrElse(false))
+    } yield continent
   }
 
   /*
@@ -327,9 +355,13 @@ class LevelControl @Inject()(
    * */
   def advanceStats(tokenId: String, success: Boolean): Future[PathAndContinent] = {
     for {
-      _ <- getStats(tokenId) // ensures user definitely exists in table
-      newPath <- statsDAO.incrementWinsAndTimedPlayed(tokenId, success)
-      continent <- createBuiltContinent(tokenId, newPath)
+      stats <- getStats(tokenId)
+      newPath <- stats.isSandbox match {
+        case Some(t) if t => FastFuture.successful(stats.currentPath)
+        case _ =>
+          statsDAO.incrementWinsAndTimedPlayed(tokenId, success)
+      }
+      continent <- createBuiltContinent(tokenId, newPath, stats.isSandbox.getOrElse(false))
     } yield PathAndContinent(newPath, continent)
   }
 
@@ -350,5 +382,13 @@ class LevelControl @Inject()(
       _ <- getStats(tokenId)
       unlocked <- statsDAO.unlock(tokenId)
     } yield unlocked
+  }
+
+  def getSandbox(tokenId: String): Future[PathAndContinent] = {
+    for {
+      _ <- statsDAO.setIsSandbox(tokenId, bool = true)
+      path <- getPath(tokenId)
+      continent <- createBuiltContinent(tokenId, "", isSandbox = true)
+    } yield PathAndContinent(path, continent)
   }
 }
