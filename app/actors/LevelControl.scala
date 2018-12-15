@@ -298,7 +298,11 @@ class LevelControl @Inject()(
                 stats
             }
           )
-      }).flatMap(s => s)
+      }).flatMap {
+      _.flatMap { stats =>
+        calibrateContinentPath(stats, stats.currentPath).map(path => stats.copy(currentPath = path))
+      }
+    }
   }
 
   private def calibrateContinentPath(stats: Stats, path: String): Future[String] = {
