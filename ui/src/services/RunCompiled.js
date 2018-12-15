@@ -218,10 +218,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _resetStep () {
-    this.levelControl.getContinent(this.levelControl.path, (res) => {
-      $store.state.levelControl._resetContinent({pathAndContinent: res})
-      this.constructor(this.context)
-    })
+    this.levelControl.resetContinent()
   }
 
   _stopRobot () {
