@@ -7,12 +7,14 @@
       v-on:enter="enter"
       v-on:leave="leave"
     >
-      <p v-for="(message, ind) in messageList"
-           class="message"
-           :class="message.type"
-           :id="'message-' + ind"
-           :key="message.id"
-           @click="removeMessage(ind)"
+      <p
+        v-for="(message, ind) in messageList"
+        v-if="message.msg.length"
+        class="message"
+        :class="message.type"
+        :id="'message-' + ind"
+        :key="message.id"
+        @click="removeMessage(ind)"
       >
         {{ message.msg }}
       </p>
