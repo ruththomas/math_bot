@@ -42,6 +42,9 @@ export default {
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
+    },
+    path () {
+      return this.levelControl.path
     }
   },
   data () {
@@ -59,6 +62,11 @@ export default {
         dragClass: 'dragging',
         sort: true
       }
+    }
+  },
+  watch: {
+    path () {
+      this.setPut()
     }
   },
   methods: {
