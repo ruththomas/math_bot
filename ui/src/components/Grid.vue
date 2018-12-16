@@ -198,6 +198,12 @@ export default {
       font-size: $grid-space-font-size;
       background: $grid-background;
 
+      .tool {
+        position: absolute;
+        height: 90%;
+        width: 90%;
+      }
+
       img {
         position: absolute;
         height: 90%;

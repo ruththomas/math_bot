@@ -10,12 +10,35 @@
           @click.native="toggleFunctionImage"
         ></puzzle-pieces>
         <div
-          class='function-control'
-          :class="editingFunction.color"
-          :style="{'background-color': levelControl.getColorHex(editingFunction.color)}"
-          @click="applyColorConditional"
+          id="denom-selector-trigger"
+          class="function-control"
         >
+          <tool
+            :denomination="editingFunction.color"
+          ></tool>
         </div>
+        <b-popover
+          target="denom-selector-trigger"
+          placement="top"
+          triggers="click"
+        >
+          <div class="denom-selector-body">
+            <tool
+              v-for="(denom, ind) in denominations"
+              :key="'denom-selector/' + ind"
+              :denomination="denom.name"
+            ></tool>
+            <!--<b-button-->
+              <!--v-for="(denom, ind) in denominations"-->
+              <!--:key="'denom-selector/' + ind"-->
+              <!--class="denom-selector-item"-->
+              <!--:style="{'background-color': levelControl.getColorHex(denom.name)}"-->
+              <!--@mouseover="highlightGridDenom(denom.name)"-->
+            <!--&gt;-->
+              <!--{{denom.name}}-->
+            <!--</b-button>-->
+          </div>
+        </b-popover>
 
         <div class="func-name">
           <input v-default-value="editingFunction.name" autofocus type="text" maxlength="20" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
@@ -70,6 +93,7 @@ import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
 import PuzzlePieces from './Puzzle_pieces'
+import Tool from './Tool'
 
 export default {
   mounted () {
@@ -78,6 +102,9 @@ export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
+    },
+    denominations () {
+      return this.levelControl.continent.toolList
     },
     robot () {
       return this.levelControl.robot
@@ -143,6 +170,9 @@ export default {
     }
   },
   methods: {
+    highlightGridDenom (denom) {
+      console.log('HIT')
+    },
     updateName () {
       this.levelControl.updateFunctionProperties(this.editingFunction)
     },
@@ -211,7 +241,8 @@ export default {
     draggable,
     FunctionBox,
     FunctionDrop,
-    PuzzlePieces
+    PuzzlePieces,
+    Tool
   }
 }
 </script>
@@ -359,4 +390,19 @@ export default {
     cursor: pointer;
   }
 
+  .denom-selector-body {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    .tool {
+      height: 3.5vmin;
+      width: 3.5vmin;
+      min-height: 20px;
+      min-width: 20px;
+      display: inline-block;
+    }
+    .tool:hover {
+      cursor: pointer;
+    }
+  }
 </style>
