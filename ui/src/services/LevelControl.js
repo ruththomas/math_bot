@@ -24,7 +24,6 @@ class LevelControl extends Ws {
     this._prepFunc = this._prepFunc.bind(this)
     this._setFunctions = this._setFunctions.bind(this)
     this.getCurrentStarSystem = this.getCurrentStarSystem.bind(this)
-    this.updateFunctionColor = this.updateFunctionColor.bind(this)
     this._positionBar = this._positionBar.bind(this)
     this.getSandbox = this.getSandbox.bind(this)
 
@@ -217,11 +216,6 @@ class LevelControl extends Ws {
   updateFunctionProperties (func) {
     this._wsOnMessage(this._resetContinent)
     this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
-  }
-
-  updateFunctionColor (func) {
-    this._wsOnMessage(this._resetContinent)
-    this._send(JSON.stringify({action: 'update-function-color', 'function': this._prepFunc(func)}))
   }
 
   getPath () {

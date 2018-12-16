@@ -15,6 +15,7 @@
         >
           <tool
             :denomination="editingFunction.color"
+            :hide-denom="true"
           ></tool>
         </div>
         <b-popover
@@ -22,21 +23,15 @@
           placement="top"
           triggers="click"
         >
+          <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover('denom-selector-trigger')" />
           <div class="denom-selector-body">
             <tool
               v-for="(denom, ind) in denominations"
               :key="'denom-selector/' + ind"
               :denomination="denom.name"
+              :hide-denom="denom.name === '1'"
+              @click.native="updateFunctionColor(denom.name)"
             ></tool>
-            <!--<b-button-->
-              <!--v-for="(denom, ind) in denominations"-->
-              <!--:key="'denom-selector/' + ind"-->
-              <!--class="denom-selector-item"-->
-              <!--:style="{'background-color': levelControl.getColorHex(denom.name)}"-->
-              <!--@mouseover="highlightGridDenom(denom.name)"-->
-            <!--&gt;-->
-              <!--{{denom.name}}-->
-            <!--</b-button>-->
           </div>
         </b-popover>
 
@@ -176,8 +171,8 @@ export default {
     updateName () {
       this.levelControl.updateFunctionProperties(this.editingFunction)
     },
-    applyColorConditional () {
-      this.levelControl.updateFunctionColor(this.editingFunction)
+    updateFunctionColor (color) {
+      this.levelControl.updateFunctionProperties(Object.assign(this.editingFunction, {color: color}))
     },
     toggleFunctionImage () {
       const func = this.editingFunction
@@ -336,11 +331,25 @@ export default {
     }
 
     .function-control {
-      height: 1.3em;
-      width: 1.3em;
       border-radius: 0.5vmin;
       margin-right: 10px;
       cursor: pointer;
+
+      .tool {
+        position: relative;
+        height: 4vmin;
+        width: 4vmin;
+        bottom: -0.25rem;
+
+      }
+      .tool:hover {
+        cursor: pointer;
+      }
+    }
+
+    .function-control.trash {
+      height: 1.3em;
+      width: 1.3em;
     }
 
     .func-name {
@@ -395,11 +404,13 @@ export default {
     width: 100%;
     overflow: auto;
     .tool {
-      height: 3.5vmin;
-      width: 3.5vmin;
+      height: 4vmin;
+      width: 4vmin;
       min-height: 20px;
       min-width: 20px;
       display: inline-block;
+      position: relative;
+      margin: 1%;
     }
     .tool:hover {
       cursor: pointer;

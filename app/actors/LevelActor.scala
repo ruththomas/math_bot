@@ -156,6 +156,7 @@ class LevelActor @Inject()(out: ActorRef,
         preparedFunctions <- levelControl.activateDeactivateFunction(tokenId, function)
       } yield out ! preparedFunctions
     /*
+     * @deprecated
      * Updates every instance of a functions color
      * */
     case ChangeFunctionColor(function) =>

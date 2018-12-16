@@ -235,6 +235,9 @@ class LevelControl @Inject()(
     } yield pathAndContinent
   }
 
+  /*
+   * @deprecated
+   * */
   def changeFunctionColor(tokenId: String, function: Function): Future[PathAndContinent] = {
     for {
       funcOpt <- functionsDAO.findFunction(tokenId, function.created_id)
