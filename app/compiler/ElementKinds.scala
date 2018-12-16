@@ -79,7 +79,6 @@ object ElementKinds extends Enumeration {
     white,
     anyColor,
     emptyColor,
-    zero,
     one,
     ten,
     hundred,

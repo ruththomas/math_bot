@@ -47,6 +47,7 @@ export default {
 
 <style scoped lang="scss">
 .tool {
+  position: absolute;
   height: 90%;
   width: 90%;
   div {

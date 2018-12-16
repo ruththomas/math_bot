@@ -111,11 +111,11 @@ trait Conditionals extends LevelGenTags {
       continentStruct = Some(
         ContinentStruct(
           gridMap = List(
-            "($) |E| |E| |E| |E| |E| |E| |E| |E| [TS(1g)]",
+            "($) |E| |E| |E| |E| |E| |E| |E| |E| [TS(1000)]",
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |E|",
-            "[TS(1g)] |E| |E| |E| |E| (R) |W| |W| |W| |E|",
+            "[TS(1000)] |E| |E| |E| |E| (R) |W| |W| |W| |E|",
             "|E| |W| |W| |W| |W| |W| |W| |W| |W| |E|",
-            "[TS(1g)] |E| |E| |E| |E| |E| |E| |E| |E| [TS(1g)]"
+            "[TS(1000)] |E| |E| |E| |E| |E| |E| |E| |E| [TS(1000)]"
           ),
           description = "Walk to the portal.",
           mainMax = 1,
@@ -157,7 +157,7 @@ trait Conditionals extends LevelGenTags {
             "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
             "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
             "|W| |W| |W| |W| |E| |W| |W| |W| |W| |W|",
-            "($) |E| |E| |E| [TS(10g)] |W| |W| |W| |W| |W|"
+            "($) |E| |E| |E| [TS(10000)] |W| |W| |W| |W| |W|"
           ),
           description = "Walk to the portal.",
           mainMax = 1,
@@ -243,11 +243,11 @@ trait Conditionals extends LevelGenTags {
       continentStruct = Some(
         ContinentStruct(
           gridMap = List(
-            "(R) |E| |E| |E| [TS(1)] |E| |E| |E| |E| [TS(10g)]",
+            "(R) |E| |E| |E| [TS(1)] |E| |E| |E| |E| [TS(10000)]",
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |E|",
-            "[TS(10g)] |E| |E| |E| |E| ($) |W| |W| |W| [TS(1)]",
+            "[TS(10000)] |E| |E| |E| |E| ($) |W| |W| |W| [TS(1)]",
             "|E| |W| |W| |W| |W| |W| |W| |W| |W| |E|",
-            "[TS(10g)] |E| [TS(1)] |E| |E| |E| |E| |E| |E| [TS(10g]"
+            "[TS(10000)] |E| [TS(1)] |E| |E| |E| |E| |E| |E| [TS(10000]"
           ),
           description = "Walk to the portal.",
           mainMax = 1,
@@ -284,11 +284,11 @@ trait Conditionals extends LevelGenTags {
       continentStruct = Some(
         ContinentStruct(
           gridMap = List(
-            "($) |E| [TS(10)] |E| [TS(1g)] [TS(10g)] [TS(1)] |E| |E| [TS(100)]",
-            "|W| |W| |W| |W| |W| |W| |W| |W| |W| [TS(1g)]",
+            "($) |E| [TS(10)] |E| [TS(1000)] [TS(10000)] [TS(1)] |E| |E| [TS(100)]",
+            "|W| |W| |W| |W| |W| |W| |W| |W| |W| [TS(1000)]",
             "[TS(100)] [TS(10) [TS(1)] |E| [TS(10)] (R) |W| |W| |W| |E|",
-            "[TS(10g)] |W| |W| |W| |W| |W| |W| |W| |W| [TS(10)]",
-            "[TS(100)] |E| [TS(10) |E| [TS(1)] [TS(1)] |E| [TS(10g)] [TS(1g)] [TS(100]"
+            "[TS(10000)] |W| |W| |W| |W| |W| |W| |W| |W| [TS(10)]",
+            "[TS(100)] |E| [TS(10) |E| [TS(1)] [TS(1)] |E| [TS(10000)] [TS(1000)] [TS(100]"
           ),
           description = "Walk to the portal.",
           mainMax = 1,
@@ -412,7 +412,7 @@ trait Conditionals extends LevelGenTags {
       continentStruct = Some(
         ContinentStruct(
           gridMap = List(
-            "|W| [TS(100) |E| [TS(10g)] |W| ($)     |W| |W| |W| |W|",
+            "|W| [TS(100) |E| [TS(10000)] |W| ($)     |W| |W| |W| |W|",
             "|W| |E|      |W| |E|       |W| |E|     |W| |W| |W| |W|",
             "|W| |E|      |W| |E|       |W| |E|     |W| |W| |W| |W|",
             "|W| |E|      |W| |E|       |W| |E|     |W| |W| |W| |W|",
@@ -474,9 +474,9 @@ trait Conditionals extends LevelGenTags {
           gridMap = List(
             "|W|     |W| |W|       [TS(1)] |E|       [TS(10)]  |W| |W|      ($) [TS(100)]",
             "|W|     |W| |W|       |E|     |W|       [TS(100)] |E| [TS(10)] |W| |E|",
-            "|W|     |W| |W|       [TS(1)] [TS(1g)]  |W|       |W| |E|      |W| |E|",
+            "|W|     |W| |W|       [TS(1)] [TS(1000)]  |W|       |W| |E|      |W| |E|",
             "[TS(1)] |E| [TS(10)]  |W|     |E|       |W|       |W| |E|      |W| |E|",
-            "(R)     |W| [TS(10g)] |E|     [TS(10g)] |W|       |W| [TS(1g)] |E| [TS(1g)]"
+            "(R)     |W| [TS(10000)] |E|     [TS(10000)] |W|       |W| [TS(1000)] |E| [TS(1000)]"
           ),
           description = "Walk to the portal.",
           mainMax = 1,
@@ -528,7 +528,7 @@ trait Conditionals extends LevelGenTags {
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
-            "(R) [TS(10g)] [TS(10)] [TS(10g)] [TS(10g)] [TS(10)] [TS(10g)] [TS(10)] [TS(10g)] ($)",
+            "(R) [TS(10000)] [TS(10)] [TS(10000)] [TS(10000)] [TS(10)] [TS(10000)] [TS(10)] [TS(10000)] ($)",
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
           ),
@@ -586,7 +586,7 @@ trait Conditionals extends LevelGenTags {
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
-            "(R) [TS(1g)] [TS(1)] [TS(1)] [TS(10)] [TS(100)] [TS(10)] [TS(1)] [TS(1g)] ($)",
+            "(R) [TS(1000)] [TS(1)] [TS(1)] [TS(10)] [TS(100)] [TS(10)] [TS(1)] [TS(1000)] ($)",
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
           ),
@@ -646,7 +646,7 @@ trait Conditionals extends LevelGenTags {
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
-            "(R) |E| [TS(10)] |E| [TS(10g)] [TS(100)] |E| |E| [TS(10g)] ($)",
+            "(R) |E| [TS(10)] |E| [TS(10000)] [TS(100)] |E| |E| [TS(10000)] ($)",
             "|W| |W| |W| |W| |W| |W| |W| |W| |W| |W|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
           ),

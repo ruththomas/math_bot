@@ -122,16 +122,7 @@ object PreparedFunctions {
    * */
   private def convertColors(functions: List[Function]): List[Function] = functions.map { f =>
     f.copy(
-      color = {
-        allColors.find(_.name == f.color) match {
-          case Some(e) if e.name == "blue" => one.name
-          case Some(e) if e.name == "purple" => ten.name
-          case Some(e) if e.name == "green" => hundred.name
-          case Some(e) if e.name == "pink" => thousand.name
-          case Some(e) if e.name == "red" => tenThousand.name
-          case _ => white.name
-        }
-      },
+      color = all.find(_.name == f.color).getOrElse(white).name,
       func = f.func.map(convertColors)
     )
   }

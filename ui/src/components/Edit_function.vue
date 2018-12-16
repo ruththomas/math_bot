@@ -12,6 +12,7 @@
         <div
           class='function-control'
           :class="editingFunction.color"
+          :style="{'background-color': levelControl.getColorHex(editingFunction.color)}"
           @click="applyColorConditional"
         >
         </div>
@@ -179,9 +180,9 @@ export default {
     },
     setPut (bool = this.functions.length < this.editingFunction.sizeLimit) {
       this.functionDraggableOptions.group.put = bool
-      if (!bool) {
-        this.fullMessage()
-      }
+      // if (!bool) {
+      //   this.fullMessage()
+      // }
     },
     editFunction () {
       if (this.functions.length <= this.editingFunction.sizeLimit) {

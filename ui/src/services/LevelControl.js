@@ -220,7 +220,10 @@ class LevelControl extends Ws {
   }
 
   updateFunctionColor (func) {
-    this._wsOnMessage(this._resetContinent)
+    this._wsOnMessage((res) => {
+      console.log(res)
+      this._resetContinent(res)
+    })
     this._send(JSON.stringify({action: 'update-function-color', 'function': this._prepFunc(func)}))
   }
 

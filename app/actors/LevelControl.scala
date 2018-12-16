@@ -20,7 +20,8 @@ class LevelControl @Inject()(
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
   private def nextColor(currentColor: String): String = {
-    listedElements.lift(listedElements.indexWhere(_.name == currentColor) + 1).getOrElse(listedElements.head).name
+    val ele = listedElements.lift(listedElements.indexWhere(_.name == currentColor) + 1)
+    ele.getOrElse(listedElements.head).name
   }
 
   /*
@@ -239,10 +240,11 @@ class LevelControl @Inject()(
       funcOpt <- functionsDAO.findFunction(tokenId, function.created_id)
       pathAndContinent <- funcOpt match {
         case Some(func) =>
+          val color = nextColor(func.color)
           updateFunctionProperties(
             tokenId,
             func.copy(
-              color = nextColor(func.color)
+              color = color
             )
           )
         case None => getBuiltContinent(tokenId)
@@ -253,17 +255,9 @@ class LevelControl @Inject()(
   /*
    * Recursively updates all instances of a functions color, name, displayName
    * */
-  private def changedAllInstances(functions: List[Function], function: Function): List[Function] = {
-    functions.map { ft =>
-      val func = ft.func.getOrElse(List.empty[Function])
-      ft.copy(
-        name = if (ft.created_id == function.created_id) function.name else ft.name,
-        color = if (ft.created_id == function.created_id) function.color else ft.color,
-        displayName =
-          if (ft.created_id == function.created_id) Some(function.displayName.getOrElse(false)) else ft.displayName,
-        func = Some(changedAllInstances(func, function))
-      )
-    }
+  private def changedAllInstances(functions: List[Function], function: Function): List[Function] = functions.map { ft =>
+    (if (ft.created_id == function.created_id) function
+     else ft).copy(func = ft.func.map(changedAllInstances(_, function)))
   }
 
   /*

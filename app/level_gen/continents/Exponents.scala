@@ -15,7 +15,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -51,7 +51,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -87,7 +87,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -123,7 +123,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -159,7 +159,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -195,7 +195,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -231,7 +231,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -267,7 +267,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -303,7 +303,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -339,7 +339,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -375,7 +375,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -411,7 +411,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -447,7 +447,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -483,7 +483,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -519,7 +519,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -555,7 +555,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -591,7 +591,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
@@ -627,7 +627,7 @@ trait Exponents extends LevelGenTags {
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
             "|E| |E| (R) |E| |E| ($) |E|  |E|   |E|  |E|",
             "|E| |E| |E| |E| |E| |E| |E|  |E|   |E|  |E|",
-            "|E| |E| |E| |E| |E| [1] [10] [100] [1g] [10g]"
+            "|E| |E| |E| |E| |E| [1] [10] [100] [1000] [10000]"
           ),
           description = "Place the correct amount on the portal",
           mainMax = -1,
