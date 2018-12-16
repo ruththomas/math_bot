@@ -75,6 +75,11 @@ object ElementKinds extends Enumeration {
   val allLetters: Set[ElementKind] = Set(x, y, z)
   val all: Set[ElementKind] = allColors ++ allNumbers ++ allLetters
 
+  val listedControlElements: List[Element] = List(
+    white,
+    anyColor,
+    emptyColor
+  ).map(ek => Element(original = true, name = ek.name, image = ek.name, color = ek, value = ek.value))
   val listedElements: List[Element] = List(
     white,
     anyColor,

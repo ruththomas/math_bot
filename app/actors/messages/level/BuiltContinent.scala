@@ -10,16 +10,17 @@ import compiler.ElementKinds._
 object BuiltContinent {
   def apply(functions: Functions, continent: CelestialSystem, functionsDAO: Option[FunctionsDAO]): BuiltContinent = {
     val continentStruct = continent.continentStruct.get
+    val builtGrid = buildGrid(continentStruct.gridMap)
     new BuiltContinent(
       name = continent.name,
-      gridMap = buildGrid(continentStruct.gridMap),
+      gridMap = builtGrid,
       description = makeDescription(continentStruct),
       mainMax = continentStruct.maxMain,
       initialRobotState = setInitialRobot(continentStruct),
       stagedEnabled = continentStruct.stagedEnabled,
       activeEnabled = continentStruct.activeEnabled,
       lambdas = PreparedFunctions(functions, continentStruct, functionsDAO.get),
-      toolList = listedElements.map(ClientElement.apply),
+      toolList = gatherTools(builtGrid),
       specialParameters = continentStruct.specialParameters,
       problem = problemGen(continentStruct.problem),
       initFocus = createInitFocus(continentStruct.initFocus),
@@ -33,6 +34,14 @@ object BuiltContinent {
 
   import Problem._
   import daos.DefaultCommands._
+
+  def gatherTools(gridMap: List[List[GridPart]]): List[ClientElement] = {
+    import compiler.ElementKinds._
+    val tools = gridMap.flatten.filter(_.tools.nonEmpty).flatMap(_.tools).distinct.map(t => t.name -> t).toMap
+    if (tools.nonEmpty) {
+      listedControlElements.map(ClientElement.apply) ::: listedElements.flatMap(e => tools.get(e.name))
+    } else listedControlElements.filter(_.name == "white").map(ClientElement.apply)
+  }
 
   def freeHintUrl(idOpt: Option[String]): Option[String] = idOpt match {
     case Some(id) => Some(embedURL(id))

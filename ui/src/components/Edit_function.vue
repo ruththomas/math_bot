@@ -402,7 +402,6 @@ export default {
   .denom-selector-body {
     height: 100%;
     width: 100%;
-    overflow: auto;
     .tool {
       height: 4vmin;
       width: 4vmin;
