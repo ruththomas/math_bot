@@ -146,7 +146,7 @@ class LevelControl @Inject()(
   def clientInit(tokenId: String): Future[(String, GalaxyData, PathAndContinent)] = {
     for {
       stats <- getStats(tokenId)
-      builtContinent <- createBuiltContinent(tokenId, stats.currentPath)
+      builtContinent <- createBuiltContinent(tokenId, stats.currentPath, stats.isSandbox.getOrElse(false))
     } yield
       (stats.currentPath, GalaxyData(stats, stats.currentPath), PathAndContinent(stats.currentPath, builtContinent))
   }
