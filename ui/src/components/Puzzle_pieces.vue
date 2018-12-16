@@ -13,11 +13,13 @@
     data-toggle="tooltip" :title="func.name"
     :style="size ? {height: size, width: size} : {}"
   >
-    <!--<div-->
-      <!--class="denomination-name"-->
-    <!--&gt;-->
-      <!--{{func.color}}-->
-    <!--</div>-->
+    <div
+      v-if="func.color !== 'white'"
+      class="denomination-name"
+      :style="{color: levelControl.getColorHex(func.color)}"
+    >
+      {{func.color}}
+    </div>
     <svg v-if="pieceToShow === 'closed'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <linearGradient id="rainbow-border" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="20%" stop-color="#4A90E2" />
@@ -249,6 +251,13 @@ export default {
       background: -o-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Opera 11.1 to 12.0 */
       background: -moz-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Firefox 3.6 to 15 */
       background: linear-gradient(to right, $blue, $purple, $green, $pink, $red)!important; /* Standard syntax (must be last) */
+    }
+
+    .denomination-name {
+      position: absolute;
+      font-weight: bolder;
+      top: 5%;
+      left: 5%;
     }
   }
 

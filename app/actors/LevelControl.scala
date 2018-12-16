@@ -231,7 +231,7 @@ class LevelControl @Inject()(
           changedAllInstances(functions.listed, function)
         )
       )
-      pathAndContinent <- getBuiltContinent(tokenId)
+      pathAndContinent <- resetContinent(tokenId)
     } yield pathAndContinent
   }
 
@@ -247,7 +247,7 @@ class LevelControl @Inject()(
               color = color
             )
           )
-        case None => getBuiltContinent(tokenId)
+        case None => resetContinent(tokenId)
       }
     } yield pathAndContinent
   }
