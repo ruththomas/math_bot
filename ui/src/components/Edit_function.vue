@@ -15,7 +15,7 @@
         >
           <tool
             :denomination="editingFunction.color"
-            :hide-denom="true"
+            :hide-denom="editingFunction.color === '1'"
           ></tool>
         </div>
         <b-popover
