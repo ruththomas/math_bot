@@ -156,7 +156,7 @@ object Compiler {
                 SetItemDown
               case id if allFunctions.contains(id) =>
                 f.color match {
-                  case Colors.white.name =>
+                  case ElementKinds.white.name =>
                     UserFunctionRefById(id)
                   case _ =>
                     IfElement(ElementKinds.from(f.color).getOrElse(ElementKinds.anyColor), UserFunctionRefById(id))

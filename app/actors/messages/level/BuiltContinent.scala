@@ -2,10 +2,9 @@ package actors.messages.level
 
 import actors.VideoHintActor.embedURL
 import daos.FunctionsDAO
-import level_gen.models.{CelestialSystem, ContinentStruct}
+import level_gen.models.{ CelestialSystem, ContinentStruct }
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import compiler.ElementKinds._
 
 object BuiltContinent {
   def apply(functions: Functions, continent: CelestialSystem, functionsDAO: Option[FunctionsDAO]): BuiltContinent = {

@@ -1,7 +1,7 @@
 package compiler.processor
 
 import compiler.operations.{ ChangeRobotDirection, MoveRobotForwardOneSpot, _ }
-import compiler.{ Colors, Grid, GridAndProgram }
+import compiler.{ ElementKinds, Grid, GridAndProgram }
 import configuration.CompilerConfiguration
 
 import scala.annotation.tailrec
@@ -24,7 +24,7 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
   @tailrec
   private def execute(state : ProcessorState, maybeOperation : Option[(Operation, TraceTag)], post : Seq[(Operation, TraceTag)], stepCount : Int, emptyLoopCount : Int, successCheck : Grid => Boolean, checkEveryFrame : Boolean) : Stream[Frame] = {
     if (emptyLoopCount > config.maxEmptyLoopCount || stepCount > config.maxProgramSteps) {
-      Stream(generateFinalFrame(state, false))
+      Stream(generateFinalFrame(state, isSuccess = false))
     } else {
       maybeOperation match {
         case Some(operation) =>
@@ -32,13 +32,13 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
             case uf: UserFunction =>
               val withTrace = uf.operations.zipWithIndex.map(t => (t._1, TraceTag(uf, t._2)))
               execute(state, withTrace.headOption, withTrace.tail ++: post, stepCount, emptyLoopCount + 1, successCheck, checkEveryFrame)
-            case IfColor(color, conditionalOperation) =>
+            case IfElement(color, conditionalOperation) =>
               state.currentRegister.peek() match {
                 case Some(element) if element.color == color =>
                   execute(state, Some((conditionalOperation, operation._2)), post, stepCount, emptyLoopCount + 1, successCheck, checkEveryFrame)
-                case Some(_) if color == Colors.anyColor =>
+                case Some(_) if color == ElementKinds.anyColor =>
                   execute(state, Some((conditionalOperation, operation._2)), post, stepCount, emptyLoopCount + 1, successCheck, checkEveryFrame)
-                case None if color == Colors.emptyColor =>
+                case None if color == ElementKinds.emptyColor =>
                   execute(state, Some((conditionalOperation, operation._2)), post, stepCount, emptyLoopCount + 1, successCheck, checkEveryFrame)
                 case _ =>
                   execute(state, post.headOption, post.drop(1), stepCount, emptyLoopCount + 1, successCheck, checkEveryFrame) // Skip the operation inside the if

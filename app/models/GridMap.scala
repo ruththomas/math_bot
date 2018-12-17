@@ -1,6 +1,6 @@
 package models
 
-import _root_.compiler.processor.Frame
+import _root_.compiler.Grid
 import actors.messages.level.{ClientElement, GridPart, Problem}
 
 /*
@@ -9,7 +9,7 @@ import actors.messages.level.{ClientElement, GridPart, Problem}
 case class GridMap(
     gMap: List[List[GridPart]],
     robotOrientation: String,
-    success: (Frame, Problem) => Boolean,
+    success: (Grid, Problem) => Boolean,
     problem: Problem,
     evalEachFrame: Boolean,
     description: String,
