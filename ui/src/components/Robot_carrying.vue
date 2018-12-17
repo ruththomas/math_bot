@@ -70,11 +70,6 @@ export default {
       return this.$store.getters.getPermanentImages
     }
   },
-  watch: {
-    robotCarrying (c) {
-      console.log(this.organizeCarrying)
-    }
-  },
   data () {
     return {
       amountToShow: 48
