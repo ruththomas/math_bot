@@ -69,10 +69,10 @@
                     :key="`d-image-${iInd}`"
                     :class="tool.original ? 'replenish-tool' : ''"
                   >
-                    <b-img
-                      :src="permanentImages.tools[tool.image]"
-                      fluid
-                    ></b-img>
+                    <tool
+                      :denomination="tool.name"
+                      :hide-denom="tool.name === '1'"
+                    ></tool>
                   </div>
                 </div>
               </b-popover>
@@ -338,6 +338,10 @@ export default {
     right:  calc(#{-$popover-btn-size} / 2);
     z-index: 10001;
     cursor: pointer;
+  }
+  .tool {
+    height: 2vmin;
+    width: 2vmin;
   }
 </style>
 <style lang="scss">

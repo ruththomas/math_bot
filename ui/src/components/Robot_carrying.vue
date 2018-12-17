@@ -1,11 +1,14 @@
 <template>
   <div>
-    <div id="robot-carrying-id" class="robot-carrying" :class="!organizeCarrying.length ? 'hide-carrying' : ''" @click="openPopover('robot-carrying-id')">
+    <div id="robot-carrying-id" class="robot-carrying" @click="openPopover('robot-carrying-id')">
       <span
-        v-for="(tool, ind) in organizeCarrying"
-        :key="'carrying-' + ind"
+        v-for="(tool, key) in organizeCarrying"
+        :key="'carrying-' + key"
       >
-        <b-img class="tool-display-image" :src="toolImages[tool[0]]" /> <span>x</span> <span>{{tool[1]}}</span>
+        <tool
+          :denomination="key"
+          :hide-denom="key === '1'"
+        ></tool> <span>x</span> <span>{{tool}}</span>
       </span>
     </div>
     <b-popover
@@ -15,12 +18,12 @@
       placement="left"
     >
       <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover('robot-carrying-id')" />
-      <b-img
+      <tool
         v-for="(imageName, iInd) in displayCarrying"
         :key="'carrying-popover-image/' + iInd"
-        class="tool-display-image"
-        :src="toolImages[imageName]"
-      ></b-img>
+        :denomination="imageName"
+        :hide-denom="imageName === '1'"
+      ></tool>
       <span class="tool-display-text" @click="adjustShowAmount"><strong>. . .</strong></span>
     </b-popover>
   </div>
@@ -28,8 +31,8 @@
 
 <script>
 import uid from 'uid'
-import _ from 'underscore'
 import utils from '../services/utils'
+import Tool from './Tool'
 
 export default {
   computed: {
@@ -48,19 +51,11 @@ export default {
     problem () {
       return this.levelControl.continent.problem.problem
     },
-
     organizeCarrying () {
-      return _.chain(this.robotCarrying)
-        .reduce((organized, tool) => {
-          organized[tool] = organized[tool] + 1 || 1
-          return organized
-        }, {})
-        .pairs()
-        .sortBy((tup) => {
-          const values = {kitty: 1, ten: 10, oneHundred: 100, oneThousand: 1000, tenThousand: 10000}
-          return values[tup[0]]
-        })
-        .value()
+      return this.robotCarrying.reduce((groups, name) => {
+        groups[name] = groups[name] + 1 || 1
+        return groups
+      }, {})
     },
     toolImages () {
       return this.permanentImages.tools
@@ -73,6 +68,11 @@ export default {
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    }
+  },
+  watch: {
+    robotCarrying (c) {
+      console.log(this.organizeCarrying)
     }
   },
   data () {
@@ -89,6 +89,9 @@ export default {
     },
     closePopover: utils.closePopover,
     openPopover: utils.openPopover
+  },
+  components: {
+    Tool
   }
 }
 </script>
@@ -145,5 +148,9 @@ export default {
     right:  calc(#{-$popover-btn-size} / 2);
     z-index: 10001;
     cursor: pointer;
+  }
+  .tool {
+    height: 2vmin;
+    width: 2vmin;
   }
 </style>

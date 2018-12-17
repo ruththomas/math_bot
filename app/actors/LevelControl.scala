@@ -270,9 +270,15 @@ class LevelControl @Inject()(
    * */
   def activateDeactivateFunction(tokenId: String, function: Function): Future[PreparedFunctions] = {
     for {
+      stats <- getStats(tokenId)
       functions <- getFunctions(tokenId)
       path <- getPath(tokenId)
-    } yield PreparedFunctions(functions, getContinentData(path).continentStruct.get, function, functionsDAO)
+    } yield
+      PreparedFunctions(functions,
+                        if (stats.isSandbox.getOrElse(false)) sandbox.continentStruct.get
+                        else getContinentData(path).continentStruct.get,
+                        function,
+                        functionsDAO)
   }
 
   /*

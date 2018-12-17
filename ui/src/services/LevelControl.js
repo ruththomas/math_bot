@@ -179,7 +179,7 @@ class LevelControl extends Ws {
       displayName: false,
       name: '',
       func: [],
-      color: 'default'
+      color: 'white'
     })
     this._wsOnMessage((updated) => {
       this._setFunctions(updated.preparedFunctions)
