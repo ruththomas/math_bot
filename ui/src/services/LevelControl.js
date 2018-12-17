@@ -246,7 +246,7 @@ class LevelControl extends Ws {
       this._setContinent({pathAndContinent: res.pathAndContinent})
       this.runCompiled = new RunCompiled()
     })
-    this._send(JSON.stringify({action: 'reset-continent'}))
+    this._send(JSON.stringify({action: 'reset-continent', path: this.path}))
   }
 
   deleteMain () {

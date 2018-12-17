@@ -337,10 +337,10 @@ class LevelControl @Inject()(
     } yield PathAndContinent(pathOpt.getOrElse(stats.currentPath), continent)
   }
 
-  def resetContinent(tokenId: String): Future[PathAndContinent] = {
+  def resetContinent(tokenId: String, pathOpt: Option[String] = None): Future[PathAndContinent] = {
     for {
       stats <- getStats(tokenId)
-      calibratedPath <- calibrateContinentPath(stats, stats.currentPath)
+      calibratedPath <- calibrateContinentPath(stats, pathOpt.getOrElse(stats.currentPath))
       continent <- createBuiltContinent(tokenId, calibratedPath, stats.isSandbox.getOrElse(false))
     } yield PathAndContinent(calibratedPath, continent)
   }

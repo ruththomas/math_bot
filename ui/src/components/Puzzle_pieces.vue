@@ -264,7 +264,7 @@ export default {
       position: absolute;
       font-weight: bolder;
       top: 0;
-      left: 5%;
+      right: 5%;
       font-size: 1.5vmin;
     }
   }
