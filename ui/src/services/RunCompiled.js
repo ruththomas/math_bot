@@ -80,7 +80,7 @@ class RunCompiled extends GridAnimator {
   }
 
   pause () {
-    this._pausedMessage()
+    // this._pausedMessage()
     this.forward = true
     this.robot.setSpeed(400)
     this.robot.setState('paused')
@@ -166,7 +166,7 @@ class RunCompiled extends GridAnimator {
     const dis = this
     const failedMessage1 = {
       type: 'success',
-      msg: `Not quite, a hint might help.`,
+      msg: '',
       handlers () {
         const $helpButton = $('.help-button')
         const $reset = $('.reset.dialog-button')
@@ -185,25 +185,13 @@ class RunCompiled extends GridAnimator {
         }
       }
     }
-    const failedMessage2 = {
-      type: 'success',
-      msg: ' Click on any icon to restart.',
-      handlers () {
-        return {
-          closeControl: dis._closeMessageRobotHome()
-        }
-      }
-    }
-    this._addMessage(failedMessage2)
     this._addMessage(failedMessage1)
   }
 
-  _mainEmptyMessage (emptyFuncs) {
-    const emptyCount = emptyFuncs.length
-
+  _mainEmptyMessage () {
     const messageBuilder = {
       type: 'warn',
-      msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : `${emptyFuncs.length} of your functions ${emptyCount > 1 ? 'are' : 'is'} empty`,
+      msg: '',
       handlers () {
         const $bar = $('.bar')
 
@@ -266,7 +254,7 @@ class RunCompiled extends GridAnimator {
   _failure (frame) {
     return this.initializeAnimation(frame, async () => {
       this.lastFrame = frame
-      this.robot.setState('failure')
+      this.robot.setState('paused')
       this._failedMessage()
       this._updateGalaxyData()
     })
@@ -298,7 +286,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _nextCurrent () {
-    this.currentFrame = this.forward ? this.currentFrame + 1 : Math.max(this.currentFrame - 1, 0)
+    this.currentFrame = Math.min(this.robotFrames.length - 1, this.forward ? this.currentFrame + 1 : Math.max(this.currentFrame - 1, 0))
     return this.currentFrame
   }
 
