@@ -145,7 +145,6 @@ export default {
     cursor: pointer;
   }
   .tool {
-    height: 2vmin;
     width: 2vmin;
   }
 </style>
