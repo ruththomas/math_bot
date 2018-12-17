@@ -1,7 +1,7 @@
 package models
 
-import actors.messages.level.{ GridPart, Problem, ToolList }
-import _root_.compiler.Grid
+import _root_.compiler.processor.Frame
+import actors.messages.level.{ClientElement, GridPart, Problem}
 
 /*
  * Only used in compiler.
@@ -9,9 +9,9 @@ import _root_.compiler.Grid
 case class GridMap(
     gMap: List[List[GridPart]],
     robotOrientation: String,
-    success: (Grid, Problem) => Boolean,
+    success: (Frame, Problem) => Boolean,
     problem: Problem,
     evalEachFrame: Boolean,
     description: String,
-    toolList: ToolList = ToolList()
+    toolList: List[ClientElement]
 )

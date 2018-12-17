@@ -105,7 +105,7 @@ export default {
     goToProfile () {
       this.$store.dispatch('toggleHintShowing', {showing: false, videoURL: ''})
       this.$store.dispatch('deleteMessages')
-      this.$router.push({path: 'profile'})
+      this.$router.push({path: '/profile'})
     },
     handlePicture (picture) {
       if (!picture || picture.match(/gravatar/)) {

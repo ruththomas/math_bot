@@ -45,8 +45,8 @@ object Compiler {
                           tool =>
                             Element(tool.original,
                                     tool.name,
-                                    tool.image,
-                                    Colors.from(tool.color).getOrElse(Colors.emptyColor),
+                                    tool.name,
+                                    ElementKinds.from(tool.name).getOrElse(ElementKinds.emptyColor),
                                     tool.value)
                         )
                       )
@@ -104,7 +104,7 @@ object Compiler {
       f.operations.flatMap {
         case funcRef: UserFunctionRef =>
           if (lookup(funcRef).isEmpty) Some(funcRef) else None
-        case ifColor: IfColor =>
+        case ifColor: IfElement =>
           ifColor.operation match {
             case funcRef: UserFunctionRefById =>
               if (lookup(funcRef).isEmpty) Some(funcRef) else None
@@ -126,7 +126,7 @@ object Compiler {
       f.operations = f.operations.map {
         case funcRef: UserFunctionRef =>
           lookup(funcRef).getOrElse(NoOperation)
-        case ifColor: IfColor =>
+        case ifColor: IfElement =>
           ifColor.operation match {
             case funcRef: UserFunctionRefById =>
               ifColor.copy(operation = lookup(funcRef).getOrElse(NoOperation))
@@ -159,7 +159,7 @@ object Compiler {
                   case Colors.white.name =>
                     UserFunctionRefById(id)
                   case _ =>
-                    IfColor(Colors.from(f.color).getOrElse(Colors.anyColor), UserFunctionRefById(id))
+                    IfElement(ElementKinds.from(f.color).getOrElse(ElementKinds.anyColor), UserFunctionRefById(id))
                 }
               case _ =>
                 NoOperation
@@ -223,21 +223,21 @@ object Compiler {
           Left((NoOperation, c._2 + (name -> n), c._3))
         }))(elements.map(e => convertMbl(e, lc)))
 
-      case MblList(MblSymbol("if") :: MblQuoted(colorStr) :: elements) =>
-        Colors.from(colorStr) match {
+      case MblList(MblSymbol("if") :: MblQuoted(kind) :: elements) =>
+        ElementKinds.from(kind) match {
           case Some(color) =>
             (errReduce orElse (opsReduce andThen { c =>
               val l = UserFunctionLambda(c._1, lc.inc)
               Left(
                 (
-                  IfColor(color, l),
+                  IfElement(color, l),
                   c._2,
                   c._3 + (l.id -> l)
                 )
               )
             }))(elements.map(e => convertMbl(e, lc)))
           case None =>
-            Right(s"Invalid color '$colorStr'")
+            Right(s"Invalid element '$kind'")
         }
 
       case MblList(elements) => // Usually the "main" function but if its not the outermost function, and shows up anywhere else it will just be executed inline as a kind of lambda

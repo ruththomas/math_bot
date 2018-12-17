@@ -99,9 +99,8 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       logger.LogInfo(className, "Creating new compiler.")
 
       for {
-        pathAndContinent <- levelControl.getBuiltContinent(tokenId)
+        continent <- levelControl.compilerBuiltContinent(tokenId)
       } yield {
-        val continent = pathAndContinent.builtContinent
         val main = continent.lambdas.main
         val funcs = continent.lambdas.activeFuncs
         val commands = continent.lambdas.cmds

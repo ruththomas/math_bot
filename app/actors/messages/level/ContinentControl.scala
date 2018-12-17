@@ -1,14 +1,14 @@
 package actors.messages.level
-import compiler.{ CellType, Grid }
+import compiler.CellType
 import compiler.processor.Frame
 object ContinentControl {
-  private def isFinalSpot(grid: Grid) =
-    grid.currentCell().cellType == CellType.FinalAnswer
+  private def isFinalSpot(frame: Frame) =
+    frame.board.currentCell().cellType == CellType.FinalAnswer
 
-  private def totalDropped(grid: Grid, problem: Problem) = {
-    val spotSum = grid.currentCell().contents.map(_.value).sum
-    val solution = Problem.evalProblem(problem)
-    spotSum == solution.toInt
+  private def totalDropped(frame: Frame, problem: Problem) = {
+    val spotSum: BigDecimal = frame.board.currentCell().contents.map(_.valueToBigDec).sum
+    val solution: BigDecimal = BigDecimal(Problem.evalProblem(problem))
+    spotSum == solution
   }
 
   private def discoverRecursion(main: Function,
@@ -55,9 +55,9 @@ class ContinentControl(
   import ContinentControl._
   val listedFunctions: List[Function] = functions.list.values.toList
 
-  def success(grid : Grid, problem : Problem): Boolean = {
+  def success(frame: Frame, problem: Problem): Boolean = {
     if (parameters.contains("sandbox")) false
     else
-      isFinalSpot(grid) && totalDropped(grid, problem) && checkParams(parameters, listedFunctions)
+      isFinalSpot(frame) && totalDropped(frame, problem) && checkParams(parameters, listedFunctions)
   }
 }

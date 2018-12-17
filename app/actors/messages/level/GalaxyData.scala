@@ -6,7 +6,7 @@ object GalaxyData {
 
   def apply(stats: Stats, path: String): GalaxyData = {
     val key = path.take(2)
-    val galaxy = Map(key -> stats.list(key))
+    val galaxy = Map(key -> stats.list.getOrElse(key, "00"))
     val starSystem = stats.list.filterKeys(l => l.length == 3 && l.take(key.length).contains(key))
     new GalaxyData(
       id = galaxy.head._1,

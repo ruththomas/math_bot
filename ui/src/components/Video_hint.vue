@@ -22,13 +22,11 @@
       :player-width="'100%'"
       @ended="videoHintControl.hideVideo()"
     ></youtube>
-    <social-sharing></social-sharing>
   </b-modal>
 </template>
 
 <script>
 import SplashScreen from './Splash_screen'
-import SocialSharing from './Social_sharing'
 
 export default {
   name: 'Video_hint',
@@ -51,8 +49,7 @@ export default {
     }
   },
   components: {
-    SplashScreen,
-    SocialSharing
+    SplashScreen
   }
 }
 </script>
