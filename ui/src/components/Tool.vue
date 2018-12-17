@@ -69,8 +69,6 @@ export default {
 
 <style scoped lang="scss">
   .tool {
-    height: 100%;
-    width: 100%;
     /*border: 1px solid orangered;*/
     position: relative;
 

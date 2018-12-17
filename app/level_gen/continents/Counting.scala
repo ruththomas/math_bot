@@ -13,7 +13,7 @@ trait Counting extends LevelGenTags {
           gridMap = List(
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
-            "|E| |E| (R) [TS(1)] ($) |E| |E| |E| |E| |E|",
+            "|E| |E| (R) [1] ($) |E| |E| |E| |E| |E|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|",
             "|E| |E| |E| |E| |E| |E| |E| |E| |E| |E|"
           ),
