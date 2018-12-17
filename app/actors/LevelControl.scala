@@ -16,7 +16,7 @@ class LevelControl @Inject()(
     functionsDAO: FunctionsDAO,
     playerTokenDAO: PlayerTokenDAO
 )(implicit ec: ExecutionContext) {
-  import compiler.ElementKinds.listedElements
+  import compiler.ElementKinds._
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
   private def nextColor(currentColor: String): String = {
@@ -182,6 +182,16 @@ class LevelControl @Inject()(
     getContinentData(path).continentStruct.map(_.videoHints).getOrElse(List.empty[String])
   }
 
+  private def calibrateColors(functions: Functions) = {
+    def updateFunc(func: List[Function]): List[Function] = {
+      func.map {
+        case f if !listedElements.exists(_.name == f.color) => f.copy(color = white.name, func = f.func.map(updateFunc))
+        case f => f.copy(func = f.func.map(updateFunc))
+      }
+    }
+    functions.copy(list = updateFunc(functions.list.values.toList).map(f => f.created_id -> f).toMap)
+  }
+
   /*
    * Gets all functions for user
    * */
@@ -190,21 +200,23 @@ class LevelControl @Inject()(
       playerToken <- playerTokenDAO.getToken(tokenId)
       functions <- functionsDAO.find(tokenId)
     } yield
-      functions match {
-        case Some(f) => f // already in new system
-        case None =>
-          playerToken match {
-            case Some(PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
-              val functions: Functions =
-                Functions(tokenId, lambdas.get, getAllAssignedStaged() ::: getAllPreBuiltActives())
-              functionsDAO.insert(functions)
-              functions
-            case _ => // new account
-              val functions: Functions = Functions(tokenId)
-              functionsDAO.insert(functions)
-              functions
-          }
-      }
+      calibrateColors(
+        functions match {
+          case Some(f) => f
+          case None =>
+            playerToken match {
+              case Some(PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
+                val functions: Functions =
+                  Functions(tokenId, lambdas.get, getAllAssignedStaged() ::: getAllPreBuiltActives())
+                functionsDAO.insert(functions)
+                functions
+              case _ => // new account
+                val functions: Functions = Functions(tokenId)
+                functionsDAO.insert(functions)
+                functions
+            }
+        }
+      )
   }
 
   /*
