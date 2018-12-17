@@ -56,8 +56,8 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
         ChangeFunctionColor(function)
       case Some(LevelRequest(action, _, _, _, _)) if action == "get-sandbox" =>
         GetSandbox()
-      case Some(LevelRequest(action, _, _, _, _)) if action == "reset-continent" =>
-        ResetContinent()
+      case Some(LevelRequest(action, _, pathOpt, _, _)) if action == "reset-continent" =>
+        ResetContinent(pathOpt)
       case _ => ActorFailed("Bad json input")
     }
   }

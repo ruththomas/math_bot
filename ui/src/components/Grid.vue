@@ -38,12 +38,11 @@
                 v-if="space.name === 'final answer'"
                 class="portal glyphicon"
                 :src="permanentImages.blackHole"></b-img>
-              <b-img
-                v-if="space.tools.length"
-                class="tool animated zoomIn"
+              <tool
                 v-for="(tool, tInd) in space.tools"
                 :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
-                :src="toolImages[tool.image]"></b-img>
+                :denomination="tool.name"
+              ></tool>
               <b-img
                 class="robot animated"
                 v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
@@ -60,14 +59,15 @@
                 <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover(`grid-cell-${rInd}-${sInd}`)" />
                 <div class="display-tools">
                   <div
-                    v-for="(tool, iInd) in space.tools.slice(0, 100)"
+                    v-for="(tool, iInd) in space.tools"
                     :key="`d-image-${iInd}`"
+                    class="display-tools-item"
                     :class="tool.original ? 'replenish-tool' : ''"
                   >
-                    <b-img
-                      :src="permanentImages.tools[tool.image]"
-                      fluid
-                    ></b-img>
+                    <tool
+                      :denomination="tool.name"
+                      :hide-denom="tool.name === '1'"
+                    ></tool>
                   </div>
                 </div>
               </b-popover>
@@ -86,6 +86,7 @@ import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
 import utils from '../services/utils'
 import ControlPanel from './Control_panel'
+import Tool from './Tool'
 
 export default {
   mounted () {
@@ -146,7 +147,8 @@ export default {
   components: {
     SplashScreen,
     RobotCarrying,
-    ControlPanel
+    ControlPanel,
+    Tool
   }
 }
 </script>
@@ -190,6 +192,12 @@ export default {
       border-right: 1px solid $grid-space-border-color;
       font-size: $grid-space-font-size;
       background: $grid-background;
+
+      .tool {
+        position: absolute;
+        height: 90%;
+        width: 90%;
+      }
 
       img {
         position: absolute;
@@ -290,6 +298,13 @@ export default {
     flex-wrap: wrap;
     position: relative;
 
+    .display-tools-item {
+      .tool {
+        height: 2vmin;
+        width: 2vmin;
+      }
+    }
+
     img {
       height: $display-tool-size;
     }
@@ -325,6 +340,10 @@ export default {
     right:  calc(#{-$popover-btn-size} / 2);
     z-index: 10001;
     cursor: pointer;
+  }
+  .tool {
+    height: 2vmin;
+    width: 2vmin;
   }
 </style>
 <style lang="scss">
