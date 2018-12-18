@@ -1,14 +1,13 @@
 package actors.messages.level
 import compiler.{ CellType, Grid }
-import compiler.processor.Frame
 object ContinentControl {
   private def isFinalSpot(grid: Grid) =
     grid.currentCell().cellType == CellType.FinalAnswer
 
   private def totalDropped(grid: Grid, problem: Problem) = {
-    val spotSum = grid.currentCell().contents.map(_.value).sum
-    val solution = Problem.evalProblem(problem)
-    spotSum == solution.toInt
+    val spotSum: BigDecimal = grid.currentCell().contents.map(_.valueToBigDec).sum
+    val solution: BigDecimal = BigDecimal(Problem.evalProblem(problem))
+    spotSum == solution
   }
 
   private def discoverRecursion(main: Function,

@@ -10,11 +10,30 @@
           @click.native="toggleFunctionImage"
         ></puzzle-pieces>
         <div
-          class='function-control'
-          :class="editingFunction.color"
-          @click="applyColorConditional"
+          id="denom-selector-trigger"
+          class="function-control"
         >
+          <tool
+            :denomination="editingFunction.color"
+            :hide-denom="editingFunction.color === '1'"
+          ></tool>
         </div>
+        <b-popover
+          target="denom-selector-trigger"
+          placement="top"
+          triggers="click"
+        >
+          <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closePopover('denom-selector-trigger')" />
+          <div class="denom-selector-body">
+            <tool
+              v-for="(denom, ind) in denominations"
+              :key="'denom-selector/' + ind"
+              :denomination="denom.name"
+              :hide-denom="denom.name === '1'"
+              @click.native="updateFunctionColor(denom.name)"
+            ></tool>
+          </div>
+        </b-popover>
 
         <div class="func-name">
           <input v-default-value="editingFunction.name" autofocus type="text" maxlength="20" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
@@ -69,6 +88,7 @@ import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
 import PuzzlePieces from './Puzzle_pieces'
+import Tool from './Tool'
 
 export default {
   mounted () {
@@ -77,6 +97,9 @@ export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
+    },
+    denominations () {
+      return this.levelControl.continent.toolList
     },
     robot () {
       return this.levelControl.robot
@@ -142,11 +165,14 @@ export default {
     }
   },
   methods: {
+    highlightGridDenom (denom) {
+      console.log('HIT')
+    },
     updateName () {
       this.levelControl.updateFunctionProperties(this.editingFunction)
     },
-    applyColorConditional () {
-      this.levelControl.updateFunctionColor(this.editingFunction)
+    updateFunctionColor (color) {
+      this.levelControl.updateFunctionProperties(Object.assign(this.editingFunction, {color: color}))
     },
     toggleFunctionImage () {
       const func = this.editingFunction
@@ -179,9 +205,9 @@ export default {
     },
     setPut (bool = this.functions.length < this.editingFunction.sizeLimit) {
       this.functionDraggableOptions.group.put = bool
-      if (!bool) {
-        this.fullMessage()
-      }
+      // if (!bool) {
+      //   this.fullMessage()
+      // }
     },
     editFunction () {
       if (this.functions.length <= this.editingFunction.sizeLimit) {
@@ -210,7 +236,8 @@ export default {
     draggable,
     FunctionBox,
     FunctionDrop,
-    PuzzlePieces
+    PuzzlePieces,
+    Tool
   }
 }
 </script>
@@ -304,11 +331,25 @@ export default {
     }
 
     .function-control {
-      height: 1.3em;
-      width: 1.3em;
       border-radius: 0.5vmin;
       margin-right: 10px;
       cursor: pointer;
+
+      .tool {
+        position: relative;
+        height: 4vmin;
+        width: 4vmin;
+        bottom: -0.25rem;
+
+      }
+      .tool:hover {
+        cursor: pointer;
+      }
+    }
+
+    .function-control.trash {
+      height: 1.3em;
+      width: 1.3em;
     }
 
     .func-name {
@@ -358,4 +399,20 @@ export default {
     cursor: pointer;
   }
 
+  .denom-selector-body {
+    height: 100%;
+    width: 100%;
+    .tool {
+      height: 4vmin;
+      width: 4vmin;
+      min-height: 20px;
+      min-width: 20px;
+      display: inline-block;
+      position: relative;
+      margin: 1%;
+    }
+    .tool:hover {
+      cursor: pointer;
+    }
+  }
 </style>

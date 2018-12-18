@@ -24,7 +24,6 @@ class LevelControl extends Ws {
     this._prepFunc = this._prepFunc.bind(this)
     this._setFunctions = this._setFunctions.bind(this)
     this.getCurrentStarSystem = this.getCurrentStarSystem.bind(this)
-    this.updateFunctionColor = this.updateFunctionColor.bind(this)
     this._positionBar = this._positionBar.bind(this)
     this.getSandbox = this.getSandbox.bind(this)
 
@@ -116,18 +115,54 @@ class LevelControl extends Ws {
         return '#353535'
       case 'white':
         return '#ffffff'
-      case 'blue':
+      case '1':
         return '#4A90E2'
-      case 'purple':
+      case '10':
         return '#CA7AFF'
-      case 'green':
+      case '100':
         return '#50E3C2'
-      case 'pink':
+      case '1000':
         return '#FF98B1'
-      case 'red':
+      case '10000':
         return '#F25C5C'
+      case '.1':
+        return '#CDF7F6'
+      case '.01':
+        return '#8FB8DE'
+      case '.001':
+        return '#9A94BC'
+      case '.0001':
+        return '#9B5094'
+      case '.00001':
+        return '#533A71'
+      case 'x':
+        return '#9CEC5B'
+      case 'y':
+        return '#F0F465'
+      case 'z':
+        return '#A3320B'
+      case '-.00001':
+        return '#E3BAC6'
+      case '-.0001':
+        return '#FFF5B2'
+      case '-.001':
+        return '#EC7357'
+      case '-.01':
+        return '#E1CE7A'
+      case '-.1':
+        return '#9D695A'
+      case '-1':
+        return '#78E0DC'
+      case '-10':
+        return '#A1CDF1'
+      case '-100':
+        return '#2D5D7B'
+      case '-1000':
+        return '#C2AFF0'
+      case '-10000':
+        return '#7D5C65'
       default:
-        return '#FFD700' // color name changed in server, checkout `app/compiler/Colors.scala` for new pallet
+        return '#FFD700' // color name changed in server, checkout `app/compiler/ElementKinds.scala` for new pallet
     }
   }
 
@@ -144,7 +179,7 @@ class LevelControl extends Ws {
       displayName: false,
       name: '',
       func: [],
-      color: 'default'
+      color: 'white'
     })
     this._wsOnMessage((updated) => {
       this._setFunctions(updated.preparedFunctions)
@@ -183,11 +218,6 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'update-function-properties', 'function': this._prepFunc(func)}))
   }
 
-  updateFunctionColor (func) {
-    this._wsOnMessage(this._resetContinent)
-    this._send(JSON.stringify({action: 'update-function-color', 'function': this._prepFunc(func)}))
-  }
-
   getPath () {
     this._wsOnMessage(this._setPath)
     this._send(JSON.stringify({action: 'get-path'}))
@@ -216,7 +246,7 @@ class LevelControl extends Ws {
       this._setContinent({pathAndContinent: res.pathAndContinent})
       this.runCompiled = new RunCompiled()
     })
-    this._send(JSON.stringify({action: 'reset-continent'}))
+    this._send(JSON.stringify({action: 'reset-continent', path: this.path}))
   }
 
   deleteMain () {

@@ -16,11 +16,12 @@ class LevelControl @Inject()(
     functionsDAO: FunctionsDAO,
     playerTokenDAO: PlayerTokenDAO
 )(implicit ec: ExecutionContext) {
-  import compiler.Colors.listedColors
+  import compiler.ElementKinds._
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
 
   private def nextColor(currentColor: String): String = {
-    listedColors.lift(listedColors.indexWhere(_.name == currentColor) + 1).getOrElse(listedColors.head).name
+    val ele = listedElements.lift(listedElements.indexWhere(_.name == currentColor) + 1)
+    ele.getOrElse(listedElements.head).name
   }
 
   /*
@@ -145,7 +146,7 @@ class LevelControl @Inject()(
   def clientInit(tokenId: String): Future[(String, GalaxyData, PathAndContinent)] = {
     for {
       stats <- getStats(tokenId)
-      builtContinent <- createBuiltContinent(tokenId, stats.currentPath)
+      builtContinent <- createBuiltContinent(tokenId, stats.currentPath, stats.isSandbox.getOrElse(false))
     } yield
       (stats.currentPath, GalaxyData(stats, stats.currentPath), PathAndContinent(stats.currentPath, builtContinent))
   }
@@ -181,6 +182,16 @@ class LevelControl @Inject()(
     getContinentData(path).continentStruct.map(_.videoHints).getOrElse(List.empty[String])
   }
 
+  private def calibrateColors(functions: Functions) = {
+    def updateFunc(func: List[Function]): List[Function] = {
+      func.map {
+        case f if !listedElements.exists(_.name == f.color) => f.copy(color = white.name, func = f.func.map(updateFunc))
+        case f => f.copy(func = f.func.map(updateFunc))
+      }
+    }
+    functions.copy(list = updateFunc(functions.list.values.toList).map(f => f.created_id -> f).toMap)
+  }
+
   /*
    * Gets all functions for user
    * */
@@ -189,21 +200,23 @@ class LevelControl @Inject()(
       playerToken <- playerTokenDAO.getToken(tokenId)
       functions <- functionsDAO.find(tokenId)
     } yield
-      functions match {
-        case Some(f) => f // already in new system
-        case None =>
-          playerToken match {
-            case Some(PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
-              val functions: Functions =
-                Functions(tokenId, lambdas.get, getAllAssignedStaged() ::: getAllPreBuiltActives())
-              functionsDAO.insert(functions)
-              functions
-            case _ => // new account
-              val functions: Functions = Functions(tokenId)
-              functionsDAO.insert(functions)
-              functions
-          }
-      }
+      calibrateColors(
+        functions match {
+          case Some(f) => f
+          case None =>
+            playerToken match {
+              case Some(PlayerToken(_, lambdas, _, _, _)) if lambdas.isDefined => // legacy account
+                val functions: Functions =
+                  Functions(tokenId, lambdas.get, getAllAssignedStaged() ::: getAllPreBuiltActives())
+                functionsDAO.insert(functions)
+                functions
+              case _ => // new account
+                val functions: Functions = Functions(tokenId)
+                functionsDAO.insert(functions)
+                functions
+            }
+        }
+      )
   }
 
   /*
@@ -230,22 +243,26 @@ class LevelControl @Inject()(
           changedAllInstances(functions.listed, function)
         )
       )
-      pathAndContinent <- getBuiltContinent(tokenId)
+      pathAndContinent <- resetContinent(tokenId)
     } yield pathAndContinent
   }
 
+  /*
+   * @deprecated
+   * */
   def changeFunctionColor(tokenId: String, function: Function): Future[PathAndContinent] = {
     for {
       funcOpt <- functionsDAO.findFunction(tokenId, function.created_id)
       pathAndContinent <- funcOpt match {
         case Some(func) =>
+          val color = nextColor(func.color)
           updateFunctionProperties(
             tokenId,
             func.copy(
-              color = nextColor(func.color)
+              color = color
             )
           )
-        case None => getBuiltContinent(tokenId)
+        case None => resetContinent(tokenId)
       }
     } yield pathAndContinent
   }
@@ -253,17 +270,9 @@ class LevelControl @Inject()(
   /*
    * Recursively updates all instances of a functions color, name, displayName
    * */
-  private def changedAllInstances(functions: List[Function], function: Function): List[Function] = {
-    functions.map { ft =>
-      val func = ft.func.getOrElse(List.empty[Function])
-      ft.copy(
-        name = if (ft.created_id == function.created_id) function.name else ft.name,
-        color = if (ft.created_id == function.created_id) function.color else ft.color,
-        displayName =
-          if (ft.created_id == function.created_id) Some(function.displayName.getOrElse(false)) else ft.displayName,
-        func = Some(changedAllInstances(func, function))
-      )
-    }
+  private def changedAllInstances(functions: List[Function], function: Function): List[Function] = functions.map { ft =>
+    (if (ft.created_id == function.created_id) function
+     else ft).copy(func = ft.func.map(changedAllInstances(_, function)))
   }
 
   /*
@@ -273,9 +282,15 @@ class LevelControl @Inject()(
    * */
   def activateDeactivateFunction(tokenId: String, function: Function): Future[PreparedFunctions] = {
     for {
+      stats <- getStats(tokenId)
       functions <- getFunctions(tokenId)
       path <- getPath(tokenId)
-    } yield PreparedFunctions(functions, getContinentData(path).continentStruct.get, function, functionsDAO)
+    } yield
+      PreparedFunctions(functions,
+                        if (stats.isSandbox.getOrElse(false)) sandbox.continentStruct.get
+                        else getContinentData(path).continentStruct.get,
+                        function,
+                        functionsDAO)
   }
 
   /*
@@ -334,10 +349,10 @@ class LevelControl @Inject()(
     } yield PathAndContinent(pathOpt.getOrElse(stats.currentPath), continent)
   }
 
-  def resetContinent(tokenId: String): Future[PathAndContinent] = {
+  def resetContinent(tokenId: String, pathOpt: Option[String] = None): Future[PathAndContinent] = {
     for {
       stats <- getStats(tokenId)
-      calibratedPath <- calibrateContinentPath(stats, stats.currentPath)
+      calibratedPath <- calibrateContinentPath(stats, pathOpt.getOrElse(stats.currentPath))
       continent <- createBuiltContinent(tokenId, calibratedPath, stats.isSandbox.getOrElse(false))
     } yield PathAndContinent(calibratedPath, continent)
   }

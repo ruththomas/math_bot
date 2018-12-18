@@ -1,6 +1,6 @@
 package actors.messages.level
 
-import compiler.Colors
+import compiler.ElementKinds
 import play.api.libs.json.{Json, OFormat}
 
 object Function {
@@ -22,17 +22,17 @@ object Function {
 }
 
 case class Function(
-    created_id: String,
-    color: String = Colors.white.name,
-    func: Option[List[Function]],
-    displayName: Option[Boolean] = None,
-    set: Boolean = false,
-    name: String,
-    image: String,
-    index: Int,
-    category: String,
-    commandId: String,
-    sizeLimit: Int = -1
+                     created_id: String,
+                     color: String = ElementKinds.white.name,
+                     func: Option[List[Function]],
+                     displayName: Option[Boolean] = None,
+                     set: Boolean = false,
+                     name: String,
+                     image: String,
+                     index: Int,
+                     category: String,
+                     commandId: String,
+                     sizeLimit: Int = -1
 ) {
   def clientSizeLimit: Int = if (this.sizeLimit < 0) 10000 else this.sizeLimit
 }
