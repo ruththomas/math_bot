@@ -3,7 +3,7 @@
     <mascot
       :id="'main-delete-function'"
       @click.native="animateVulnerable"
-      :color="levelControl.runCompiled.failure ? '#F25C5C' : '#ffffff'"
+      :color="gridRobotColor"
     ></mascot>
     <div class="plugin"></div>
     <b-popover
@@ -35,6 +35,19 @@ export default {
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    isLastFrame () {
+      const robotFrames = this.levelControl.runCompiled.robotFrames
+      return robotFrames.length && this.levelControl.runCompiled.currentFrame === robotFrames.length - 1
+    },
+    gridRobotColor () {
+      if (this.isLastFrame) {
+        return '#F25C5C'
+      } else if (this.levelControl.robot.state === 'running') {
+        return '#B8E986'
+      } else {
+        return '#ffffff'
+      }
     }
   },
   methods: {

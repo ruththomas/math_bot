@@ -42,15 +42,11 @@
                 :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
                 :denomination="tool.name"
               ></tool>
-              <!--<b-img-->
-                <!--class="robot animated"-->
-                <!--v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"-->
-                <!--:key="'ROBOT'"-->
-                <!--:src="robot._robotDirections[robotOrientation]"></b-img>-->
               <grid-robot
                 v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
                 :key="'grid-robot'"
                 :direction="robotOrientation"
+                :color="gridRobotColor"
               ></grid-robot>
 
               <b-popover
@@ -106,6 +102,19 @@ export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
+    },
+    isLastFrame () {
+      const robotFrames = this.levelControl.runCompiled.robotFrames
+      return robotFrames.length && this.levelControl.runCompiled.currentFrame === robotFrames.length - 1
+    },
+    gridRobotColor () {
+      if (this.isLastFrame) {
+        return '#F25C5C'
+      } else if (this.robot.state === 'running') {
+        return '#B8E986'
+      } else {
+        return '#ffffff'
+      }
     },
     gridMap () {
       return this.levelControl.gridMap
