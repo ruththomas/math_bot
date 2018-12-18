@@ -38,15 +38,15 @@
         </div>
       </transition>
       <!-- !!! Uncomment below to access advanced mode !!! -->
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <span :style="{opacity: levelControl.mode === 'advanced' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Normal</span>
-        <toggle-button
-          @change="toggleAdvanced"
-          :color="{checked: 'rgba(255, 255, 255, 0.5)', unchecked: 'rgba(255, 255, 255, 0.5)', disabled: 'rgba(255, 255, 255, 0.5)'}"
-          :switch-color="{checked: 'linear-gradient(to left, #25EF02, #000000)', unchecked: 'linear-gradient(to left, #000000, #25EF02)'}"
-        />
-        <span :style="{opacity: levelControl.mode === 'normal' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
-      </div>
+      <!--<div style="display: flex; justify-content: center; align-items: center;">-->
+        <!--<span :style="{opacity: levelControl.mode === 'advanced' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Normal</span>-->
+        <!--<toggle-button-->
+          <!--@change="toggleAdvanced"-->
+          <!--:color="{checked: 'rgba(255, 255, 255, 0.5)', unchecked: 'rgba(255, 255, 255, 0.5)', disabled: 'rgba(255, 255, 255, 0.5)'}"-->
+          <!--:switch-color="{checked: 'linear-gradient(to left, #25EF02, #000000)', unchecked: 'linear-gradient(to left, #000000, #25EF02)'}"-->
+        <!--/>-->
+        <!--<span :style="{opacity: levelControl.mode === 'normal' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>-->
+      <!--</div>-->
     </div>
     <confirm-deactivate-func></confirm-deactivate-func>
   </div>
@@ -146,6 +146,7 @@ export default {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
     background-size: cover;
     height: 100%;
+    padding: 2vmin 0;
     .container {
       display: flex;
       flex-direction: column;

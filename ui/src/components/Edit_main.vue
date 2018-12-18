@@ -12,29 +12,7 @@
       :origin="'editMain'"
       :size-limit="levelControl.continent.mainMax"
     ></function-drop>
-    <div class="control-bar bar noDrag" v-if="Object.keys(robot).length">
-      <img
-        id="main-delete-function"
-        class="trash noDrag dialog-button function-control"
-        :src="permanentImages.buttons.trashButton"
-        @click="animateVulnerable"
-      />
-      <b-popover
-        v-if="levelControl.functions.main.func.length"
-        target="main-delete-function"
-        placement="top"
-        triggers="click"
-      >
-        <img class="dialog-button close-popover"
-             :src="permanentImages.buttons.xButton"
-             @click="[animateVulnerable(), closePopover('main-delete-function')]"
-        />
-        <div class="button-effect trash-confirm"  @click="[animateVulnerable(), wipeFunction(), closePopover('main-delete-function')]">
-          <img class="dialog-button" :src="permanentImages.openTrashCan" />
-        </div>
-      </b-popover>
-      <div class="end-cap"></div>
-    </div>
+    <bar :set-put="setPut"></bar>
 </div>
 </template>
 
@@ -43,6 +21,8 @@ import draggable from 'vuedraggable'
 import FunctionBox from './Function_box'
 import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
+import Mascot from './Mascot'
+import Bar from './Bar'
 
 export default {
   mounted () {
@@ -114,10 +94,6 @@ export default {
       }
       this.setPut()
     },
-    wipeFunction () {
-      this.levelControl.deleteMain()
-      this.setPut(true)
-    },
     add () {
     },
     moving () {
@@ -129,18 +105,6 @@ export default {
       this.$store.dispatch('updateTrashVisible', false)
     },
     closePopover: utils.closePopover,
-    animateVulnerable () {
-      const $functions = $('.editMain-drop-zone > .piece:not(.placeholder-piece)')
-      const animationClass = 'piece-shake'
-      $functions.each(function () {
-        const $ele = $(this)
-        if ($ele.hasClass(animationClass)) {
-          $ele.removeClass(animationClass)
-        } else {
-          $ele.addClass(animationClass)
-        }
-      })
-    },
     adjustSpeed () {
       this.levelControl.robot.adjustSpeed()
     },
@@ -151,7 +115,9 @@ export default {
   components: {
     draggable,
     FunctionBox,
-    FunctionDrop
+    FunctionDrop,
+    Mascot,
+    Bar
   }
 }
 </script>
@@ -163,35 +129,17 @@ export default {
   $click-color: #B8E986;
   $dialog-button-size: 3.5vmin;
   $danger-color: #F25C5C;
+  $mascot-size: 12vmin;
+  $padding-left: calc(#{$mascot-size} / 1.2);
+  $bar-color: #B8E986;
 
   .edit-main {
     position: relative;
     width: 100%;
     margin: 0 auto;
     height: 100%;
-    padding: 0 $dialog-button-size;
+    padding: 0 $padding-left 0 $padding-left;
     z-index: 1000;
-
-    .bar {
-      position: absolute;
-      left: 0;
-      right: $dialog-button-size;
-      top: calc(50%);
-      height: $bar-height;
-      background-color: #B8E986;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: -1;
-
-      .end-cap {
-        position: absolute;
-        height: 3vmin;
-        width: 1px;
-        left: 100%;
-        background-color: $click-color;
-      }
-    }
 
     .hidden-bar {
       background-color: transparent;

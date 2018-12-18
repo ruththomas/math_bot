@@ -2,7 +2,6 @@
     <div class="container grid">
       <div v-if="gridMap" class="row" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''" key="grid-map-1234">
         <div class="grid-map">
-          <control-panel></control-panel>
           <div
             class="grid-row animated"
             v-for="(row, rInd) in gridMap"
