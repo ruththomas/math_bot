@@ -1,7 +1,7 @@
 package controllers
 
 import actors.convert_flow.{AdminRequestConvertFlow, AdminResponseConvertFlow}
-import actors.messages.admin.LevelStats
+import actors.messages.admin.{Event, RawEvent}
 import actors.{ActorTags, AdminActor}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
@@ -13,7 +13,7 @@ import daos._
 import email.{AdminApprovedEmail, AdminVerificationEmail}
 import models.AdminAuth
 import play.api.Environment
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsSuccess, JsValue, Json}
 import play.api.libs.streams.ActorFlow
 import play.api.libs.ws._
 import play.api.mvc._
@@ -29,6 +29,7 @@ class AdminController @Inject()(
     val sessionDAO: SessionDAO,
     val statsDAO: StatsDAO,
     val auth0LegacyDAO: Auth0LegacyDao,
+    val eventsDAO: EventsDAO,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
     implicit val system: ActorSystem,
     implicit val conf: play.api.Configuration,
@@ -142,6 +143,64 @@ class AdminController @Inject()(
           Ok(s"Admin privileges have been revoked for $email.")
         }
       case None => FastFuture.successful(BadRequest("Missing email query parameter"))
+    }
+  }
+
+  // todo: hook up to ws or ensure player is admin in request
+
+  def getEvents: Action[AnyContent] = Action.async { implicit request =>
+    eventsDAO.getEvents.map { p: Seq[Event] =>
+      Ok(Json.toJson(p))
+
+    }
+  }
+
+  // fixme: reference by _id
+
+  def removeEvent(id: String): Action[AnyContent] = Action.async { implicit request =>
+    eventsDAO.remove(id).flatMap { evt =>
+      FastFuture.successful(Ok(Json.toJson("result" -> evt.toString)))
+    }
+
+  }
+
+  def insertEvent: Action[WSMessage] = Action.async(parse.json) { implicit request =>
+    val json: JsValue = request.body
+
+    val m = Json.fromJson[RawEvent](json)
+
+    m match {
+
+      case JsSuccess(value, _) =>
+        val newEvent = Event(value.date, value.title, value.description, value.links)
+
+        eventsDAO.insert(newEvent).flatMap { _ =>
+          FastFuture.successful(Ok(Json.toJson(newEvent)))
+
+        }
+
+      case _ => FastFuture.successful(BadRequest("invalid request"))
+    }
+
+  }
+
+  // fixme: reference via _id
+
+  def replaceEvent: Action[WSMessage] = Action.async(parse.json) { implicit request =>
+    val json: JsValue = request.body
+
+    val m = Json.fromJson[RawEvent](json)
+
+    m match {
+
+      case JsSuccess(value, _) =>
+        val e = Event(value.date, value.title, value.description, value.links)
+
+        eventsDAO.replace(e).flatMap { result =>
+          FastFuture.successful(Ok(Json.toJson("result" -> result)))
+        }
+      case _ => FastFuture.successful(BadRequest("Invalid Request"))
+
     }
   }
 

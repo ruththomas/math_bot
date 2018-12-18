@@ -54,9 +54,7 @@ class AdminActor @Inject()(out: ActorRef,
   override def receive: Receive = {
 
     case GetMaxLevel() =>
-      println("hello")
       playerAccountDAO.maxLevelStats.map { maxLevels =>
-        println("hello result")
         out ! UserMaxLevel(maxLevels)
       }
 
