@@ -11,7 +11,13 @@
         <label for="title">Title</label>
         <input
           :readonly="readOnly"
-          id="title" type="text" name="title" v-model="userInput.title" required class="form-control"/>
+          id="title"
+          type="text"
+          name="title"
+          v-model="userInput.title"
+          required
+          class="form-control"
+        />
       </div>
 
       <div class="form-group">
@@ -26,7 +32,11 @@
         <textarea
           name="description"
           :readonly="readOnly"
-          rows="5" class="form-control" v-model="userInput.description" required placeholder="describe the event...">
+          rows="5" class="form-control"
+          v-model="userInput.description"
+          required
+          placeholder="describe the event..."
+        >
       </textarea>
       </div>
 
@@ -78,10 +88,6 @@ export default {
     Datepicker
   },
   methods: {
-
-    updateLink (l) {
-      console.log('update link', l)
-    },
 
     updateDate (date) {
       Object.assign(this.userInput, {
