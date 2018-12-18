@@ -1,6 +1,10 @@
 <template>
   <div class="star-system-admin">
 
+    <div class="row my-3">
+      <unlock-all-levels></unlock-all-levels>
+    </div>
+
     <div class="row mb-3" v-if="adminControl.maxLevel.length > 0">
       <admin-max-level></admin-max-level>
     </div>
@@ -9,7 +13,7 @@
 
       <div class="row mb-3">
 
-        <div class="input-group">
+        <div class="form-group">
           <label for="starSystems">
             star system
           </label>
@@ -22,7 +26,7 @@
       </div>
 
       <div class="row mb-3">
-        <div class="input-group">
+        <div class="form-group">
           <label for="planets">
             planets
           </label>
@@ -40,7 +44,7 @@
         </div>
       </div>
 
-      <h3>Level Stats</h3>
+      <h3>Continent Stats</h3>
 
       <div class="row d-flex">
         <div
@@ -48,7 +52,7 @@
           v-show="continentIds.includes(continent.id)"
         >
 
-          <div class="card-header">level: {{continent.id}}</div>
+          <div class="card-header">continent: {{continent.id}}</div>
 
           <div class="card-body">
             <p>timesPlayed: {{continent.timesPlayed}}</p>
@@ -70,6 +74,7 @@
 import Continents from './Continents'
 import Planets from './Planets'
 import AdminMaxLevel from './Admin_max_level'
+import UnlockAllLevels from './UnlockAllLevels'
 
 export default {
   name: 'LevelStats',
@@ -121,6 +126,7 @@ export default {
     }
   },
   components: {
+    UnlockAllLevels,
     AdminMaxLevel,
     Continents,
     Planets
@@ -139,5 +145,6 @@ export default {
       position: absolute;
       color: white;
     }
+
   }
 </style>

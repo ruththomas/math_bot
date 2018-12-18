@@ -1,55 +1,45 @@
 <template>
 
   <div class="events-detail">
+    <div class="row d-flex justify-content-end align-items-center">
 
-    <div class="row d-flex justify-content-end" v-if="editMode">
-      <b-btn @click="editMode = false">
-        x
+      <b-btn
+        v-if="!editMode"
+        @click="toggleEditMode"
+
+      >
+        Edit
       </b-btn>
+      <b-btn
+        v-if="editMode"
+        @click="toggleEditMode"
+
+      >
+        View
+      </b-btn>
+
+      <img
+        @click="handleDeleteEvent"
+        class="trash noDrag dialog-button mx-2"
+        :src="permanentImages.buttons.trashButton"
+      />
+
     </div>
 
     <div>
       <div v-if="editMode">
 
         <events-add
-          init="SI"
+          init="1"
           :event="event"
           :handle-submit="handleEditEvent"></events-add>
 
       </div>
       <div v-else>
-        <h3>{{event.title}}</h3>
-        {{JSON.stringify(event)}}
+        <events-add init="1" :event="event" read-only="1"></events-add>
       </div>
     </div>
 
-    <div class="row d-flex justify-content-end">
-      <div class="btn-group">
-
-        <b-btn
-          v-if="!editMode"
-          @click="toggleEditMode"
-
-        >
-          Edit Event
-        </b-btn>
-        <b-btn
-          v-if="editMode"
-          @click="toggleEditMode"
-
-        >
-          Close
-        </b-btn>
-
-        <b-btn
-          @click="handleDeleteEvent"
-          variant="danger"
-        >
-          Delete
-        </b-btn>
-
-      </div>
-    </div>
   </div>
 </template>
 
@@ -65,15 +55,24 @@ export default {
       editMode: false
     }
   },
+  computed: {
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
+    }
+  },
   methods: {
 
     handleDeleteEvent (e) {
       e.preventDefault()
 
       this.deleteEvent(this.event)
+
+      this.editMode = false
     },
     handleEditEvent (event) {
       this.handleSubmit(event)
+
+      this.editMode = false
     },
     toggleEditMode () {
       this.editMode = !this.editMode
@@ -83,5 +82,9 @@ export default {
 </script>
 
 <style scoped>
+  .event-title {
 
+    letter-spacing: .4rem;
+    font-weight: bold;
+  }
 </style>

@@ -270,6 +270,8 @@ class LevelControl extends Ws {
 
   _handleUnlockAllLevels (res) {
     this.unlockedAllLevels = true
+
+    console.log('unlock', res)
   }
 
   _init () {

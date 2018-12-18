@@ -6,7 +6,7 @@
         Event List
       </span>
 
-      or
+      |
 
       <span @click="toggleView" :class="!listVisible ? 'active' : null">
         Add Event
@@ -22,7 +22,7 @@
         </div>
 
         <ul class="list-group">
-          <li v-for="_event in eventsList" :key="_event.date + _event.description" class="list-group-item">
+          <li v-for="_event in eventsList" :key="_event.date + _event.description" class="list-group-item my-3">
             <events-detail
               :handle-submit="editEvent"
               :event="_event" :delete-event="deleteEvent" :edit-event="editEvent"></events-detail>
@@ -46,11 +46,12 @@ import { v1 } from 'node-uuid'
 import EventsAdd from './Events_add'
 
 class Event {
-  constructor (_date, title, description, _id = '') {
+  constructor (_date, title, description, _id = '', links = []) {
     this.id = _id || v1()
     this.date = _date
     this.title = title
     this.description = description
+    this.links = links
   }
 }
 
@@ -148,19 +149,6 @@ export default {
     background: var(--light);
     overflow-y: scroll;
     height: 100vh;
-  }
-
-  .page-title {
-
-    padding-top: 100px;
-  }
-
-  @media all and (max-width: 476px) {
-
-    .page-title {
-
-      padding-top: 50px;
-    }
   }
 
   span {

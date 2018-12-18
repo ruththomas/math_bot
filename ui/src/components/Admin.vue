@@ -17,15 +17,15 @@
               <li class="list-group-item" @click="updateActive('levels')"
                   :class="activeDisplay === 'levels' ? 'active' : null">Levels
               </li>
+              <li class="list-group-item" @click="updateActive('events')"
+                  :class="activeDisplay === 'events' ? 'active' : null">
+                Events
+              </li>
             </ul>
           </div>
           <div class="col-sm-9">
             <div class="row mb-3">
-              <b-btn
-                class="text-capitalize"
-                @click="unlockLevels" :disabled="levelControl.unlockedAllLevels">
-                {{levelControl.unlockedAllLevels ? 'Levels unlocked!' : 'unlock all levels'}}
-              </b-btn>
+
             </div>
 
             <div v-if="activeDisplay === 'levels'">
@@ -34,8 +34,12 @@
 
             </div>
 
-            <div v-if="activeDisplay === 'users' && userAccountSignups.length">
-              <admin-users></admin-users>
+            <div v-if="activeDisplay === 'users'">
+              <admin-users v-if="userAccountSignups.length"></admin-users>
+            </div>
+
+            <div v-if="activeDisplay === 'events'">
+              <events-list></events-list>
             </div>
           </div>
         </div>
@@ -54,6 +58,7 @@ import AdminCurentPath from './Admin_max_level'
 import UserSignupsChart from './Admin_user_signups_chart'
 import LevelStats from './Admin_level_stats'
 import AdminUsers from './Admin_users'
+import EventsList from './Events_list'
 
 // refresh data every x seconds
 const fetchDataInterval = 30 // seconds
@@ -75,11 +80,6 @@ export default {
     // toggle view levels & users
     updateActive (_active) {
       this.activeDisplay = _active
-    },
-
-    // unlock all levels for user
-    unlockLevels () {
-      this.levelControl.getUnlock()
     },
 
     _fetchData () {
@@ -150,6 +150,7 @@ export default {
     }
   },
   components: {
+    EventsList,
     AdminUsers,
     UserSignupsChart,
     StarSystem,
