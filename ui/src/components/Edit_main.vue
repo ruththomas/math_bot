@@ -211,25 +211,4 @@ export default {
     }
   }
 
-  .trash-confirm {
-    background-color: $danger-color;
-    box-shadow: 0 2px 10px 0 $danger-color;
-    animation: shake 0.8s;
-    animation-iteration-count: infinite;
-    margin: 1vmin;
-  }
-
-  .close-popover {
-    float: right;
-    display: flex;
-    position: absolute;
-    bottom: calc(100% - #{$dialog-button-size} / 2);
-    right:  calc(#{-$dialog-button-size} / 2);
-    z-index: 10001;
-    cursor: pointer;
-  }
-
-  .deactivate-edit-main {
-    opacity: 0;
-  }
 </style>

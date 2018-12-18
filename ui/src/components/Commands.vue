@@ -44,14 +44,6 @@
         </draggable>
       </div>
     </div>
-
-    <div
-      id="open-staged"
-      class="dialog-button"
-      @click="toggleFunctionAdd"
-      @mousedown="runCompiled.resetIfFailure"
-    >
-    </div>
   </div>
 </template>
 
@@ -161,11 +153,6 @@ export default {
     },
     handleEditFunctionEvent (evt) {
       this.$store.dispatch('updateEditFunctionEvent', evt.target)
-    },
-    toggleFunctionAdd (evt) {
-      this.handleEditFunctionEvent(evt)
-      this.$store.dispatch('updateEditingIndex', null)
-      this.$store.dispatch('updateFunctionAreaShowing', this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction')
     },
     editFunction (evt, func, ind) {
       $('#open-staged').show()

@@ -3,6 +3,7 @@
     <mascot
       :id="'main-delete-function'"
       @click.native="animateVulnerable"
+      :color="levelControl.runCompiled.failure ? '#F25C5C' : '#ffffff'"
     ></mascot>
     <div class="plugin"></div>
     <b-popover
@@ -63,10 +64,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$mascot-size: 12vmin;
+$mascot-size: 9vmin;
 $bar-height: 1px;
 $bar-color: #B8E986;
 $padding-left: calc(#{$mascot-size} / 1.2);
+$danger-color: #F25C5C;
+$dialog-button-size: 3.5vmin;
 .bar {
   position: absolute;
   left: $mascot-size;
@@ -81,11 +84,12 @@ $padding-left: calc(#{$mascot-size} / 1.2);
 
   .mascot {
     position: absolute;
-    right: calc(100% + calc(#{$mascot-size} / 6));
+    right: calc(100% + calc(#{$mascot-size} / 2));
     transform: translateY(calc(-15% - #{$bar-height}));
     width: $mascot-size;
     height: auto;
     z-index: 100;
+    cursor: pointer;
   }
 
   .plugin {
@@ -93,7 +97,7 @@ $padding-left: calc(#{$mascot-size} / 1.2);
     position: absolute;
     height: $bar-height;
     right: 100%;
-    width: calc(#{$mascot-size} / 1.75);
+    width: calc(#{$mascot-size} / 1.1);
     z-index: 101;
   }
 
@@ -104,5 +108,27 @@ $padding-left: calc(#{$mascot-size} / 1.2);
     left: 100%;
     background-color: $bar-color;
   }
+}
+
+.trash-confirm {
+  background-color: $danger-color;
+  box-shadow: 0 2px 10px 0 $danger-color;
+  animation: shake 0.8s;
+  animation-iteration-count: infinite;
+  margin: 1vmin;
+}
+
+.close-popover {
+  float: right;
+  display: flex;
+  position: absolute;
+  bottom: calc(100% - #{$dialog-button-size} / 2);
+  right:  calc(#{-$dialog-button-size} / 2);
+  z-index: 10001;
+  cursor: pointer;
+}
+
+.deactivate-edit-main {
+  opacity: 0;
 }
 </style>

@@ -1,27 +1,22 @@
 <template>
   <div class="staged-functions-container">
-    <div class="staged-functions-header">
-      <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
-    </div>
-    <div class="staged-functions-content">
-      <draggable
-        class="staged-functions"
-        :list="stagedFunctions"
-        :options="draggableOptions"
-        @add="confirmDeactivateFunction"
-      >
-        <function-box
-          v-for="(func, ind) in stagedFunctions"
-          :key="'staged-func/' + ind"
-          :func="func"
-          :ind="func.index"
-          :collection="stagedFunctions"
-          :origin="'stagedFunctions'"
-          :data-function-index="func.index"
-          :data-created-id="func.created_id"
-        ></function-box>
-      </draggable>
-    </div>
+    <draggable
+      class="staged-functions"
+      :list="stagedFunctions"
+      :options="draggableOptions"
+      @add="confirmDeactivateFunction"
+    >
+      <function-box
+        v-for="(func, ind) in stagedFunctions"
+        :key="'staged-func/' + ind"
+        :func="func"
+        :ind="func.index"
+        :collection="stagedFunctions"
+        :origin="'stagedFunctions'"
+        :data-function-index="func.index"
+        :data-created-id="func.created_id"
+      ></function-box>
+    </draggable>
   </div>
 </template>
 

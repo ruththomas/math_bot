@@ -42,11 +42,16 @@
                 :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
                 :denomination="tool.name"
               ></tool>
-              <b-img
-                class="robot animated"
+              <!--<b-img-->
+                <!--class="robot animated"-->
+                <!--v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"-->
+                <!--:key="'ROBOT'"-->
+                <!--:src="robot._robotDirections[robotOrientation]"></b-img>-->
+              <grid-robot
                 v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
-                :key="'ROBOT'"
-                :src="robot._robotDirections[robotOrientation]"></b-img>
+                :key="'grid-robot'"
+                :direction="robotOrientation"
+              ></grid-robot>
 
               <b-popover
                 v-if="space.tools.length"
@@ -88,6 +93,7 @@ import utils from '../services/utils'
 import ControlPanel from './Control_panel'
 import GridControls from './Grid_controls'
 import Tool from './Tool'
+import GridRobot from './Grid_robot'
 
 export default {
   mounted () {
@@ -150,7 +156,8 @@ export default {
     SplashScreen,
     RobotCarrying,
     ControlPanel,
-    Tool
+    Tool,
+    GridRobot
   }
 }
 </script>
@@ -216,10 +223,22 @@ export default {
         width: 75%;
       }
 
-      img.robot {
-        height: 150%;
-        top: -35%;
+      .grid-robot {
+        position: absolute;
         z-index: 9;
+        top: 0;
+        left: 1%;
+        margin: 0 auto;
+        height: 140%;
+        width: 135%;
+      }
+
+      .grid-robot-0 {
+        top: -40%;
+      }
+
+      .grid-robot-270 {
+        left: -36%;
       }
 
       .multi-problem {

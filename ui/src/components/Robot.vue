@@ -37,6 +37,7 @@
           <advanced-mode></advanced-mode>
         </div>
       </transition>
+      <!--<staged-functions></staged-functions>-->
       <!-- !!! Uncomment below to access advanced mode !!! -->
       <!--<div style="display: flex; justify-content: center; align-items: center;">-->
         <!--<span :style="{opacity: levelControl.mode === 'advanced' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Normal</span>-->
@@ -67,6 +68,7 @@ import LevelCongrats from './Planet_congrats'
 import AdvancedMode from './Advanced_mode'
 import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 import ActiveDrop from './Activate_drop'
+import StagedFunctions from './Staged_functions'
 
 export default {
   mounted () {
@@ -132,7 +134,8 @@ export default {
     StepCongrats,
     LevelCongrats,
     AdvancedMode,
-    ActiveDrop
+    ActiveDrop,
+    StagedFunctions
   }
 }
 </script>
