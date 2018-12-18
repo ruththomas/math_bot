@@ -41,7 +41,7 @@ class GridAnimator {
         this.grid[cell.location.x][cell.location.y].tools = cell.items.map((name, tInd) => {
           const originalTool = this.grid[cell.location.x][cell.location.y].tools[tInd]
           if (!originalTool || (originalTool && !originalTool.original)) {
-            const newTool = JSON.parse(JSON.stringify(this.toolList[name]))
+            const newTool = JSON.parse(JSON.stringify(this.toolList.find((t) => t.name === name)))
             newTool.original = false
             return newTool
           } else {
