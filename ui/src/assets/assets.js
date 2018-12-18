@@ -168,11 +168,7 @@ module.exports = {
     '101': 'https://res.cloudinary.com/sheouth/image/upload/v1543680677/noun_airship_1820392_FFFFFF.png'
   },
   tools: {
-    kitty: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348238/tools/noun_1241059_cc_xsu8cz.svg',
-    ten: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348259/tools/Shape_1_s1oarm.svg',
-    oneHundred: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348270/tools/Shape_Copy_s0nqnc.svg',
-    oneThousand: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348281/tools/Box_Pink_lmrsxt.svg',
-    tenThousand: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348314/tools/Shape_Copy_2_vwlfsp.svg'
+    '1': 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348238/tools/noun_1241059_cc_xsu8cz.svg'
   },
   stars: {
     5: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522348009/stars/stars-5_mxzlcm.png',
