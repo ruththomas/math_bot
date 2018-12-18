@@ -151,8 +151,7 @@ export default {
     SplashScreen,
     RobotCarrying,
     ControlPanel,
-    Tool,
-    GridControls
+    Tool
   }
 }
 </script>
