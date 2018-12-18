@@ -147,6 +147,7 @@ export default {
     closePopover: utils.closePopover
   },
   components: {
+    GridControls,
     SplashScreen,
     RobotCarrying,
     ControlPanel,
