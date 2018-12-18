@@ -146,7 +146,7 @@ class AdminController @Inject()(
     }
   }
 
-  // todo: hook up to ws or ensure player is admin in request
+  // todo: hook up to ws
 
   def getEvents: Action[AnyContent] = Action.async { implicit request =>
     eventsDAO.getEvents.map { p: Seq[Event] =>
@@ -157,8 +157,8 @@ class AdminController @Inject()(
 
   // fixme: reference by _id
 
-  def removeEvent(id: String): Action[AnyContent] = Action.async { implicit request =>
-    eventsDAO.remove(id).flatMap { evt =>
+  def removeEvent(title: String): Action[AnyContent] = Action.async { implicit request =>
+    eventsDAO.remove(title).flatMap { evt =>
       FastFuture.successful(Ok(Json.toJson("result" -> evt.toString)))
     }
 
