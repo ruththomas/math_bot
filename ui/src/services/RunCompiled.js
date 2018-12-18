@@ -35,6 +35,7 @@ class RunCompiled extends GridAnimator {
   }
 
   lastFrame = null
+  failure = false
 
   _testForEmptyFunctions () {
     const mainFunction = $store.state.levelControl.functions.main.func
@@ -254,6 +255,7 @@ class RunCompiled extends GridAnimator {
   _failure (frame) {
     return this.initializeAnimation(frame, async () => {
       this.lastFrame = frame
+      this.failure = true
       this.robot.setState('paused')
       this._failedMessage()
       this._updateGalaxyData()

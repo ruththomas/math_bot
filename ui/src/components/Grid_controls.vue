@@ -16,9 +16,10 @@
     >
     <img
       v-else
-      class="play dialog-button"
+      class="actual-play play dialog-button"
+      :class="levelControl.runCompiled.failure ? 'disabled' : ''"
       :src="permanentImages.buttons.playButton"
-      @click="levelControl.robot.state !== 'failure' ? levelControl.runCompiled.start() : ''"
+      @click="!levelControl.runCompiled.failure ? levelControl.runCompiled.start() : ''"
     />
     <img
       class="reset dialog-button"
