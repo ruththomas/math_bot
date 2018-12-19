@@ -134,9 +134,8 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       logger.LogInfo(className, "Creating new compiler.")
 
       for {
-        pathAndContinent <- levelControl.getBuiltContinent(tokenId)
+        continent <- levelControl.compilerBuiltContinent(tokenId)
       } yield {
-        val continent = pathAndContinent.builtContinent
         val grid = GridMap( // todo - refactor to use continent directly
           gMap = continent.gridMap,
           robotOrientation = continent.initialRobotState.orientation,
