@@ -10,7 +10,7 @@
       <div class="form-group">
         <label for="title">Title</label>
         <input
-          :readonly="readOnly"
+          :readonly="Boolean(readOnly)"
           id="title"
           type="text"
           name="title"
@@ -31,7 +31,7 @@
         <label>Description</label>
         <textarea
           name="description"
-          :readonly="readOnly"
+          :readonly="Boolean(readOnly)"
           rows="5" class="form-control"
           v-model="userInput.description"
           required
@@ -43,7 +43,7 @@
       <div class="form-group">
         <label>Links</label>
         <input
-          :readonly="readOnly"
+          :readonly="Boolean(readOnly)"
           type="text"
           class="form-control"
           v-model="userInput.links"
@@ -51,7 +51,7 @@
         />
       </div>
 
-      <div class="row my-3 d-flex justify-content-end" v-if="!readOnly">
+      <div class="row my-3 d-flex justify-content-end" v-if="!Boolean(readOnly)">
         <b-btn type="reset" class="mx-2">
           clear
         </b-btn>
@@ -81,7 +81,7 @@ export default {
   },
   mounted () {
     if (this.init) {
-      Object.assign(this.userInput, this.event, { date: String(this.event.date) })
+      Object.assign(this.userInput, this.event)
     }
   },
   components: {

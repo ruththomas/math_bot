@@ -29,12 +29,6 @@ POST        /api/auth/recoverPassword         controllers.AuthController.passwor
 POST        /api/auth/updatePassword          controllers.AuthController.updatePassword
 GET         /api/auth/logout                  controllers.AuthController.logout
 
-
-GET         /api/admin/events                     controllers.AdminController.getEvents
-DELETE      /api/admin/events/:title          controllers.AdminController.removeEvent(title)
-POST        /api/admin/events                     controllers.AdminController.insertEvent
-PUT         /api/admin/events                     controllers.AdminController.replaceEvent
-
 # !! This must be last - and may show an error until prod build !!
 # Map static resources from the /public folder to the file resource path
 GET         /*file                            controllers.SpaController.assetOrDefault(file)

@@ -1,7 +1,7 @@
 package controllers
 
 import actors.convert_flow.{AdminRequestConvertFlow, AdminResponseConvertFlow}
-import actors.messages.admin.{Event, RawEvent}
+import actors.messages.admin.{AdminEvent, NewEvent}
 import actors.{ActorTags, AdminActor}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
@@ -61,6 +61,7 @@ class AdminController @Inject()(
                                  auth0LegacyDAO,
                                  sessionDAO,
                                  statsDAO,
+                                 eventsDAO,
                                  ws,
                                  environment)
                       }
@@ -143,64 +144,6 @@ class AdminController @Inject()(
           Ok(s"Admin privileges have been revoked for $email.")
         }
       case None => FastFuture.successful(BadRequest("Missing email query parameter"))
-    }
-  }
-
-  // todo: hook up to ws
-
-  def getEvents: Action[AnyContent] = Action.async { implicit request =>
-    eventsDAO.getEvents.map { p: Seq[Event] =>
-      Ok(Json.toJson(p))
-
-    }
-  }
-
-  // fixme: reference by _id
-
-  def removeEvent(title: String): Action[AnyContent] = Action.async { implicit request =>
-    eventsDAO.remove(title).flatMap { evt =>
-      FastFuture.successful(Ok(Json.toJson("result" -> evt.toString)))
-    }
-
-  }
-
-  def insertEvent: Action[WSMessage] = Action.async(parse.json) { implicit request =>
-    val json: JsValue = request.body
-
-    val m = Json.fromJson[RawEvent](json)
-
-    m match {
-
-      case JsSuccess(value, _) =>
-        val newEvent = Event(value.date, value.title, value.description, value.links)
-
-        eventsDAO.insert(newEvent).flatMap { _ =>
-          FastFuture.successful(Ok(Json.toJson(newEvent)))
-
-        }
-
-      case _ => FastFuture.successful(BadRequest("invalid request"))
-    }
-
-  }
-
-  // fixme: reference via _id
-
-  def replaceEvent: Action[WSMessage] = Action.async(parse.json) { implicit request =>
-    val json: JsValue = request.body
-
-    val m = Json.fromJson[RawEvent](json)
-
-    m match {
-
-      case JsSuccess(value, _) =>
-        val e = Event(value.date, value.title, value.description, value.links)
-
-        eventsDAO.replace(e).flatMap { result =>
-          FastFuture.successful(Ok(Json.toJson("result" -> result)))
-        }
-      case _ => FastFuture.successful(BadRequest("Invalid Request"))
-
     }
   }
 

@@ -10,7 +10,11 @@ export default class AdminControl extends Ws {
     loginsLastWeek: 'logins-last-week',
     levelStats: 'level-stats',
     currentPath: 'current-path',
-    maxLevel: 'max-level'
+    maxLevel: 'max-level',
+    getEvents: 'events-get',
+    postEvents: 'events-post',
+    putEvent: 'events-put',
+    delEvent: 'events-delete'
   }
 
   userCount = 0
@@ -21,9 +25,34 @@ export default class AdminControl extends Ws {
   levelStats = []
   currentPath = []
   maxLevel = []
+  events = []
+  event = null
 
   constructor () {
     super('admin')
+  }
+
+  getEvents () {
+    this._send(JSON.stringify({action: this.actions.getEvents}))
+  }
+
+  postEvent (event) {
+    this._send(JSON.stringify({action: this.actions.postEvents, newEvent: this._mapEventToRequest(event)}))
+  }
+
+  putEvent (event) {
+    this._send(JSON.stringify({action: this.actions.putEvent, event: this._mapEventToRequest(event)}))
+  }
+
+  delEvent (event) {
+    this._send(JSON.stringify({action: this.actions.delEvent, event: this._mapEventToRequest(event)}))
+  }
+
+  _mapEventToRequest (event) {
+    return Object.assign({}, event, {
+
+      date: new Date(event.date).getTime()
+    })
   }
 
   /*
@@ -93,7 +122,12 @@ export default class AdminControl extends Ws {
   }
 
   handleSocketResponse (result) {
-    const { activeUserCount = -1, status = 'failure', last7DaysLoginCount = '-1', userAccountSignups = [], userCount = '-1', currentPath = [], levelStats = [], maxLevel = [] } = result
+    const { activeUserCount = -1,
+      status = 'failure', last7DaysLoginCount = '-1',
+      events = [],
+      event = null,
+      userAccountSignups = [], userCount = '-1', currentPath = [],
+      levelStats = [], maxLevel = [] } = result
 
     if (status !== 'success') {
       console.error('socket error', result)
@@ -128,6 +162,16 @@ export default class AdminControl extends Ws {
     if (maxLevel.length) {
       this.maxLevel = maxLevel.slice()
       // console.log(Array.from(this.maxLevel))
+    }
+
+    if (events.length) {
+      this.events = events.slice()
+    }
+
+    if (event) {
+      this.event = event
+
+      this.getEvents()
     }
 
     if (levelStats.length) {

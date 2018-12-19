@@ -36,7 +36,7 @@
 
       </div>
       <div v-else>
-        <events-add init="1" :event="event" read-only="1"></events-add>
+        <events-add init="1" :event="event" :read-only="Boolean(1)"></events-add>
       </div>
     </div>
 

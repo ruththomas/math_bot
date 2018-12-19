@@ -2,7 +2,7 @@ package actors.convert_flow
 
 import actors.AdminActor._
 import actors.messages.ActorFailed
-import actors.messages.admin.{CurrentPath, LevelStats}
+import actors.messages.admin.{AdminEvent, CurrentPath, LevelStats}
 import actors.messages.playeraccount.{MaxLevel, UserAccountSignups}
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
@@ -19,7 +19,9 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
       activeUserCount: Option[Long] = None,
       currentPath: Option[Seq[CurrentPath]] = None,
       levelStats: Option[Seq[LevelStats]] = None,
-      maxLevel: Option[Seq[MaxLevel]] = None
+      maxLevel: Option[Seq[MaxLevel]] = None,
+      events: Option[Seq[AdminEvent]] = None,
+      event: Option[AdminEvent] = None
   )
 
   implicit val adminResponseWrites: OWrites[AdminResponse] = Json.format[AdminResponse]
@@ -37,6 +39,9 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
         AdminResponse(success, None, None, None, None, None, Some(currentPaths), None)
       case UserMaxLevel(maxLevel) => AdminResponse(success, None, None, None, None, None, None, None, Some(maxLevel))
       case LevelStatsResult(levelStats) => AdminResponse(success, None, None, None, None, None, None, Some(levelStats))
+      case Events(events) => AdminResponse(success, None, None, None, None, None, None, None, None, Some(events))
+      case Event(event) => AdminResponse(success, None, None, None, None, None, None, None, None, None, Some(event))
+      case DeleteEventResult(msg) => AdminResponse(success, None, Some(msg))
       case ActorFailed(message) => AdminResponse(failed, message = Some(message))
       case _ => AdminResponse(failed)
     })
