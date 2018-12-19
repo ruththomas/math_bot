@@ -33,6 +33,8 @@ object LevelActor {
   final case class ActivateDeactivateFunction(function: Function)
   final case class Unlock()
   final case class ChangeFunctionColor(function: Function)
+  final case class GetSandbox()
+  final case class ResetContinent(pathOpt: Option[String])
 
   def props(out: ActorRef,
             tokenId: String,
@@ -154,16 +156,25 @@ class LevelActor @Inject()(out: ActorRef,
         preparedFunctions <- levelControl.activateDeactivateFunction(tokenId, function)
       } yield out ! preparedFunctions
     /*
+     * @deprecated
      * Updates every instance of a functions color
      * */
     case ChangeFunctionColor(function) =>
       for {
         pathAndContinent <- levelControl.changeFunctionColor(tokenId, function)
       } yield out ! pathAndContinent
+    case GetSandbox() =>
+      for {
+        sandbox <- levelControl.getSandbox(tokenId)
+      } yield out ! sandbox
     case Unlock() =>
       for {
         updated <- levelControl.unlock(tokenId)
       } yield out ! updated
+    case ResetContinent(pathOpt) =>
+      for {
+        reset <- levelControl.resetContinent(tokenId, pathOpt)
+      } yield out ! reset
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }

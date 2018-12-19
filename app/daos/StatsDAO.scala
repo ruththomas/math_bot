@@ -172,6 +172,12 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       _ <- collection.replaceOne(equal(tokenIdLabel, tokenId), updated.get).toFuture()
     } yield updated.get
 
+  def setIsSandbox(tokenId: String, bool: Boolean): Future[Stats] = {
+    for {
+      updated <- collection.findOneAndUpdate(equal(tokenIdLabel, tokenId), set(isSandboxLabel, bool)).toFuture()
+    } yield updated.copy(isSandbox = Some(bool))
+  }
+
   private val playerAccounts = BsonDocument("""
                                       |   { $lookup: {
                                       |        from: "playeraccount",

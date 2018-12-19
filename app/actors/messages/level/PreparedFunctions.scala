@@ -6,7 +6,7 @@ import play.api.libs.json.{Json, OFormat}
 import utils.Implicits._
 
 object PreparedFunctions {
-  import compiler.Colors._
+  import compiler.ElementKinds._
   implicit val format: OFormat[PreparedFunctions] = Json.format[PreparedFunctions]
 
   private def getFunctionIds(listedFunctions: List[Function]): List[String] = listedFunctions.map(_.created_id)
@@ -116,13 +116,13 @@ object PreparedFunctions {
 
   /*
    * Converts any color not found in color pallet to white
-   * As long as the color `white` is found in `compiler/Colors.scala`
+   * As long as the color `white` is found in `compiler/ElementKinds.scala`
    * this function will revert function colors that aren't otherwise
-   * found in Colors.scala
+   * found in ElementKinds.scala
    * */
   private def convertColors(functions: List[Function]): List[Function] = functions.map { f =>
     f.copy(
-      color = allColors.find(_.name == f.color).getOrElse(white).name,
+      color = all.find(_.name == f.color).getOrElse(white).name,
       func = f.func.map(convertColors)
     )
   }

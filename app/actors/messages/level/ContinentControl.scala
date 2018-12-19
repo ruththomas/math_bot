@@ -6,9 +6,9 @@ object ContinentControl {
     frame.board.currentCell().cellType == CellType.FinalAnswer
 
   private def totalDropped(frame: Frame, problem: Problem) = {
-    val spotSum = frame.board.currentCell().contents.map(_.value).sum
-    val solution = Problem.evalProblem(problem)
-    spotSum == solution.toInt
+    val spotSum: BigDecimal = frame.board.currentCell().contents.map(_.valueToBigDec).sum
+    val solution: BigDecimal = BigDecimal(Problem.evalProblem(problem))
+    spotSum == solution
   }
 
   private def discoverRecursion(main: Function,

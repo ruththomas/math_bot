@@ -24,7 +24,6 @@ import 'codemirror/lib/codemirror.css'
 import 'swiper/dist/css/swiper.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import EventsList from '../components/Events_list'
 
 Vue.use(VueCodemirror)
 Vue.use(ToggleButton)
@@ -100,11 +99,6 @@ const router = new Router({
       name: 'AdminRequest',
       component: AdminRequest,
       secure: true
-    },
-    {
-      path: '/events',
-      name: 'Events',
-      component: EventsList
     },
     {
       path: '*',

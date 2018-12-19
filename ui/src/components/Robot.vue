@@ -103,8 +103,8 @@ export default {
     }
   },
   components: {
-    UserGravatar,
     ConfirmDeactivateFunc,
+    UserGravatar,
     Grid,
     Commands,
     Trash,
