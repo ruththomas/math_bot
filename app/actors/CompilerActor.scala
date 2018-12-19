@@ -1,20 +1,20 @@
 package actors
 
-import _root_.models.compiler.{ ClientFrame, ClientRobotState, ClientTrace }
+import _root_.models.compiler.{ClientFrame, ClientRobotState, ClientTrace}
 import actors.messages._
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{Actor, ActorRef, Props}
 import akka.http.scaladsl.util.FastFuture
 import akka.util.Timeout
 import compiler.operations.Final
 import compiler.processor.Frame
-import compiler.{ Compiler, FrameController, GridAndProgram, Point }
+import compiler.{Compiler, FrameController, GridAndProgram, Point}
 import configuration.CompilerConfiguration
 import javax.inject.Inject
 import loggers.MathBotLogger
 import models.GridMap
 
 import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContextExecutor, Future }
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
     logger: MathBotLogger,
@@ -25,10 +25,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
 
   implicit val timeout: Timeout = 5000.minutes
 
-  private case class ProgramState(frameController: FrameController,
-                                  grid: GridMap,
-                                  program: GridAndProgram
-                                 )
+  private case class ProgramState(frameController: FrameController, grid: GridMap, program: GridAndProgram)
 
   private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
 
@@ -63,7 +60,8 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       ClientFrame(ClientRobotState(Point(0, 0), "0", List.empty[String]),
                   "failure",
                   Some(pathAndContinent),
-                  Seq.empty[ClientTrace])
+                  Seq.empty[ClientTrace],
+                  Some(0))
     }
   }
 
@@ -113,10 +111,12 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           context.become(
             compileContinue(
               0,
-              ProgramState(frameController = FrameController(program, f => continent.stepControl.success(f, problem), continent.evalEachFrame, config),
+              ProgramState(frameController = FrameController(program,
+                                                             f => continent.stepControl.success(f, problem),
+                                                             continent.evalEachFrame,
+                                                             config),
                            grid = grid,
-                           program = program
-                           )
+                           program = program)
             )
           )
           self ! CompilerContinue(steps)
@@ -145,10 +145,12 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
             context.become(
               compileContinue(
                 0,
-                ProgramState(frameController = FrameController(program, f => continent.stepControl.success(f, problem), continent.evalEachFrame, config),
+                ProgramState(frameController = FrameController(program,
+                                                               f => continent.stepControl.success(f, problem),
+                                                               continent.evalEachFrame,
+                                                               config),
                              grid = grid,
-                             program = program
-                             )
+                             program = program)
               )
             )
             self ! CompilerContinue(steps)
@@ -166,7 +168,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       } yield out ! CompilerOutput(List(lastFrame))
   }
 
-  private def compileContinue(index : Int, state: ProgramState): Receive = {
+  private def compileContinue(index: Int, state: ProgramState): Receive = {
 
     case CompilerExecute(steps, _) =>
       self ! CompilerContinue(steps)
@@ -180,7 +182,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       } yield {
         sendFrames(state, cf)
       }
-      context.become(compileContinue(index+steps, state))
+      context.become(compileContinue(index + steps, state))
 
     case _: CompilerHalt =>
       logger.LogInfo(className, "Compiler halted")
