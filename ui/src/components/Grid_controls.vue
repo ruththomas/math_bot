@@ -17,9 +17,9 @@
     <img
       v-else
       class="actual-play play dialog-button"
-      :class="levelControl.runCompiled.failure ? 'disabled' : ''"
+      :class="isLastFrame ? 'disabled' : ''"
       :src="permanentImages.buttons.playButton"
-      @click="!levelControl.runCompiled.failure ? levelControl.runCompiled.start() : ''"
+      @click="!isLastFrame ? levelControl.runCompiled.start() : ''"
     />
     <img
       class="reset dialog-button"
@@ -40,6 +40,10 @@ export default {
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    isLastFrame () {
+      const robotFrames = this.levelControl.runCompiled.robotFrames
+      return robotFrames.length && this.levelControl.runCompiled.currentFrame === robotFrames.length - 1
     }
   },
   data () {

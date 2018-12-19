@@ -110,7 +110,7 @@ export default {
     gridRobotColor () {
       if (this.isLastFrame) {
         return '#F25C5C'
-      } else if (this.robot.state === 'running') {
+      } else if (this.robot.state === 'running' || this.levelControl.robot.state === 'paused') {
         return '#B8E986'
       } else {
         return '#ffffff'
