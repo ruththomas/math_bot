@@ -8,24 +8,26 @@
     @callback="changeSpeed"
   ></vue-slider>
   <div class="buttons">
-    <div class="control-btn-group">
+    <div class="control-btn-group advanced-mode-btn-group">
       <img
         class="advanced-mode-button dialog-button"
         :src="permanentImages.buttons.advancedMode"
         @click="toggleAdvanced"
       >
     </div>
-    <div class="control-btn-group">
+    <div class="control-btn-group play-btn-group">
       <img
-        v-if="levelControl.robot.state === 'running'"
+        v-if="!hidePaused && levelControl.robot.state === 'running'"
         class="pause play dialog-button"
         :src="permanentImages.buttons.pauseButton"
         @click="[levelControl.runCompiled._pausedMessage(), levelControl.runCompiled.pause()]"
       >
       <img
         v-else
+        v-for="(btn, ind) in playButtonsNumber"
+        :key="'play-button/' + ind"
         class="actual-play play dialog-button"
-        :class="isLastFrame ? 'disabled' : ''"
+        :class="[isLastFrame ? 'disabled' : '', !levelControl.runCompiled.forward ? 'play-reverse' : '']"
         :src="permanentImages.buttons.playButton"
         @click="!isLastFrame ? levelControl.runCompiled.start() : ''"
       />
@@ -67,6 +69,12 @@ export default {
     isLastFrame () {
       const robotFrames = this.levelControl.runCompiled.robotFrames
       return robotFrames.length && this.levelControl.runCompiled.currentFrame === robotFrames.length - 1
+    },
+    playButtonsNumber () {
+      const speed = this.levelControl.robot.robotSpeed
+      if (speed < 133) return new Array(3).fill(3)
+      else if (speed < 266) return new Array(2).fill(2)
+      else return new Array(1).fill(1).fill(1)
     }
   },
   data () {
@@ -84,7 +92,8 @@ export default {
         },
         tooltip: false,
         clickable: false
-      }
+      },
+      hidePaused: false
     }
   },
   methods: {
@@ -96,10 +105,12 @@ export default {
       }
     },
     resetSpeed () {
+      this.hidePaused = false
       this.sliderValue = 50
       this.levelControl.runCompiled.pause()
     },
     changeSpeed () {
+      this.hidePaused = true
       this.levelControl.runCompiled.setDirection(this.sliderValue > 50)
       if (this.levelControl.robot.state === 'home' || this.levelControl.robot.state === 'paused') {
         this.levelControl.runCompiled.start()
@@ -142,6 +153,12 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
       flex: 1;
     }
 
+    .control-btn-group.advanced-mode-btn-group {
+      .advanced-mode-button {
+        margin: 0 2%;
+      }
+    }
+
     .control-btn-group.reset-group {
       justify-content: flex-end;
     }
@@ -150,18 +167,19 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
       justify-content: flex-end;
       .dialog-button {
         transform: scale(1.5);
+        margin: 0 2%;
+      }
+    }
+
+    .control-btn-group.play-btn-group {
+      .play-reverse {
+        transform: rotate(180deg);
       }
     }
 
     .dialog-button {
       height: 2.5vmin;
-    }
-
-    .advanced-mode-button {
-
-    }
-
-    .play {
+      width: auto;
     }
 
     .play.dialog-button.disabled {
