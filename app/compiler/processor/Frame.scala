@@ -4,7 +4,7 @@ import compiler.{ Cell, CellChange, Grid }
 import compiler.operations.{ NoOperation, Operation, UserFunctionById }
 
 case class Frame(operation: Operation, register: Register, board: Grid, traceTag: TraceTag, robotLocation: Option[RobotLocation] = None, cellChange : Option[CellChange] = None,
-                 success : Boolean = false) {
+                 success : Boolean = false, index : Option[Int] = None) {
   def withMinimalGrid : Frame =
     cellChange match {
       case Some(cell) =>

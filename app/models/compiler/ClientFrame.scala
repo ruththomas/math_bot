@@ -2,7 +2,7 @@ package models.compiler
 
 import actors.messages.level.PathAndContinent
 import compiler.processor.Frame
-import play.api.libs.json.{ Json, OWrites }
+import play.api.libs.json.{Json, OWrites}
 
 /*
  * Conveys the result of a mathbot processor execution to the web client.
@@ -11,9 +11,10 @@ import play.api.libs.json.{ Json, OWrites }
 case class ClientFrame(robotState: ClientRobotState,
                        programState: String,
                        pathAndContinent: Option[PathAndContinent],
-                       trace : Seq[ClientTrace]) {
-  def isSuccess : Boolean = programState == "success"
-  def isFailure : Boolean = programState == "failure"
+                       trace: Seq[ClientTrace],
+                       index: Option[Int]) {
+  def isSuccess: Boolean = programState == "success"
+  def isFailure: Boolean = programState == "failure"
 }
 
 object ClientFrame {
@@ -32,5 +33,9 @@ object ClientFrame {
     ClientFrame(frame, "failure", Some(pathAndContinent))
 
   def apply(frame: Frame, programState: String, pathAndContinent: Option[PathAndContinent]): ClientFrame =
-    ClientFrame(ClientRobotState(frame), programState, pathAndContinent, Seq(ClientTrace(frame.traceTag)))
+    ClientFrame(ClientRobotState(frame),
+                programState,
+                pathAndContinent,
+                Seq(ClientTrace(frame.traceTag)),
+                index = frame.index)
 }
