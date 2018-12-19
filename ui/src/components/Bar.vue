@@ -86,7 +86,7 @@ $dialog-button-size: 3.5vmin;
 .bar {
   position: absolute;
   left: $mascot-size;
-  right: $padding-left;
+  right: 0;
   top: calc(50%);
   height: $bar-height;
   background-color: $bar-color;

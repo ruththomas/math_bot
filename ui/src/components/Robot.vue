@@ -22,14 +22,19 @@
         leave-active-class="animated bounceOutRight"
       >
         <div v-if="levelControl.mode === 'normal'" class="row container" style="flex: 1;">
-          <div class="row" style="padding: 0; display: flex; flex: 1; position: relative; z-index: 110;">
-            <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+          <div class="row" style="padding: 0; display: flex; flex: 2; position: relative; z-index: 110; padding: 1%;">
+            <popover-bucket v-if="functionAreaShowing === 'editFunction'"></popover-bucket>
             <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
           </div>
 
-          <div class="row" style="padding: 0; display: flex; flex: 1;">
+          <div class="row" style="padding: 0; display: flex; flex: 2; align-items: center; position: relative;">
             <trash></trash>
             <commands></commands>
+          </div>
+
+          <div class="row" style="display: flex; flex: 1; position: relative;">
+            <trash></trash>
+            <staged-functions></staged-functions>
           </div>
         </div>
 
@@ -37,17 +42,6 @@
           <advanced-mode></advanced-mode>
         </div>
       </transition>
-      <!--<staged-functions></staged-functions>-->
-      <!-- !!! Uncomment below to access advanced mode !!! -->
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <span :style="{opacity: levelControl.mode === 'advanced' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Normal</span>
-        <toggle-button
-          @change="toggleAdvanced"
-          :color="{checked: 'rgba(255, 255, 255, 0.5)', unchecked: 'rgba(255, 255, 255, 0.5)', disabled: 'rgba(255, 255, 255, 0.5)'}"
-          :switch-color="{checked: 'linear-gradient(to left, #25EF02, #000000)', unchecked: 'linear-gradient(to left, #000000, #25EF02)'}"
-        />
-        <span :style="{opacity: levelControl.mode === 'normal' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
-      </div>
     </div>
     <confirm-deactivate-func></confirm-deactivate-func>
   </div>
