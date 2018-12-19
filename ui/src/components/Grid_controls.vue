@@ -8,24 +8,47 @@
     @callback="changeSpeed"
   ></vue-slider>
   <div class="buttons">
-    <img
-      v-if="levelControl.robot.state === 'running'"
-      class="pause play dialog-button"
-      :src="permanentImages.buttons.pauseButton"
-      @click="[levelControl.runCompiled._pausedMessage(), levelControl.runCompiled.pause()]"
+    <div class="control-btn-group">
+      <img
+        class="advanced-mode-button dialog-button"
+        :src="permanentImages.buttons.advancedMode"
+        @click="toggleAdvanced"
+      >
+    </div>
+    <div class="control-btn-group">
+      <img
+        v-if="levelControl.robot.state === 'running'"
+        class="pause play dialog-button"
+        :src="permanentImages.buttons.pauseButton"
+        @click="[levelControl.runCompiled._pausedMessage(), levelControl.runCompiled.pause()]"
+      >
+      <img
+        v-else
+        class="actual-play play dialog-button"
+        :class="isLastFrame ? 'disabled' : ''"
+        :src="permanentImages.buttons.playButton"
+        @click="!isLastFrame ? levelControl.runCompiled.start() : ''"
+      />
+    </div>
+    <div class="control-btn-group reset-group">
+      <img
+        class="reset dialog-button"
+        :src="permanentImages.buttons.resetButton"
+        @click="levelControl.runCompiled.reset()"
+      />
+    </div>
+    <div
+      class="control-btn-group video-group"
     >
-    <img
-      v-else
-      class="actual-play play dialog-button"
-      :class="isLastFrame ? 'disabled' : ''"
-      :src="permanentImages.buttons.playButton"
-      @click="!isLastFrame ? levelControl.runCompiled.start() : ''"
-    />
-    <img
-      class="reset dialog-button"
-      :src="permanentImages.buttons.resetButton"
-      @click="levelControl.runCompiled.reset()"
-    />
+      <!--todo-->
+      <img
+        v-for="(v, i) in ['1', '2', '3']"
+        :key="'video-button/' + i"
+        class="dialog-button"
+        :class="v"
+        :src="permanentImages.buttons.hint"
+      >
+    </div>
   </div>
 </div>
 </template>
@@ -50,7 +73,7 @@ export default {
     return {
       sliderValue: 50,
       sliderOptions: {
-        width: '50%',
+        width: '75%',
         height: 2,
         'bg-style': {
           'background-color': '#B8E986',
@@ -86,6 +109,9 @@ export default {
         this.levelControl.robot.setState('running')
         this.levelControl.robot.setSpeed(this.convertToSpeed())
       }
+    },
+    toggleAdvanced (evt) {
+      this.levelControl.mode = this.levelControl.mode === 'normal' ? 'advanced' : 'normal'
     }
   },
   components: {
@@ -108,13 +134,34 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
   align-items: center;
 
   .buttons {
-    width: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .control-btn-group {
+      display: flex;
+      flex: 1;
+    }
+
+    .control-btn-group.reset-group {
+      justify-content: flex-end;
+    }
+
+    .control-btn-group.video-group {
+      justify-content: flex-end;
+      .dialog-button {
+        transform: scale(1.5);
+      }
+    }
+
     .dialog-button {
       height: 2.5vmin;
     }
 
+    .advanced-mode-button {
+
+    }
+
     .play {
-      float: left;
     }
 
     .play.dialog-button.disabled {
@@ -123,7 +170,6 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
     }
 
     .reset {
-      float: right;
     }
   }
 }

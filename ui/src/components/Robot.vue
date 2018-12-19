@@ -109,9 +109,6 @@ export default {
       } else {
         return picture
       }
-    },
-    toggleAdvanced (evt) {
-      this.levelControl.mode = evt.value ? 'advanced' : 'normal'
     }
   },
   components: {
