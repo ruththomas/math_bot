@@ -10,17 +10,11 @@ import play.api.libs.json.{ JsString, JsValue, Writes, _ }
 
 object CompilerResponseConvertFlow extends SocketResponseConvertFlow {
 
-
-
-  implicit val problemWrites = new Writes[Problem] {
-    def writes(o: Problem) = JsString(o.encryptedProblem)
-  }
-
   implicit val compileResponseFormat: OWrites[CompilerResponse] = Json.writes[CompilerResponse]
 
   def responseToJson(msg: Any): JsValue = {
     val cr = msg match {
-      case CompilerOutput(frames, problem) => compiler.CompilerResponse(frames, Some(problem))
+      case CompilerOutput(frames) => compiler.CompilerResponse(frames)
       case _: CompilerHalted => CompilerResponse(halted = Some(true))
       case ActorFailed(m) => CompilerResponse(error = Some(m))
       case _ => CompilerResponse(error = Some("Unknown response from compiler"))
