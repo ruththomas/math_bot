@@ -42,13 +42,13 @@
     <div
       class="control-btn-group video-group"
     >
-      <!--todo-->
       <img
-        v-for="(v, i) in ['1', '2', '3']"
+        v-for="(v, i) in videos"
         :key="'video-button/' + i"
         class="dialog-button"
-        :class="v"
+        :class="i > 0 && !v.active ? 'video-disabled' : ''"
         :src="permanentImages.buttons.hint"
+        @click="[videoHintControl.showHint(), levelControl.runCompiled.reset()]"
       >
     </div>
   </div>
@@ -62,6 +62,23 @@ export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
+    },
+    videoHintControl () {
+      return this.$store.getters.getVideoHintControl
+    },
+    videoTimers () {
+      return this.$store.getters.getVideoTimers
+    },
+    timer () {
+      return this.videoTimers[this.levelControl.path] || {stars: 3}
+    },
+    hintCount () {
+      return this.levelControl.continent.hintCount
+    },
+    videos () {
+      return new Array(this.hintCount).fill('hint').map((n, i) => {
+        return {active: i < Math.min(this.timer.stars, this.hintCount)}
+      })
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
@@ -168,6 +185,9 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
       .dialog-button {
         transform: scale(1.5);
         margin: 0 2%;
+      }
+      .video-disabled {
+        opacity: 0.5;
       }
     }
 
