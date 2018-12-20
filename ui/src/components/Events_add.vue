@@ -2,7 +2,7 @@
 
   <div class="text-left">
     <h3 class="my-3 text-center event-title">
-      {{userInput.title || 'Event'}}
+      {{userInput.title}}
     </h3>
 
     <vue-form @submit.prevent="onSubmit" :state="formstate" class="mb-3">
@@ -20,13 +20,26 @@
         />
       </div>
 
-      <div class="form-group">
-        <label>Date</label>
-        <datepicker
-          :disabled="readOnly"
-          :value="userInput.date"
-          @selected="updateDate"/>
-      </div>
+       <div class="form-group">
+
+         <label>Date</label>
+
+         <vue-ctk-date-time-picker
+           v-if="readOnly"
+           v-model="userInput.dateReadOnly"
+           :disable-dates="true"
+           :disable-time="true"
+
+         ></vue-ctk-date-time-picker>
+          <vue-ctk-date-time-picker
+            v-model="userInput.date"
+            v-else
+            :disable-dates="readOnly"
+            :disable-time="readOnly"
+
+          ></vue-ctk-date-time-picker>
+       </div>
+
       <div class="form-group">
         <label>Description</label>
         <textarea
@@ -69,19 +82,22 @@ import Datepicker from 'vuejs-datepicker'
 export default {
   name: 'Events_add',
   data () {
+    const _now = new Date()
     return {
       formstate: {},
+      minDate: '2018-01-01',
       userInput: {
-        date: '',
+        date: _now,
         title: '',
         description: '',
+        dateReadOnly: _now.toISOString(),
         links: []
       }
     }
   },
   mounted () {
     if (this.init) {
-      Object.assign(this.userInput, this.event)
+      Object.assign(this.userInput, this.event, {date: new Date(this.event.date), dateReadOnly: new Date(this.event.date).toISOString()})
     }
   },
   components: {
@@ -109,6 +125,8 @@ export default {
 </script>
 
 <style scoped>
+
+  @import '~vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 
   .event-title {
 

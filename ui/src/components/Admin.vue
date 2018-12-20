@@ -89,7 +89,8 @@ export default {
         this.adminControl.getActiveUserCount(),
         this.adminControl.getLastWeekLogins(),
         // this.adminControl.getCurrentPath(),
-        this.adminControl.getMaxLevelStats()
+        this.adminControl.getMaxLevelStats(),
+        this.adminControl.getEvents()
       ])
     },
     handleRoute () {

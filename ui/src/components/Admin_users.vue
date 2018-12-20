@@ -1,13 +1,14 @@
 <template>
   <div>
     <h3 class="text-left my-3">Summary</h3>
+
     <div class="row mb-3 d-flex justify-content-between align-items-center">
 
       <div class="card">
         <div class="card-header">Users</div>
         <div class="card-body">
 
-          <h5 class="card-title" id="userCount">{{ userCount.toLocaleString() }}</h5>
+          <h5 class="card-title text-monospace font-weight-bold" id="userCount">{{ userCount.toLocaleString() }}</h5>
           <p class="card-text">
             All time
           </p>
@@ -17,7 +18,7 @@
       <div class="card">
         <div class="card-header">Logins</div>
         <div class="card-body">
-          <h5 class="card-title" id="last7DaysLoginCount">
+          <h5 class="card-title text-monospace font-weight-bold" id="last7DaysLoginCount">
             {{last7DaysLoginCount.toLocaleString()}}
           </h5>
           <p class="card-text">
@@ -30,7 +31,7 @@
           Active Users
         </div>
         <div class="card-body">
-          <h5 class="card-title" id="activeUserCount">
+          <h5 class="card-title text-monospace font-weight-bold" id="activeUserCount">
             {{activeUserCount.toLocaleString()}}
           </h5>
           <p class="card-text">
@@ -41,13 +42,17 @@
       </div>
     </div>
 
+      <div class="row">
+        <admin-filter-date></admin-filter-date>
+      </div>
+
     <div class="row mb-3">
       <user-signups-chart></user-signups-chart>
     </div>
 
-    <div class="row mb-3" v-if="adminControl.maxLevel.length > 0">
-        <admin-max-level></admin-max-level>
-    </div>
+    <!--<div class="row mb-3" v-if="adminControl.maxLevel.length > 0">-->
+        <!--<admin-max-level></admin-max-level>-->
+    <!--</div>-->
 
     <div class="row mb-3">
       <div class="col-md-8 offset-md-2">
@@ -61,10 +66,11 @@
 import AdminMaxLevel from './Admin_max_level'
 import UserSignupsChart from './Admin_user_signups_chart'
 import AdminUserSignupCalendar from './Admin_user_signup_calandar'
+import AdminFilterDate from './AdminFilterDate'
 
 export default {
   name: 'AdminUsers',
-  components: { UserSignupsChart, AdminMaxLevel, AdminUserSignupCalendar },
+  components: { AdminFilterDate, UserSignupsChart, AdminMaxLevel, AdminUserSignupCalendar },
   computed: {
 
     adminControl () {

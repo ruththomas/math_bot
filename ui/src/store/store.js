@@ -10,6 +10,7 @@ import CompilerControl from '../services/CompilerControl'
 import VideoControl from '../services/VideoControl'
 import LevelControl from '../services/LevelControl'
 import AdminControl from '../services/AdminControl'
+import {EventsControl} from '../services/EventsControl'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -21,6 +22,7 @@ function addMessage (state, messageBuilder) {
 
 export default new Vuex.Store({
   state: {
+    eventsControl: new EventsControl(),
     permanentImages: permanentImages,
     showCongrats: false,
     tryAgainShowing: false,
@@ -165,6 +167,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getEventsControl: state => state.eventsControl,
     getAuth: state => state.auth,
     getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,
     getAdminControl: state => state.adminControl,

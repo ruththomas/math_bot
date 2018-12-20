@@ -5,66 +5,97 @@
       <unlock-all-levels></unlock-all-levels>
     </div>
 
+    <div class="row mb-3">
+
+      <div class="form-group">
+        <label for="starSystems">
+          star system
+        </label>
+        <select @change="changeStarSystem" class="form-control-sm" id="starSystems" name="starSystems">
+          <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
+            {{star.stats.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="form-group">
+        <label for="planets">
+          planets
+        </label>
+        <select
+          id="planets"
+          name="planets"
+          @change="changeActivePlanet"
+        >
+          <option
+
+            v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
+            {{planet.stats.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <div class="row mb-3" v-if="adminControl.maxLevel.length > 0">
       <admin-max-level></admin-max-level>
     </div>
 
     <div v-if="adminControl.levelStats.length">
 
-      <div class="row mb-3">
-
-        <div class="form-group">
-          <label for="starSystems">
-            star system
-          </label>
-          <select @change="changeStarSystem" class="form-control-sm" id="starSystems" name="starSystems">
-            <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
-              {{star.stats.name}}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="form-group">
-          <label for="planets">
-            planets
-          </label>
-          <select
-            id="planets"
-            name="planets"
-            @change="changeActivePlanet"
-          >
-            <option
-
-              v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
-              {{planet.stats.name}}
-            </option>
-          </select>
-        </div>
-      </div>
-
       <h3>Continent Stats</h3>
 
-      <div class="row d-flex">
-        <div
-          v-for="(continent) in adminControl.levelStats" :key="continent.id" class="card m-3" style="width: 18rem;"
-          v-show="continentIds.includes(continent.id)"
+      <table class="table table-striped">
+        <thead>
+
+        <tr>
+          <th>
+            id
+          </th>
+          <th>timesPlayed</th>
+          <th>timesPlayedAvg</th>
+          <th>timesPlayedMax</th>
+          <th>wins</th>
+          <th>winsAvg</th>
+          <th>winsMax</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr  v-for="(continent) in adminControl.levelStats"
+             :key="continent.id"
+             v-show="continentIds.includes(continent.id)"
         >
+          <td>{{continent.id}}</td>
+          <td class="text-monospace">{{continent.timesPlayed}}</td>
+          <td class="text-monospace">{{continent.timesPlayedAvg}}</td>
+          <td class="text-monospace">{{continent.timesPlayedMax}}</td>
+          <td class="text-monospace">{{continent.wins}}</td>
+          <td class="text-monospace">{{continent.winsAvg}}</td>
+          <td class="text-monospace">{{continent.winsMax}}</td>
+        </tr>
+        </tbody>
+      </table>
 
-          <div class="card-header">continent: {{continent.id}}</div>
+      <!--<div class="row d-flex">-->
+        <!--<div-->
+          <!--v-for="(continent) in adminControl.levelStats" :key="continent.id" class="card m-3" style="width: 18rem;"-->
+          <!--v-show="continentIds.includes(continent.id)"-->
+        <!--&gt;-->
 
-          <div class="card-body">
-            <p>timesPlayed: {{continent.timesPlayed}}</p>
-            <p>timesPlayedAvg: {{continent.timesPlayedAvg}}</p>
-            <p>timesPlayedMax: {{continent.timesPlayedMax}}</p>
-            <p>wins: {{continent.wins}}</p>
-            <p>winsAvg: {{continent.winsAvg}}</p>
-            <p>winsMax: {{continent.winsMax}}</p>
-          </div>
+          <!--<div class="card-header">continent: {{continent.id}}</div>-->
 
-        </div>
-      </div>
+          <!--<div class="card-body">-->
+            <!--<p>timesPlayed: {{continent.timesPlayed}}</p>-->
+            <!--<p>timesPlayedAvg: {{continent.timesPlayedAvg}}</p>-->
+            <!--<p>timesPlayedMax: {{continent.timesPlayedMax}}</p>-->
+            <!--<p>wins: {{continent.wins}}</p>-->
+            <!--<p>winsAvg: {{continent.winsAvg}}</p>-->
+            <!--<p>winsMax: {{continent.winsMax}}</p>-->
+          <!--</div>-->
+
+        <!--</div>-->
+      <!--</div>-->
     </div>
   </div>
 
@@ -147,4 +178,5 @@ export default {
     }
 
   }
+
 </style>

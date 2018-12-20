@@ -122,50 +122,52 @@ export default class AdminControl extends Ws {
   }
 
   handleSocketResponse (result) {
-    const { activeUserCount = -1,
-      status = 'failure', last7DaysLoginCount = '-1',
-      events = [],
+    const {
+      activeUserCount = null,
+      status = 'failure',
+      last7DaysLoginCount = null,
+      events = null,
       event = null,
-      userAccountSignups = [], userCount = '-1', currentPath = [],
-      levelStats = [], maxLevel = [] } = result
+      userAccountSignups = null,
+      userCount = null,
+      currentPath = null,
+      levelStats = null,
+      maxLevel = null
+    } = result
 
     if (status !== 'success') {
       console.error('socket error', result)
       return false
     }
-    const count = parseInt(userCount)
 
-    if (count >= 0) {
-      this.userCount = count
+    if (userCount) {
+      this.userCount = parseInt(userCount)
     }
 
-    const _activeUserCount = parseInt(activeUserCount)
-
-    if (activeUserCount >= 0) {
-      this.activeUserCount = _activeUserCount
+    if (activeUserCount) {
+      this.activeUserCount = parseInt(activeUserCount)
     }
 
-    const _logins = parseInt(last7DaysLoginCount)
-
-    if (_logins >= 0) {
-      this.last7DaysLoginCount = _logins
+    if (last7DaysLoginCount) {
+      this.last7DaysLoginCount = parseInt(last7DaysLoginCount)
     }
 
-    if (userAccountSignups.length) {
+    if (userAccountSignups) {
       this.userAccountSignups = userAccountSignups
     }
 
-    if (currentPath.length) {
+    if (currentPath) {
       this.currentPath = currentPath
     }
 
-    if (maxLevel.length) {
-      this.maxLevel = maxLevel.slice()
+    if (maxLevel) {
+      this.maxLevel = maxLevel
       // console.log(Array.from(this.maxLevel))
     }
 
-    if (events.length) {
-      this.events = events.slice()
+    // fixme: if user deletes last event, events array empty but not updated in FE
+    if (events) {
+      this.events = events
     }
 
     if (event) {
@@ -174,7 +176,7 @@ export default class AdminControl extends Ws {
       this.getEvents()
     }
 
-    if (levelStats.length) {
+    if (levelStats) {
       const _levelStats = this.levelStats.slice()
 
       _levelStats.push(levelStats[0])

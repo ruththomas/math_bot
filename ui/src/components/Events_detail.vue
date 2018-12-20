@@ -15,11 +15,26 @@
         @click="toggleEditMode"
 
       >
-        View
+        Details
       </b-btn>
 
+      <div v-if="confirmDelete">
+
+        <b-btn
+          @click="confirmDelete = false"
+        >
+          Cancel
+        </b-btn>
+        <b-btn
+          @click="handleDeleteEvent"
+          variant="danger">
+          Confirm Deletion
+        </b-btn>
+      </div>
+
       <img
-        @click="handleDeleteEvent"
+        v-else
+        @click="_confirmDelete"
         class="trash noDrag dialog-button mx-2"
         :src="permanentImages.buttons.trashButton"
       />
@@ -52,7 +67,8 @@ export default {
   props: ['event', 'deleteEvent', 'editEvent', 'handleSubmit'],
   data () {
     return {
-      editMode: false
+      editMode: false,
+      confirmDelete: false
     }
   },
   computed: {
@@ -61,6 +77,12 @@ export default {
     }
   },
   methods: {
+
+    _confirmDelete (e) {
+      e.preventDefault()
+
+      this.confirmDelete = !this.confirmDelete
+    },
 
     handleDeleteEvent (e) {
       e.preventDefault()
@@ -82,6 +104,7 @@ export default {
 </script>
 
 <style scoped>
+
   .event-title {
 
     letter-spacing: .4rem;

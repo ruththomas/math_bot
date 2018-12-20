@@ -2,30 +2,30 @@
 
   <div class="container-fluid">
 
+    <h3 class="text-left my-3">Signups over time</h3>
     <div class="row">
 
       <div class="card" style="width: 100%;">
 
         <div class="card-header">
-          <h3>Signups over time</h3>
 
           <div class="row d-flex justify-content-center align-items-center">
             <span style="font-size: 1.3rem;" class="m-3">
-            <span>
+            <span class="text-monospace font-weight-bold">
               {{signupsOverRange.toLocaleString()}}
 
             </span>
               signups from
+              <span>
+                {{minDate.toLocaleString()}}
+              </span>
+              <span>
+                to
+              </span>
+              <span>
+                {{maxDate.toLocaleString()}}
+              </span>
             </span>
-
-            <datepicker
-              :value="minDate"
-              @selected="updateMinDate"/>
-
-            <span class="p-3 text-capitalize">to</span>
-            <datepicker
-              :value="maxDate"
-              @selected="updateMaxDate"/>
           </div>
 
         </div>
@@ -35,30 +35,7 @@
         <div class="card-footer">
 
           <div class="row d-flex justify-content-end align-items-center">
-            <select class="form-control-sm m-3" @change="last"
-                    v-model="activeDateRange"
-            >
-              <option value="">please select date range...</option>
-              <option value="month">
-                This month
-              </option>
-              <option value="7">
-                Last 7 days
-              </option>
-              <option value="30">
-                Last 30 days
-              </option>
-              <option value="90">
-                Last 90 days
-              </option>
-              <option value="180">
-                Last 180 days
-              </option>
 
-              <option value="year">
-                Last year
-              </option>
-            </select>
             <div class="btn-group">
 
               <b-btn
@@ -101,15 +78,13 @@ export default {
   data () {
     return {
       chart: null,
-      minDate: new Date(new Date().getTime() - 86400 * 1000 * 7 * 4), // 28 days
-      maxDate: new Date(),
       x: [],
       y: [],
       activeCharts: {
         signups: false,
         total: false
-      },
-      activeDateRange: 'month'
+      }
+
     }
   },
   computed: {
@@ -121,13 +96,17 @@ export default {
       return this.$store.getters.getAdminControl
     },
 
+    eventsControl () {
+      return this.$store.getters.getEventsControl
+    },
+
     signupsOverRange () {
       const d = this.data.filter(item => {
         const { _id: { year, month, day } } = item
 
         const date = new Date(year, month, day)
 
-        return this.minDate <= date && date <= this.maxDate
+        return new Date(this.eventsControl.minDate) <= date && date <= new Date(this.eventsControl.maxDate)
       })
       const signups = d.map(i => i.signups)
       return signups.reduce((accum, cur) => accum + cur, 0)
@@ -142,6 +121,14 @@ export default {
       }, 0)
 
       return _total
+    },
+
+    maxDate () {
+      return this.eventsControl.maxDate
+    },
+
+    minDate () {
+      return this.eventsControl.minDate
     }
 
   },
@@ -174,37 +161,6 @@ export default {
       this.chart.unload(column)
 
       this.activeCharts[column] = false
-    },
-
-    last (e) {
-      let days = e.target.value
-
-      if (days === '') return
-      this.minDate = new Date()
-
-      if (days === 'month') {
-        const _date = new Date()
-
-        this.minDate = new Date(_date.getFullYear(), _date.getMonth(), 1)
-      } else if (days === 'year') {
-        this.minDate = new Date(this.minDate.getFullYear() - 1, this.minDate.getMonth(), this.minDate.getDay())
-      } else {
-        this.minDate.setDate(this.minDate.getDate() - +days)
-      }
-      this.maxDate = new Date()
-      this.activeDateRange = days
-      this.setRange()
-    },
-
-    updateMinDate (e) {
-      this.minDate = e
-      this.setRange()
-    },
-
-    updateMaxDate (e) {
-      this.maxDate = e
-
-      this.setRange()
     },
 
     setRange () {
@@ -252,8 +208,8 @@ export default {
       axis: {
         x: {
           type: 'timeseries',
-          min: this.minDate,
-          max: this.maxDate,
+          min: this.eventsControl.minDate,
+          max: this.eventsControl.maxDate,
           label: {
             text: 'Date',
             position: 'outer-middle'
@@ -277,6 +233,14 @@ export default {
     Datepicker
   },
   watch: {
+
+    minDate (_, __) {
+      this.setRange()
+    },
+
+    maxDate (_, __) {
+      this.setRange()
+    },
     data (newData, oldData) {
       const { signups, total } = this.activeCharts
 

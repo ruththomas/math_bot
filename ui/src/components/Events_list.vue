@@ -31,8 +31,13 @@
       </div>
 
       <div v-else>
-        <events-add
-          :handle-submit="postEvent"></events-add>
+
+        <div class="card">
+          <div class="card-body">
+            <events-add
+              :handle-submit="postEvent"></events-add>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -51,9 +56,6 @@ export default {
     return {
       listVisible: true
     }
-  },
-  mounted () {
-    this.adminControl.getEvents()
   },
   computed: {
     eventsList () {
