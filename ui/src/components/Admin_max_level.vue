@@ -102,4 +102,10 @@ export default {
 <style scoped>
   @import '~c3/c3.min.css';
 
+  #current_path_chart {
+
+    width: 100%;
+    min-height: 200px;
+  }
+
 </style>

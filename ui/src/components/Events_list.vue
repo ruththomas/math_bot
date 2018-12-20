@@ -20,14 +20,12 @@
         <div class="alert alert-info" v-if="!eventsList.length">
           No events found
         </div>
-
-        <ul class="list-group">
-          <li v-for="_event in eventsList" :key="_event.date + _event.description" class="list-group-item my-3">
-            <events-detail
-              :handle-submit="editEvent"
-              :event="_event" :delete-event="deleteEvent" :edit-event="editEvent"></events-detail>
-          </li>
-        </ul>
+        <events-detail
+          :handle-submit="editEvent"
+          :event="_event"
+          :delete-event="deleteEvent"
+          :edit-event="editEvent"
+        ></events-detail>
       </div>
 
       <div v-else>

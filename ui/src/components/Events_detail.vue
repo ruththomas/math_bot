@@ -1,60 +1,79 @@
 <template>
 
-  <div class="events-detail">
-    <div class="row d-flex justify-content-end align-items-center">
+  <div>
 
-      <b-btn
-        v-if="!editMode"
-        @click="toggleEditMode"
+    <table class="table table-striped table-hover">
+      <thead>
+      <tr>
+        <th>
+          title
+        </th>
+        <th>
+          date
+        </th>
+        <th>
+          description
+        </th>
+        <th>
 
-      >
-        Edit
-      </b-btn>
-      <b-btn
-        v-if="editMode"
-        @click="toggleEditMode"
+        </th>
+      </tr>
+      </thead>
+      <tbody v-if="editMode">
+      <tr v-for="_event in adminControl.events" :key="_event.date + _event.description" class="events-detail">
 
-      >
-        Details
-      </b-btn>
+        <td>
 
-      <div v-if="confirmDelete">
+          <b-btn
+            @click="toggleEditMode"
 
-        <b-btn
-          @click="confirmDelete = false"
-        >
-          Cancel
-        </b-btn>
-        <b-btn
-          @click="handleDeleteEvent"
-          variant="danger">
-          Confirm Deletion
-        </b-btn>
-      </div>
+          >
+            Details
+          </b-btn>
 
-      <img
-        v-else
-        @click="_confirmDelete"
-        class="trash noDrag dialog-button mx-2"
-        :src="permanentImages.buttons.trashButton"
-      />
+          <img
+            @click="_confirmDelete"
+            class="trash noDrag dialog-button mx-2"
+            :src="permanentImages.buttons.trashButton"
+          />
 
-    </div>
+          <b-btn
+            @click="confirmDelete = false"
+          >
+            Cancel
+          </b-btn>
+          <b-btn
+            @click="handleDeleteEvent"
+            variant="danger">
+            Confirm Deletion
+          </b-btn>
+        </td>
 
-    <div>
-      <div v-if="editMode">
+        <td colspan="3">
+          <events-add
+            init="1"
+            :event="event"
+            :handle-submit="handleEditEvent"></events-add>
 
-        <events-add
-          init="1"
-          :event="event"
-          :handle-submit="handleEditEvent"></events-add>
+        </td>
 
-      </div>
-      <div v-else>
-        <events-add init="1" :event="event" :read-only="Boolean(1)"></events-add>
-      </div>
-    </div>
-
+      </tr>
+      </tbody>
+      <tbody v-else>
+      <tr v-for="event in adminControl.events" :key="event.date + event.description">
+        <td>{{event.title}}</td>
+        <td>{{new Date(event.date).toLocaleString()}}</td>
+        <td>{{event.description}}</td>
+        <td>
+          <b-btn
+            @click="toggleEditMode"
+          >
+            Edit
+          </b-btn>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -74,6 +93,9 @@ export default {
   computed: {
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    adminControl () {
+      return this.$store.getters.getAdminControl
     }
   },
   methods: {
@@ -105,9 +127,4 @@ export default {
 
 <style scoped>
 
-  .event-title {
-
-    letter-spacing: .4rem;
-    font-weight: bold;
-  }
 </style>

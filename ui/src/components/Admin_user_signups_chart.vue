@@ -9,28 +9,36 @@
 
         <div class="card-header">
 
-          <div class="row d-flex justify-content-center align-items-center">
-            <span style="font-size: 1.3rem;" class="m-3">
-            <span class="text-monospace font-weight-bold">
+          <div class="row d-flex justify-content-center align-items-space-between my-1 font-weight-bold">
+             <span>
+                {{minDate.toLocaleString()}}
+              </span>
+            <span>
+                  -
+            </span>
+            <span>
+                {{maxDate.toLocaleString()}}
+            </span>
+
+          </div>
+
+          <div class="row">
+            <span class="text-monospace font-weight-bold mx-3">
               {{signupsOverRange.toLocaleString()}}
 
             </span>
-              signups from
-              <span>
-                {{minDate.toLocaleString()}}
-              </span>
-              <span>
-                to
-              </span>
-              <span>
-                {{maxDate.toLocaleString()}}
-              </span>
+
+            <span>
+              Signups
             </span>
+
           </div>
 
         </div>
         <div class="card-body">
-          <div id="chart"></div>
+          <div class="row">
+            <div id="chart"></div>
+          </div>
         </div>
         <div class="card-footer">
 
@@ -78,8 +86,6 @@ export default {
   data () {
     return {
       chart: null,
-      x: [],
-      y: [],
       activeCharts: {
         signups: false,
         total: false
@@ -91,6 +97,18 @@ export default {
 
     data () {
       return this.adminControl.userAccountSignups
+    },
+
+    x () {
+      return this.data.map(item => {
+        const { _id: { month, day, year } } = item
+
+        return new Date(year, month, day)
+      })
+    },
+
+    y () {
+      return this.data.map(item => item.signups)
     },
     adminControl () {
       return this.$store.getters.getAdminControl
@@ -106,9 +124,11 @@ export default {
 
         const date = new Date(year, month, day)
 
-        return new Date(this.eventsControl.minDate) <= date && date <= new Date(this.eventsControl.maxDate)
+        return this.minDate <= date && date <= this.maxDate
       })
       const signups = d.map(i => i.signups)
+
+      console.log('sign', this.data.length, d.length)
       return signups.reduce((accum, cur) => accum + cur, 0)
     },
 
@@ -129,6 +149,16 @@ export default {
 
     minDate () {
       return this.eventsControl.minDate
+    },
+
+    events () {
+      return this.adminControl.events.map(event => {
+        return {
+
+          value: new Date(event.date),
+          text: event.title
+        }
+      })
     }
 
   },
@@ -136,14 +166,27 @@ export default {
   methods: {
 
     load (column) {
+      let options = {
+
+        grid: {
+          x: {
+            lines: this.events
+          }
+        }
+      }
       if (column === 'signups') {
-        this.chart.load({
+        Object.assign(options, {
           columns: [
             ['signups'].concat(...this.y)
           ]
         })
       } else if (column === 'total') {
-        this.chart.load({
+        Object.assign(options, {
+          axis: {
+            y2: {
+              show: true
+            }
+          },
           types: {
             total: 'area'
           },
@@ -154,6 +197,8 @@ export default {
       } else {
         throw new Error('unknown col ' + column)
       }
+
+      this.chart.load(options)
       this.activeCharts[column] = true
     },
 
@@ -167,49 +212,31 @@ export default {
       const { minDate: min, maxDate: max } = this
 
       this.chart.axis.range({ max: { x: max }, min: { x: min } })
-    },
-    _build () {
-      this.x = this.data.map(item => {
-        const { _id: { month, day, year } } = item
-
-        return new Date(year, month, day)
-      })
-
-      this.y = this.data.map(item => item.signups)
     }
   },
 
   mounted () {
-    this._build()
+    const xCol = ['x'].concat(...this.x)
 
-    const chart = document.getElementById('chart')
+    const yCol = ['signups'].concat(...this.y)
 
     this.chart = c3.generate({
-      bindto: chart,
-      // size: {
-      //   height: width * 0.5,
-      //   width
-      // },
-      // transition: {
-      //   duration: 500
-      // },
+      bindto: '#chart',
+
       data: {
         x: 'x',
         columns: [
-          ['x'].concat(...this.x),
-          ['signups'].concat(...this.y)
-          // ['total'].concat(...this.total)
+          xCol,
+          yCol
         ]
-        // axes: {
-        //   data2: 'y2' // ADD
-        // }
+
       },
 
       axis: {
         x: {
           type: 'timeseries',
-          min: this.eventsControl.minDate,
-          max: this.eventsControl.maxDate,
+          min: this.minDate,
+          max: this.maxDate,
           label: {
             text: 'Date',
             position: 'outer-middle'
@@ -223,6 +250,15 @@ export default {
             text: 'Signups per day',
             position: 'outer-middle'
           }
+        },
+        y2: {
+
+          show: false
+        }
+      },
+      grid: {
+        x: {
+          lines: this.events
         }
       }
     }, this.options)
@@ -242,14 +278,18 @@ export default {
       this.setRange()
     },
     data (newData, oldData) {
-      const { signups, total } = this.activeCharts
+      if (newData !== oldData) {
+        const { signups, total } = this.activeCharts
 
-      if (signups) {
-        this.load('signups')
-      }
+        if (signups) {
+          this.load('signups')
+        }
 
-      if (total) {
-        this.load('total')
+        if (total) {
+          this.load('total')
+        }
+
+        this.setRange()
       }
     }
   }
@@ -259,6 +299,12 @@ export default {
 <style scoped lang="scss">
 
   @import '~c3/c3.min.css';
+
+  #chart {
+
+    width: 100%;
+    min-height: 200px;
+  }
 
   /*.c3-line-total, .c3-line-signups {*/
   /*stroke-width: 0;*/

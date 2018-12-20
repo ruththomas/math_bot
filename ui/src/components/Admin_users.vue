@@ -50,10 +50,6 @@
       <user-signups-chart></user-signups-chart>
     </div>
 
-    <!--<div class="row mb-3" v-if="adminControl.maxLevel.length > 0">-->
-        <!--<admin-max-level></admin-max-level>-->
-    <!--</div>-->
-
     <div class="row mb-3">
       <div class="col-md-8 offset-md-2">
         <admin-user-signup-calendar></admin-user-signup-calendar>

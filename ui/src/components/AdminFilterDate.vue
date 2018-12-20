@@ -1,33 +1,33 @@
 <template>
 
-  <div class="fs">
+  <div class="container fs">
 
-    <div class="row">
-      minDate: {{eventsControl.minDate}}
-    </div>
+    <!--<div class="row">-->
+      <!--minDate: {{eventsControl.minDate}}-->
+    <!--</div>-->
 
-    <div class="row">
-      maxDate: {{eventsControl.maxDate}}
-    </div>
+    <!--<div class="row">-->
+      <!--maxDate: {{eventsControl.maxDate}}-->
+    <!--</div>-->
 
-    <div class="row">
-      verb: {{eventsControl.verb}}
-    </div>
+    <!--<div class="row">-->
+      <!--action: {{eventsControl.action}}-->
+    <!--</div>-->
 
-    <div class="row">
-      opt: {{eventsControl.opt}}
-    </div>
+    <!--<div class="row">-->
+      <!--opt: {{eventsControl.opt}}-->
+    <!--</div>-->
 
-    <div class="row">
+    <div class="row my-3">
       <div class="col">
         <select v-model="activeVerb">
-          <option v-for="verb in eventsControl.verbs" :key="verb">
-            {{verb}}
+          <option v-for="action in eventsControl.actions" :key="action">
+            {{action}}
           </option>
         </select>
       </div>
 
-      <div >
+      <div class="row my-3 d-flex justify-content-center align-items-center">
         <div class="col" v-if="['before', 'after', 'on'].includes(activeVerb)">
 
           <div v-for="event in eventsList" :key="event.id" @click="updateDateEvent(event)">
@@ -41,14 +41,13 @@
             v-model="userInput.date"
           />
         </div>
-        <div v-if="'between' === activeVerb">
+        <div class="col" v-if="'between' === activeVerb">
           <datepicker v-model="userInput.minDate"></datepicker>
           <datepicker v-model="userInput.maxDate"></datepicker>
         </div>
         <div class="col" v-if="['previous', 'next'].includes(activeVerb)">
           <input type="number" v-model="days"/>
         </div>
-
         <div class="col" v-if="['current', 'previous', 'next'].includes(activeVerb)">
           <select v-model="activeOpts" v-if="'current' === activeVerb">
             <option v-for="_opt in _opts" :key="_opt" >
@@ -65,7 +64,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row my-3">
       <b-btn
         @click="handleUpdateFilter"
       >

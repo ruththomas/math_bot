@@ -1,9 +1,6 @@
 <template>
 
   <div class="text-left">
-    <h3 class="my-3 text-center event-title">
-      {{userInput.title}}
-    </h3>
 
     <vue-form @submit.prevent="onSubmit" :state="formstate" class="mb-3">
 
@@ -85,7 +82,6 @@ export default {
     const _now = new Date()
     return {
       formstate: {},
-      minDate: '2018-01-01',
       userInput: {
         date: _now,
         title: '',
@@ -97,7 +93,12 @@ export default {
   },
   mounted () {
     if (this.init) {
-      Object.assign(this.userInput, this.event, {date: new Date(this.event.date), dateReadOnly: new Date(this.event.date).toISOString()})
+      Object.assign(this.userInput, this.event,
+        {
+          date: new Date(this.event.date),
+          dateReadOnly: new Date(this.event.date).toISOString()
+        }
+      )
     }
   },
   components: {
@@ -105,11 +106,6 @@ export default {
   },
   methods: {
 
-    updateDate (date) {
-      Object.assign(this.userInput, {
-        date
-      })
-    },
     onSubmit (e) {
       e.preventDefault()
       if (!this.formstate.$valid) {
@@ -127,10 +123,4 @@ export default {
 <style scoped>
 
   @import '~vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
-
-  .event-title {
-
-    letter-spacing: .4rem;
-    font-weight: bold;
-  }
 </style>
