@@ -8,24 +8,49 @@
     @callback="changeSpeed"
   ></vue-slider>
   <div class="buttons">
-    <img
-      v-if="levelControl.robot.state === 'running'"
-      class="pause play dialog-button"
-      :src="permanentImages.buttons.pauseButton"
-      @click="[levelControl.runCompiled._pausedMessage(), levelControl.runCompiled.pause()]"
+    <div class="control-btn-group advanced-mode-btn-group">
+      <img
+        class="advanced-mode-button dialog-button"
+        :src="permanentImages.buttons.advancedMode"
+        @click="toggleAdvanced"
+      >
+    </div>
+    <div class="control-btn-group play-btn-group">
+      <img
+        v-if="!hidePaused && levelControl.robot.state === 'running'"
+        class="pause play dialog-button"
+        :src="permanentImages.buttons.pauseButton"
+        @click="[levelControl.runCompiled._pausedMessage(), levelControl.runCompiled.pause()]"
+      >
+      <img
+        v-else
+        v-for="(btn, ind) in playButtonsNumber"
+        :key="'play-button/' + ind"
+        class="actual-play play dialog-button"
+        :class="[isLastFrame ? 'disabled' : '', !levelControl.runCompiled.forward ? 'play-reverse' : '']"
+        :src="permanentImages.buttons.playButton"
+        @click="!isLastFrame ? levelControl.runCompiled.start() : ''"
+      />
+    </div>
+    <div class="control-btn-group reset-group">
+      <img
+        class="reset dialog-button"
+        :src="permanentImages.buttons.resetButton"
+        @click="levelControl.runCompiled.reset()"
+      />
+    </div>
+    <div
+      class="control-btn-group video-group"
     >
-    <img
-      v-else
-      class="actual-play play dialog-button"
-      :class="levelControl.runCompiled.failure ? 'disabled' : ''"
-      :src="permanentImages.buttons.playButton"
-      @click="!levelControl.runCompiled.failure ? levelControl.runCompiled.start() : ''"
-    />
-    <img
-      class="reset dialog-button"
-      :src="permanentImages.buttons.resetButton"
-      @click="levelControl.runCompiled.reset()"
-    />
+      <img
+        v-for="(v, i) in videos"
+        :key="'video-button/' + i"
+        class="dialog-button"
+        :class="i > 0 && !v.active ? 'video-disabled' : ''"
+        :src="permanentImages.buttons.hint"
+        @click="[videoHintControl.showHint(), levelControl.runCompiled.reset()]"
+      >
+    </div>
   </div>
 </div>
 </template>
@@ -38,15 +63,42 @@ export default {
     levelControl () {
       return this.$store.getters.getLevelControl
     },
+    videoHintControl () {
+      return this.$store.getters.getVideoHintControl
+    },
+    videoTimers () {
+      return this.$store.getters.getVideoTimers
+    },
+    timer () {
+      return this.videoTimers[this.levelControl.path] || {stars: 3}
+    },
+    hintCount () {
+      return this.levelControl.continent.hintCount
+    },
+    videos () {
+      return new Array(this.hintCount).fill('hint').map((n, i) => {
+        return {active: i < Math.min(this.timer.stars, this.hintCount)}
+      })
+    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
+    },
+    isLastFrame () {
+      const robotFrames = this.levelControl.runCompiled.robotFrames
+      return robotFrames.length && this.levelControl.runCompiled.currentFrame === robotFrames.length - 1
+    },
+    playButtonsNumber () {
+      const speed = this.levelControl.robot.robotSpeed
+      if (speed < 133) return new Array(3).fill(3)
+      else if (speed < 266) return new Array(2).fill(2)
+      else return new Array(1).fill(1).fill(1)
     }
   },
   data () {
     return {
       sliderValue: 50,
       sliderOptions: {
-        width: '50%',
+        width: '75%',
         height: 2,
         'bg-style': {
           'background-color': '#B8E986',
@@ -57,7 +109,8 @@ export default {
         },
         tooltip: false,
         clickable: false
-      }
+      },
+      hidePaused: false
     }
   },
   methods: {
@@ -69,10 +122,12 @@ export default {
       }
     },
     resetSpeed () {
+      this.hidePaused = false
       this.sliderValue = 50
       this.levelControl.runCompiled.pause()
     },
     changeSpeed () {
+      this.hidePaused = true
       this.levelControl.runCompiled.setDirection(this.sliderValue > 50)
       if (this.levelControl.robot.state === 'home' || this.levelControl.robot.state === 'paused') {
         this.levelControl.runCompiled.start()
@@ -82,6 +137,9 @@ export default {
         this.levelControl.robot.setState('running')
         this.levelControl.robot.setSpeed(this.convertToSpeed())
       }
+    },
+    toggleAdvanced (evt) {
+      this.levelControl.mode = this.levelControl.mode === 'normal' ? 'advanced' : 'normal'
     }
   },
   components: {
@@ -104,13 +162,44 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
   align-items: center;
 
   .buttons {
-    width: 50%;
-    .dialog-button {
-      height: 2.5vmin;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .control-btn-group {
+      display: flex;
+      flex: 1;
     }
 
-    .play {
-      float: left;
+    .control-btn-group.advanced-mode-btn-group {
+      .advanced-mode-button {
+        margin: 0 2%;
+      }
+    }
+
+    .control-btn-group.reset-group {
+      justify-content: flex-end;
+    }
+
+    .control-btn-group.video-group {
+      justify-content: flex-end;
+      .dialog-button {
+        transform: scale(1.5);
+        margin: 0 2%;
+      }
+      .video-disabled {
+        opacity: 0.5;
+      }
+    }
+
+    .control-btn-group.play-btn-group {
+      .play-reverse {
+        transform: rotate(180deg);
+      }
+    }
+
+    .dialog-button {
+      height: 2.5vmin;
+      width: auto;
     }
 
     .play.dialog-button.disabled {
@@ -119,7 +208,6 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
     }
 
     .reset {
-      float: right;
     }
   }
 }

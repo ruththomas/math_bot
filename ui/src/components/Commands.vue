@@ -1,7 +1,7 @@
 <template>
   <div class="commands" v-if="commands !== null && activeFunctions !== null">
     <div class="lambdas-container">
-      <div class="methods-container">
+      <div class="functions-container">
         <draggable
           class="methods"
           :list="commands"
@@ -19,9 +19,6 @@
             v-on:click.native="notEditableMessage"
           ></function-box>
         </draggable>
-      </div>
-
-      <div class="functions-container">
         <draggable
           class="functions"
           :list="activeFunctions"
@@ -39,18 +36,11 @@
             :origin="'functions'"
             :data-created-id="func.created_id"
             :data-index="ind"
+            :show-pointer="ind === editingIndex"
             @click.native="editFunction($event, func, ind)"
           ></function-box>
         </draggable>
       </div>
-    </div>
-
-    <div
-      id="open-staged"
-      class="dialog-button"
-      @click="toggleFunctionAdd"
-      @mousedown="runCompiled.resetIfFailure"
-    >
     </div>
   </div>
 </template>
@@ -162,11 +152,6 @@ export default {
     handleEditFunctionEvent (evt) {
       this.$store.dispatch('updateEditFunctionEvent', evt.target)
     },
-    toggleFunctionAdd (evt) {
-      this.handleEditFunctionEvent(evt)
-      this.$store.dispatch('updateEditingIndex', null)
-      this.$store.dispatch('updateFunctionAreaShowing', this.functionAreaShowing === 'addFunction' ? 'editMain' : 'addFunction')
-    },
     editFunction (evt, func, ind) {
       $('#open-staged').show()
       this.handleEditFunctionEvent(evt)
@@ -205,6 +190,7 @@ export default {
   $functions-padding-left: 2vmin;
   $commands-margin-top: 2vmin;
   $piece-height: 7.5vmin;
+  $pointer-size: 2vmin;
 
   .invisible {
     visibility: hidden;
@@ -212,14 +198,12 @@ export default {
 
   .commands {
     display: flex;
-    align-items: center;
     flex-direction: row;
     width: 100%;
     height: calc(#{$piece-height} * 2.2);
     margin: 0 auto;
     position: relative;
-    z-index: 100;
-  }
+    z-index: 1001;
 
   .lambdas-container {
     transition-duration: 300ms;
@@ -227,67 +211,26 @@ export default {
     height: 100%;
     display: flex;
     justify-content: flex-start;
-  }
+      .functions-container {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        display: flex;
+        padding-top: $pointer-size;
 
-  .command-border-info {
-    border: 1px solid rgb(0, 0, 255)!important;
-  }
+        .methods {
+          display: flex;
+          height: min-content;
+          border: 1px solid $click-color;
+          border-radius: 3px;
+          background-color: rgba(0, 0, 0, 0.5);
+        }
 
-  .methods-container {
-    .methods {
-      border: 1px solid $click-color;
-      display: flex;
-      height: min-content;
-      margin-top: $commands-margin-top;
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 3px;
+        .functions {
+          display: flex;
+          height: min-content;
+        }
+      }
     }
-  }
-
-  .functions-container {
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-right: 7%;
-    width: 100%;
-
-    .functions {
-      position: relative;
-      display: flex;
-      height: min-content;
-      min-height: $piece-height;
-      border: 1px solid transparent;
-      width: min-content;
-      width: -moz-min-content;
-      min-width: 100%;
-      margin-top: $commands-margin-top;
-      padding: 0 0 0 $functions-padding-left;
-    }
-  }
-
-  #commands-box {
-    margin: 0;
-  }
-
-  #open-staged {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 5vmin;
-    width: 5vmin;
-    z-index: 1000;
-    background: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522343465/buttons/plusButton.png");
-    margin-top: $commands-margin-top;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-
-  .rotate-to-x {
-    -webkit-transform: rotate(45deg);
-    transform:rotate(45deg);
-  }
-
-  .rotate-to-plus {
-    -webkit-transform: rotate(0);
-    transform:rotate(0);
   }
 </style>

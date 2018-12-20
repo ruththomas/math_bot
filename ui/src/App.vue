@@ -152,38 +152,6 @@ export default {
     -webkit-animation-iteration-count: 2;
   }
 
-  .pointer {
-    position: absolute;
-    width: calc(#{$pointer-size} * 2);
-    height: $pointer-size;
-    bottom: calc(100% + #{$pointer-size} / 2 - 1px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-  }
-
-  .pointer-hidden {
-    opacity: 0;
-  }
-
-  .pointer-size {
-    position: absolute;
-    border-style: solid;
-    border-width: $pointer-size $pointer-size 0 $pointer-size;
-  }
-
-  .pointer-body {
-    top: -1px;
-    z-index: 1001;
-    border-color: #000000 transparent transparent transparent;
-  }
-
-  .pointer-border {
-    top: 1px;
-    z-index: 0;
-    border-color: #737373 transparent transparent transparent;
-  }
-
   .arrow {
     border: solid black;
     border-width: 0 3px 3px 0;

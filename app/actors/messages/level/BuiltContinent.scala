@@ -2,7 +2,7 @@ package actors.messages.level
 
 import actors.VideoHintActor.embedURL
 import daos.FunctionsDAO
-import level_gen.models.{ CelestialSystem, ContinentStruct }
+import level_gen.models.{CelestialSystem, ContinentStruct}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -25,6 +25,7 @@ object BuiltContinent {
       initFocus = createInitFocus(continentStruct.initFocus),
       freeHint = freeHintUrl(continentStruct.freeHint),
       evalEachFrame = continentStruct.evalEachFrame.getOrElse(false),
+      hintCount = continentStruct.videoHints.length,
       stepControl = new ContinentControl(continentStruct.specialParameters, continentStruct.description, functions)
     )
   }
@@ -130,6 +131,7 @@ object BuiltContinent {
     (JsPath \ "initFocus").write[List[String]] and
     (JsPath \ "freeHint").writeNullable[String] and
     (JsPath \ "evalEachFrame").write[Boolean] and
+    (JsPath \ "hintCount").write[Int] and
     OWrites[ContinentControl](_ => Json.obj())
   )(unlift(BuiltContinent.unapply))
 
@@ -152,5 +154,6 @@ case class BuiltContinent(
     initFocus: List[String],
     freeHint: Option[String],
     evalEachFrame: Boolean,
+    hintCount: Int,
     stepControl: ContinentControl
 )

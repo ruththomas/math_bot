@@ -22,14 +22,19 @@
         leave-active-class="animated bounceOutRight"
       >
         <div v-if="levelControl.mode === 'normal'" class="row container" style="flex: 1;">
-          <div class="row" style="padding: 0; display: flex; flex: 1; position: relative; z-index: 110;">
-            <popover-bucket v-if="functionAreaShowing === 'editFunction' || functionAreaShowing === 'addFunction'"></popover-bucket>
+          <div class="row" style="padding: 1% 0; display: flex; flex: 2; position: relative; z-index: 110;">
+            <popover-bucket v-if="functionAreaShowing === 'editFunction'"></popover-bucket>
             <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
           </div>
 
-          <div class="row" style="padding: 0; display: flex; flex: 1;">
+          <div class="row" style="padding: 0; display: flex; flex: 2; position: relative;">
             <trash></trash>
             <commands></commands>
+          </div>
+
+          <div class="row" style="display: flex; flex: 1; position: relative;">
+            <trash></trash>
+            <staged-functions></staged-functions>
           </div>
         </div>
 
@@ -37,16 +42,6 @@
           <advanced-mode></advanced-mode>
         </div>
       </transition>
-      <!-- !!! Uncomment below to access advanced mode !!! -->
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <span :style="{opacity: levelControl.mode === 'advanced' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Normal</span>
-        <toggle-button
-          @change="toggleAdvanced"
-          :color="{checked: 'rgba(255, 255, 255, 0.5)', unchecked: 'rgba(255, 255, 255, 0.5)', disabled: 'rgba(255, 255, 255, 0.5)'}"
-          :switch-color="{checked: 'linear-gradient(to left, #25EF02, #000000)', unchecked: 'linear-gradient(to left, #000000, #25EF02)'}"
-        />
-        <span :style="{opacity: levelControl.mode === 'normal' ? 0.5 : 1, color: '#ffffff', margin: '0 0.5em'}">Advanced</span>
-      </div>
     </div>
     <confirm-deactivate-func></confirm-deactivate-func>
   </div>
@@ -58,7 +53,6 @@ import Commands from './Commands'
 import EditMain from './Edit_main'
 import Trash from './Trash'
 import Messages from './Messages'
-import ControlPanel from './Control_panel'
 import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
@@ -67,6 +61,7 @@ import LevelCongrats from './Planet_congrats'
 import AdvancedMode from './Advanced_mode'
 import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 import ActiveDrop from './Activate_drop'
+import StagedFunctions from './Staged_functions'
 
 export default {
   mounted () {
@@ -113,9 +108,6 @@ export default {
       } else {
         return picture
       }
-    },
-    toggleAdvanced (evt) {
-      this.levelControl.mode = evt.value ? 'advanced' : 'normal'
     }
   },
   components: {
@@ -125,14 +117,14 @@ export default {
     Trash,
     EditMain,
     Messages,
-    ControlPanel,
     SplashScreen,
     RobotCarrying,
     PopoverBucket,
     StepCongrats,
     LevelCongrats,
     AdvancedMode,
-    ActiveDrop
+    ActiveDrop,
+    StagedFunctions
   }
 }
 </script>
@@ -146,6 +138,7 @@ export default {
     background-image: url("https://res.cloudinary.com/deqjemwcu/image/upload/v1522346735/misc/Space_background.jpg");
     background-size: cover;
     height: 100%;
+    padding: 2vmin 0;
     .container {
       display: flex;
       flex-direction: column;

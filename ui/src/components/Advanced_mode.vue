@@ -47,7 +47,7 @@ $grid-background: rgba(0, 0, 0, 0.6);
 .advanced-mode {
   border-top: none;
   background: $grid-background;
-  height: 90%;
+  height: 100%;
   width: calc(#{$grid-space-size} * 10);
   margin: 0 auto;
   position: relative;

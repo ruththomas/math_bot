@@ -2,7 +2,6 @@
     <div class="container grid">
       <div v-if="gridMap" class="row" :class="robotCarrying.length ? 'no-radius-bottom-right' : ''" key="grid-map-1234">
         <div class="grid-map">
-          <control-panel></control-panel>
           <div
             class="grid-row animated"
             v-for="(row, rInd) in gridMap"
@@ -43,11 +42,12 @@
                 :key="'tool:' + tInd + ':' + rInd + ':' + sInd"
                 :denomination="tool.name"
               ></tool>
-              <b-img
-                class="robot animated"
+              <grid-robot
                 v-if="robot.robotLocation.x === rInd && robot.robotLocation.y === sInd"
-                :key="'ROBOT'"
-                :src="robot._robotDirections[robotOrientation]"></b-img>
+                :key="'grid-robot'"
+                :direction="robotOrientation"
+                :color="gridRobotColor"
+              ></grid-robot>
 
               <b-popover
                 v-if="space.tools.length"
@@ -86,9 +86,9 @@ import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
 import utils from '../services/utils'
-import ControlPanel from './Control_panel'
 import GridControls from './Grid_controls'
 import Tool from './Tool'
+import GridRobot from './Grid_robot'
 
 export default {
   mounted () {
@@ -101,6 +101,19 @@ export default {
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
+    },
+    isLastFrame () {
+      const robotFrames = this.levelControl.runCompiled.robotFrames
+      return robotFrames.length && this.levelControl.runCompiled.currentFrame === robotFrames.length - 1
+    },
+    gridRobotColor () {
+      if (this.isLastFrame) {
+        return '#F25C5C'
+      } else if (this.robot.state === 'running' || this.levelControl.robot.state === 'paused') {
+        return '#B8E986'
+      } else {
+        return '#ffffff'
+      }
     },
     gridMap () {
       return this.levelControl.gridMap
@@ -150,8 +163,8 @@ export default {
     GridControls,
     SplashScreen,
     RobotCarrying,
-    ControlPanel,
-    Tool
+    Tool,
+    GridRobot
   }
 }
 </script>
@@ -217,10 +230,22 @@ export default {
         width: 75%;
       }
 
-      img.robot {
-        height: 150%;
-        top: -35%;
+      .grid-robot {
+        position: absolute;
         z-index: 9;
+        top: 0;
+        left: 1%;
+        margin: 0 auto;
+        height: 140%;
+        width: 135%;
+      }
+
+      .grid-robot-0 {
+        top: -40%;
+      }
+
+      .grid-robot-270 {
+        left: -36%;
       }
 
       .multi-problem {

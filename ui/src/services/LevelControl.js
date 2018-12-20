@@ -69,9 +69,6 @@ class LevelControl extends Ws {
     const robotState = this.continent.initialRobotState
     this.robot = new Robot(robotState)
     this.functions = this.continent.lambdas
-    // console.log(this.functions.activeFuncs.map(f => {
-    //   return {name: f.name, index: f.index, createdId: f.created_id}
-    // }))
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
     setTimeout(this._positionBar, 500)

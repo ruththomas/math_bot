@@ -73,7 +73,7 @@ class GridAnimator {
     this.grid = $store.state.levelControl.gridMap
     this.toolList = $store.state.levelControl.continent.toolList
     this.robotSpeed = this.robot.robotSpeed
-    this.$robot = $('.robot')
+    this.$robot = $('.grid-robot')
     await this._moveRobot()
     await this._updateGrid()
     return new Promise(resolve => {

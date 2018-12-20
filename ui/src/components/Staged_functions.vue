@@ -1,27 +1,22 @@
 <template>
   <div class="staged-functions-container">
-    <div class="staged-functions-header">
-      <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
-    </div>
-    <div class="staged-functions-content">
-      <draggable
-        class="staged-functions"
-        :list="stagedFunctions"
-        :options="draggableOptions"
-        @add="confirmDeactivateFunction"
-      >
-        <function-box
-          v-for="(func, ind) in stagedFunctions"
-          :key="'staged-func/' + ind"
-          :func="func"
-          :ind="func.index"
-          :collection="stagedFunctions"
-          :origin="'stagedFunctions'"
-          :data-function-index="func.index"
-          :data-created-id="func.created_id"
-        ></function-box>
-      </draggable>
-    </div>
+    <draggable
+      class="staged-functions"
+      :list="stagedFunctions"
+      :options="draggableOptions"
+      @add="confirmDeactivateFunction"
+    >
+      <function-box
+        v-for="(func, ind) in stagedFunctions"
+        :key="'staged-func/' + ind"
+        :func="func"
+        :ind="func.index"
+        :collection="stagedFunctions"
+        :origin="'stagedFunctions'"
+        :data-function-index="func.index"
+        :data-created-id="func.created_id"
+      ></function-box>
+    </draggable>
   </div>
 </template>
 
@@ -99,52 +94,21 @@ export default {
   $piece-height: 7.5vmin;
 
   .staged-functions-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 100%;
-    height: calc(#{$piece-height} * 2.2);
-  }
-
-  .staged-functions-header {
-    display: flex;
-    position: relative;
-    height: 20%;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 0 $staged-functions-padding 0 $staged-functions-padding;
-    span {
-      padding-left: 4px;
-      font-size: 18px;
-    }
-  }
-
-  .staged-functions-content {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    height: 100%;
-    width: 100%;
-    z-index: 101;
     .staged-functions {
       width: min-content;
       min-width: 100%;
       width: -moz-min-content;
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
       margin: 0 auto;
+      overflow: auto;
+      display: flex;
+      .piece {
+        opacity: 0.8;
+        height: 5vmin;
+        width: 5vmin;
+      }
     }
-  }
-
-  .close-popover {
-    float: right;
-    display: flex;
-    position: absolute;
-    bottom: calc(#{$dialog-button-size} / 2);
-    right:  calc(#{-$dialog-button-size} / 2);
-    z-index: 10001;
-    cursor: pointer;
   }
 </style>

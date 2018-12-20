@@ -176,10 +176,6 @@ export default {
       align-items: center;
       height: 100%;
     }
-
-    .editMain-drop-zone {
-      justify-content: center;
-    }
   }
 
   .hide-piece {
