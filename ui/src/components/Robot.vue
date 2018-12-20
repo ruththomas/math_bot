@@ -53,7 +53,6 @@ import Commands from './Commands'
 import EditMain from './Edit_main'
 import Trash from './Trash'
 import Messages from './Messages'
-import ControlPanel from './Control_panel'
 import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import PopoverBucket from './Popover_bucket'
@@ -118,7 +117,6 @@ export default {
     Trash,
     EditMain,
     Messages,
-    ControlPanel,
     SplashScreen,
     RobotCarrying,
     PopoverBucket,

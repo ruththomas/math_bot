@@ -86,7 +86,6 @@ import SplashScreen from './Splash_screen'
 import RobotCarrying from './Robot_carrying'
 import _ from 'underscore'
 import utils from '../services/utils'
-import ControlPanel from './Control_panel'
 import GridControls from './Grid_controls'
 import Tool from './Tool'
 import GridRobot from './Grid_robot'
@@ -164,7 +163,6 @@ export default {
     GridControls,
     SplashScreen,
     RobotCarrying,
-    ControlPanel,
     Tool,
     GridRobot
   }
