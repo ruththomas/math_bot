@@ -27,6 +27,7 @@ class LevelControl extends Ws {
     this._positionBar = this._positionBar.bind(this)
     this.getSandbox = this.getSandbox.bind(this)
 
+    this._positionBarOnSizeChange()
     this._openSocket(this._init)
   }
 
@@ -90,6 +91,10 @@ class LevelControl extends Ws {
     //   return {name: f.name, index: f.index, createdId: f.created_id}
     // }))
     this.functions = functions
+  }
+
+  _positionBarOnSizeChange () {
+    $(window).resize(this._positionBar)
   }
 
   _positionBar () {

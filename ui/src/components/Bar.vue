@@ -4,6 +4,7 @@
       :id="'main-delete-function'"
       @click.native="animateVulnerable"
       :color="gridRobotColor"
+      :door-handle-color="'#B8E986'"
     ></mascot>
     <div class="plugin"></div>
     <b-popover
