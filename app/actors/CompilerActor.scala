@@ -1,21 +1,20 @@
 package actors
 
+import _root_.models.compiler.{ClientFrame, ClientRobotState, ClientTrace}
 import actors.messages._
-import actors.messages.level.Problem
 import akka.actor.{Actor, ActorRef, Props}
+import akka.http.scaladsl.util.FastFuture
 import akka.util.Timeout
-import compiler.processor.{Frame, Processor}
-import compiler.{Compiler, GridAndProgram, Point}
+import compiler.operations.Final
+import compiler.processor.Frame
+import compiler.{Compiler, FrameController, GridAndProgram, Point}
 import configuration.CompilerConfiguration
 import javax.inject.Inject
 import loggers.MathBotLogger
-import _root_.models.compiler.{ClientFrame, ClientRobotState, ClientTrace}
-import akka.http.scaladsl.util.FastFuture
-import compiler.operations.Final
 import models.GridMap
 
-import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
     logger: MathBotLogger,
@@ -26,19 +25,11 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
 
   implicit val timeout: Timeout = 5000.minutes
 
-  private case class ProgramState(stream: Stream[Frame],
-                                  iterator: Iterator[Frame],
-                                  grid: GridMap,
-                                  program: GridAndProgram,
-                                  clientFrames: List[ClientFrame] = List.empty[ClientFrame],
-                                  leftover: Option[Frame] = None,
-                                  exitOnSuccess: Boolean = false) {
-    def withLeftover(l: Frame): ProgramState = this.copy(leftover = Some(l))
-  }
+  private case class ProgramState(frameController: FrameController, grid: GridMap, program: GridAndProgram)
 
   private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
 
-  private def createFrames(leadingFrames: List[Frame]): Future[List[ClientFrame]] = {
+  private def createFrames(leadingFrames: Seq[Frame]): Future[Seq[ClientFrame]] = {
 
     val minimized = leadingFrames.map(_.withMinimalGrid)
 
@@ -56,7 +47,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
         }
 
       case _ =>
-        FastFuture.successful[List[ClientFrame]](minimized.map(ClientFrame(_)))
+        FastFuture.successful[Seq[ClientFrame]](minimized.map(ClientFrame(_)))
 
     }
 
@@ -69,7 +60,8 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       ClientFrame(ClientRobotState(Point(0, 0), "0", List.empty[String]),
                   "failure",
                   Some(pathAndContinent),
-                  Seq.empty[ClientTrace])
+                  Seq.empty[ClientTrace],
+                  Some(0))
     }
   }
 
@@ -85,8 +77,8 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
   }
    */
 
-  private def sendFrames(programState: ProgramState, clientFrames: List[ClientFrame]): Unit = {
-    out ! CompilerOutput(clientFrames, programState.grid.problem)
+  private def sendFrames(programState: ProgramState, clientFrames: Seq[ClientFrame]): Unit = {
+    out ! CompilerOutput(clientFrames)
   }
 
   override def receive: Receive = createCompile()
@@ -116,15 +108,15 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
         for {
           program <- Compiler.compile(main, funcs, commands, grid, problem)
         } yield {
-          val processor = Processor(program, config)
-          val stream = processor.execute(f => continent.stepControl.success(f, problem), continent.evalEachFrame)
           context.become(
             compileContinue(
-              ProgramState(stream = stream,
-                           iterator = stream.iterator,
+              0,
+              ProgramState(frameController = FrameController(program,
+                                                             f => continent.stepControl.success(f, problem),
+                                                             continent.evalEachFrame,
+                                                             config),
                            grid = grid,
-                           program = program,
-                           exitOnSuccess = grid.evalEachFrame)
+                           program = program)
             )
           )
           self ! CompilerContinue(steps)
@@ -149,15 +141,15 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
         Compiler.compileMbl(mbl, grid, problem) match {
 
           case Left(program) =>
-            val processor = Processor(program, config)
-            val stream = processor.execute(f => continent.stepControl.success(f, problem), continent.evalEachFrame)
             context.become(
               compileContinue(
-                ProgramState(stream = stream,
-                             iterator = stream.iterator,
+                0,
+                ProgramState(frameController = FrameController(program,
+                                                               f => continent.stepControl.success(f, problem),
+                                                               continent.evalEachFrame,
+                                                               config),
                              grid = grid,
-                             program = program,
-                             exitOnSuccess = grid.evalEachFrame)
+                             program = program)
               )
             )
             self ! CompilerContinue(steps)
@@ -172,10 +164,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       logger.LogDebug("CompilerActor", "Continue received during create state.")
       for {
         lastFrame <- createLastFromFromNothing()
-      } yield out ! CompilerOutput(List(lastFrame), Problem(""))
+      } yield out ! CompilerOutput(List(lastFrame))
   }
 
-  private def compileContinue(currentCompiler: ProgramState): Receive = {
+  private def compileContinue(index: Int, state: ProgramState): Receive = {
 
     case CompilerExecute(steps, _) =>
       self ! CompilerContinue(steps)
@@ -185,14 +177,11 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                      s"Stepping compiler for $steps steps with actor ${context.self.path.toSerializationFormat}")
 
       for {
-        cf <- createFrames(
-          currentCompiler.iterator
-            .take(steps)
-            .toList
-        )
+        cf <- createFrames(state.frameController.request(index, steps, 1))
       } yield {
-        sendFrames(currentCompiler, cf)
+        sendFrames(state, cf)
       }
+      context.become(compileContinue(index + steps, state))
 
     case _: CompilerHalt =>
       logger.LogInfo(className, "Compiler halted")
