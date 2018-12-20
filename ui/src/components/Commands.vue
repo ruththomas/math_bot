@@ -36,6 +36,7 @@
             :origin="'functions'"
             :data-created-id="func.created_id"
             :data-index="ind"
+            :show-pointer="ind === editingIndex"
             @click.native="editFunction($event, func, ind)"
           ></function-box>
         </draggable>
@@ -189,6 +190,7 @@ export default {
   $functions-padding-left: 2vmin;
   $commands-margin-top: 2vmin;
   $piece-height: 7.5vmin;
+  $pointer-size: 2vmin;
 
   .invisible {
     visibility: hidden;
@@ -196,13 +198,12 @@ export default {
 
   .commands {
     display: flex;
-    align-items: center;
     flex-direction: row;
     width: 100%;
     height: calc(#{$piece-height} * 2.2);
     margin: 0 auto;
     position: relative;
-    z-index: 100;
+    z-index: 1001;
 
   .lambdas-container {
     transition-duration: 300ms;
@@ -215,6 +216,7 @@ export default {
         -webkit-overflow-scrolling: touch;
         width: 100%;
         display: flex;
+        padding-top: $pointer-size;
 
         .methods {
           display: flex;

@@ -124,6 +124,10 @@
         {{func.name === '' ? 'name me' : func.name}}
       </span>
     </div>
+    <div class="pointer" v-if="showPointer">
+      <div class="pointer-size pointer-border"></div>
+      <div class="pointer-size pointer-body"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -183,7 +187,7 @@ export default {
       }
     }
   },
-  props: ['id', 'ind', 'func', 'pieceToShow', 'showName', 'method', 'size']
+  props: ['id', 'ind', 'func', 'pieceToShow', 'showName', 'method', 'size', 'showPointer']
 }
 </script>
 
@@ -199,6 +203,7 @@ export default {
   $green: #50E3C2;
   $pink: #FF98B1;
   $red: #F25C5C;
+  $pointer-size: 2vmin;
 
   .piece {
     position: relative;
@@ -290,4 +295,36 @@ export default {
   .piece.piece-placeholder {
     opacity: 0.3;
   }
+  .pointer {
+    position: absolute;
+    width: calc(#{$pointer-size} * 2);
+    height: $pointer-size;
+    bottom: calc(100% + #{$piece-margin});
+    left: calc(#{$pointer-size} * 2 - 4px);
+    transform: translateX(-50%);
+    z-index: 101;
+  }
+
+  .pointer-hidden {
+    opacity: 0;
+  }
+
+  .pointer-size {
+    position: absolute;
+    border-style: solid;
+    border-width: $pointer-size $pointer-size 0 $pointer-size;
+  }
+
+  .pointer-body {
+    top: -1px;
+    z-index: 1001;
+    border-color: #000000 transparent transparent transparent;
+  }
+
+  .pointer-border {
+    top: 1px;
+    z-index: 0;
+    border-color: #737373 transparent transparent transparent;
+  }
+
 </style>

@@ -27,7 +27,7 @@
             <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
           </div>
 
-          <div class="row" style="padding: 0; display: flex; flex: 2; align-items: center; position: relative;">
+          <div class="row" style="padding: 0; display: flex; flex: 2; position: relative;">
             <trash></trash>
             <commands></commands>
           </div>

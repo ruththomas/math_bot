@@ -7,6 +7,7 @@
     :show-name="showName"
     :method="method"
     :size="size"
+    :show-pointer="showPointer"
   >
   </puzzle-pieces>
 </template>
@@ -42,7 +43,7 @@ export default {
   components: {
     PuzzlePieces
   },
-  props: ['func', 'ind', 'origin', 'method', 'collection', 'otherMounted', 'size']
+  props: ['func', 'ind', 'origin', 'method', 'collection', 'otherMounted', 'size', 'showPointer']
 }
 </script>
 

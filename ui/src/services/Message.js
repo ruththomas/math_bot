@@ -10,7 +10,7 @@ class Message {
     this.timeOutCounter = 5000
 
     this.type = messageBuilder.type
-    this.msg = `${messageBuilder.msg}`
+    this.msg = ''
     this.handlers = messageBuilder.handlers ? messageBuilder.handlers() : {}
 
     this.runBeforeAppend = this.handlers.runBeforeAppend || function () {}

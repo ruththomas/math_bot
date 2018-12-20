@@ -1,8 +1,7 @@
 <template>
   <div class="popover-bucket">
     <div class="popover-bucket-content">
-      <staged-functions v-if="functionAreaShowing === 'addFunction'"></staged-functions>
-      <edit-function v-else></edit-function>
+      <edit-function></edit-function>
     </div>
   </div>
 </template>
@@ -10,31 +9,14 @@
 <script>
 import StagedFunctions from './Staged_functions'
 import EditFunction from './Edit_function'
-import PopoverBucket from '../services/PopoverBucket'
 
 export default {
-  mounted () {
-    this.popoverBucket = new PopoverBucket(this, this.editFunctionEvent)
-  },
-  beforeDestroy () {
-    this.popoverBucket.removePointer()
-  },
   computed: {
     editFunctionEvent () {
-      return this.$store.getters.getEditFunctionEvent
+      return $(this.$store.getters.getEditFunctionEvent)
     },
     functionAreaShowing () {
       return this.$store.getters.getFunctionAreaShowing
-    }
-  },
-  watch: {
-    editFunctionEvent (evt) {
-      this.popoverBucket = new PopoverBucket(this, evt)
-    }
-  },
-  data () {
-    return {
-      popoverBucket: null
     }
   },
   components: {
@@ -66,4 +48,5 @@ export default {
     display: flex;
     align-items: center;
   }
+
 </style>
