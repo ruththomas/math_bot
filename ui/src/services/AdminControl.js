@@ -29,6 +29,7 @@ export default class AdminControl extends Ws {
   maxLevel = []
   events = []
   event = null
+  confirmDeleteEvent = {}
 
   constructor () {
     super('admin')
@@ -48,6 +49,10 @@ export default class AdminControl extends Ws {
     this._send(JSON.stringify({
       action: this.actions.putEvent,
       event: AdminControl._mapEventToRequest(event)}))
+  }
+
+  handleDelEvent (event) {
+    this.delEvent(event)
   }
 
   delEvent (event) {

@@ -2,8 +2,11 @@
 
       <tr>
         <td>{{event.title}}</td>
-        <td>{{new Date(event.date).toLocaleString()}}</td>
-        <td>{{event.description}}</td>
+        <td>{{new Date(event.date).toLocaleDateString()}}</td>
+        <td>{{event.description.slice(0, 100)}}</td>
+        <td>
+          {{event.links}}
+        </td>
         <td>
           <b-btn
             @click="toggleEditMode(event)"

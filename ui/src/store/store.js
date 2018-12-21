@@ -55,6 +55,10 @@ export default new Vuex.Store({
       state.levelControl = new LevelControl()
       state.adminControl = new AdminControl()
     },
+
+    CONFIRM_DEL_EVENT (state, event) {
+      state.adminControl.confirmDeleteEvent = event
+    },
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
     },
@@ -111,6 +115,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
+
+    confirmDeleteEvent ({commit}, evt) {
+      commit('CONFIRM_DEL_EVENT', evt)
+    },
     confirmDeactivateFunction ({commit}, _func) {
       commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
     },

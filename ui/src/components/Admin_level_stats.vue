@@ -5,39 +5,6 @@
       <unlock-all-levels></unlock-all-levels>
     </div>
 
-    <div class="row mb-3">
-
-      <div class="form-group">
-        <label for="starSystems">
-          star system
-        </label>
-        <select @change="changeStarSystem" class="form-control-sm" id="starSystems" name="starSystems">
-          <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
-            {{star.stats.name}}
-          </option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row mb-3">
-      <div class="form-group">
-        <label for="planets">
-          planets
-        </label>
-        <select
-          id="planets"
-          name="planets"
-          @change="changeActivePlanet"
-        >
-          <option
-
-            v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
-            {{planet.stats.name}}
-          </option>
-        </select>
-      </div>
-    </div>
-
     <div class="row mb-3" v-if="adminControl.maxLevel.length > 0">
       <admin-max-level></admin-max-level>
     </div>
@@ -46,19 +13,54 @@
 
       <h3>Continent Stats</h3>
 
-      <table class="table table-striped">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="mx-3">
+
+          <div class="form-group">
+            <label for="starSystems">
+              star system
+            </label>
+            <select @change="changeStarSystem" class="form-control-sm" id="starSystems" name="starSystems">
+              <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
+                {{star.stats.name}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mx-3">
+          <div class="form-group">
+            <label for="planets">
+              planets
+            </label>
+            <select
+              id="planets"
+              name="planets"
+              @change="changeActivePlanet"
+            >
+              <option
+
+                v-for="planet in starSystem.planets" :key="planet.id" :value="planet.id">
+                {{planet.stats.name}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <table class="table table-striped table-responsive table-hover">
         <thead>
 
         <tr>
           <th>
             id
           </th>
-          <th>timesPlayed</th>
-          <th>timesPlayedAvg</th>
-          <th>timesPlayedMax</th>
-          <th>wins</th>
-          <th>winsAvg</th>
-          <th>winsMax</th>
+          <th class="text-right">timesPlayed</th>
+          <th class="text-right">timesPlayedAvg</th>
+          <th class="text-right">timesPlayedMax</th>
+          <th class="text-right">wins</th>
+          <th class="text-right">winsAvg</th>
+          <th class="text-right">winsMax</th>
         </tr>
         </thead>
         <tbody>
@@ -67,12 +69,12 @@
              v-show="continentIds.includes(continent.id)"
         >
           <td>{{continent.id}}</td>
-          <td class="text-monospace">{{continent.timesPlayed}}</td>
-          <td class="text-monospace">{{continent.timesPlayedAvg}}</td>
-          <td class="text-monospace">{{continent.timesPlayedMax}}</td>
-          <td class="text-monospace">{{continent.wins}}</td>
-          <td class="text-monospace">{{continent.winsAvg}}</td>
-          <td class="text-monospace">{{continent.winsMax}}</td>
+          <td class="text-monospace text-right">{{continent.timesPlayed}}</td>
+          <td class="text-monospace text-right">{{continent.timesPlayedAvg}}</td>
+          <td class="text-monospace text-right">{{continent.timesPlayedMax}}</td>
+          <td class="text-monospace text-right">{{continent.wins}}</td>
+          <td class="text-monospace text-right">{{continent.winsAvg}}</td>
+          <td class="text-monospace text-right">{{continent.winsMax}}</td>
         </tr>
         </tbody>
       </table>
@@ -177,6 +179,14 @@ export default {
       color: white;
     }
 
+    th, label {
+
+      text-transform: capitalize;
+    }
+
+    label {
+
+    }
   }
 
 </style>

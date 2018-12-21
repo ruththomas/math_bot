@@ -110,8 +110,11 @@ export default {
       bindto: `#chart_total`,
 
       data: {
+        colors: {
+          'total': '#B8E986'
+        },
         x: 'x',
-        type: 'area',
+        // type: 'area',
         columns: [
           xCol,
           yCol

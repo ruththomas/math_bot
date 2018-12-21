@@ -17,17 +17,18 @@
           <div class="row my-3">
             <h5 class="mx-1">Events</h5>
             <div class="row btn-group d-flex flex-wrap justify-content-center align-items-center">
-              <b-btn
-                variant="default"
-                v-for="event in eventsList"
-                :key="event.id"
-                @click="handleSetDate(event)"
-              >
-                {{event.title}}
-                <small>
-                  {{event.date.toLocaleString()}}
-                </small>
-              </b-btn>
+              <select v-model="userInput.abcEvent" @change="handleSetDate(userInput.abcEvent)">
+                <option
+                  v-for="event in eventsList"
+                  :key="event.id"
+                  :value="event"
+                >
+                  {{event.title}}
+                  <small>
+                    {{event.date.toLocaleString()}}
+                  </small>
+                </option>
+              </select>
             </div>
 
           </div>
@@ -40,59 +41,56 @@
         </div>
         <div class="col" v-if="'between' === activeAction">
 
-          <div class="row">
             <div class="col">
               <h5>From</h5>
-              <div class="row my-2">
+              <div class="row d-flex justify-content-center align-items-center my-2">
                 <datepicker
                   v-model="userInput.minDate"
                 />
-              </div>
-              <div class="btn-group">
-                <b-btn
-                  variant="default"
-                  v-for="event in eventsList"
-                  :key="event.id"
-                  @click="setDate(event, 1, 0, 0)"
-                >
-                  {{event.title}}
-                  <small>
-                    {{event.date.toLocaleString()}}
-                  </small>
-                </b-btn>
+
+                <div class="btn-group">
+                 <select v-model="userInput.minDate">
+                   <option
+                     v-for="event in eventsList"
+                     :key="event.id"
+                     :value="event.date"
+                   >
+                     {{event.title}}
+                     <small>
+                       {{event.date.toLocaleString()}}
+                     </small>
+                   </option>
+                 </select>
+                </div>
               </div>
 
             </div>
 
             <div class="col">
               <h5 class="mx-1">To</h5>
-              <div class="row my-2">
+              <div class="row d-flex justify-content-center align-items-center my-2">
                 <datepicker
                   v-model="userInput.maxDate"
                 />
-              </div>
-              <div class="row my-2">
-                <div class="btn-group">
-                  <b-btn
-                    variant="default"
+                <select v-model="userInput.maxDate" @change="userInput.date = userInput.maxDate">
+                  <option
                     v-for="_event in eventsList"
                     :key="_event.id"
-                    @click="setDate(_event, 0, 1)"
+                    :value="_event.date"
+
                   >
                     {{_event.title}}
                     <small>
                       {{_event.date.toLocaleString()}}
                     </small>
-                  </b-btn>
-                </div>
-
+                  </option>
+                </select>
               </div>
 
             </div>
 
           </div>
 
-        </div>
         <div class="col" v-if="['previous', 'next'].includes(activeAction)">
           <input type="number"
                  class="text-right text-monospace"
@@ -140,6 +138,7 @@ export default {
       days: 30,
       userInput: {
         days: 30,
+        abcEvent: {},
         date: d,
         minDate: d,
         maxDate: d
@@ -164,6 +163,7 @@ export default {
   methods: {
 
     handleSetDate ({date}) {
+      console.log('handle set', date)
       if (this.activeAction === 'before') {
         this.userInput.maxDate = date
       } else if (this.activeAction === 'after') {
@@ -185,21 +185,7 @@ export default {
 
     updateFilter () {
       this.eventsControl.updateFilter(this.activeAction, this.days, this.activeOpts, this.userInput.date, this.userInput.minDate, this.userInput.maxDate)
-    },
-
-    setDate ({date}, min = false, max = false, _date = false) {
-      if (min) {
-        this.userInput.minDate = date
-      }
-
-      if (max) {
-        this.userInput.maxDate = date
-      }
-      if (_date) {
-        this.userInput.date = date
-      }
     }
-
   }
 }
 </script>

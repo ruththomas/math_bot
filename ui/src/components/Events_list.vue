@@ -1,5 +1,6 @@
 <template>
   <div class="events-list container-fluid">
+    <confirm-delete-event></confirm-delete-event>
     <h3 class="page-title mb-3">
 
       <span @click="toggleView" :class="listVisible ? 'active' : null">
@@ -44,7 +45,7 @@
             No events found
           </div>
 
-          <table class="table table-striped table-hover" v-else>
+          <table class="my-3 table table-striped table-hover" v-else>
             <thead>
             <tr>
               <th>
@@ -57,6 +58,9 @@
                 description
               </th>
               <th>
+                links
+              </th>
+              <th>
 
               </th>
             </tr>
@@ -67,6 +71,7 @@
               v-for="event in adminControl.events"
               :key="event.id"
               :event="event"
+              :confirm-delete="confirmDelete"
               :toggle-edit-mode="toggleEditMode"
               :delete-event="deleteEvent"
             ></events-detail>
@@ -74,15 +79,8 @@
           </table>
         </div>
 
-        <div v-else>
-
-          <div class="card">
-            <div class="card-body">
-              <events-add
-                :handle-submit="postEvent"></events-add>
-            </div>
-          </div>
-        </div>
+        <events-add v-else
+                    :handle-submit="postEvent"></events-add>
       </div>
     </div>
 
@@ -93,10 +91,11 @@
 
 import EventsDetail from './Events_detail'
 import EventsAdd from './Events_add'
+import ConfirmDeleteEvent from './Confirm_delete_event'
 
 export default {
   name: 'Events_list',
-  components: { EventsAdd, EventsDetail },
+  components: { ConfirmDeleteEvent, EventsAdd, EventsDetail },
   data () {
     return {
       listVisible: true,
@@ -117,9 +116,9 @@ export default {
   methods: {
 
     confirmDelete (event) {
-      this.confirmDelete = true
-
-      this.confirmDeleteEvent = event
+      this.$store.dispatch('confirmDeleteEvent', event).then(() => {
+        this.$root.$emit('bv::show::modal', 'confirm-delete-event')
+      })
     },
 
     toggleEditMode (event) {
@@ -185,6 +184,11 @@ export default {
   span:hover {
 
     border-bottom: 2px solid var(--info);
+  }
+
+  th {
+
+    text-transform: capitalize;
   }
 
 </style>
