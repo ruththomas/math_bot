@@ -86,10 +86,6 @@ class LevelControl extends Ws {
   }
 
   _setFunctions (functions) {
-    // console.log('staged length', functions.stagedFunctions.length)
-    // console.log(functions.activeFuncs.map(f => {
-    //   return {name: f.name, index: f.index, createdId: f.created_id}
-    // }))
     this.functions = functions
   }
 
@@ -204,14 +200,17 @@ class LevelControl extends Ws {
   }
 
   findFunctionIndex (createdId) {
-    return this.functions.activeFuncs.reduce((atIndex, func, ind) => {
+    return this.functions.activeFunctions.reduce((atIndex, func, ind) => {
       if (func.created_id === createdId) atIndex = ind
       return atIndex
     }, 0)
   }
 
   updateFunction (func) {
-    this._wsOnMessage(this._positionBar) // doing nothing with response for now
+    this._wsOnMessage((res) => {
+      this._positionBar()
+      this._resetContinent(res)
+    })
     this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))
   }
 

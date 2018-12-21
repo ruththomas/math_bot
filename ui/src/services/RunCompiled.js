@@ -39,13 +39,13 @@ class RunCompiled extends GridAnimator {
 
   _testForEmptyFunctions () {
     const mainFunction = $store.state.levelControl.functions.main.func
-    const activeFuncs = $store.state.levelControl.functions.activeFuncs
+    const activeFunctions = $store.state.levelControl.functions.activeFunctions
 
     if (!mainFunction.length) return [{name: 'Main'}]
 
     return _.chain(mainFunction)
       .map(f => {
-        const funcToken = activeFuncs.find(af => af.created_id === f.created_id)
+        const funcToken = activeFunctions.find(af => af.created_id === f.created_id)
         if (funcToken) return funcToken
         else return null
       })
