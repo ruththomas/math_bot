@@ -9,7 +9,7 @@
       <admin-max-level></admin-max-level>
     </div>
 
-    <div v-if="adminControl.levelStats.length">
+    <div>
 
       <h3>Continent Stats</h3>
 
