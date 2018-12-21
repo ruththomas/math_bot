@@ -3,37 +3,84 @@
     <h3 class="page-title mb-3">
 
       <span @click="toggleView" :class="listVisible ? 'active' : null">
-        Event List
+        List
       </span>
 
       |
 
       <span @click="toggleView" :class="!listVisible ? 'active' : null">
-        Add Event
+        Add
       </span>
 
     </h3>
 
     <div>
 
-      <div v-if="listVisible">
-        <div class="alert alert-info" v-if="!eventsList.length">
-          No events found
+      <div v-if="editMode">
+
+        <div>
+
+          <b-btn
+            @click="toggleEditMode"
+
+          >
+            back
+          </b-btn>
         </div>
-        <events-detail
-          :handle-submit="editEvent"
-          :event="_event"
-          :delete-event="deleteEvent"
-          :edit-event="editEvent"
-        ></events-detail>
+
+        <div>
+          <events-add
+            init="1"
+            :event="editEvent"
+            :handle-submit="handleEditEvent"
+          ></events-add>
+
+        </div>
+
       </div>
-
       <div v-else>
+        <div v-if="listVisible">
+          <div class="alert alert-info" v-if="!eventsList.length">
+            No events found
+          </div>
 
-        <div class="card">
-          <div class="card-body">
-            <events-add
-              :handle-submit="postEvent"></events-add>
+          <table class="table table-striped table-hover" v-else>
+            <thead>
+            <tr>
+              <th>
+                title
+              </th>
+              <th>
+                date
+              </th>
+              <th>
+                description
+              </th>
+              <th>
+
+              </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <events-detail
+              v-for="event in adminControl.events"
+              :key="event.id"
+              :event="event"
+              :toggle-edit-mode="toggleEditMode"
+              :delete-event="deleteEvent"
+            ></events-detail>
+            </tbody>
+          </table>
+        </div>
+
+        <div v-else>
+
+          <div class="card">
+            <div class="card-body">
+              <events-add
+                :handle-submit="postEvent"></events-add>
+            </div>
           </div>
         </div>
       </div>
@@ -52,7 +99,9 @@ export default {
   components: { EventsAdd, EventsDetail },
   data () {
     return {
-      listVisible: true
+      listVisible: true,
+      editEvent: null,
+      editMode: false
     }
   },
   computed: {
@@ -66,6 +115,18 @@ export default {
 
   },
   methods: {
+
+    confirmDelete (event) {
+      this.confirmDelete = true
+
+      this.confirmDeleteEvent = event
+    },
+
+    toggleEditMode (event) {
+      this.editMode = !this.editMode
+
+      this.editEvent = event
+    },
 
     getEvents () {
       return this.adminControl.getEvents()
@@ -83,8 +144,18 @@ export default {
       this.listVisible = true
     },
 
-    editEvent (event) {
+    handleEditEvent (event) {
+      this._editEvent(event)
+    },
+
+    _editEvent (event) {
       this.adminControl.putEvent(event)
+
+      this.listVisible = true
+
+      this.editEvent = null
+
+      this.editMode = false
     }
   }
 }

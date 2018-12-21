@@ -1,4 +1,4 @@
-export class Event {
+export class AdminEvent {
   constructor ({date, title, description, id = null, links}) {
     this.id = id
     this.date = new Date(date)

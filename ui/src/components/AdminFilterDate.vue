@@ -1,57 +1,107 @@
 <template>
 
-  <div class="container fs">
+  <div class="fs">
 
-    <!--<div class="row">-->
-      <!--minDate: {{eventsControl.minDate}}-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-      <!--maxDate: {{eventsControl.maxDate}}-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-      <!--action: {{eventsControl.action}}-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-      <!--opt: {{eventsControl.opt}}-->
-    <!--</div>-->
-
-    <div class="row my-3">
+    <div class="row d-flex justify-content-center align-items-center m-3">
       <div class="col">
-        <select v-model="activeVerb">
+        <select v-model="activeAction">
           <option v-for="action in eventsControl.actions" :key="action">
             {{action}}
           </option>
         </select>
       </div>
 
-      <div class="row my-3 d-flex justify-content-center align-items-center">
-        <div class="col" v-if="['before', 'after', 'on'].includes(activeVerb)">
+      <div class="row m-3 ">
+        <div class="col" v-if="['before', 'after', 'on'].includes(activeAction)">
 
-          <div v-for="event in eventsList" :key="event.id" @click="updateDateEvent(event)">
-            {{event.title}}
+          <div class="row my-3">
+            <h5 class="mx-1">Events</h5>
+            <div class="row btn-group d-flex flex-wrap justify-content-center align-items-center">
+              <b-btn
+                variant="default"
+                v-for="event in eventsList"
+                :key="event.id"
+                @click="handleSetDate(event)"
+              >
+                {{event.title}}
+                <small>
+                  {{event.date.toLocaleString()}}
+                </small>
+              </b-btn>
+            </div>
 
-            <small>
-              {{new Date(event.date).toLocaleString()}}
-            </small>
           </div>
-          <datepicker
-            v-model="userInput.date"
-          />
+          <div class="row my-3">
+            <h5 class="mx-1">Date</h5>
+            <datepicker
+              v-model="userInput.date"
+            />
+          </div>
         </div>
-        <div class="col" v-if="'between' === activeVerb">
-          <datepicker v-model="userInput.minDate"></datepicker>
-          <datepicker v-model="userInput.maxDate"></datepicker>
+        <div class="col" v-if="'between' === activeAction">
+
+          <div class="row">
+            <div class="col">
+              <h5>From</h5>
+              <div class="row my-2">
+                <datepicker
+                  v-model="userInput.minDate"
+                />
+              </div>
+              <div class="btn-group">
+                <b-btn
+                  variant="default"
+                  v-for="event in eventsList"
+                  :key="event.id"
+                  @click="setDate(event, 1, 0, 0)"
+                >
+                  {{event.title}}
+                  <small>
+                    {{event.date.toLocaleString()}}
+                  </small>
+                </b-btn>
+              </div>
+
+            </div>
+
+            <div class="col">
+              <h5 class="mx-1">To</h5>
+              <div class="row my-2">
+                <datepicker
+                  v-model="userInput.maxDate"
+                />
+              </div>
+              <div class="row my-2">
+                <div class="btn-group">
+                  <b-btn
+                    variant="default"
+                    v-for="_event in eventsList"
+                    :key="_event.id"
+                    @click="setDate(_event, 0, 1)"
+                  >
+                    {{_event.title}}
+                    <small>
+                      {{_event.date.toLocaleString()}}
+                    </small>
+                  </b-btn>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
-        <div class="col" v-if="['previous', 'next'].includes(activeVerb)">
-          <input type="number" v-model="days"/>
+        <div class="col" v-if="['previous', 'next'].includes(activeAction)">
+          <input type="number"
+                 class="text-right text-monospace"
+                 min="0" v-model="days"/>
         </div>
-        <div class="col" v-if="['current', 'previous', 'next'].includes(activeVerb)">
-          <select v-model="activeOpts" v-if="'current' === activeVerb">
-            <option v-for="_opt in _opts" :key="_opt" >
-                {{_opt}}
+        <div class="col" v-if="['current', 'previous', 'next'].includes(activeAction)">
+          <select v-model="activeOpts" v-if="'current' === activeAction">
+            <option v-for="_opt in eventsControl.opts" :key="_opt" :value="_opt">
+              {{_opt.slice(0, -1)}}
             </option>
           </select>
 
@@ -64,7 +114,7 @@
       </div>
     </div>
 
-    <div class="row my-3">
+    <div class="row m-3">
       <b-btn
         @click="handleUpdateFilter"
       >
@@ -83,23 +133,21 @@ export default {
   name: 'AdminFilterDate',
   components: { Datepicker, VueFullcalendar },
   data () {
+    const d = new Date()
     return {
-      activeDateRange: 'month',
-      activeVerb: 'previous',
-      activeOpts: 'days',
+      activeAction: 'current',
+      activeOpts: 'months',
       days: 30,
       userInput: {
         days: 30,
-        date: new Date(),
-        minDate: new Date(),
-        maxDate: new Date()
+        date: d,
+        minDate: d,
+        maxDate: d
       }
     }
   },
   computed: {
-    _opts () {
-      return this.eventsControl.opts.map(_i => _i.slice(0, -1))
-    },
+
     eventsList () {
       return this.adminControl.events
     },
@@ -115,6 +163,20 @@ export default {
   },
   methods: {
 
+    handleSetDate ({date}) {
+      if (this.activeAction === 'before') {
+        this.userInput.maxDate = date
+      } else if (this.activeAction === 'after') {
+        this.userInput.minDate = date
+      } else if (this.activeAction === 'on') {
+        this.userInput.minDate = date
+        this.userInput.maxDate = date
+      } else {
+        throw new Error('Invalid Request')
+      }
+      this.userInput.date = date
+    },
+
     handleUpdateFilter (e) {
       e.preventDefault()
 
@@ -122,33 +184,20 @@ export default {
     },
 
     updateFilter () {
-      this.eventsControl.updateFilter(this.activeVerb, this.days, this.activeOpts, this.userInput.date, this.userInput.minDate, this.userInput.maxDate)
+      this.eventsControl.updateFilter(this.activeAction, this.days, this.activeOpts, this.userInput.date, this.userInput.minDate, this.userInput.maxDate)
     },
 
-    updateDateEvent (e) {
-      const date = new Date(e.date)
-      this.userInput.date = date
-      this.userInput.minDate = date
-      this.userInput.maxDate = date
-    },
-
-    last (e) {
-      let days = e.target.value
-
-      if (days === '') return
-      this.minDate = new Date()
-
-      if (days === 'month') {
-        const _date = new Date()
-
-        this.minDate = new Date(_date.getFullYear(), _date.getMonth(), 1)
-      } else if (days === 'year') {
-        this.minDate = new Date(this.minDate.getFullYear() - 1, this.minDate.getMonth(), this.minDate.getDay())
-      } else {
-        this.minDate.setDate(this.minDate.getDate() - +days)
+    setDate ({date}, min = false, max = false, _date = false) {
+      if (min) {
+        this.userInput.minDate = date
       }
-      this.maxDate = new Date()
-      this.activeDateRange = days
+
+      if (max) {
+        this.userInput.maxDate = date
+      }
+      if (_date) {
+        this.userInput.date = date
+      }
     }
 
   }
@@ -158,7 +207,6 @@ export default {
 <style scoped>
 
   .fs {
-    transition: opacity 500ms linear;
     border: 2px solid #d7dbde;
     margin-right: 0.85em;
     margin-bottom: 0.5em;
@@ -167,6 +215,56 @@ export default {
     min-height: 30px;
     min-width: 150px;
     color: #74838f;
+  }
+
+  input[type=number] {
+    color:#2e353b;
+    font-size:1.12em;
+    padding:.75rem .75rem;
+    border:1px solid #d7dbde;
+    border-image-source:initial;
+    border-image-slice:initial;
+    border-image-width:initial;
+    border-image-outset:initial;
+    border-image-repeat:initial;
+    border-radius:4px;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
+    border-bottom-right-radius:4px;
+    border-bottom-left-radius:4px;
+    transition:border .3s linear;
+    transition-property:border;
+    transition-duration:.3s;
+    transition-timing-function:linear;
+    transition-delay:0;
+    width:65px;
+    font-weight:700;
+    border-color:#d7dbde;
+    border-style:solid;
+    border-width:1px
+  }
+
+  select
+  {
+    display:inline-block;
+    padding:.6em;
+    border:1px solid #d7dbde;
+    border-image-source:initial;
+    border-image-slice:initial;
+    border-image-width:initial;
+    border-image-outset:initial;
+    border-image-repeat:initial;
+    border-radius:4px;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
+    border-bottom-right-radius:4px;
+    border-bottom-left-radius:4px;
+    font-size:14px;
+    font-weight:700;
+    min-width:90px;
+    border-color:#d7dbde;
+    border-style:solid;
+    border-width:1px
   }
 
 </style>

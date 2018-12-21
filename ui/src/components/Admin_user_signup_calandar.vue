@@ -1,28 +1,26 @@
 <template>
+
   <div>
 
-   <div class="card">
-     <div class="card-header">
-      <h3> Signups over Time</h3>
-     </div>
-     <div class="card-body">
-       <full-calendar class="user-signup-calendar"
-                      :events="data"
-                      @changeMonth="changeMonth"
-                      @eventClick="eventClick"
-                      @dayClick="dayClick"
-                      @moreClick="moreClick"
-       >
+    <div class="card">
+      <div class="card-body">
+        <full-calendar class="user-signup-calendar"
+                       :events="data"
+        >
 
-       </full-calendar>
-     </div>
-   </div>
+        </full-calendar>
+        <!--@changeMonth="changeMonth"-->
+        <!--@eventClick="eventClick"-->
+        <!--@dayClick="dayClick"-->
+        <!--@moreClick="moreClick"-->
+      </div>
+    </div>
   </div>
 </template>
 <script>
 
 function mapSignupsToCalendar (signup) {
-  const {_id: {month, day, year}, signups} = signup
+  const { _id: { month, day, year }, signups } = signup
 
   const date = new Date(year, month, day)
 
@@ -32,6 +30,7 @@ function mapSignupsToCalendar (signup) {
     end: date
   }
 }
+
 export default {
   data () {
     return {
@@ -68,4 +67,9 @@ export default {
 }
 </script>
 <style lang='scss'>
+
+  .card {
+
+    width: 50vw;
+  }
 </style>

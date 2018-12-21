@@ -1,6 +1,8 @@
 import Ws from './Ws'
 
 import _ from 'underscore'
+import { AdminEvent } from './AdminEvent'
+import { LevelStats } from './LevelStats'
 
 export default class AdminControl extends Ws {
   actions = {
@@ -21,7 +23,7 @@ export default class AdminControl extends Ws {
   activeUserCount = 0
   last7DaysLoginCount = 0
   userAccountSignups = []
-  // todo: convert into obj
+  // todo: convert into obj issues w/ vue rendering undefined params of obj
   levelStats = []
   currentPath = []
   maxLevel = []
@@ -37,18 +39,24 @@ export default class AdminControl extends Ws {
   }
 
   postEvent (event) {
-    this._send(JSON.stringify({action: this.actions.postEvents, newEvent: this._mapEventToRequest(event)}))
+    this._send(JSON.stringify({
+      action: this.actions.postEvents,
+      newEvent: AdminControl._mapEventToRequest(event)}))
   }
 
   putEvent (event) {
-    this._send(JSON.stringify({action: this.actions.putEvent, event: this._mapEventToRequest(event)}))
+    this._send(JSON.stringify({
+      action: this.actions.putEvent,
+      event: AdminControl._mapEventToRequest(event)}))
   }
 
   delEvent (event) {
-    this._send(JSON.stringify({action: this.actions.delEvent, event: this._mapEventToRequest(event)}))
+    this._send(JSON.stringify({
+      action: this.actions.delEvent,
+      event: AdminControl._mapEventToRequest(event)}))
   }
 
-  _mapEventToRequest (event) {
+  static _mapEventToRequest (event) {
     return Object.assign({}, event, {
 
       date: new Date(event.date).getTime()
@@ -114,6 +122,7 @@ export default class AdminControl extends Ws {
   }
 
   getLevelStats (_id) {
+    console.log('id', _id)
     this._send(JSON.stringify({ action: this.actions.levelStats, level: _id }))
   }
 
@@ -153,7 +162,13 @@ export default class AdminControl extends Ws {
     }
 
     if (userAccountSignups) {
-      this.userAccountSignups = userAccountSignups
+      const signups = userAccountSignups.map(item => {
+        const {_id: {month, day, year}} = item
+        return Object.assign({}, item, {
+          date: new Date(year, month, day)
+        })
+      })
+      this.userAccountSignups = _.sortBy(signups, 'date')
     }
 
     if (currentPath) {
@@ -165,9 +180,8 @@ export default class AdminControl extends Ws {
       // console.log(Array.from(this.maxLevel))
     }
 
-    // fixme: if user deletes last event, events array empty but not updated in FE
     if (events) {
-      this.events = events
+      this.events = events.map(evt => new AdminEvent(evt))
     }
 
     if (event) {
@@ -177,13 +191,8 @@ export default class AdminControl extends Ws {
     }
 
     if (levelStats) {
-      const _levelStats = this.levelStats.slice()
-
-      _levelStats.push(levelStats[0])
-
-      this.levelStats = _.uniq(_levelStats, i => i.id)
-
-      // console.log('level stats', this.levelStats)
+      const stats = this.levelStats.concat(...levelStats.map(l => new LevelStats(l)))
+      this.levelStats = _.uniq(stats, i => i.id)
     }
   }
 }

@@ -3,19 +3,18 @@ const moment = require('moment')
 const days = 30
 
 export class EventsControl {
-  minYear = 2018
+  minYear = '2018'
   days = days
   minDate = moment().subtract(days, 'days').toDate() // 28 days
   maxDate = new Date()
 
-  action = 'previous'
+  action = 'before'
   opt = 'days'
 
   actions = ['previous', 'current', 'before', 'after', 'on', 'between']
   opts = ['days', 'weeks', 'months', 'years']
 
   updateFilter (action = 'previous', days = 30, opt = 'days', day = new Date(), minDate = new Date(), maxDate = new Date()) {
-    console.log('upate filter', arguments)
     if (!(this.actions.includes(action))) {
       throw new Error('invalid request')
     }
@@ -29,8 +28,8 @@ export class EventsControl {
     if (action === 'previous') {
       this.minDate = d
     } else if (action === 'before') {
-      this.minDate = new Date(2018)
-      this.maxDate = minDate
+      this.minDate = new Date(this.minYear)
+      this.maxDate = maxDate
     } else if (action === 'after') {
       this.minDate = minDate
 

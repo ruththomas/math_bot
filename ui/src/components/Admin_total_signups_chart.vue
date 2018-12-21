@@ -1,16 +1,15 @@
 <template>
-
-     <div class="container-fluid">
-       <div class="row">
-         <div class="card" style="width: 100%;">
-           <div class="card-body">
-             <div class="row">
-               <div id="chart_signups" class="chart"></div>
-             </div>
-           </div>
+ <div class="container-fluid">
+   <div class="row">
+     <div class="card" style="width: 100%;">
+       <div class="card-body">
+         <div class="row">
+           <div id="chart_total" class="chart"></div>
          </div>
        </div>
      </div>
+   </div>
+ </div>
 </template>
 
 <script>
@@ -18,7 +17,7 @@ import c3 from 'c3'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
-  name: 'UserSignupsChart',
+  name: 'TotalUserSignupsChart',
   data () {
     return {
       chart: null
@@ -38,10 +37,6 @@ export default {
       })
     },
 
-    y () {
-      return this.data.map(item => item.signups)
-    },
-
     adminControl () {
       return this.$store.getters.getAdminControl
     },
@@ -49,6 +44,20 @@ export default {
     eventsControl () {
       return this.$store.getters.getEventsControl
     },
+
+    totalSignups () {
+      let signups = this.data.map(i => i.signups)
+
+      const _total = []
+
+      signups.reduce((prev, curr, i) => {
+        _total[i] = prev + curr
+        return _total[i]
+      }, 0)
+
+      return _total
+    },
+
     maxDate () {
       return this.eventsControl.maxDate
     },
@@ -61,7 +70,7 @@ export default {
       return this.adminControl.events.map(event => {
         return {
 
-          value: new Date(event.date),
+          value: event.date,
           text: event.title
         }
       })
@@ -74,14 +83,14 @@ export default {
     load () {
       let options = {
 
-        // unload: true,
+        unload: true,
         grid: {
           x: {
             lines: this.events
           }
         },
         columns: [
-          ['signups'].concat(...this.y)
+          ['total'].concat(...this.totalSignups)
         ]
       }
       this.chart.load(options)
@@ -91,19 +100,18 @@ export default {
 
       this.chart.axis.range({ max: { x: max }, min: { x: min } })
     }
-
   },
 
   mounted () {
-    const xCol = ['date'].concat(...this.x)
+    const xCol = ['x'].concat(...this.x)
 
-    const yCol = ['signups'].concat(...this.y)
-
+    const yCol = ['total'].concat(...this.totalSignups)
     this.chart = c3.generate({
-      bindto: `#chart_signups`,
+      bindto: `#chart_total`,
 
       data: {
-        x: 'date',
+        x: 'x',
+        type: 'area',
         columns: [
           xCol,
           yCol
@@ -126,7 +134,7 @@ export default {
         },
         y: {
           label: { // ADD
-            text: 'Signups per day',
+            text: 'Total Signups',
             position: 'outer-middle'
           }
         }

@@ -42,18 +42,46 @@
       </div>
     </div>
 
+    <div class="row">
+      <admin-filter-date></admin-filter-date>
+    </div>
+
+    <h3 class="text-left my-3">Signups over time</h3>
+
+      <div class="row d-flex justify-content-center align-items-space-between my-1 font-weight-bold">
+             <span>
+                {{eventsControl.minDate.toLocaleString()}}
+              </span>
+        <span>
+                  -
+            </span>
+        <span>
+                {{eventsControl.maxDate.toLocaleString()}}
+            </span>
+
+      </div>
+
       <div class="row">
-        <admin-filter-date></admin-filter-date>
+            <span class="text-monospace font-weight-bold mx-3">
+              {{signupsOverRange.toLocaleString()}}
+
+            </span>
+
+        <span>
+              Signups
+            </span>
+
       </div>
 
     <div class="row mb-3">
       <user-signups-chart></user-signups-chart>
     </div>
+    <div class="row mb-3">
+      <total-user-signups-chart v-if="userAccountSignups"></total-user-signups-chart>
+    </div>
 
     <div class="row mb-3">
-      <div class="col-md-8 offset-md-2">
-        <admin-user-signup-calendar></admin-user-signup-calendar>
-      </div>
+      <admin-user-signup-calendar v-if="userAccountSignups"></admin-user-signup-calendar>
     </div>
   </div>
 </template>
@@ -63,10 +91,11 @@ import AdminMaxLevel from './Admin_max_level'
 import UserSignupsChart from './Admin_user_signups_chart'
 import AdminUserSignupCalendar from './Admin_user_signup_calandar'
 import AdminFilterDate from './AdminFilterDate'
+import TotalUserSignupsChart from './Admin_total_signups_chart'
 
 export default {
   name: 'AdminUsers',
-  components: { AdminFilterDate, UserSignupsChart, AdminMaxLevel, AdminUserSignupCalendar },
+  components: { TotalUserSignupsChart, AdminFilterDate, UserSignupsChart, AdminMaxLevel, AdminUserSignupCalendar },
   computed: {
 
     adminControl () {
@@ -85,7 +114,23 @@ export default {
     },
     userAccountSignups () {
       return this.adminControl.userAccountSignups
+    },
+    eventsControl () {
+      return this.$store.getters.getEventsControl
+    },
+
+    signupsOverRange () {
+      const d = this.adminControl.userAccountSignups.filter(item => {
+        const { _id: { year, month, day } } = item
+
+        const date = new Date(year, month, day)
+
+        return this.eventsControl.minDate <= date && date <= this.eventsControl.maxDate
+      })
+      const signups = d.map(i => i.signups)
+      return signups.reduce((accum, cur) => accum + cur, 0)
     }
+
   },
   watch: {
 

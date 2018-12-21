@@ -1,6 +1,5 @@
 <template>
-  <div class="admin">
-    <div class="container-fluid">
+  <div class="container-fluid admin">
       <div class="row my-3">
         <user-gravatar></user-gravatar>
       </div>
@@ -46,7 +45,6 @@
       </div>
 
     </div>
-  </div>
 </template>
 
 <script>

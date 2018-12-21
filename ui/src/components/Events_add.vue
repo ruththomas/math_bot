@@ -83,7 +83,7 @@ export default {
     return {
       formstate: {},
       userInput: {
-        date: _now,
+        date: _now.toISOString(),
         title: '',
         description: '',
         dateReadOnly: _now.toISOString(),
@@ -95,7 +95,7 @@ export default {
     if (this.init) {
       Object.assign(this.userInput, this.event,
         {
-          date: new Date(this.event.date),
+          date: new Date(this.event.date).toISOString(),
           dateReadOnly: new Date(this.event.date).toISOString()
         }
       )
