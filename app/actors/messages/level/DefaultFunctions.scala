@@ -17,6 +17,45 @@ object Categories extends Enumeration {
 }
 
 object DefaultFunctions {
+  val turnRight =
+    Function(
+      created_id = "1001",
+      name = "Turn Right",
+      func = Some(List.empty[Nothing]),
+      image = "turn_right",
+      index = 0,
+      category = Categories.command,
+      commandId = CommandIds.changeRobotDirection
+    )
+  val forward = Function(
+    created_id = "1002",
+    name = "Walk",
+    func = Some(List.empty[Nothing]),
+    image = "move_forward",
+    index = 1,
+    category = Categories.command,
+    commandId = CommandIds.moveRobotForwardOneSpot
+  )
+  val putDown = Function(
+    created_id = "1003",
+    name = "Put Down",
+    func = Some(List.empty[Nothing]),
+    image = "drop_item",
+    index = 2,
+    category = Categories.command,
+    commandId = CommandIds.setItemDown
+  )
+  val pickup =
+    Function(
+      created_id = "1004",
+      name = "Pick Up",
+      func = Some(List.empty[Nothing]),
+      image = "pick_up",
+      index = 3,
+      category = Categories.command,
+      commandId = CommandIds.pickUpItem
+    )
+
   def main: Function = Function(
     created_id = "100001",
     name = Categories.main,
@@ -27,44 +66,7 @@ object DefaultFunctions {
     commandId = CommandIds.mainFunction
   )
 
-  def cmds: List[Function] = List(
-    Function(
-      created_id = "1001",
-      name = "Turn Right",
-      func = Some(List.empty[Nothing]),
-      image = "turn_right",
-      index = 0,
-      category = Categories.command,
-      commandId = CommandIds.changeRobotDirection
-    ),
-    Function(
-      created_id = "1002",
-      name = "Walk",
-      func = Some(List.empty[Nothing]),
-      image = "move_forward",
-      index = 1,
-      category = Categories.command,
-      commandId = CommandIds.moveRobotForwardOneSpot
-    ),
-    Function(
-      created_id = "1003",
-      name = "Put Down",
-      func = Some(List.empty[Nothing]),
-      image = "drop_item",
-      index = 2,
-      category = Categories.command,
-      commandId = CommandIds.setItemDown
-    ),
-    Function(
-      created_id = "1004",
-      name = "Pick Up",
-      func = Some(List.empty[Nothing]),
-      image = "pick_up",
-      index = 3,
-      category = Categories.command,
-      commandId = CommandIds.pickUpItem
-    )
-  )
+  def cmds: List[Function] = List(turnRight, forward, putDown, pickup)
 
   def funcs: List[Function] =
     (1 to 50).toList.map(

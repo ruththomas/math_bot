@@ -17,7 +17,7 @@ case class ContinentStruct(
     assignedStaged: List[AssignedFunction],
     preBuiltActive: List[AssignedFunction],
     allowedActives: Option[List[String]] = None,
-    cmdsAvailable: List[String],
+    cmdsAvailable: Option[List[String]] = None,
     specialParameters: List[String],
     problem: String,
     clearMain: Boolean,

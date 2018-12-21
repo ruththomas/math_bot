@@ -94,7 +94,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
         continent <- levelControl.compilerBuiltContinent(tokenId)
       } yield {
         val main = continent.lambdas.main
-        val funcs = continent.lambdas.activeFuncs
+        val funcs = continent.lambdas.functions
         val commands = continent.lambdas.cmds
         val grid = GridMap( // todo - refactor to use continent directly
           gMap = continent.gridMap,

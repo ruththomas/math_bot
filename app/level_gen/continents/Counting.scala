@@ -1,5 +1,6 @@
 package level_gen.continents
 import actors.messages.AssignedFunction
+import daos.DefaultCommands
 import level_gen.LevelGenTags
 import level_gen.models.{CelestialSystem, ContinentStruct}
 
@@ -25,12 +26,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "1",
           clearMain = false,
@@ -59,12 +54,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "3",
           clearMain = false,
@@ -93,12 +82,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "5",
           clearMain = false,
@@ -127,12 +110,6 @@ trait Counting extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           stagedQty = -1,
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "4",
           clearMain = false,
@@ -161,12 +138,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "0",
           clearMain = false,
@@ -195,12 +166,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "2",
           clearMain = false,
@@ -229,12 +194,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "1",
           clearMain = false,
@@ -263,12 +222,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "5",
           clearMain = false,
@@ -297,12 +250,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "9",
           clearMain = false,
@@ -331,12 +278,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "4",
           clearMain = false,
@@ -365,12 +306,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "6",
           clearMain = false,
@@ -399,12 +334,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "8",
           clearMain = false,
@@ -433,12 +362,6 @@ trait Counting extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("functionRequired"),
           problem = "3",
           clearMain = false,

@@ -26,12 +26,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "9 / 3",
           clearMain = false,
@@ -62,12 +56,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "8 / 2",
           clearMain = false,
@@ -98,12 +86,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "4 / 1",
           clearMain = false,
@@ -134,12 +116,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "6 / 2",
           clearMain = false,
@@ -170,12 +146,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "4 / 2",
           clearMain = false,
@@ -206,12 +176,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "7 / 1",
           clearMain = false,
@@ -242,12 +206,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "8 / 4",
           clearMain = false,
@@ -278,12 +236,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "5 / 1",
           clearMain = false,
@@ -314,12 +266,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "4 / 4",
           clearMain = false,
@@ -350,12 +296,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "2 / 1",
           clearMain = false,
@@ -386,12 +326,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "9 / 3",
           clearMain = false,
@@ -422,12 +356,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "8 / 4",
           clearMain = false,
@@ -458,12 +386,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "7 / 1",
           clearMain = false,
@@ -494,12 +416,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "8 / 2",
           clearMain = false,
@@ -530,12 +446,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "6 / 3",
           clearMain = false,
@@ -566,12 +476,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "4 / 2",
           clearMain = false,
@@ -602,12 +506,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "6 / 2",
           clearMain = false,
@@ -638,12 +536,6 @@ trait Division extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "9 / 3",
           clearMain = false,

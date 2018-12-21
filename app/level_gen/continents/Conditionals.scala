@@ -1,5 +1,6 @@
 package level_gen.continents
 import actors.messages.AssignedFunction
+import actors.messages.level.DefaultFunctions
 import level_gen.LevelGenTags
 import level_gen.models.{CelestialSystem, ContinentStruct}
 
@@ -47,12 +48,6 @@ trait Conditionals extends LevelGenTags {
               "54771309360"
             )
           ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -90,12 +85,6 @@ trait Conditionals extends LevelGenTags {
               "54771309360"
             )
           ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -131,12 +120,6 @@ trait Conditionals extends LevelGenTags {
               "50425126605",
               "54771309360"
             )
-          ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
           ),
           specialParameters = List.empty[String],
           problem = "0",
@@ -181,12 +164,6 @@ trait Conditionals extends LevelGenTags {
               "52594280153"
             )
           ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -221,12 +198,6 @@ trait Conditionals extends LevelGenTags {
               "50425126605",
               "52594280153"
             )
-          ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
           ),
           specialParameters = List.empty[String],
           problem = "0",
@@ -263,12 +234,6 @@ trait Conditionals extends LevelGenTags {
               "52594280153"
             )
           ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -304,12 +269,6 @@ trait Conditionals extends LevelGenTags {
               "50425126605",
               "54771309360"
             )
-          ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
           ),
           specialParameters = List.empty[String],
           problem = "0",
@@ -348,12 +307,6 @@ trait Conditionals extends LevelGenTags {
               "52594280153"
             )
           ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -390,12 +343,6 @@ trait Conditionals extends LevelGenTags {
               "54771309360",
               "52594280153"
             )
-          ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
           ),
           specialParameters = List.empty[String],
           problem = "0",
@@ -451,12 +398,6 @@ trait Conditionals extends LevelGenTags {
               "57442038480"
             )
           ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -504,12 +445,6 @@ trait Conditionals extends LevelGenTags {
               "57442038480",
               "57049032471"
             )
-          ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
           ),
           specialParameters = List.empty[String],
           problem = "0",
@@ -562,12 +497,6 @@ trait Conditionals extends LevelGenTags {
               "54191328403",
               "57688072155"
             )
-          ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
           ),
           specialParameters = List.empty[String],
           problem = "30",
@@ -623,12 +552,6 @@ trait Conditionals extends LevelGenTags {
               "57688072155"
             )
           ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "3",
           clearMain = false,
@@ -667,12 +590,6 @@ trait Conditionals extends LevelGenTags {
               "54191328403",
               "57688072155"
             )
-          ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
           ),
           specialParameters = List.empty[String],
           problem = "100",
@@ -713,12 +630,6 @@ trait Conditionals extends LevelGenTags {
               "57688072155"
             )
           ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "80",
           clearMain = false,
@@ -757,12 +668,6 @@ trait Conditionals extends LevelGenTags {
               "54191328403",
               "57688072155"
             )
-          ),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
           ),
           specialParameters = List.empty[String],
           problem = "22",
