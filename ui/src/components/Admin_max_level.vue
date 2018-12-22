@@ -52,16 +52,31 @@ export default {
       return this.$store.getters.getAdminControl
     },
 
-    x () {
-      return this.adminControl.maxLevel.map(i => i._id)
-    },
-    y () {
-      return this.adminControl.maxLevel.map(i => i.count)
+    data () {
+      return this.adminControl.maxLevel.map(i => this.getInfo(i)).filter(Boolean)
     }
   },
   methods: {
 
+    getInfo (continent) {
+      const lev = continent._id.slice(4)
+      if (continent._id.startsWith('0000')) {
+        return Object.assign({}, continent, {starSystem: 0, title: `P-${lev}`})
+      } else if (continent._id.startsWith('0010')) {
+        return Object.assign({}, continent, {starSystem: 1, title: `Digit-${lev}`})
+      }
+
+      return null
+    },
+
     generateChart () {
+      const d = this.data
+
+      const x = d.map(i => i.title)
+
+      const programming = d.filter(i => i.starSystem === 0).map(i => i.count)
+      const digit1 = d.filter(i => i.starSystem === 1).map(i => i.count)
+
       this.chart = c3.generate({
         bindto: document.getElementById('current_path_chart'),
         // size: {
@@ -72,18 +87,31 @@ export default {
         //   duration: 500
         // },
         data: {
+          color: function (color, d) {
+            // d will be 'id' when called for legends
+            console.log(color, d)
+
+            if (d.id === 'programming') {
+              return 'red'
+            } else if (d.id === '1 digit') {
+              return 'blue'
+            }
+          },
           columns: [
-            ['count'].concat(this.y)
+            ['programming'].concat(...programming),
+            ['1 digit'].concat(...digit1)
+            // ['count'].concat(...y)
           ],
           type: 'bar'
+
           // axes: {
           //   data2: 'y2' // ADD
           // }
         },
         axis: {
           x: {
-            type: 'category',
-            categories: this.x
+            type: 'bar',
+            categories: x
           },
           y: {
             label: { // ADD

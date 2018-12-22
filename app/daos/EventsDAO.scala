@@ -13,7 +13,7 @@ class EventsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContex
 
   import AdminEvent._
 
-  final val collLabel = "events"
+  final val collectionLabel = "events"
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(
@@ -22,24 +22,28 @@ class EventsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContex
     DEFAULT_CODEC_REGISTRY
   )
 
-  val coll: MongoCollection[AdminEvent] =
+  val collection: MongoCollection[AdminEvent] =
     mathbotDb
-      .getCollection[AdminEvent](collLabel)
+      .getCollection[AdminEvent](collectionLabel)
       .withCodecRegistry(codecRegistry)
 
-//  override def prepare() = {
-//    super.prepare()
-//    collection.createIndex(ascending(usernameField))
+//  collection.createIndex(ascending(idLabel)).toFuture().onComplete {
+//    case Success(_) =>
+//      println("created index")
+//    //aLogger.debug(SemanticLog.tags.index(collectionLabel, idLabel, "Created index"))
+//    case Failure(t) =>
+//      println("failure to create index")
+//    // aLogger.error(SemanticLog.tags.index(collectionLabel, idLabel, t, "Failed to create index"))
 //  }
 
   def insert(event: AdminEvent): Future[AdminEvent] =
-    coll
+    collection
       .insertOne(event)
       .toFuture()
       .map(_ => event)
 
   def replace(event: AdminEvent): Future[AdminEvent] =
-    coll
+    collection
       .replaceOne(equal(idLabel, event.id), event)
       .toFuture()
       .map(_ => event)
@@ -47,7 +51,7 @@ class EventsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContex
 
     for {
 
-      res <- coll.deleteOne(equal(idLabel, id)).toFuture
+      res <- collection.deleteOne(equal(idLabel, id)).toFuture
 
     } yield {
       0 < res.getDeletedCount
@@ -58,7 +62,7 @@ class EventsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContex
 
     for {
 
-      res <- coll.deleteOne(equal(idLabel, event.id)).toFuture
+      res <- collection.deleteOne(equal(idLabel, event.id)).toFuture
 
     } yield {
       0 < res.getDeletedCount
@@ -67,6 +71,6 @@ class EventsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContex
   }
   def getEvents: Future[Seq[AdminEvent]] = {
 
-    coll.find().toFuture
+    collection.find().toFuture
   }
 }

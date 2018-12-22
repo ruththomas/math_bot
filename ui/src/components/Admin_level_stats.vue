@@ -11,9 +11,9 @@
 
     <div>
 
-      <h3>Continent Stats</h3>
+      <h3 class="my-3">Level Stats</h3>
 
-      <div class="row d-flex justify-content-center align-items-center">
+      <div class="row d-flex justify-content-center align-items-center my-3">
         <div class="mx-3">
 
           <div class="form-group">
@@ -48,56 +48,11 @@
         </div>
       </div>
 
-      <table class="table table-striped table-responsive table-hover">
-        <thead>
+      <level-stats-table
+        :level-stats="adminControl.levelStats"
+        :continent-ids="continentIds"
+      ></level-stats-table>
 
-        <tr>
-          <th>
-            id
-          </th>
-          <th class="text-right">timesPlayed</th>
-          <th class="text-right">timesPlayedAvg</th>
-          <th class="text-right">timesPlayedMax</th>
-          <th class="text-right">wins</th>
-          <th class="text-right">winsAvg</th>
-          <th class="text-right">winsMax</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr  v-for="(continent) in adminControl.levelStats"
-             :key="continent.id"
-             v-show="continentIds.includes(continent.id)"
-        >
-          <td>{{continent.id}}</td>
-          <td class="text-monospace text-right">{{continent.timesPlayed}}</td>
-          <td class="text-monospace text-right">{{continent.timesPlayedAvg}}</td>
-          <td class="text-monospace text-right">{{continent.timesPlayedMax}}</td>
-          <td class="text-monospace text-right">{{continent.wins}}</td>
-          <td class="text-monospace text-right">{{continent.winsAvg}}</td>
-          <td class="text-monospace text-right">{{continent.winsMax}}</td>
-        </tr>
-        </tbody>
-      </table>
-
-      <!--<div class="row d-flex">-->
-        <!--<div-->
-          <!--v-for="(continent) in adminControl.levelStats" :key="continent.id" class="card m-3" style="width: 18rem;"-->
-          <!--v-show="continentIds.includes(continent.id)"-->
-        <!--&gt;-->
-
-          <!--<div class="card-header">continent: {{continent.id}}</div>-->
-
-          <!--<div class="card-body">-->
-            <!--<p>timesPlayed: {{continent.timesPlayed}}</p>-->
-            <!--<p>timesPlayedAvg: {{continent.timesPlayedAvg}}</p>-->
-            <!--<p>timesPlayedMax: {{continent.timesPlayedMax}}</p>-->
-            <!--<p>wins: {{continent.wins}}</p>-->
-            <!--<p>winsAvg: {{continent.winsAvg}}</p>-->
-            <!--<p>winsMax: {{continent.winsMax}}</p>-->
-          <!--</div>-->
-
-        <!--</div>-->
-      <!--</div>-->
     </div>
   </div>
 
@@ -108,11 +63,18 @@ import Continents from './Continents'
 import Planets from './Planets'
 import AdminMaxLevel from './Admin_max_level'
 import UnlockAllLevels from './UnlockAllLevels'
+import utils from '../services/utils'
+import LevelStatsTable from './LevelStatsTable'
+
+// code 4 0000
+
+// 1 digit 0010
 
 export default {
   name: 'LevelStats',
 
   methods: {
+    parseCamelCase: utils.parseCamelCase,
 
     async changeActivePlanet (e) {
       this.activePlanet = e.target.value
@@ -129,6 +91,7 @@ export default {
 
       Promise.all(ids.map(continentId => this.adminControl.getLevelStats(continentId)))
     }
+
   },
   mounted () {
     this.getLevelStats()
@@ -159,6 +122,7 @@ export default {
     }
   },
   components: {
+    LevelStatsTable,
     UnlockAllLevels,
     AdminMaxLevel,
     Continents,
@@ -182,11 +146,9 @@ export default {
     th, label {
 
       text-transform: capitalize;
+      font-weight: bold;
     }
 
-    label {
-
-    }
   }
 
 </style>

@@ -1,13 +1,13 @@
 export class LevelStats {
   constructor ({
-    _id = 'BasicProgramming',
-    timesPlayed = 200,
-    timesPlayedAvg = 1,
-    timesPlayedMax = 1,
-    wins = 200,
-    winsAvg = 1,
-    winsMax = 1,
-    id = '00000'
+    _id = '',
+    timesPlayed = 0,
+    timesPlayedAvg = 0,
+    timesPlayedMax = 0,
+    wins = 0,
+    winsAvg = 0,
+    winsMax = 0,
+    id = ''
   }) {
     this._id = _id
     this.timesPlayed = timesPlayed
