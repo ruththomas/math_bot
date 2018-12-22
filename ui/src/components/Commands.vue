@@ -221,14 +221,22 @@ export default {
         .methods {
           display: flex;
           height: min-content;
-          border: 1px solid $click-color;
-          border-radius: 3px;
-          background-color: rgba(0, 0, 0, 0.5);
         }
 
         .functions {
           display: flex;
           height: min-content;
+          .func-category-command::after {
+            content: "";
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 1px solid $click-color;
+            border-radius: 3px;
+            background-color: rgba(0, 0, 0, 0.5);
+          }
         }
       }
     }
