@@ -60,7 +60,8 @@ export default {
         dragClass: 'dragging',
         ghostClass: 'ghost',
         chosenClass: 'chosen',
-        sort: false
+        scrollSensitivity: 60,
+        sort: true
       }
     }
   },
