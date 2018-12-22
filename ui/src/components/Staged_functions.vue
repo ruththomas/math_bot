@@ -66,10 +66,9 @@ export default {
     },
     confirmDeactivateFunction (evt) {
       const createdId = $(evt.item).attr('data-created-id')
-      const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
-
+      const func = this.levelControl.functions.activeFunctions.find(f => f.created_id === createdId)
       // if user drags command function ignore
-      if (!func) return
+      if (func.category === 'command') return this.levelControl.cleanStaged()
 
       this.$store.dispatch('confirmDeactivateFunction',
         Object.assign(func, {

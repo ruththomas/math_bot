@@ -220,32 +220,58 @@ class LevelControl @Inject()(
   }
 
   /*
+   * If passed in function does not have the category 'function' it will be returned as a reset version
+   * The client will prevent commands from edited, this is the servers fail safe.
+   * */
+  private def validateFunction(function: Function): Function = function.category match {
+    case Categories.function => function
+    case Categories.main => function
+    case _ =>
+      function.copy(
+        color = white.name,
+        name = (DefaultFunctions.cmds ::: DefaultFunctions.funcs)
+          .find(_.created_id == function.created_id)
+          .map(_.name)
+          .getOrElse(""),
+        func = Some(List.empty[Function])
+      )
+  }
+
+  /*
    * Updates function at the top level, only good when adding function to func property
    * this is the most efficient way to update a function.
    * Not good for updating color, name, or displayImage. Use updateFunctionProperties instead.
    * */
-  def updateFunction(tokenId: String, function: Function): Future[Function] =
+  def updateFunction(tokenId: String, function: Function): Future[PathAndContinent] = {
+    val valFunction = validateFunction(function)
     for {
-      _ <- functionsDAO.updateFunction(tokenId, function)
-    } yield function
+      _ <- functionsDAO.updateFunction(
+        tokenId,
+        valFunction
+      )
+      pathAndContinent <- resetContinent(tokenId)
+    } yield pathAndContinent
+  }
 
   /*
    * Updates all instances of passed in functions then returns updated PathAndContinent
    * for client to update all instances of function
    * */
-  def updateFunctionProperties(tokenId: String, function: Function): Future[PathAndContinent] = {
+  def updateFunctionProperties(tokenId: String, function: Function): Future[PathAndContinent] =
     for {
       functions <- getFunctions(tokenId)
       _ <- functionsDAO.replaceAll(
         tokenId,
         Functions(
           tokenId,
-          changedAllInstances(functions.listed, function)
+          changedAllInstances(
+            functions.listed,
+            validateFunction(function)
+          )
         )
       )
       pathAndContinent <- resetContinent(tokenId)
     } yield pathAndContinent
-  }
 
   /*
    * @deprecated

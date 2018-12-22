@@ -2,23 +2,23 @@
   <div class="commands" v-if="commands !== null && activeFunctions !== null">
     <div class="lambdas-container">
       <div class="functions-container">
-        <draggable
-          class="methods"
-          :list="commands"
-          :options="commandOptions"
-          @start="start"
-          @end="end"
-        >
-          <function-box
-            v-for="(command, ind) in commands"
-            :key="command.id"
-            :func="command"
-            :ind="ind"
-            :collection="commands"
-            :origin="'functions'"
-            v-on:click.native="notEditableMessage"
-          ></function-box>
-        </draggable>
+        <!--<draggable-->
+          <!--class="methods"-->
+          <!--:list="commands"-->
+          <!--:options="commandOptions"-->
+          <!--@start="start"-->
+          <!--@end="end"-->
+        <!--&gt;-->
+          <!--<function-box-->
+            <!--v-for="(command, ind) in commands"-->
+            <!--:key="command.id"-->
+            <!--:func="command"-->
+            <!--:ind="ind"-->
+            <!--:collection="commands"-->
+            <!--:origin="'functions'"-->
+            <!--v-on:click.native="notEditableMessage"-->
+          <!--&gt;</function-box>-->
+        <!--</draggable>-->
         <draggable
           class="functions"
           :list="activeFunctions"
@@ -64,7 +64,7 @@ export default {
       return this.levelControl.functions.cmds
     },
     activeFunctions () {
-      return this.levelControl.functions.activeFuncs
+      return this.levelControl.functions.activeFunctions
     },
     runCompiled () {
       return this.levelControl.runCompiled
@@ -171,7 +171,7 @@ export default {
       const element = evt.added || evt.moved
       const newIndex = element.newIndex
       const func = element.element
-      func.category = 'function'
+      func.category = func.category === 'command' ? func.category : 'function'
       func.index = newIndex
       this.levelControl.activateFunction(func)
     }
@@ -221,14 +221,22 @@ export default {
         .methods {
           display: flex;
           height: min-content;
-          border: 1px solid $click-color;
-          border-radius: 3px;
-          background-color: rgba(0, 0, 0, 0.5);
         }
 
         .functions {
           display: flex;
           height: min-content;
+          .func-category-command::after {
+            content: "";
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid $click-color;
+            border-radius: 3px;
+            background-color: rgba(0, 0, 0, 0.5);
+          }
         }
       }
     }

@@ -176,8 +176,13 @@ $grid-space-border-color: rgba(255, 255, 255, 0.2);
       }
     }
 
+    .control-btn-group.play-btn-group {
+      flex: 2.5;
+    }
+
     .control-btn-group.reset-group {
       justify-content: flex-end;
+      flex: 2.5;
     }
 
     .control-btn-group.video-group {

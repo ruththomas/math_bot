@@ -66,6 +66,7 @@
     <div class="edit-function-content">
 
       <function-drop
+        v-if="editingFunction.category !== 'command'"
         :id="'edit-function'"
         :list="functions"
         :options="functionDraggableOptions"
@@ -76,6 +77,13 @@
         :origin="'editFunction'"
         :size-limit="editingFunction.sizeLimit"
       ></function-drop>
+
+      <div
+        v-else
+        class="command-message"
+      >
+        This is a command that can't be edited
+      </div>
 
     </div>
   </div>
@@ -111,7 +119,7 @@ export default {
       return this.levelControl.continent.problem.problem
     },
     activeFunctions () {
-      return this.levelControl.functions.activeFuncs
+      return this.levelControl.functions.activeFunctions
     },
     editingFunction () {
       return this.activeFunctions[this.editingIndex]
@@ -279,6 +287,10 @@ export default {
     align-items: flex-end;
     height: calc(#{$piece-height} + 5vmin);
     margin-top: 3vmin;
+
+    .command-message {
+      color: #ffffff;
+    }
   }
 
   .edit-function-drop > * {

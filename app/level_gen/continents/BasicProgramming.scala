@@ -1,5 +1,6 @@
 package level_gen.continents
 import actors.messages.AssignedFunction
+import actors.messages.level.DefaultFunctions
 import level_gen.LevelGenTags
 import level_gen.models.{CelestialSystem, ContinentStruct}
 
@@ -26,9 +27,7 @@ trait BasicProgramming extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List.empty[String]),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id)),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -59,9 +58,7 @@ trait BasicProgramming extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List.empty[String]),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id)),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -92,9 +89,7 @@ trait BasicProgramming extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List.empty[String]),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id)),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -138,9 +133,7 @@ trait BasicProgramming extends LevelGenTags {
             )
           ),
           allowedActives = Some(List("50246629508")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id)),
           specialParameters = List(
             "functionRequired"
           ),
@@ -173,9 +166,7 @@ trait BasicProgramming extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("50246629508")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id)),
           specialParameters = List(
             "functionRequired"
           ),
@@ -207,10 +198,7 @@ trait BasicProgramming extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("50246629508")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id, DefaultFunctions.turnRight.created_id)),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -248,10 +236,7 @@ trait BasicProgramming extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("50246629508", "58071679485")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id, DefaultFunctions.turnRight.created_id)),
           specialParameters = List(
             "functionRequired"
           ),
@@ -291,10 +276,7 @@ trait BasicProgramming extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("53367904610")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id, DefaultFunctions.turnRight.created_id)),
           specialParameters = List(
             "functionRequired"
           ),
@@ -326,10 +308,7 @@ trait BasicProgramming extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List.empty[String]),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id, DefaultFunctions.turnRight.created_id)),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -359,10 +338,7 @@ trait BasicProgramming extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("50246629508")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id, DefaultFunctions.turnRight.created_id)),
           specialParameters = List(
             "functionRequired"
           ),
@@ -393,10 +369,7 @@ trait BasicProgramming extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id, DefaultFunctions.turnRight.created_id)),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -425,10 +398,7 @@ trait BasicProgramming extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id, DefaultFunctions.turnRight.created_id)),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -457,10 +427,7 @@ trait BasicProgramming extends LevelGenTags {
           stagedQty = -1,
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection"
-          ),
+          cmdsAvailable = Some(List(DefaultFunctions.forward.created_id, DefaultFunctions.turnRight.created_id)),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,

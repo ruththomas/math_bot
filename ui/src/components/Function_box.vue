@@ -14,7 +14,6 @@
 
 <script>
 import uId from 'uid'
-
 import PuzzlePieces from './Puzzle_pieces'
 
 export default {

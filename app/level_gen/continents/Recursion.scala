@@ -34,12 +34,6 @@ trait Recursion extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("54709789996")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "0",
           clearMain = true,
@@ -78,12 +72,6 @@ trait Recursion extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("52128941453")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "0",
           clearMain = false,
@@ -114,12 +102,6 @@ trait Recursion extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("52128941453")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "0",
           clearMain = false,
@@ -150,12 +132,6 @@ trait Recursion extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("52128941453")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "0",
           clearMain = false,
@@ -194,12 +170,6 @@ trait Recursion extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("51974949138", "53367904610")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "0",
           clearMain = false,
@@ -230,12 +200,6 @@ trait Recursion extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("51974949138", "53367904610")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "0",
           clearMain = false,
@@ -274,12 +238,6 @@ trait Recursion extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("57634311012", "53367904610")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "0",
           clearMain = false,
@@ -310,12 +268,6 @@ trait Recursion extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("57634311012", "53367904610")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "0",
           clearMain = false,
@@ -354,12 +306,6 @@ trait Recursion extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("50555483574")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "8",
           clearMain = false,
@@ -412,12 +358,6 @@ trait Recursion extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("53165523148", "57688072155", "54191328403")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "4",
           clearMain = false,
@@ -448,12 +388,6 @@ trait Recursion extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("53165523148", "57688072155", "54191328403")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "5",
           clearMain = false,
@@ -492,12 +426,6 @@ trait Recursion extends LevelGenTags {
           ),
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("59033416266", "53367904610", "58071679485", "57688072155", "54191328403")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "4",
           clearMain = false,
@@ -528,12 +456,6 @@ trait Recursion extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("59033416266", "53367904610", "58071679485", "57688072155", "54191328403")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "3",
           clearMain = false,
@@ -564,12 +486,6 @@ trait Recursion extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("59033416266", "53367904610", "58071679485", "57688072155", "54191328403")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "2",
           clearMain = false,
@@ -600,12 +516,6 @@ trait Recursion extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = Some(List("59033416266", "53367904610", "58071679485", "57688072155", "54191328403")),
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List("recursionRequired"),
           problem = "3",
           clearMain = false,

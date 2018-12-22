@@ -29,7 +29,7 @@ export default {
       return this.levelControl.continent.problem.problem
     },
     activeFunctions () {
-      return this.levelControl.functions.activeFuncs
+      return this.levelControl.functions.activeFunctions
     },
     stagedFunctions () {
       return this.levelControl.functions.stagedFunctions

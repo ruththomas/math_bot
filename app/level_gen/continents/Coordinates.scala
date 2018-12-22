@@ -1,5 +1,6 @@
 package level_gen.continents
 import actors.messages.AssignedFunction
+import actors.messages.level.DefaultFunctions
 import level_gen.LevelGenTags
 import level_gen.models.{CelestialSystem, ContinentStruct}
 
@@ -26,12 +27,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "1 + 2",
           clearMain = false,
@@ -62,12 +57,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -98,12 +87,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -134,12 +117,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -170,12 +147,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -206,12 +177,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -242,12 +207,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -278,12 +237,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -314,12 +267,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -350,12 +297,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -386,12 +327,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -422,12 +357,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -458,12 +387,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -494,12 +417,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -530,12 +447,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -566,12 +477,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -602,12 +507,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,
@@ -638,12 +537,6 @@ trait Coordinates extends LevelGenTags {
           assignedStaged = List.empty[AssignedFunction],
           preBuiltActive = List.empty[AssignedFunction],
           allowedActives = None,
-          cmdsAvailable = List(
-            "moveRobotForwardOneSpot",
-            "changeRobotDirection",
-            "pickUpItem",
-            "setItemDown"
-          ),
           specialParameters = List.empty[String],
           problem = "0",
           clearMain = false,

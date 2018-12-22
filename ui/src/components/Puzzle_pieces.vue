@@ -6,7 +6,8 @@
       : pieceToShow === 'start' ? 'piece-start'
       : 'piece-middle-or-end',
       func.created_id,
-      func.color === 'empty' ? 'piece-drop-shadow' : ''
+      func.color === 'empty' ? 'piece-drop-shadow' : '',
+      'func-category-' + func.category
     ]"
     @click="method ? method($event, func, ind) : ''"
     @mousedown="runCompiled.resetIfFailure"

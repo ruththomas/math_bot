@@ -55,7 +55,8 @@ object PreparedFunctions {
     functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2, sizeLimit = fNi._1.clientSizeLimit)).sortBy(_.index)
 
   private def isAllowedFunction(func: Function, continentStruct: ContinentStruct): Boolean =
-    continentStruct.allowedActives match {
+    (if (func.category == Categories.function || func.category == Categories.staged) continentStruct.allowedActives
+     else continentStruct.cmdsAvailable) match {
       case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
       case Some(allowed) if allowed.isEmpty => false
       case None => true
@@ -64,7 +65,6 @@ object PreparedFunctions {
   private object FilteredFunctions {
     def apply(
         main: Function,
-        cmds: List[Function],
         actives: List[Function],
         staged: List[Function],
         continentStruct: ContinentStruct
@@ -80,14 +80,13 @@ object PreparedFunctions {
                 ))
             )
         }),
-        cmds = cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId)).sortBy(_.index),
         actives = actives.filter(isAllowedFunction(_, continentStruct)).sortBy(_.index),
         staged = staged.filter(isAllowedFunction(_, continentStruct)).sortBy(_.index)
       )
   }
 
   private case class FilteredFunctions(main: Function,
-                                       cmds: List[Function],
+//                                       cmds: List[Function],
                                        actives: List[Function],
                                        staged: List[Function])
 
@@ -139,11 +138,14 @@ object PreparedFunctions {
             functionsDAO: FunctionsDAO): PreparedFunctions = {
     val actives = functions.actives
     val staged = functions.staged
-    val cmds = functions.commands
+//    val cmds = functions.commands
 
-    val filteredFunctions = FilteredFunctions(functions.main, cmds, actives, staged, continentStruct)
+    val filteredFunctions = FilteredFunctions(functions.main, actives, staged, continentStruct)
 
-    if (function.category == Categories.function && actives.exists(_.created_id == function.created_id)) {
+    if ((function.category == Categories.command || function.category == Categories.function) && actives.exists(
+          _.created_id == function.created_id
+        )) {
+      // todo - verify if this block is actually needed.
       // reposition active function
       val insertAt: Int = filteredFunctions.actives(function.index).index
       val activesWithOutFunction = actives.filterNot(_.created_id == function.created_id)
@@ -151,21 +153,20 @@ object PreparedFunctions {
         activesWithOutFunction.take(insertAt) ::: List(function) ::: activesWithOutFunction.drop(insertAt)
       )
 
-      val finished = FilteredFunctions(functions.main, cmds, updatedActives, functions.staged, continentStruct)
+      val finished = FilteredFunctions(functions.main, updatedActives, functions.staged, continentStruct)
 
       functionsDAO.replaceAll(
         functions.tokenId,
         Functions(
           functions.tokenId,
-          List(functions.main) ::: cmds ::: updatedActives ::: functions.staged
+          List(functions.main) ::: updatedActives ::: functions.staged
         )
       )
 
       new PreparedFunctions(
-        finished.main,
-        finished.cmds,
-        finished.actives,
-        finished.staged
+        main = finished.main,
+        activeFunctions = finished.actives,
+        stagedFunctions = finished.staged
       )
     } else {
       // activate/deactivate function
@@ -187,10 +188,10 @@ object PreparedFunctions {
             functions.tokenId,
             Functions(
               functions.tokenId,
-              List(functions.main) ::: cmds ::: updatedActives ::: newStagedAdded
+              List(functions.main) ::: updatedActives ::: newStagedAdded
             )
           )
-          FilteredFunctions(functions.main, cmds, updatedActives, updatedStaged, continentStruct)
+          FilteredFunctions(functions.main, updatedActives, updatedStaged, continentStruct)
         case Categories.staged => // deactivate function
           def filterDeactivated(funcs: List[Function]): List[Function] =
             funcs.filterNot(_.created_id == function.created_id)
@@ -212,11 +213,13 @@ object PreparedFunctions {
 
           functionsDAO.replaceAll(
             functions.tokenId,
-            Functions(functions.tokenId, List(updatedMain) ::: cmds ::: updatedActives ::: updatedStaged)
+            Functions(functions.tokenId, List(updatedMain) ::: updatedActives ::: updatedStaged)
           )
-          FilteredFunctions(updatedMain, cmds, updatedActives, updatedStaged, continentStruct)
+          FilteredFunctions(updatedMain, updatedActives, updatedStaged, continentStruct)
+        case _ => // can't be moved
+          filteredFunctions
       }
-      new PreparedFunctions(finished.main, finished.cmds, finished.actives, finished.staged)
+      new PreparedFunctions(finished.main, finished.actives, finished.staged)
     }
   }
 
@@ -228,24 +231,22 @@ object PreparedFunctions {
   def apply(functions: Functions, continentStruct: ContinentStruct, functionsDAO: FunctionsDAO): PreparedFunctions = {
     val listedFunctions = functions.listed
     val functionIds = getFunctionIds(listedFunctions)
-    val cmds = convertColors(functions.commands).sortBy(_.index)
-    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, cmds, functionIds)
+    val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, functions.commands, functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
     val main = functions.main.copy(func = functions.main.func.map(convertColors))
     val actives = indexEm(convertColors(preBuiltActives ::: functions.actives))
     val staged = indexEm(convertColors(addMoreStaged(functions.actives, assignedStaged ::: functions.staged)))
 
-    val filteredFunctions = FilteredFunctions(main, cmds, actives, staged, continentStruct)
+    val filteredFunctions = FilteredFunctions(main, actives, staged, continentStruct)
 
     functionsDAO.replaceAll(
       functions.tokenId,
-      Functions(functions.tokenId, List(filteredFunctions.main) ::: cmds ::: actives ::: staged)
+      Functions(functions.tokenId, List(filteredFunctions.main) ::: actives ::: staged)
     )
 
     new PreparedFunctions(
       main = filteredFunctions.main,
-      cmds = filteredFunctions.cmds,
-      activeFuncs = filteredFunctions.actives,
+      activeFunctions = filteredFunctions.actives,
       stagedFunctions = filteredFunctions.staged
     )
   }
@@ -253,7 +254,9 @@ object PreparedFunctions {
 
 case class PreparedFunctions(
     main: Function,
-    cmds: List[Function],
-    activeFuncs: List[Function],
+    activeFunctions: List[Function],
     stagedFunctions: List[Function]
-)
+) {
+  def functions: List[Function] = activeFunctions.filter(_.category == Categories.function)
+  def cmds: List[Function] = activeFunctions.filter(_.category == Categories.command)
+}

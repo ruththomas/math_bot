@@ -146,7 +146,7 @@ case class ContinentStruct(
     assignedStaged: List[AssignedFunction], // see `Adding PreBuiltActives and AssignedStaged Functions` section
     preBuiltActive: List[AssignedFunction], // see `Adding PreBuiltActives and AssignedStaged Functions` section
     allowedActives: Option[List[String]] = None, // list of created_id's of allowed actives, these will be the only functions available for continent
-    cmdsAvailable: List[String], // List of command names (see `Command Names` section) allowed for this continent
+    cmdsAvailable: Option[List[String]] = None, // List of command created_id's, if set to None all commands available 
     specialParameters: List[String], // see `Special Parameters` section
     problem: String, // see `Building a Problem` section
     clearMain: Boolean, // If set to true main function will be cleared each time continent is reset @deprecated
@@ -155,16 +155,6 @@ case class ContinentStruct(
     videoHints: List[String], // List of YouTube video ids, max length 3. If empty list a message will indicate continent has no hints
     freeHint: Option[String] = None // A single YouTube video id that will be displayed when user navigates to continent
 )
-```
-
-#### Command Names 
-* Command names can also be found in `app/model/DefaultCommands.scala`
-
-```$xslt
-  "changeRobotDirection"
-  "moveRobotForwardOneSpot"
-  "setItemDown"
-  "pickUpItem"
 ```
 
 #### Creating a Grid Map
