@@ -67,14 +67,12 @@ export default {
     confirmDeactivateFunction (evt) {
       const createdId = $(evt.item).attr('data-created-id')
       const func = this.levelControl.functions.activeFunctions.find(f => f.created_id === createdId)
-
       // if user drags command function ignore
-      if (!func) return
+      if (func.category === 'command') return this.levelControl.cleanStaged()
 
       this.$store.dispatch('confirmDeactivateFunction',
         Object.assign(func, {
-          index: evt.newIndex,
-          category: func.category === 'command' ? func.category : 'staged'
+          index: evt.newIndex
         })
       )
       this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')

@@ -199,6 +199,10 @@ class LevelControl extends Ws {
     return parsed
   }
 
+  cleanStaged () {
+    this.functions.stagedFunctions = this.functions.stagedFunctions.filter((f) => f.category === 'staged')
+  }
+
   findFunctionIndex (createdId) {
     return this.functions.activeFunctions.reduce((atIndex, func, ind) => {
       if (func.created_id === createdId) atIndex = ind

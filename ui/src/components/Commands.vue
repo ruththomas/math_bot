@@ -233,7 +233,7 @@ export default {
             left: -4px;
             right: -4px;
             bottom: -4px;
-            border: 1px solid $click-color;
+            border: 2px solid $click-color;
             border-radius: 3px;
             background-color: rgba(0, 0, 0, 0.5);
           }
