@@ -55,7 +55,8 @@ object PreparedFunctions {
     functions.zipWithIndex.map(fNi => fNi._1.copy(index = fNi._2, sizeLimit = fNi._1.clientSizeLimit)).sortBy(_.index)
 
   private def isAllowedFunction(func: Function, continentStruct: ContinentStruct): Boolean =
-    (if (func.category == Categories.function) continentStruct.allowedActives else continentStruct.cmdsAvailable) match {
+    (if (func.category == Categories.function || func.category == Categories.staged) continentStruct.allowedActives
+     else continentStruct.cmdsAvailable) match {
       case Some(allowed) if allowed.nonEmpty => allowed.contains(func.created_id)
       case Some(allowed) if allowed.isEmpty => false
       case None => true
@@ -64,7 +65,6 @@ object PreparedFunctions {
   private object FilteredFunctions {
     def apply(
         main: Function,
-//        cmds: List[Function],
         actives: List[Function],
         staged: List[Function],
         continentStruct: ContinentStruct
@@ -80,7 +80,6 @@ object PreparedFunctions {
                 ))
             )
         }),
-//        cmds = cmds.filter(c => continentStruct.cmdsAvailable.contains(c.commandId)).sortBy(_.index),
         actives = actives.filter(isAllowedFunction(_, continentStruct)).sortBy(_.index),
         staged = staged.filter(isAllowedFunction(_, continentStruct)).sortBy(_.index)
       )
@@ -232,7 +231,6 @@ object PreparedFunctions {
   def apply(functions: Functions, continentStruct: ContinentStruct, functionsDAO: FunctionsDAO): PreparedFunctions = {
     val listedFunctions = functions.listed
     val functionIds = getFunctionIds(listedFunctions)
-//    val cmds = convertColors(functions.commands).sortBy(_.index)
     val preBuiltActives = makePrebuiltActives(continentStruct.preBuiltActive, functions.commands, functionIds)
     val assignedStaged = makeAssignedStaged(continentStruct.assignedStaged, functionIds)
     val main = functions.main.copy(func = functions.main.func.map(convertColors))
