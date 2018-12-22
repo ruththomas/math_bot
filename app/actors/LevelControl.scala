@@ -225,6 +225,7 @@ class LevelControl @Inject()(
    * */
   private def validateFunction(function: Function): Function = function.category match {
     case Categories.function => function
+    case Categories.main => function
     case _ =>
       function.copy(
         color = white.name,

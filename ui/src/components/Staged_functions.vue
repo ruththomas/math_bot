@@ -73,7 +73,8 @@ export default {
 
       this.$store.dispatch('confirmDeactivateFunction',
         Object.assign(func, {
-          index: evt.newIndex
+          index: evt.newIndex,
+          category: func.category === 'command' ? func.category : 'staged'
         })
       )
       this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')

@@ -143,7 +143,10 @@ object PreparedFunctions {
 
     val filteredFunctions = FilteredFunctions(functions.main, actives, staged, continentStruct)
 
-    if (function.category == Categories.function && actives.exists(_.created_id == function.created_id)) {
+    if ((function.category == Categories.command || function.category == Categories.function) && actives.exists(
+          _.created_id == function.created_id
+        )) {
+      // todo - verify if this block is actually needed.
       // reposition active function
       val insertAt: Int = filteredFunctions.actives(function.index).index
       val activesWithOutFunction = actives.filterNot(_.created_id == function.created_id)
@@ -214,6 +217,8 @@ object PreparedFunctions {
             Functions(functions.tokenId, List(updatedMain) ::: updatedActives ::: updatedStaged)
           )
           FilteredFunctions(updatedMain, updatedActives, updatedStaged, continentStruct)
+        case _ => // can't be moved
+          filteredFunctions
       }
       new PreparedFunctions(finished.main, finished.actives, finished.staged)
     }

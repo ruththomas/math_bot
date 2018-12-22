@@ -1,5 +1,4 @@
 import GridAnimator from './GridAnimator'
-import _ from 'underscore'
 import $store from '../store/store'
 import $router from '../router'
 import { $root } from '../main'
@@ -37,23 +36,6 @@ class RunCompiled extends GridAnimator {
   lastFrame = null
   failure = false
 
-  _testForEmptyFunctions () {
-    const mainFunction = $store.state.levelControl.functions.main.func
-    const activeFunctions = $store.state.levelControl.functions.activeFunctions
-
-    if (!mainFunction.length) return [{name: 'Main'}]
-
-    return _.chain(mainFunction)
-      .map(f => {
-        const funcToken = activeFunctions.find(af => af.created_id === f.created_id)
-        if (funcToken) return funcToken
-        else return null
-      })
-      .filter(func => func !== null)
-      .filter(func => !func.func.length)
-      .value()
-  }
-
   resetIfFailure () {
     if (this.robot.state === 'failure') {
       this.reset()
@@ -65,11 +47,8 @@ class RunCompiled extends GridAnimator {
   }
 
   start () {
-    const emptyFuncs = this._testForEmptyFunctions()
     const normalMode = $store.state.levelControl.mode === 'normal'
-    if (normalMode && emptyFuncs.length) {
-      this._mainEmptyMessage(emptyFuncs)
-    } else if (this.robot.state !== 'paused') {
+    if (this.robot.state !== 'paused') {
       this.robotFrames = []
       this._deleteAllMessages()
       this.robot.setState('running')

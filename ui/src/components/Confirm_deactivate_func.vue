@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     deactivateFunction () {
-      this.levelControl.deactivateFunction(Object.assign(this.confirmDeactiveFunction, {category: 'staged'}))
+      this.levelControl.deactivateFunction(this.confirmDeactiveFunction)
       this.hide()
       this.$store.dispatch('confirmDeactivateFunction', {})
     },
