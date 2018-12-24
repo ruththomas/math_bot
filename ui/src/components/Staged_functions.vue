@@ -1,8 +1,6 @@
 <template>
   <div class="staged-functions-container">
-    <div class="staged-functions-header">
-      <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
-    </div>
+    <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
     <div class="staged-functions-content">
       <draggable
         class="staged-functions"
@@ -26,71 +24,71 @@
 </template>
 
 <script>
-import FunctionBox from './Function_box'
-import draggable from 'vuedraggable'
-import PuzzlePieces from './Puzzle_pieces'
+  import FunctionBox from './Function_box'
+  import draggable from 'vuedraggable'
+  import PuzzlePieces from './Puzzle_pieces'
 
-export default {
-  mounted () {
-  },
-  computed: {
-    confirmDeactiveFunction () {
-      return this.$store.getters.getConfirmDeactiveFunction
+  export default {
+    mounted () {
     },
-    levelControl () {
-      return this.$store.getters.getLevelControl
-    },
-    stagedFunctions () {
-      return this.levelControl.functions.stagedFunctions
-    },
-    permanentImages () {
-      return this.$store.getters.getPermanentImages
-    }
-  },
-  data () {
-    return {
-      draggableOptions: {
-        group: {
-          name: 'commands-staged',
-          pull: 'clone',
-          put: ['commands-slide'],
-          revertClone: true
-        },
-        animation: 100,
-        dragClass: 'dragging',
-        ghostClass: 'ghost',
-        chosenClass: 'chosen',
-        scrollSensitivity: 60,
-        sort: true
+    computed: {
+      confirmDeactiveFunction () {
+        return this.$store.getters.getConfirmDeactiveFunction
+      },
+      levelControl () {
+        return this.$store.getters.getLevelControl
+      },
+      stagedFunctions () {
+        return this.levelControl.functions.stagedFunctions
+      },
+      permanentImages () {
+        return this.$store.getters.getPermanentImages
       }
-    }
-  },
-  methods: {
-    closeStagedFunctions () {
-      this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
-      this.$store.dispatch('updateEditingIndex', null)
     },
-    confirmDeactivateFunction (evt) {
-      const createdId = $(evt.item).attr('data-created-id')
-      const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
+    data () {
+      return {
+        draggableOptions: {
+          group: {
+            name: 'commands-staged',
+            pull: 'clone',
+            put: ['commands-slide'],
+            revertClone: true
+          },
+          animation: 100,
+          dragClass: 'dragging',
+          ghostClass: 'ghost',
+          chosenClass: 'chosen',
+          scrollSensitivity: 60,
+          sort: true
+        }
+      }
+    },
+    methods: {
+      closeStagedFunctions () {
+        this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
+        this.$store.dispatch('updateEditingIndex', null)
+      },
+      confirmDeactivateFunction (evt) {
+        const createdId = $(evt.item).attr('data-created-id')
+        const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
 
-      // if user drags command function ignore
-      if (!func) return
+        // if user drags command function ignore
+        if (!func) return
 
-      this.$store.dispatch('confirmDeactivateFunction',
-        Object.assign(func, {
-          index: evt.newIndex
-        })
-      )
-      this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
+        this.$store.dispatch('confirmDeactivateFunction',
+          Object.assign(func, {
+            index: evt.newIndex
+          })
+        )
+        this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
+      }
+    },
+    components: {
+      draggable,
+      FunctionBox,
+      PuzzlePieces
     }
-  },
-  components: {
-    draggable,
-    FunctionBox,
-    PuzzlePieces
   }
-}
 </script>
 
 <style scoped lang="scss">
@@ -143,7 +141,7 @@ export default {
     float: right;
     display: flex;
     position: absolute;
-    bottom: calc(#{$dialog-button-size} / 2);
+    top: calc(#{-$dialog-button-size} / 2);
     right:  calc(#{-$dialog-button-size} / 2);
     z-index: 10001;
     cursor: pointer;

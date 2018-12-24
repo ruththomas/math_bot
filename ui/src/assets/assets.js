@@ -3,7 +3,7 @@ module.exports = {
     drop_item: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345223/robotCommands/setDown.png',
     pick_up: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345227/robotCommands/pickup.png',
     turn_right: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345219/robotCommands/rightArrow.png',
-    move_forward: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345224/robotCommands/walk.png'
+    move_forward: 'https://res.cloudinary.com/sheouth/image/upload/v1545497269/noun_Walk_871436_FFFFFF.png'
   },
   puzzlePieces: {
     start: {
