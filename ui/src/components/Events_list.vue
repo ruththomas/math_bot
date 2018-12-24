@@ -44,9 +44,17 @@
           <div class="alert alert-info" v-if="!eventsList.length">
             No events found
           </div>
-
-          <table class="my-3 table table-striped table-hover" v-else>
+          <div v-else>
+            <div class="row m-3">
+              <input
+                style="max-width: 15rem;"
+                placeholder="filter by title"
+                type="text" v-model="userInput.filterEventText"  class="form-control"/>
+            </div>
+          <table class="my-3 table table-striped table-hover" >
             <thead>
+          <tr>
+          </tr>
             <tr>
               <th>
                 title
@@ -68,7 +76,7 @@
 
             <tbody>
             <events-detail
-              v-for="event in adminControl.events"
+              v-for="event in visibleEventsList"
               :key="event.id"
               :event="event"
               :confirm-delete="confirmDelete"
@@ -77,6 +85,7 @@
             ></events-detail>
             </tbody>
           </table>
+          </div>
         </div>
 
         <events-add v-else
@@ -100,10 +109,20 @@ export default {
     return {
       listVisible: true,
       editEvent: null,
-      editMode: false
+      editMode: false,
+      userInput: {
+        filterEventText: ''
+      }
     }
   },
   computed: {
+
+    visibleEventsList () {
+      const regex = new RegExp(this.userInput.filterEventText, 'gi')
+      return this.eventsList.filter(evt => {
+        return evt.title.match(regex)
+      })
+    },
     eventsList () {
       return this.adminControl.events
     },

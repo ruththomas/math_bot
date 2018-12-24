@@ -3,6 +3,11 @@
      <div class="container-fluid">
        <div class="row">
          <div class="card" style="width: 100%;">
+             <div class="card-header">
+               <h4 class="text-left">
+                 New player accounts per day
+               </h4>
+             </div>
            <div class="card-body">
              <div class="row">
                <div id="chart_signups" class="chart"></div>
@@ -126,7 +131,7 @@ export default {
         },
         y: {
           label: { // ADD
-            text: 'Signups per day',
+            text: 'Number',
             position: 'outer-middle'
           }
         }

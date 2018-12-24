@@ -17,7 +17,7 @@
     <div class="congrats-icon mb-3">
       <img :src="permanentImages.instructionsRobot">
     </div>
-    <h1 class="text-white mb-3">Confirm delete</h1>
+    <h1 class="mb-3">Confirm delete</h1>
 
     <div class="row d-flex justify-content-center align-items-center">
 
@@ -42,7 +42,7 @@
         variant="primary"
         @click="deleteEvent"
       >
-        Deactivate
+        Delete
       </b-btn>
     </div>
   </b-modal>
@@ -91,13 +91,14 @@ export default {
   $video-hint-close-left: 100%;
   $dialog-button-size: 3.5vmin;
   $click-color: #B8E986;
-  $embedded-background: #1b1e21;
+  $embedded-background: var(--light);
   $dialog-button-size: 2rem;
-  $background-color: rgba(0, 0, 0, 1);
+  $background-color: var(--light);
   $grid-space-size: 9vmin;
   $share-btn-size: 2.5rem;
 
   #confirm-delete-event {
+    color: black;
     .modal-dialog .modal-content {
       left: 0;
       position: relative;
@@ -125,7 +126,7 @@ export default {
           margin: 0;
           .btn {
             background-color: $click-color;
-            color: #000000;
+            color: black;
             border: none;
           }
         }

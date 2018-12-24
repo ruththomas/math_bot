@@ -35,6 +35,9 @@
 
             <div v-if="activeDisplay === 'users'">
               <admin-users v-if="userAccountSignups.length"></admin-users>
+              <div v-else>
+                <h1>Doing Science...</h1>
+              </div>
             </div>
 
             <div v-if="activeDisplay === 'events'">

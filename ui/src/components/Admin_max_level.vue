@@ -15,17 +15,8 @@
 <script>
 
 import c3 from 'c3'
+import _ from 'underscore'
 
-// const ar = [
-//   {
-//     '_id': '00004',
-//     'count': 1
-//   },
-//   {
-//     '_id': '00003',
-//     'count': 2
-//   }
-// ]
 export default {
   name: 'AdminMaxLevel',
   data () {
@@ -53,7 +44,9 @@ export default {
     },
 
     data () {
-      return this.adminControl.maxLevel.map(i => this.getInfo(i)).filter(Boolean)
+      return this.adminControl.maxLevel
+        .map(i => this.getInfo(i))
+        .filter(Boolean)
     }
   },
   methods: {
@@ -61,9 +54,9 @@ export default {
     getInfo (continent) {
       const lev = continent._id.slice(4)
       if (continent._id.startsWith('0000')) {
-        return Object.assign({}, continent, {starSystem: 0, title: `P-${lev}`})
+        return Object.assign({}, continent, {starSystem: 0, title: `P-${lev}`, level: lev})
       } else if (continent._id.startsWith('0010')) {
-        return Object.assign({}, continent, {starSystem: 1, title: `Digit-${lev}`})
+        return Object.assign({}, continent, {starSystem: 1, title: `D -${lev}`, level: lev})
       }
 
       return null
@@ -72,50 +65,33 @@ export default {
     generateChart () {
       const d = this.data
 
-      const x = d.map(i => i.title)
+      const programming = _.sortBy(d.filter(i => i.starSystem === 0), 'level')
 
-      const programming = d.filter(i => i.starSystem === 0).map(i => i.count)
-      const digit1 = d.filter(i => i.starSystem === 1).map(i => i.count)
+      const digit1 = _.sortBy(d.filter(i => i.starSystem === 1), 'level')
 
       this.chart = c3.generate({
         bindto: document.getElementById('current_path_chart'),
-        // size: {
-        //   height: width * 0.5,
-        //   width
-        // },
-        // transition: {
-        //   duration: 500
-        // },
         data: {
           color: function (color, d) {
-            // d will be 'id' when called for legends
-            console.log(color, d)
-
-            if (d.id === 'programming') {
-              return 'red'
-            } else if (d.id === '1 digit') {
-              return 'blue'
+            if (programming.length <= d.index) {
+              return 'orange'
             }
+            return 'steelblue'
           },
           columns: [
-            ['programming'].concat(...programming),
-            ['1 digit'].concat(...digit1)
-            // ['count'].concat(...y)
+            ['programming'].concat(...programming.map(i => i.count), ...digit1.map(i => i.count))
           ],
           type: 'bar'
 
-          // axes: {
-          //   data2: 'y2' // ADD
-          // }
         },
         axis: {
           x: {
-            type: 'bar',
-            categories: x
+            type: 'category',
+            categories: [...programming.map(i => i.title), ...digit1.map(i => i.title)]
           },
           y: {
             label: { // ADD
-              text: 'number of users',
+              text: 'number',
               position: 'outer-middle'
             }
           }

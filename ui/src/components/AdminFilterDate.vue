@@ -11,8 +11,8 @@
         </select>
       </div>
 
-      <div class="row m-3 ">
-        <div class="col" v-if="['before', 'after', 'on'].includes(activeAction)">
+      <div class="row m-2 d-flex justify-content-center align-items-center ">
+        <div v-if="['before', 'after', 'on'].includes(activeAction)">
 
           <div class="row my-3">
             <h5 class="mx-1">Events</h5>
@@ -39,9 +39,9 @@
             />
           </div>
         </div>
-        <div class="col" v-if="'between' === activeAction">
+        <div v-if="'between' === activeAction">
 
-            <div class="col">
+            <div>
               <h5>From</h5>
               <div class="row d-flex justify-content-center align-items-center my-2">
                 <datepicker
@@ -66,7 +66,7 @@
 
             </div>
 
-            <div class="col">
+            <div>
               <h5 class="mx-1">To</h5>
               <div class="row d-flex justify-content-center align-items-center my-2">
                 <datepicker
@@ -90,13 +90,12 @@
             </div>
 
           </div>
-
-        <div class="col" v-if="['previous', 'next'].includes(activeAction)">
+        <div v-if="['previous', 'next'].includes(activeAction)">
           <input type="number"
                  class="text-right text-monospace"
                  min="0" v-model="days"/>
         </div>
-        <div class="col" v-if="['current', 'previous', 'next'].includes(activeAction)">
+        <div v-if="['current', 'previous', 'next'].includes(activeAction)">
           <select v-model="activeOpts" v-if="'current' === activeAction">
             <option v-for="_opt in eventsControl.opts" :key="_opt" :value="_opt">
               {{_opt.slice(0, -1)}}
@@ -109,17 +108,19 @@
             </option>
           </select>
         </div>
+
+       <div>
+         <b-btn
+           class="ml-2 btn-sm"
+
+           @click="handleUpdateFilter"
+         >
+           Update Filter
+         </b-btn>
+       </div>
       </div>
     </div>
 
-    <div class="row m-3">
-      <b-btn
-        @click="handleUpdateFilter"
-      >
-        Apply Filter
-
-      </b-btn>
-    </div>
   </div>
 </template>
 

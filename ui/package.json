@@ -55,6 +55,7 @@
     "jquery-watch": "^1.21.0",
     "mathjs": "^3.13.3",
     "md5": "^2.2.1",
+    "moment": "^2.23.0",
     "mongoose": "^4.9.0",
     "mongoose-find-one-or-create": "^0.2.0",
     "morgan": "^1.8.1",
