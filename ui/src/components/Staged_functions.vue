@@ -1,6 +1,8 @@
 <template>
   <div class="staged-functions-container">
-    <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
+    <div class="staged-functions-header">
+      <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="closeStagedFunctions" />
+    </div>
     <div class="staged-functions-content">
       <draggable
         class="staged-functions"
@@ -27,7 +29,6 @@
   import FunctionBox from './Function_box'
   import draggable from 'vuedraggable'
   import PuzzlePieces from './Puzzle_pieces'
-
   export default {
     mounted () {
     },
@@ -58,8 +59,7 @@
           dragClass: 'dragging',
           ghostClass: 'ghost',
           chosenClass: 'chosen',
-          scrollSensitivity: 60,
-          sort: true
+          sort: false
         }
       }
     },
@@ -71,10 +71,8 @@
       confirmDeactivateFunction (evt) {
         const createdId = $(evt.item).attr('data-created-id')
         const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
-
         // if user drags command function ignore
         if (!func) return
-
         this.$store.dispatch('confirmDeactivateFunction',
           Object.assign(func, {
             index: evt.newIndex
@@ -96,7 +94,6 @@
   $piece-height: 7.5vmin;
   $dialog-button-size: 3.5vmin;
   $piece-height: 7.5vmin;
-
   .staged-functions-container {
     position: relative;
     display: flex;
@@ -105,7 +102,6 @@
     width: 100%;
     height: calc(#{$piece-height} * 2.2);
   }
-
   .staged-functions-header {
     display: flex;
     position: relative;
@@ -118,7 +114,6 @@
       font-size: 18px;
     }
   }
-
   .staged-functions-content {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -136,12 +131,11 @@
       margin: 0 auto;
     }
   }
-
   .close-popover {
     float: right;
     display: flex;
     position: absolute;
-    top: calc(#{-$dialog-button-size} / 2);
+    bottom: calc(#{$dialog-button-size} / 2);
     right:  calc(#{-$dialog-button-size} / 2);
     z-index: 10001;
     cursor: pointer;
