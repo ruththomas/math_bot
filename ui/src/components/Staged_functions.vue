@@ -29,6 +29,7 @@
   import FunctionBox from './Function_box'
   import draggable from 'vuedraggable'
   import PuzzlePieces from './Puzzle_pieces'
+
   export default {
     mounted () {
     },
@@ -71,8 +72,12 @@
       confirmDeactivateFunction (evt) {
         const createdId = $(evt.item).attr('data-created-id')
         const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
+
+
         // if user drags command function ignore
         if (!func) return
+
+
         this.$store.dispatch('confirmDeactivateFunction',
           Object.assign(func, {
             index: evt.newIndex
@@ -102,6 +107,7 @@
     width: 100%;
     height: calc(#{$piece-height} * 2.2);
   }
+
   .staged-functions-header {
     display: flex;
     position: relative;
@@ -114,6 +120,7 @@
       font-size: 18px;
     }
   }
+
   .staged-functions-content {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -131,6 +138,7 @@
       margin: 0 auto;
     }
   }
+
   .close-popover {
     float: right;
     display: flex;
