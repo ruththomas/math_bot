@@ -26,70 +26,70 @@
 </template>
 
 <script>
-  import FunctionBox from './Function_box'
-  import draggable from 'vuedraggable'
-  import PuzzlePieces from './Puzzle_pieces'
+import FunctionBox from './Function_box'
+import draggable from 'vuedraggable'
+import PuzzlePieces from './Puzzle_pieces'
 
-  export default {
-    mounted () {
+export default {
+  mounted () {
+  },
+  computed: {
+    confirmDeactiveFunction () {
+      return this.$store.getters.getConfirmDeactiveFunction
     },
-    computed: {
-      confirmDeactiveFunction () {
-        return this.$store.getters.getConfirmDeactiveFunction
-      },
-      levelControl () {
-        return this.$store.getters.getLevelControl
-      },
-      stagedFunctions () {
-        return this.levelControl.functions.stagedFunctions
-      },
-      permanentImages () {
-        return this.$store.getters.getPermanentImages
-      }
+    levelControl () {
+      return this.$store.getters.getLevelControl
     },
-    data () {
-      return {
-        draggableOptions: {
-          group: {
-            name: 'commands-staged',
-            pull: 'clone',
-            put: ['commands-slide'],
-            revertClone: true
-          },
-          animation: 100,
-          dragClass: 'dragging',
-          ghostClass: 'ghost',
-          chosenClass: 'chosen',
-          sort: false
-        }
-      }
+    stagedFunctions () {
+      return this.levelControl.functions.stagedFunctions
     },
-    methods: {
-      closeStagedFunctions () {
-        this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
-        this.$store.dispatch('updateEditingIndex', null)
-      },
-      confirmDeactivateFunction (evt) {
-        const createdId = $(evt.item).attr('data-created-id')
-        const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
-
-        // if user drags command function ignore
-        if (!func) return
-
-        this.$store.dispatch('confirmDeactivateFunction',
-          Object.assign(func, {
-            index: evt.newIndex
-          })
-        )
-        this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
-      }
-    },
-    components: {
-      draggable,
-      FunctionBox,
-      PuzzlePieces
+    permanentImages () {
+      return this.$store.getters.getPermanentImages
     }
+  },
+  data () {
+    return {
+      draggableOptions: {
+        group: {
+          name: 'commands-staged',
+          pull: 'clone',
+          put: ['commands-slide'],
+          revertClone: true
+        },
+        animation: 100,
+        dragClass: 'dragging',
+        ghostClass: 'ghost',
+        chosenClass: 'chosen',
+        sort: false
+      }
+    }
+  },
+  methods: {
+    closeStagedFunctions () {
+      this.$store.dispatch('updateFunctionAreaShowing', 'editMain')
+      this.$store.dispatch('updateEditingIndex', null)
+    },
+    confirmDeactivateFunction (evt) {
+      const createdId = $(evt.item).attr('data-created-id')
+      const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
+
+      // if user drags command function ignore
+      if (!func) return
+
+      this.$store.dispatch('confirmDeactivateFunction',
+        Object.assign(func, {
+          index: evt.newIndex
+        })
+      )
+      this.$root.$emit('bv::show::modal', 'confirm-deactivate-func')
+    }
+  },
+  components: {
+    draggable,
+    FunctionBox,
+    PuzzlePieces
   }
+}
 </script>
 
 <style scoped lang="scss">
