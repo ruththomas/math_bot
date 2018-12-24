@@ -73,10 +73,8 @@
         const createdId = $(evt.item).attr('data-created-id')
         const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
 
-
         // if user drags command function ignore
         if (!func) return
-
 
         this.$store.dispatch('confirmDeactivateFunction',
           Object.assign(func, {
@@ -99,6 +97,7 @@
   $piece-height: 7.5vmin;
   $dialog-button-size: 3.5vmin;
   $piece-height: 7.5vmin;
+
   .staged-functions-container {
     position: relative;
     display: flex;
