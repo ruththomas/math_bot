@@ -5,7 +5,7 @@
     <div class="row d-flex justify-content-around align-items-center my-3">
       <div>
 
-        <h3>
+        <h3 class="text-monospace font-weight-bold">
           {{last30DaySignups | local}}
         </h3>
         <h5>New Player Account in last 30 days</h5>
@@ -13,7 +13,7 @@
       </div>
 
       <div title="user growth compared from previous 30 days and prev 60 days">
-        <h3 :class="0 < userGrowth ? 'text-success' : 'text-danger'">
+        <h3 :class="0 < userGrowth ? 'text-success' : 'text-danger'" class="text-monospace font-weight-bold">
           {{userGrowth | percentage}}
         </h3>
         <h5 >User Growth</h5>

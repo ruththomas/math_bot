@@ -53,9 +53,10 @@ export default {
 
     getInfo (continent) {
       const lev = continent._id.slice(4)
-      if (continent._id.startsWith('0000')) {
+
+      if (continent._id.startsWith('0000') && continent._id.length > 5) {
         return Object.assign({}, continent, {starSystem: 0, title: `P-${lev}`, level: lev})
-      } else if (continent._id.startsWith('0010')) {
+      } else if (continent._id.startsWith('0010') && continent._id.length > 5) {
         return Object.assign({}, continent, {starSystem: 1, title: `D -${lev}`, level: lev})
       }
 
@@ -68,6 +69,8 @@ export default {
       const programming = _.sortBy(d.filter(i => i.starSystem === 0), 'level')
 
       const digit1 = _.sortBy(d.filter(i => i.starSystem === 1), 'level')
+
+      console.log(programming)
 
       this.chart = c3.generate({
         bindto: document.getElementById('current_path_chart'),
