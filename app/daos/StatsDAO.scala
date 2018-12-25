@@ -178,47 +178,10 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     } yield updated.copy(isSandbox = Some(bool))
   }
 
-  private val playerAccounts = BsonDocument("""
-                                      |   { $lookup: {
-                                      |        from: "playeraccount",
-                                      |        localField: "tokenId",
-                                      |        foreignField: "tokenId",
-                                      |        as: "user",
-                                      |      },
-                                      |    }
-                                    """.stripMargin)
-  private val nonAdminAccounts = BsonDocument("""
-                                        | { $match: {
-                                        |
-                                        |    "user.isAdmin": false
-                                        |  }
-                                        | }
-                                      """.stripMargin)
-
-  private val currentPathGroup = BsonDocument(f"""
-                                       | { $$group: {
-                                       |   _id: "$$currentPath",
-                                       |   count: { $$sum: 1 }
-                                       |  }
-                                       | }
-            """.stripMargin)
-  def currentPath: Future[Seq[CurrentPath]] = {
-
-    currentPathCollection
-      .aggregate(
-        Seq(
-          playerAccounts,
-          nonAdminAccounts,
-          currentPathGroup
-        )
-      )
-      .toFuture
-
-  }
-
   def levelStats(func: Option[String]): Future[Seq[LevelStats]] = {
 
     val _func = func.getOrElse("00000")
+
     val _levelStats =
       f"""
          |{
@@ -230,7 +193,6 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
          |      wins: { $$sum: '$$list.${_func}.wins' },
          |      winsAvg: { $$avg: '$$list.${_func}.wins' },
          |      winsMax: { $$max: '$$list.${_func}.wins' },
-         |
          |    }
          |  }
        """.stripMargin
@@ -238,16 +200,22 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     levelStatsCollection
       .aggregate(
         Seq(
-          playerAccounts,
-          nonAdminAccounts,
+          // BsonDocument("""{ $match: { isSandbox: false } }"""),
+          BsonDocument("""
+                         |   { $lookup: {
+                         |        from: "playeraccount",
+                         |        localField: "tokenId",
+                         |        foreignField: "tokenId",
+                         |        as: "user",
+                         |      },
+                         |    }
+                       """.stripMargin),
+          BsonDocument("""{ $match: { "user.isAdmin": false, isSandbox: false } }"""),
           BsonDocument(_levelStats),
-          BsonDocument(f"""
-              | {
-              |   $$addFields: { id: '${_func}'}
-              | }
-            """.stripMargin)
+          BsonDocument(f"""{$$addFields: { id: '${_func}'}}""")
         )
       )
       .toFuture
   }
+
 }

@@ -2,59 +2,56 @@
   <div>
     <h3 class="text-left my-3">Summary</h3>
 
-    <div class="row d-flex justify-content-around align-items-center my-3">
-      <div>
-
-        <h3 class="text-monospace font-weight-bold">
-          {{last30DaySignups | local}}
-        </h3>
-        <h5>New Player Account in last 30 days</h5>
-
-      </div>
-
-      <div title="user growth compared from previous 30 days and prev 60 days">
-        <h3 :class="0 < userGrowth ? 'text-success' : 'text-danger'" class="text-monospace font-weight-bold">
-          {{userGrowth | percentage}}
-        </h3>
-        <h5 >User Growth</h5>
-
-      </div>
-    </div>
-
     <div class="row mb-3 d-flex justify-content-between align-items-center">
 
-      <div class="card">
-        <div class="card-header">Users</div>
+      <div class="card col-xs-6 col-lg-4">
         <div class="card-body">
 
+          <h5 class="card-title text-monospace font-weight-bold">
+            {{last30DaySignups | local}}
+          </h5>
+          <p class="card-text">New accounts last 30 days</p>
+
+        </div>
+      </div>
+
+      <div class="card col-xs-6 col-lg-4">
+        <div class="card-body"
+             title="user growth compared from previous 30 days and prev 60 days">
+
+          <h5 :class="0 < userGrowth ? 'text-success' : 'text-danger'" class="text-monospace font-weight-bold">
+            {{userGrowth | percentage}}
+          </h5>
+          <p>User Growth</p>
+
+        </div>
+      </div>
+      <div class="card col-xs-6 col-lg-4">
+        <div class="card-body">
           <h5 class="card-title text-monospace font-weight-bold" id="userCount">{{ userCount | local }}</h5>
           <p class="card-text">
-            All time
+            All time Users
           </p>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">Logins</div>
+      <div class="card col-xs-6 col-lg-4">
         <div class="card-body">
-          <h5 class="card-title text-monospace font-weight-bold" id="last7DaysLoginCount">
-            {{last7DaysLoginCount | local}}
+          <h5 class="card-title text-monospace font-weight-bold" id="lastXDaysLoginCount">
+            {{lastXDaysLoginCount | local}}
           </h5>
           <p class="card-text">
-            Last 7 days
+            Logins Last 7 days
           </p>
         </div>
       </div>
-      <div class="card" style="width: 18rem;">
-        <div class="card-header">
-          Active Users
-        </div>
+      <div class="card col-xs-6 col-lg-4">
         <div class="card-body">
           <h5 class="card-title text-monospace font-weight-bold" id="activeUserCount">
             {{activeUserCount | local}}
           </h5>
           <p class="card-text">
-            Right Now
+            Active Users
           </p>
         </div>
 
@@ -67,33 +64,33 @@
       <total-user-signups-chart v-if="userAccountSignups"></total-user-signups-chart>
     </div>
 
-      <div class="row d-flex justify-content-center align-items-space-between my-1 font-weight-bold">
+    <div class="row d-flex justify-content-center align-items-space-between my-1 font-weight-bold">
              <span>
                 {{eventsControl.minDate | local }}
               </span>
-        <span>
+      <span>
 
           <span class="m-2">
             -
           </span>
             </span>
-        <span>
+      <span>
                 {{eventsControl.maxDate | local }}
             </span>
 
-      </div>
+    </div>
 
-      <div class="row my-3">
+    <div class="row my-3">
             <span class="text-monospace font-weight-bold mx-3">
               {{signupsOverRange | local}}
 
             </span>
 
-        <span>
+      <span>
               New Player Accounts
             </span>
 
-      </div>
+    </div>
 
     <div class="row mb-3">
       <user-signups-chart></user-signups-chart>
@@ -102,6 +99,7 @@
     <div class="row m-3">
       <admin-filter-date></admin-filter-date>
     </div>
+
     <div class="row mb-3">
       <admin-user-signup-calendar v-if="userAccountSignups"></admin-user-signup-calendar>
     </div>
@@ -115,6 +113,7 @@ import AdminUserSignupCalendar from './Admin_user_signup_calandar'
 import AdminFilterDate from './AdminFilterDate'
 import TotalUserSignupsChart from './Admin_total_signups_chart'
 import moment from 'moment'
+
 export default {
   name: 'AdminUsers',
   components: { TotalUserSignupsChart, AdminFilterDate, UserSignupsChart, AdminMaxLevel, AdminUserSignupCalendar },
@@ -146,8 +145,8 @@ export default {
       return this.adminControl.activeUserCount
     },
 
-    last7DaysLoginCount () {
-      return this.adminControl.last7DaysLoginCount
+    lastXDaysLoginCount () {
+      return this.adminControl.lastXDaysLoginCount
     },
     userAccountSignups () {
       return this.adminControl.userAccountSignups
@@ -197,8 +196,8 @@ export default {
       setTimeout(() => userCount.classList.remove(klass), 2000)
     },
 
-    last7DaysLoginCount (newVal, oldVal) {
-      const userCount = document.getElementById('last7DaysLoginCount')
+    lastXDaysLoginCount (newVal, oldVal) {
+      const userCount = document.getElementById('lastXDaysLoginCount')
 
       if (!userCount) return
       const klass = newVal > oldVal ? 'increment' : 'decrement'
@@ -213,7 +212,7 @@ export default {
 
 <style scoped>
 
-  #userCount, #last7DaysLoginCount {
+  #userCount, #lastXDaysLoginCount {
 
     transition: all 0.3s ease-in-out;
   }
@@ -229,9 +228,7 @@ export default {
   }
 
   .card {
-
-    min-width: 10rem;
-    max-width: 10rem;
+    width: 15rem;
+    height: 10rem;
   }
-
 </style>

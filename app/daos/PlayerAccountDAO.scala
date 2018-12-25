@@ -1,7 +1,6 @@
 package daos
 
 import java.util.Date
-import org.mongodb.scala.bson.collection.mutable.Document
 
 import actors.messages.playeraccount.{MaxLevel, SignupDate, UserAccountSignups}
 import com.google.inject.Inject
@@ -11,7 +10,8 @@ import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.{CodecProvider, CodecRegistries}
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
-import org.mongodb.scala.bson.{BsonDateTime, BsonDocument}
+import org.mongodb.scala.bson.collection.mutable.Document
+import org.mongodb.scala.bson.{BsonBoolean, BsonDateTime, BsonDocument}
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Indexes._
 import org.mongodb.scala.model.Updates._
@@ -104,67 +104,105 @@ class PlayerAccountDAO @Inject()(
 
   def count: Future[Long] = collection.count().toFuture()
 
-  private final val signupsPerDayQuery =
-    BsonDocument("""
-      |
-      |{$group: {
-      |      _id: {month: {$month: "$created"}, day: {$dayOfMonth: "$created"}, year: {$year: "$created"}},
-      |      signups: {$sum: 1},
-      |    }
-      |  }""".stripMargin)
+  private final val nonAdminAccountStatement: BsonDocument = BsonDocument(
+    s"""{ $$match: { ${isAdminLabel.name}: false }}"""
+  )
 
+  /*
+
+    Non admin user grouped by day
+    @returns signup count, and timesAccessed count
+   */
   def signupsPerDay: Future[Seq[UserAccountSignups]] = {
 
     userAccountSignupCollection
       .aggregate(
-        List(
-          this.signupsPerDayQuery
+        Seq(
+          this.nonAdminAccountStatement,
+          BsonDocument(f"""
+                          |{$$group: {
+                          |      _id: {
+                          |         month: {$$month: "$$created"},
+                          |         day: {$$dayOfMonth: "$$created"},
+                          |         year: {$$year: "$$created"}
+                          |      },
+                          |      signups: {$$sum: 1},
+                          |    }
+                          |  }""".stripMargin)
         )
       )
       .toFuture
 
   }
 
-  private final val DAY_IN_MS = 1000 * 60 * 60 * 24
-  private final val sevenDays = 7 * DAY_IN_MS
+  /*
+    @return non admin user logged in past X days
+   */
+  def lastXDaysLoginCount(days: Option[Int]): Future[Long] = {
 
-  def last7DaysLoginCount: Future[Long] = {
+    val _days: Int = days.getOrElse(7)
+    val date: BsonDateTime = BsonDateTime(new Date(new Date().getTime - 1000 * 60 * 60 * 24 * _days))
 
-    val date = BsonDateTime(new Date(new Date().getTime - this.sevenDays))
-
-    collection.count(gt(lastAccess.name, date)).toFuture
-
+    collection
+      .count(combine(gte(lastAccess.name, date), equal(isAdminLabel.name, false)))
+      .toFuture()
   }
 
   def maxLevelStats: Future[Seq[MaxLevel]] = {
 
-    val _maxLevel =
-      f"""
-        |{
-        |    $$group: {
-        |        _id: "$$maxLevel",
-        |        count: { $$sum: 1 }
-        |    }
-        |}
-      """.stripMargin
-
-    val admin =
-      """
-        |{
-        |    $match: {
-        |        isAdmin: false
-        |    }
-        |}
-      """.stripMargin
-
     maxLevelCollection
       .aggregate(
         Seq(
-          BsonDocument(admin),
-          BsonDocument(_maxLevel)
+          this.nonAdminAccountStatement,
+          BsonDocument(s"""{ $$sortByCount: "$$maxLevel" }""")
         )
       )
       .toFuture
+  }
+
+  /*
+
+    user is active if has a session
+    remove admin users from count
+
+    todo: query too expensive
+    todo: add index to token.sub field
+
+   */
+
+  def activeUserCount: Future[Int] = {
+
+    collection
+      .aggregate(
+        Seq(
+          this.nonAdminAccountStatement,
+          BsonDocument(f"""
+                         |   { $$lookup: {
+                         |        from: "session",
+                         |        localField: "sub",
+                         |        foreignField: "token.sub",
+                         |        as: "foundToken",
+                         |      }
+                         |    }
+                       """.stripMargin),
+          BsonDocument("""{ $match: { "foundToken.token.sub": { $exists: true } } }""")
+        )
+      )
+      .toFuture()
+      .map(_.length)
+
+    // collection.count(combine(equal(isAdminLabel.name, false))).toFuture()
+
+  }
+
+  /*
+
+    Non admin user count
+   */
+
+  def userCount: Future[Long] = {
+
+    collection.count(equal(isAdminLabel.name, BsonBoolean(false))).toFuture()
   }
 
 }

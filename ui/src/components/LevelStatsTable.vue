@@ -2,9 +2,7 @@
   <table class="table">
     <thead>
     <tr>
-      <th>
-        level
-      </th>
+      <th class="text-left text-capitalize">level</th>
       <th class="text-right text-capitalize">{{'timesPlayed' | camelCase}}</th>
       <th class="text-right text-capitalize">{{'wins' | camelCase}}</th>
       <th class="text-right text-capitalize">{{'winPercentage' | camelCase}}</th>
@@ -19,7 +17,7 @@
          :key="continent.id"
          v-show="continentIds.includes(continent.id)"
     >
-      <td>{{continent.id.slice(4)}}</td>
+      <td class="text-monospace text-left">{{continent.id.slice(4)}}</td>
       <td class="text-monospace text-right">{{continent.timesPlayed  | local}}</td>
       <td class="text-monospace text-right">{{continent.wins | local}}</td>
       <td class="text-monospace text-right">{{continent.wins /  continent.timesPlayed | percentage}}</td>

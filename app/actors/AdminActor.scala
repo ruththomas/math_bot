@@ -1,6 +1,6 @@
 package actors
 import actors.messages.ActorFailed
-import actors.messages.admin.{AdminEvent, CurrentPath, LevelStats, NewEvent}
+import actors.messages.admin.{AdminEvent, LevelStats, NewEvent}
 import actors.messages.playeraccount.{MaxLevel, UserAccountSignups}
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
@@ -15,18 +15,15 @@ object AdminActor {
   final case class PutEvent(event: Option[AdminEvent])
   final case class PostEvent(event: Option[NewEvent])
   final case class DeleteEvent(event: Option[AdminEvent])
-
   final case class DeleteEventResult(result: String)
   final case class UserMaxLevel(maxLevel: Seq[MaxLevel])
   final case class GetActiveUserCount()
   final case class GetSignupsPerDay()
-  final case class GetLoginsLast7Days()
+  final case class GetLoginsLastXDays(days: Option[Int])
   final case class GetLevelStats(level: Option[String])
-  final case class GetCurrentPath()
-  final case class CurrentPathResult(currentPaths: Seq[CurrentPath])
   final case class LevelStatsResult(levelStats: Seq[LevelStats])
   final case class SignupsPerDay(result: Seq[UserAccountSignups])
-  final case class Last7DaysLogins(logins: Long)
+  final case class LastXDaysLogins(logins: Long)
   final case class UserCount(count: Long)
   final case class ActiveUserCount(count: Long)
   final case class Events(events: Seq[AdminEvent])
@@ -77,9 +74,9 @@ class AdminActor @Inject()(out: ActorRef,
         out ! UserMaxLevel(maxLevels)
       }
 
-    case GetLoginsLast7Days() =>
-      playerAccountDAO.last7DaysLoginCount.map { logins =>
-        out ! Last7DaysLogins(logins)
+    case GetLoginsLastXDays(days) =>
+      playerAccountDAO.lastXDaysLoginCount(days).map { logins =>
+        out ! LastXDaysLogins(logins)
       }
     case GetSignupsPerDay() =>
       playerAccountDAO.signupsPerDay
@@ -92,20 +89,16 @@ class AdminActor @Inject()(out: ActorRef,
         out ! ActiveUserCount(count)
       }
 
-    case GetCurrentPath() =>
-      statsDAO.currentPath.map { currentPaths =>
-        out ! CurrentPathResult(currentPaths)
-      }
     case GetLevelStats(level) =>
       statsDAO.levelStats(level).map { levelStats =>
         out ! LevelStatsResult(levelStats)
       }
     case GetUserCount() =>
       for {
-        migratedCount <- auth0LegacyDao.countUnmigrated
-        playerAccount <- playerAccountDAO.count
+        unMigratedUserCount <- auth0LegacyDao.countUnmigrated
+        userCount <- playerAccountDAO.userCount
 
-      } yield out ! UserCount(playerAccount + migratedCount)
+      } yield out ! UserCount(userCount + unMigratedUserCount)
 
     case GetEvents() =>
       eventsDAO.getEvents.map { events =>
@@ -142,7 +135,7 @@ class AdminActor @Inject()(out: ActorRef,
           eventsDAO.insert(newEvent).map { evt =>
             out ! Event(evt)
           }
-        case _ => out ! ActorFailed
+        case _ => out ! ActorFailed("Invalid Request")
       }
 
     case actorFailed: ActorFailed => out ! actorFailed

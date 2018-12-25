@@ -44,7 +44,7 @@ export default {
     },
 
     data () {
-      return this.adminControl.maxLevel
+      return Object.values(this.adminControl.maxLevel)
         .map(i => this.getInfo(i))
         .filter(Boolean)
     }
@@ -54,9 +54,9 @@ export default {
     getInfo (continent) {
       const lev = continent._id.slice(4)
 
-      if (continent._id.startsWith('0000') && continent._id.length > 5) {
+      if (continent._id.startsWith('0000') && continent._id.length >= 5) {
         return Object.assign({}, continent, {starSystem: 0, title: `P-${lev}`, level: lev})
-      } else if (continent._id.startsWith('0010') && continent._id.length > 5) {
+      } else if (continent._id.startsWith('0010') && continent._id.length >= 5) {
         return Object.assign({}, continent, {starSystem: 1, title: `D -${lev}`, level: lev})
       }
 
@@ -70,8 +70,6 @@ export default {
 
       const digit1 = _.sortBy(d.filter(i => i.starSystem === 1), 'level')
 
-      console.log(programming)
-
       this.chart = c3.generate({
         bindto: document.getElementById('current_path_chart'),
         data: {
@@ -82,7 +80,7 @@ export default {
             return 'steelblue'
           },
           columns: [
-            ['programming'].concat(...programming.map(i => i.count), ...digit1.map(i => i.count))
+            ['Level'].concat(...programming.map(i => i.count), ...digit1.map(i => i.count))
           ],
           type: 'bar'
 

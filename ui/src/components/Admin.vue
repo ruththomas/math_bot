@@ -23,15 +23,8 @@
             </ul>
           </div>
           <div class="col-sm-9">
-            <div class="row mb-3">
 
-            </div>
-
-            <div v-if="activeDisplay === 'levels'">
-
-              <level-stats></level-stats>
-
-            </div>
+            <level-stats v-if="activeDisplay === 'levels'"></level-stats>
 
             <div v-if="activeDisplay === 'users'">
               <admin-users v-if="userAccountSignups.length"></admin-users>
@@ -40,9 +33,7 @@
               </div>
             </div>
 
-            <div v-if="activeDisplay === 'events'">
-              <events-list></events-list>
-            </div>
+              <events-list  v-if="activeDisplay === 'events'"></events-list>
           </div>
         </div>
       </div>
@@ -62,7 +53,7 @@ import AdminUsers from './Admin_users'
 import EventsList from './Events_list'
 
 // refresh data every x seconds
-const fetchDataInterval = 30 // seconds
+const fetchDataInterval = 300 // seconds
 
 export default {
   name: 'Admin',
@@ -88,9 +79,7 @@ export default {
         this.adminControl.getDailySignups(),
         this.adminControl.getUserCount(),
         this.adminControl.getActiveUserCount(),
-        this.adminControl.getLastWeekLogins(),
-        // this.adminControl.getCurrentPath(),
-        this.adminControl.getMaxLevelStats(),
+        this.adminControl.getLoginsLastXDays(7),
         this.adminControl.getEvents()
       ])
     },
@@ -137,15 +126,12 @@ export default {
       return this.adminControl.activeUserCount
     },
 
-    last7DaysLoginCount () {
-      return this.adminControl.last7DaysLoginCount
+    lastXDaysLoginCount () {
+      return this.adminControl.lastXDaysLoginCount
     },
 
     adminControl () {
       return this.$store.getters.getAdminControl
-    },
-    tokenId () {
-      return this.$store.getters.getTokenId
     },
     levelControl () {
       return this.$store.getters.getLevelControl

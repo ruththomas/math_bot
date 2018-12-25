@@ -15,7 +15,7 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
       userCount: Option[Long] = None,
       message: Option[String] = None,
       userAccountSignups: Option[Seq[UserAccountSignups]] = None,
-      last7DaysLoginCount: Option[Long] = None,
+      lastXDaysLoginCount: Option[Long] = None,
       activeUserCount: Option[Long] = None,
       currentPath: Option[Seq[CurrentPath]] = None,
       levelStats: Option[Seq[LevelStats]] = None,
@@ -31,17 +31,15 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
 
   override def responseToJson(msg: Any): JsValue = {
     Json.toJson[AdminResponse](msg match {
-      case Last7DaysLogins(logins) => AdminResponse(success, None, None, None, Some(logins))
+      case LastXDaysLogins(logins) => AdminResponse(success, None, None, None, Some(logins))
       case ActiveUserCount(count) => AdminResponse(success, None, None, None, None, Some(count))
       case UserCount(count) => AdminResponse(success, userCount = Some(count))
       case SignupsPerDay(signups) => AdminResponse(success, None, None, Some(signups))
-      case CurrentPathResult(currentPaths) =>
-        AdminResponse(success, None, None, None, None, None, Some(currentPaths), None)
       case UserMaxLevel(maxLevel) => AdminResponse(success, None, None, None, None, None, None, None, Some(maxLevel))
       case LevelStatsResult(levelStats) => AdminResponse(success, None, None, None, None, None, None, Some(levelStats))
       case Events(events) => AdminResponse(success, None, None, None, None, None, None, None, None, Some(events))
       case Event(event) => AdminResponse(success, None, None, None, None, None, None, None, None, None, Some(event))
-      case DeleteEventResult(msg) => AdminResponse(success, None, Some(msg))
+      case DeleteEventResult(message) => AdminResponse(success, None, Some(message))
       case ActorFailed(message) => AdminResponse(failed, message = Some(message))
       case _ => AdminResponse(failed)
     })

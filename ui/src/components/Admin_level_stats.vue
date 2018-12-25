@@ -5,8 +5,11 @@
       <unlock-all-levels></unlock-all-levels>
     </div>
 
-    <div class="row mb-3" v-if="adminControl.maxLevel.length > 0">
-      <admin-max-level></admin-max-level>
+    <div class="row mb-3">
+      <admin-max-level v-if="someMaxLevel()"></admin-max-level>
+      <div v-else>
+        <h6>Loading...</h6>
+      </div>
     </div>
 
     <div>
@@ -63,7 +66,6 @@ import Continents from './Continents'
 import Planets from './Planets'
 import AdminMaxLevel from './Admin_max_level'
 import UnlockAllLevels from './UnlockAllLevels'
-import utils from '../services/utils'
 import LevelStatsTable from './LevelStatsTable'
 
 // code 4 0000
@@ -74,7 +76,12 @@ export default {
   name: 'LevelStats',
 
   methods: {
-    parseCamelCase: utils.parseCamelCase,
+
+    someMaxLevel () {
+      return Object.values(this.adminControl.maxLevel).some(level => {
+        return level.count > 0
+      })
+    },
 
     async changeActivePlanet (e) {
       this.activePlanet = e.target.value
@@ -94,7 +101,10 @@ export default {
 
   },
   mounted () {
-    this.getLevelStats()
+    Promise.all([
+      this.adminControl.getMaxLevelStats(),
+      this.getLevelStats()
+    ])
   },
   data () {
     return {

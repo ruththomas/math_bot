@@ -27,15 +27,6 @@ class EventsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContex
       .getCollection[AdminEvent](collectionLabel)
       .withCodecRegistry(codecRegistry)
 
-//  collection.createIndex(ascending(idLabel)).toFuture().onComplete {
-//    case Success(_) =>
-//      println("created index")
-//    //aLogger.debug(SemanticLog.tags.index(collectionLabel, idLabel, "Created index"))
-//    case Failure(t) =>
-//      println("failure to create index")
-//    // aLogger.error(SemanticLog.tags.index(collectionLabel, idLabel, t, "Failed to create index"))
-//  }
-
   def insert(event: AdminEvent): Future[AdminEvent] =
     collection
       .insertOne(event)
