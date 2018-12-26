@@ -17,7 +17,8 @@
 
       <div class="card col-xs-6 col-lg-4">
         <div class="card-body"
-             title="user growth compared from previous 30 days and prev 60 days">
+             v-b-popover.hover=""
+             title="user growth compared from 0 - 30 and 30 - 60 days ago">
 
           <h5 :class="0 < userGrowth ? 'text-success' : 'text-danger'" class="text-monospace font-weight-bold">
             {{userGrowth | percentage}}

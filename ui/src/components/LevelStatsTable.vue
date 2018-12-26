@@ -3,13 +3,27 @@
     <thead>
     <tr>
       <th class="text-left text-capitalize">level</th>
-      <th class="text-right text-capitalize">{{'timesPlayed' | camelCase}}</th>
-      <th class="text-right text-capitalize">{{'wins' | camelCase}}</th>
-      <th class="text-right text-capitalize">{{'winPercentage' | camelCase}}</th>
-      <th class="text-right text-capitalize">{{'winsAvg' | camelCase}}</th>
-      <th class="text-right text-capitalize">{{'winsMax' | camelCase}}</th>
-      <th class="text-right text-capitalize">{{'timesPlayedMax' | camelCase}}</th>
-      <th class="text-right text-capitalize">{{'timesPlayedAvg' | camelCase}}</th>
+      <th
+        v-b-tooltip.hover title="Sum of times played by users"
+        class="text-right text-capitalize">{{'timesPlayed' | camelCase}}</th>
+      <th
+        v-b-tooltip.hover title="Sum of wins on level"
+        class="text-right text-capitalize">{{'wins' | camelCase}}</th>
+      <th
+        v-b-tooltip.hover title="Users Win Proportion"
+        class="text-right text-capitalize">{{'winPercentage' | camelCase}}</th>
+      <th
+        v-b-tooltip.hover title="Average amount of wins per level"
+        class="text-right text-capitalize">{{'winsAvg' | camelCase}}</th>
+      <th
+        v-b-tooltip.hover title="Max amout of times a user won a level"
+        class="text-right text-capitalize">{{'winsMax' | camelCase}}</th>
+      <th
+        v-b-tooltip.hover title="Maximum times a user played a level"
+        class="text-right text-capitalize">{{'timesPlayedMax' | camelCase}}</th>
+      <th
+        v-b-tooltip.hover title="Average times a user plays a level"
+        class="text-right text-capitalize">{{'timesPlayedAvg' | camelCase}}</th>
     </tr>
     </thead>
     <tbody>

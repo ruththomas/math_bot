@@ -8,6 +8,11 @@ import daos._
 import play.api.Environment
 import play.api.libs.ws.WSClient
 
+abstract class EventResult {
+
+  def result: String
+}
+
 object AdminActor {
   final case class GetUserCount()
   final case class GetMaxLevel()
@@ -15,7 +20,9 @@ object AdminActor {
   final case class PutEvent(event: Option[AdminEvent])
   final case class PostEvent(event: Option[NewEvent])
   final case class DeleteEvent(event: Option[AdminEvent])
-  final case class DeleteEventResult(result: String)
+  final case class DeleteEventResult(result: String) extends EventResult
+  final case class PostEventResult(result: String) extends EventResult
+  final case class PutEventResult(result: String) extends EventResult
   final case class UserMaxLevel(maxLevel: Seq[MaxLevel])
   final case class GetActiveUserCount()
   final case class GetSignupsPerDay()
@@ -110,7 +117,7 @@ class AdminActor @Inject()(out: ActorRef,
 
         case Some(adminEvent) =>
           eventsDAO.replace(adminEvent).map { event_ =>
-            out ! Event(event_)
+            out ! PutEventResult("successfully replaced event: " + event_.id)
           }
         case _ => out ! ActorFailed("Invalid request")
 
@@ -122,7 +129,7 @@ class AdminActor @Inject()(out: ActorRef,
         case Some(adminEvent) =>
           eventsDAO.remove(adminEvent.id)
 
-          out ! Event(adminEvent)
+          out ! DeleteEventResult("successfully removed event: " + adminEvent.id)
 
         case _ => out ! ActorFailed("Invalid Request")
       }
@@ -133,7 +140,7 @@ class AdminActor @Inject()(out: ActorRef,
         case Some(adminEvent) =>
           val newEvent = AdminEvent(adminEvent.date, adminEvent.title, adminEvent.description, adminEvent.links)
           eventsDAO.insert(newEvent).map { evt =>
-            out ! Event(evt)
+            out ! PostEventResult("successfully added event: " + evt.id)
           }
         case _ => out ! ActorFailed("Invalid Request")
       }

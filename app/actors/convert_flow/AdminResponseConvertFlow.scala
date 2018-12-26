@@ -40,6 +40,8 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
       case Events(events) => AdminResponse(success, None, None, None, None, None, None, None, None, Some(events))
       case Event(event) => AdminResponse(success, None, None, None, None, None, None, None, None, None, Some(event))
       case DeleteEventResult(message) => AdminResponse(success, None, Some(message))
+      case PutEventResult(message) => AdminResponse(success, None, Some(message))
+      case PostEventResult(message) => AdminResponse(success, None, Some(message))
       case ActorFailed(message) => AdminResponse(failed, message = Some(message))
       case _ => AdminResponse(failed)
     })

@@ -68,10 +68,6 @@ import AdminMaxLevel from './Admin_max_level'
 import UnlockAllLevels from './UnlockAllLevels'
 import LevelStatsTable from './LevelStatsTable'
 
-// code 4 0000
-
-// 1 digit 0010
-
 export default {
   name: 'LevelStats',
 

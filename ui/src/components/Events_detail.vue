@@ -1,16 +1,28 @@
 <template>
 
-      <tr>
-        <td>{{event.title}}</td>
-        <td>{{new Date(event.date).toLocaleDateString()}}</td>
-        <td>{{event.description.slice(0, 100)}}</td>
+      <tr @mouseenter="toolsVisible = true" @mouseleave="toolsVisible = false" style="height: 4rem;">
         <td>
-          {{event.links}}
+          {{event.title}}
         </td>
-        <td>
-          <b-btn
-            @click="toggleEditMode(event)"
-          >
+        <td>{{new Date(event.date).toLocaleDateString()}}</td>
+        <td style="min-width: 8rem">
+          <span v-show="toolsVisible">
+          <event-detail-popover
+
+            :id="'popover/' + event.id"
+            :event="event"
+            :title="event.title"
+            :date="event.date"
+          ></event-detail-popover>
+          </span>
+        </td>
+        <td style="min-width: 8rem;">
+          <span v-show="toolsVisible">
+
+             <b-btn
+               class="btn-sm"
+               @click="toggleEditMode(event)"
+             >
             Edit
           </b-btn>
 
@@ -19,26 +31,24 @@
             class="trash noDrag dialog-button mx-2"
             :src="permanentImages.buttons.trashButton"
           />
+          </span>
 
-          <!--<b-btn-->
-          <!--@click="handleDeleteEvent"-->
-          <!--variant="danger">-->
-          <!--Confirm Deletion-->
-          <!--</b-btn>-->
         </td>
       </tr>
 </template>
 
 <script>
 import EventsAdd from './Events_add'
+import EventDetailPopover from './Event_detail_popover'
 
 export default {
   name: 'Events_detail',
-  components: { EventsAdd },
+  components: { EventDetailPopover, EventsAdd },
   props: ['event', 'deleteEvent', 'editEvent', 'handleSubmit', 'toggleEditMode', 'confirmDelete'],
   data () {
     return {
-      editMode: false
+      editMode: false,
+      toolsVisible: false
     }
   },
   computed: {

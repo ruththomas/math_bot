@@ -62,12 +62,7 @@
               <th>
                 date
               </th>
-              <th>
-                description
-              </th>
-              <th>
-                links
-              </th>
+              <th></th>
               <th>
 
               </th>

@@ -4,6 +4,40 @@ import _ from 'underscore'
 import { AdminEvent } from './AdminEvent'
 import { LevelStats } from './LevelStats'
 
+import {v1} from 'node-uuid'
+
+class Message {
+  constructor (msg, id) {
+    this.msg = msg
+    this.id = id
+  }
+}
+
+class MessageQueue {
+  // ughh array due to vue rendering obj issues
+  messages = []
+
+  push (message, displaySec = 7000) {
+    const id = v1()
+
+    this.messages.push(new Message(message, id))
+
+    setTimeout(() => {
+      this.remove(id)
+    }, displaySec)
+  }
+
+  append (message, display) {
+    return this.push(message, display)
+  }
+
+  remove (id) {
+    this.messages = this.messages.slice().filter(msg => {
+      return msg.id !== id
+    })
+  }
+}
+
 export default class AdminControl extends Ws {
   actions = {
     userCount: 'user-count',
@@ -29,6 +63,8 @@ export default class AdminControl extends Ws {
   events = []
   event = null
   confirmDeleteEvent = {}
+
+  mq = new MessageQueue()
 
   constructor () {
     super('admin')
@@ -140,6 +176,7 @@ export default class AdminControl extends Ws {
       status = 'failure',
       lastXDaysLoginCount = null,
       events = null,
+      message = null,
       event = null,
       userAccountSignups = null,
       userCount = null,
@@ -150,6 +187,19 @@ export default class AdminControl extends Ws {
     if (status !== 'success') {
       console.error('socket error', result)
       return false
+    }
+
+    if (message) {
+      console.log('message', message)
+
+      this.mq.push(message)
+
+      const regex = new RegExp('success|remove', 'gi')
+
+      // todo switch based on message
+      if (message.match(regex)) {
+        this.getEvents()
+      }
     }
 
     if (userCount != null) {

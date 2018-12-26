@@ -3,11 +3,8 @@
       <div class="row my-3">
         <user-gravatar></user-gravatar>
       </div>
-
-      <div class="container">
-
         <div class="row">
-          <div class="col-sm-3">
+          <div class="pl-0 pr-1" style="width: 200px;">
 
             <ul class="list-group">
               <li class="list-group-item" @click="updateActive('users')"
@@ -33,12 +30,18 @@
               </div>
             </div>
 
-              <events-list  v-if="activeDisplay === 'events'"></events-list>
+            <div v-if="activeDisplay === 'events'">
+              <div class="row d-flex justify-content-center align-items-center" style="min-height: 50px">
+                <event-message-queue></event-message-queue>
+              </div>
+            <events-list  ></events-list>
+
+            </div>
+
           </div>
         </div>
       </div>
 
-    </div>
 </template>
 
 <script>
@@ -51,6 +54,7 @@ import UserSignupsChart from './Admin_user_signups_chart'
 import LevelStats from './Admin_level_stats'
 import AdminUsers from './Admin_users'
 import EventsList from './Events_list'
+import EventMessageQueue from './EventMessageQueue'
 
 // refresh data every x seconds
 const fetchDataInterval = 300 // seconds
@@ -138,6 +142,7 @@ export default {
     }
   },
   components: {
+    EventMessageQueue,
     EventsList,
     AdminUsers,
     UserSignupsChart,
