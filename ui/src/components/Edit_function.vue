@@ -20,6 +20,7 @@
           ></tool>
         </div>
         <b-popover
+          v-if="editingFunction.category !== 'command'"
           target="denom-selector-trigger"
           placement="top"
           triggers="click"
