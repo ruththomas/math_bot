@@ -156,12 +156,6 @@ export default {
   },
   data () {
     return {
-      func: {
-        color: 'default',
-        commandId: null,
-        created_id: '12345',
-        name: ''
-      },
       functionDraggableOptions: ScrollOptions({
         group: {
           name: 'commands-slide',
@@ -172,9 +166,6 @@ export default {
     }
   },
   methods: {
-    highlightGridDenom (denom) {
-      console.log('HIT')
-    },
     updateName () {
       this.levelControl.updateFunctionProperties(this.editingFunction)
     },
