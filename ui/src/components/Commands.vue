@@ -34,6 +34,7 @@ import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
 import uId from 'uid'
 import PuzzlePieces from './Puzzle_pieces'
+import ScrollOptions from '../services/ScrollOptions'
 
 export default {
   name: 'Commands',
@@ -77,30 +78,13 @@ export default {
   data () {
     return {
       commandEvt: null,
-      functionsPosition: 0,
-      commandOptions: {
-        group: {
-          name: 'commands-slide',
-          pull: 'clone',
-          put: false
-        },
-        filter: '.command-name',
-        chosenClass: 'chosen',
-        ghostClass: 'ghost',
-        sort: false
-      },
-      functionOptions: {
+      functionOptions: ScrollOptions({
         group: {
           name: 'commands-slide',
           pull: 'clone',
           put: ['commands-staged']
-        },
-        animation: 100,
-        filter: '.command-name',
-        chosenClass: 'chosen',
-        ghostClass: 'ghost',
-        sort: true
-      },
+        }
+      }),
       currentColor: this.colorSelected,
       editFunctionOpen: false
     }
@@ -199,12 +183,8 @@ export default {
         -webkit-overflow-scrolling: touch;
         width: 100%;
         display: flex;
-        padding-top: $pointer-size;
-
-        .methods {
-          display: flex;
-          height: min-content;
-        }
+        border: 1px solid teal;
+        padding: $pointer-size 0;
 
         .functions {
           display: flex;

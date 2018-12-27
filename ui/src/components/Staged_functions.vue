@@ -24,6 +24,7 @@
 import FunctionBox from './Function_box'
 import draggable from 'vuedraggable'
 import PuzzlePieces from './Puzzle_pieces'
+import ScrollOptions from '../services/ScrollOptions'
 
 export default {
   mounted () {
@@ -44,19 +45,15 @@ export default {
   },
   data () {
     return {
-      draggableOptions: {
+      draggableOptions: ScrollOptions({
         group: {
           name: 'commands-staged',
           pull: 'clone',
           put: ['commands-slide'],
           revertClone: true
         },
-        animation: 100,
-        dragClass: 'dragging',
-        ghostClass: 'ghost',
-        chosenClass: 'chosen',
         sort: false
-      }
+      })
     }
   },
   methods: {

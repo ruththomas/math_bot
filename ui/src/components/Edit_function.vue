@@ -99,6 +99,7 @@ import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
 import PuzzlePieces from './Puzzle_pieces'
 import Tool from './Tool'
+import ScrollOptions from '../services/ScrollOptions'
 
 export default {
   mounted () {
@@ -161,17 +162,13 @@ export default {
         created_id: '12345',
         name: ''
       },
-      functionDraggableOptions: {
+      functionDraggableOptions: ScrollOptions({
         group: {
           name: 'commands-slide',
           pull: true,
           put: true
-        },
-        animation: 100,
-        ghostClass: 'ghost',
-        chosenClass: 'chosen',
-        filter: '.noDrag'
-      }
+        }
+      })
     }
   },
   methods: {
@@ -290,6 +287,8 @@ export default {
     height: calc(#{$piece-height} + 5vmin);
     margin-top: 3vmin;
 
+    border: 1px solid coral;
+
     .command-message {
       color: #ffffff;
     }
@@ -315,34 +314,6 @@ export default {
     z-index: 1001;
     font-size: 2vmin;
     width: 90%;
-    .any {
-      background: #696969!important; /* For browsers that do not support gradients */
-      background: -webkit-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Safari 5.1 to 6.0 */
-      background: -o-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Opera 11.1 to 12.0 */
-      background: -moz-linear-gradient($blue, $purple, $green, $pink, $red)!important; /* For Firefox 3.6 to 15 */
-      background: linear-gradient(to right, $blue, $purple, $green, $pink, $red)!important; /* Standard syntax (must be last) */
-    }
-    .empty {
-      background: $black;
-    }
-    .white {
-      background: $white;
-    }
-    .blue {
-      background: $blue;
-    }
-    .purple {
-      background: $purple;
-    }
-    .green {
-      background: $green;
-    }
-    .pink {
-      background: $pink;
-    }
-    .red {
-      background: $red;
-    }
 
     .function-control {
       border-radius: 0.5vmin;

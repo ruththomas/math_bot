@@ -23,6 +23,7 @@ import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
 import Mascot from './Mascot'
 import Bar from './Bar'
+import ScrollOptions from '../services/ScrollOptions'
 
 export default {
   mounted () {
@@ -54,19 +55,13 @@ export default {
   },
   data () {
     return {
-      mainDraggableOptions: {
+      mainDraggableOptions: ScrollOptions({
         group: {
           name: 'commands-slide',
           pull: true,
           put: true
-        },
-        animation: 100,
-        ghostClass: 'ghost',
-        chosenClass: 'chosen',
-        filter: '.noDrag',
-        dragClass: 'dragging',
-        sort: true
-      }
+        }
+      })
     }
   },
   watch: {
