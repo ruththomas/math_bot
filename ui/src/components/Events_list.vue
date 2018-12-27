@@ -62,10 +62,7 @@
               <th>
                 date
               </th>
-              <th></th>
-              <th>
-
-              </th>
+              <th colspan="2"></th>
             </tr>
             </thead>
 
@@ -74,7 +71,6 @@
               v-for="event in visibleEventsList"
               :key="event.id"
               :event="event"
-              :confirm-delete="confirmDelete"
               :toggle-edit-mode="toggleEditMode"
               :delete-event="deleteEvent"
             ></events-detail>
@@ -95,7 +91,7 @@
 
 import EventsDetail from './Events_detail'
 import EventsAdd from './Events_add'
-import ConfirmDeleteEvent from './Confirm_delete_event'
+import ConfirmDeleteEvent from './ConfirmDeleteEvent'
 
 export default {
   name: 'Events_list',
@@ -128,12 +124,6 @@ export default {
 
   },
   methods: {
-
-    confirmDelete (event) {
-      this.$store.dispatch('confirmDeleteEvent', event).then(() => {
-        this.$root.$emit('bv::show::modal', 'confirm-delete-event')
-      })
-    },
 
     toggleEditMode (event) {
       this.editMode = !this.editMode
@@ -186,7 +176,7 @@ export default {
   span {
 
     cursor: pointer;
-    transition: border-bottom-color .3s ease;
+    transition: border-bottom-color .3s ease, border-bottom-width .3s linear;
   }
 
   span.active {

@@ -1,68 +1,69 @@
 <template>
-  <b-modal
-    id="confirm-delete-event"
-    size="md"
-    ref="confirm-delete-event"
-    :hide-header="false"
-    :hide-footer="false"
-    :lazy="true"
-  >
-    <div slot="modal-header">
-      <img class="dialog-button close-congrats"
-           @click="hide"
+
+  <span>
+    <img
+      :id="_id"
+      @click="show = !show"
+      class="trash noDrag dialog-button mx-2"
+      :src="permanentImages.buttons.trashButton"
+    />
+    <b-popover
+      :show.sync="show"
+      :target="_id"
+      placement="left"
+    >
+      <img alt="" class="dialog-button close-popover"
            :src="permanentImages.buttons.xButton"
-           data-toggle="tooltip" title="Close">
-    </div>
+           @click="show = false"
+      />
 
-    <div class="congrats-icon mb-3">
-      <img :src="permanentImages.instructionsRobot">
-    </div>
-    <h1 class="mb-3">Confirm delete</h1>
 
-    <div class="row d-flex justify-content-center align-items-center">
+      <div class="row d-flex justify-content-center align-items-center">
 
-      <div class="alert alert-warning" v-if="confirmDeleteEvent.title">
-        You are about to delete the {{confirmDeleteEvent.title}} event
+        <div class="alert alert-warning" v-if="event.title">
+          You are about to delete the {{event.title}} event
+        </div>
       </div>
-    </div>
-    <div slot="modal-footer" class="row" style="width: 100%; display: flex; justify-content: space-between;">
-      <b-btn
-        size="md"
-        style="width: 40%;"
-        class="float-right"
-        variant="primary"
-        @click="hide"
-      >
-        Quit
-      </b-btn>
-      <b-btn
-        size="md"
-        style="width: 40%"
-        class="float-right"
-        variant="primary"
-        @click="deleteEvent"
-      >
-        Delete
-      </b-btn>
-    </div>
-  </b-modal>
+      <div class="row" style="width: 100%; display: flex; justify-content: space-between;">
+        <b-btn
+          size="md"
+          style="width: 40%;"
+          class="float-right"
+          variant="secondary"
+          @click="show = false"
+        >
+          Quit
+        </b-btn>
+        <b-btn
+          size="md"
+          style="width: 40%"
+          class="float-right"
+          variant="primary"
+          @click="deleteEvent"
+        >
+          Delete
+        </b-btn>
+      </div>
+    </b-popover>
+  </span>
 </template>
 
 <script>
 
+import utils from '../services/utils'
 export default {
-  name: 'Confirm_delete_event',
+  name: 'ConfirmDeleteEvent',
   mounted () {
   },
   computed: {
+    _id () {
+      return 'handle-del/' + this.event.id
+    },
     eventsControl () {
       return this.$store.getters.getEventsControl
     },
     permanentImages () {
       return this.$store.getters.getPermanentImages
-    },
-    confirmDeleteEvent () {
-      return this.adminControl.confirmDeleteEvent
     },
     adminControl () {
       return this.$store.getters.getAdminControl
@@ -70,19 +71,17 @@ export default {
   },
   methods: {
     deleteEvent () {
-      this.adminControl.handleDelEvent(this.confirmDeleteEvent)
-      this.hide()
-      this.$store.dispatch('confirmDeleteEvent', {})
+      this.adminControl.delEvent(this.event)
     },
-    hide () {
-      this.$root.$emit('bv::hide::modal', 'confirm-delete-event')
-    }
+    closePopover: utils.closePopover,
+    openPopover: utils.openPopover
   },
   data () {
     return {
-      show: true
+      show: false
     }
-  }
+  },
+  props: ['event']
 }
 </script>
 
@@ -99,13 +98,16 @@ export default {
 
   #confirm-delete-event {
     color: black;
+
     .modal-dialog .modal-content {
       left: 0;
       position: relative;
+
       .modal-header, .modal-body, .modal-footer {
         background-color: $background-color;
         border: none;
       }
+
       .close-congrats {
         position: absolute;
         height: $dialog-button-size;
@@ -113,17 +115,21 @@ export default {
         top: 0;
         right: 0;
       }
+
       .congrats-icon {
         background-color: white;
         display: inline-block;
         border-radius: 50%;
         padding: 2rem;
       }
+
       .modal-footer {
         background-color: $background-color;
         border-top: 1px solid $click-color;
+
         .row {
           margin: 0;
+
           .btn {
             background-color: $click-color;
             color: black;
@@ -131,8 +137,10 @@ export default {
           }
         }
       }
+
       .modal-body {
         padding-bottom: 2rem;
+
         .player {
           height: calc(100% - #{$share-btn-size});
           width: 100%;
@@ -141,14 +149,17 @@ export default {
 
         .hint-spinner {
           position: absolute;
+
           *:first-child {
-            background: $embedded-background!important;
+            background: $embedded-background !important;
           }
         }
       }
+
       .social-spot {
         display: flex;
         justify-content: center;
+
         div {
           .social-sharing {
             .social-links {
