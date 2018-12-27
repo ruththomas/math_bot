@@ -183,7 +183,6 @@ export default {
         -webkit-overflow-scrolling: touch;
         width: 100%;
         display: flex;
-        border: 1px solid teal;
         padding: $pointer-size 0;
 
         .functions {

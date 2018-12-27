@@ -278,8 +278,6 @@ export default {
     height: calc(#{$piece-height} + 5vmin);
     margin-top: 3vmin;
 
-    border: 1px solid coral;
-
     .command-message {
       color: #ffffff;
     }
