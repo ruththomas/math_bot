@@ -85,10 +85,7 @@ object PreparedFunctions {
       )
   }
 
-  private case class FilteredFunctions(main: Function,
-//                                       cmds: List[Function],
-                                       actives: List[Function],
-                                       staged: List[Function])
+  private case class FilteredFunctions(main: Function, actives: List[Function], staged: List[Function])
 
   private def addMoreStaged(actives: List[Function], staged: List[Function]): List[Function] = {
     if (staged.length > 50) staged
@@ -138,7 +135,6 @@ object PreparedFunctions {
             functionsDAO: FunctionsDAO): PreparedFunctions = {
     val actives = functions.actives
     val staged = functions.staged
-//    val cmds = functions.commands
 
     val filteredFunctions = FilteredFunctions(functions.main, actives, staged, continentStruct)
 

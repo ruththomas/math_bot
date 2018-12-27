@@ -1,9 +1,9 @@
 module.exports = {
   cmdImages: {
-    drop_item: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345223/robotCommands/setDown.png',
-    pick_up: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345227/robotCommands/pickup.png',
-    turn_right: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345219/robotCommands/rightArrow.png',
-    move_forward: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345224/robotCommands/walk.png'
+    drop_item: 'https://res.cloudinary.com/sheouth/image/upload/v1545667022/putdownwhite.png',
+    pick_up: 'https://res.cloudinary.com/sheouth/image/upload/v1545667022/pickupwhite.png',
+    turn_right: 'https://res.cloudinary.com/sheouth/image/upload/v1545667022/rightarrowwhite.png',
+    move_forward: 'https://res.cloudinary.com/sheouth/image/upload/v1545497269/noun_Walk_871436_FFFFFF.png'
   },
   puzzlePieces: {
     start: {
@@ -35,7 +35,7 @@ module.exports = {
     }
   },
   funcImages: {
-    rocket: 'https://res.cloudinary.com/deqjemwcu/image/upload/o_80/v1522345324/functionIcons/rocket2.png',
+    rocket: 'https://res.cloudinary.com/sheouth/image/upload/v1545667333/rocketwhite.png',
     turnLeft: 'https://res.cloudinary.com/sheouth/image/upload/v1545234651/noun_turn_left_1136530_FFFFFF.png',
     uTurn: 'https://res.cloudinary.com/sheouth/image/upload/v1545234651/noun_u-turn_923693_FFFFFF.png',
     main: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522350153/functionIcons/robot_ootonv.png',
@@ -64,7 +64,7 @@ module.exports = {
     dropIf3: 'https://res.cloudinary.com/sheouth/image/upload/v1545234640/noun_down_39378_FFFFFF.png',
     pickupIf: 'https://res.cloudinary.com/doohickey/image/upload/v1534097326/noun_up_871564_cccccc_jiprag.svg',
     walkAhead: 'https://res.cloudinary.com/sheouth/image/upload/v1545234652/noun_Walk_1800652_FFFFFF.png',
-    walkTurn: 'https://res.cloudinary.com/doohickey/image/upload/v1534108084/noun_turn_1661846_cccccc_lr6es4.svg',
+    walkTurn: 'https://res.cloudinary.com/sheouth/image/upload/v1545667475/noun_turn_1661846_FFFFFF.png',
     '1': 'https://res.cloudinary.com/sheouth/image/upload/v1545234641/noun_Football_1787484_FFFFFF.png',
     '2': 'https://res.cloudinary.com/sheouth/image/upload/v1545234637/noun_Baseball_1057956_FFFFFF.png',
     '3': 'https://res.cloudinary.com/sheouth/image/upload/v1545234648/noun_Soccer_Ball_43155_FFFFFF.png',
