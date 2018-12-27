@@ -17,7 +17,7 @@ import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase}
 import scala.concurrent.{ExecutionContext, Future}
 
 class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
-  final val collectionLabel = "stats"
+  final val collectionLabel = "user_stats"
   import LayerStatistic._
   import Stats._
 
