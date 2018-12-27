@@ -1,30 +1,26 @@
 <template>
   <div class="commands" v-if="commands !== null && activeFunctions !== null">
-    <div class="lambdas-container">
-      <div class="functions-container">
-        <draggable
-          class="functions"
-          :list="activeFunctions"
-          :options="functionOptions"
-          @start="start"
-          @change="moveFunction"
-          @end="end"
-        >
-          <function-box
-            v-for="(func, ind) in activeFunctions"
-            :key="ind + '/' + func.created_id"
-            :func="func"
-            :ind="ind"
-            :collection="activeFunctions"
-            :origin="'functions'"
-            :data-created-id="func.created_id"
-            :data-index="ind"
-            :show-pointer="ind === editingIndex"
-            @click.native="editFunction($event, func, ind)"
-          ></function-box>
-        </draggable>
-      </div>
-    </div>
+    <draggable
+      class="functions"
+      :list="activeFunctions"
+      :options="functionOptions"
+      @start="start"
+      @change="moveFunction"
+      @end="end"
+    >
+      <function-box
+        v-for="(func, ind) in activeFunctions"
+        :key="ind + '/' + func.created_id"
+        :func="func"
+        :ind="ind"
+        :collection="activeFunctions"
+        :origin="'functions'"
+        :data-created-id="func.created_id"
+        :data-index="ind"
+        :show-pointer="ind === editingIndex"
+        @click.native="editFunction($event, func, ind)"
+      ></function-box>
+    </draggable>
   </div>
 </template>
 
@@ -164,42 +160,27 @@ export default {
   }
 
   .commands {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: calc(#{$piece-height} * 2.2);
-    margin: 0 auto;
-    position: relative;
-    z-index: 1001;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    .functions {
+      width: min-content;
+      min-width: 100%;
+      width: -moz-min-content;
+      height: 100%;
+      margin: 0 auto;
+      overflow: auto;
+      display: flex;
 
-  .lambdas-container {
-    transition-duration: 300ms;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-      .functions-container {
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        width: 100%;
-        display: flex;
-        padding: $pointer-size 0;
-
-        .functions {
-          display: flex;
-          height: min-content;
-          .func-category-command::after {
-            content: "";
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border: 2px solid $click-color;
-            border-radius: 3px;
-            background-color: rgba(0, 0, 0, 0.5);
-          }
-        }
+      .func-category-command::after {
+        content: "";
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        border: 2px solid $click-color;
+        border-radius: 3px;
+        background-color: rgba(0, 0, 0, 0.5);
       }
     }
   }
