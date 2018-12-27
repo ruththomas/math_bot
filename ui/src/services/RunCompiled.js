@@ -47,15 +47,17 @@ class RunCompiled extends GridAnimator {
   }
 
   start () {
-    const normalMode = $store.state.levelControl.mode === 'normal'
-    if (this.robot.state !== 'paused') {
-      this.robotFrames = []
-      this._deleteAllMessages()
-      this.robot.setState('running')
-      this._askCompiler(!normalMode ? $store.state.levelControl.mbl : false, true, this._processFrames)
-    } else {
-      this.robot.setState('running')
-      this._processFrames()
+    if (this.levelControl.functions.main.func.length) {
+      const normalMode = $store.state.levelControl.mode === 'normal'
+      if (this.robot.state !== 'paused') {
+        this.robotFrames = []
+        this._deleteAllMessages()
+        this.robot.setState('running')
+        this._askCompiler(!normalMode ? $store.state.levelControl.mbl : false, true, this._processFrames)
+      } else {
+        this.robot.setState('running')
+        this._processFrames()
+      }
     }
   }
 
