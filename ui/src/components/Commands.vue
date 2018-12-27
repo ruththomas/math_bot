@@ -116,7 +116,6 @@ export default {
       this.$store.dispatch('updateEditFunctionEvent', evt.target)
     },
     editFunction (evt, func, ind) {
-      $('#open-staged').show()
       this.handleEditFunctionEvent(evt)
       const i = ind === this.editingIndex ? null : ind
       if (i !== null) this.editingFunctionMessage(func)
