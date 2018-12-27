@@ -10,6 +10,7 @@
           @click.native="toggleFunctionImage"
         ></puzzle-pieces>
         <div
+          v-if="editingFunction.category !== 'command'"
           id="denom-selector-trigger"
           class="function-control"
         >
@@ -35,7 +36,7 @@
           </div>
         </b-popover>
 
-        <div class="func-name">
+        <div v-if="editingFunction.category !== 'command'" class="func-name">
           <input v-default-value="editingFunction.name" autofocus type="text" maxlength="20" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
         </div>
 
