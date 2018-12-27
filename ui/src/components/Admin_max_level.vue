@@ -55,9 +55,9 @@ export default {
       const lev = continent._id.slice(4)
 
       if (continent._id.startsWith('0000') && continent._id.length >= 5) {
-        return Object.assign({}, continent, {starSystem: 0, title: `P-${lev}`, level: lev})
+        return Object.assign({}, continent, {starSystem: 0, title: `Code ${lev}`, level: lev})
       } else if (continent._id.startsWith('0010') && continent._id.length >= 5) {
-        return Object.assign({}, continent, {starSystem: 1, title: `D -${lev}`, level: lev})
+        return Object.assign({}, continent, {starSystem: 1, title: `1 Digit ${lev}`, level: lev})
       }
 
       return null

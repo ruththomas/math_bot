@@ -17,7 +17,6 @@
            @click="show = false"
       />
 
-
       <div class="row d-flex justify-content-center align-items-center">
 
         <div class="alert alert-warning" v-if="event.title">

@@ -52,7 +52,9 @@
             {{activeUserCount | local}}
           </h5>
           <p class="card-text">
-            Active Users
+            Active Users <small class="text-danger">
+            fixme: admin users included in count
+          </small>
           </p>
         </div>
 

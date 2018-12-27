@@ -200,7 +200,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     levelStatsCollection
       .aggregate(
         Seq(
-          // BsonDocument("""{ $match: { isSandbox: false } }"""),
+          BsonDocument("""{ $match: { isSandbox: false } }"""),
           BsonDocument("""
                          |   { $lookup: {
                          |        from: "playeraccount",
@@ -210,7 +210,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
                          |      },
                          |    }
                        """.stripMargin),
-          BsonDocument("""{ $match: { "user.isAdmin": false, isSandbox: false } }"""),
+          BsonDocument("""{ $match: { "user.isAdmin": false } }"""),
           BsonDocument(_levelStats),
           BsonDocument(f"""{$$addFields: { id: '${_func}'}}""")
         )

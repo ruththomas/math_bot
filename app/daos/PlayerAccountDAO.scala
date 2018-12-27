@@ -162,12 +162,7 @@ class PlayerAccountDAO @Inject()(
 
   /*
 
-    user is active if has a session
-    remove admin users from count
-
-    todo: query too expensive
-    todo: add index to token.sub field
-
+  fixme: query is expensive cannot use in prod
    */
 
   def activeUserCount: Future[Int] = {
@@ -184,14 +179,11 @@ class PlayerAccountDAO @Inject()(
                          |        as: "foundToken",
                          |      }
                          |    }
-                       """.stripMargin),
-          BsonDocument("""{ $match: { "foundToken.token.sub": { $exists: true } } }""")
+                       """.stripMargin)
         )
       )
       .toFuture()
       .map(_.length)
-
-    // collection.count(combine(equal(isAdminLabel.name, false))).toFuture()
 
   }
 

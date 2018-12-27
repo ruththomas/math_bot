@@ -132,8 +132,8 @@ export default class AdminControl extends Ws {
 
   handleSocketResponse (result) {
     const {
-      activeUserCount = null,
       status = 'failure',
+      activeUserCount = null,
       lastXDaysLoginCount = null,
       events = null,
       message = null,

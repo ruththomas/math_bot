@@ -4,40 +4,21 @@
         <user-gravatar></user-gravatar>
       </div>
         <div class="row">
-          <div class="pl-0 pr-1" style="width: 200px;">
 
-            <ul class="list-group">
-              <li class="list-group-item" @click="updateActive('users')"
-                  :class="activeDisplay === 'users' ? 'active' : null">Users
-              </li>
-              <li class="list-group-item" @click="updateActive('levels')"
-                  :class="activeDisplay === 'levels' ? 'active' : null">Levels
-              </li>
-              <li class="list-group-item" @click="updateActive('events')"
-                  :class="activeDisplay === 'events' ? 'active' : null">
-                Events
-              </li>
-            </ul>
-          </div>
+          <admin-nav
+            :update-active="updateActive"
+            :active-display="activeDisplay"
+          ></admin-nav>
           <div class="col-sm-9">
 
             <level-stats v-if="activeDisplay === 'levels'"></level-stats>
-
             <div v-if="activeDisplay === 'users'">
               <admin-users v-if="userAccountSignups.length"></admin-users>
               <div v-else>
                 <h1>Doing Science...</h1>
               </div>
             </div>
-
-            <div v-if="activeDisplay === 'events'">
-              <div class="row d-flex justify-content-center align-items-center" style="min-height: 50px">
-                <event-message-queue></event-message-queue>
-              </div>
-            <events-list  ></events-list>
-
-            </div>
-
+            <events-list v-if="activeDisplay === 'events'"></events-list>
           </div>
         </div>
       </div>
@@ -54,10 +35,10 @@ import UserSignupsChart from './Admin_user_signups_chart'
 import LevelStats from './Admin_level_stats'
 import AdminUsers from './Admin_users'
 import EventsList from './Events_list'
-import EventMessageQueue from './EventMessageQueue'
+import AdminNav from './AdminNav'
 
 // refresh data every x seconds
-const fetchDataInterval = 300 // seconds
+const fetchDataInterval = 60 // seconds
 
 export default {
   name: 'Admin',
@@ -142,7 +123,7 @@ export default {
     }
   },
   components: {
-    EventMessageQueue,
+    AdminNav,
     EventsList,
     AdminUsers,
     UserSignupsChart,
