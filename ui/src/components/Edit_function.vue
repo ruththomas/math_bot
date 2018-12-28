@@ -364,14 +364,6 @@ export default {
     }
   }
 
-  .trash-confirm {
-    background-color: $danger-color;
-    box-shadow: 0 2px 10px 0 $danger-color;
-    animation: shake 0.8s;
-    animation-iteration-count: infinite;
-    margin: 3vmin;
-  }
-
   .function-drop-drop-zone {
     margin: 0;
   }
