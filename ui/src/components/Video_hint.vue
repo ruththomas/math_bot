@@ -6,6 +6,8 @@
     :hide-header="true"
     :hide-footer="true"
     :lazy="true"
+    @show="soundControl.pauseSounds(['robotBackground'])"
+    @hidden="soundControl.startSounds(['robotBackground'])"
   >
     <img
       class="dialog-button close-congrats"
@@ -30,8 +32,6 @@ import SplashScreen from './Splash_screen'
 
 export default {
   name: 'Video_hint',
-  mounted () {
-  },
   computed: {
     hintShowing () {
       return this.$store.getters.getHintShowing
@@ -41,11 +41,15 @@ export default {
     },
     videoHintControl () {
       return this.$store.getters.getVideoHintControl
+    },
+    soundControl () {
+      return this.$store.getters.getSoundControl
     }
   },
   data () {
     return {
-      show: true
+      show: true,
+      soundsToPause: ['robotBackground']
     }
   },
   components: {

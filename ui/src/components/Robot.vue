@@ -62,10 +62,12 @@ import AdvancedMode from './Advanced_mode'
 import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 import ActiveDrop from './Activate_drop'
 import StagedFunctions from './Staged_functions'
+import BackgroundSound from '../services/BackgroundSound'
 
 export default {
   mounted () {
     this.handleFreeHint()
+    this.$store.dispatch('makeSound', {name: 'robotBackground', sound: new BackgroundSound()})
   },
   computed: {
     videoControl () {

@@ -9,6 +9,7 @@ import RunCompiled from '../services/RunCompiled'
 import CompilerControl from '../services/CompilerControl'
 import VideoControl from '../services/VideoControl'
 import LevelControl from '../services/LevelControl'
+import SoundControl from '../services/SoundControl'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -42,13 +43,18 @@ export default new Vuex.Store({
     compilerControl: {},
     videoTimers: {},
     videoHintControl: {},
-    levelControl: {}
+    levelControl: {},
+    soundControl: {}
   },
   mutations: {
+    MAKE_SOUND (state, {name, sound}) {
+      state.soundControl.sounds[name] = sound
+    },
     UPDATE_CONTROLS (state) {
       state.compilerControl = new CompilerControl()
       state.videoHintControl = new VideoControl(state)
       state.levelControl = new LevelControl()
+      state.soundControl = new SoundControl()
     },
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
@@ -103,6 +109,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    makeSound ({commit}, {name, sound}) {
+      commit('MAKE_SOUND', {name, sound})
+    },
     confirmDeactivateFunction ({commit}, _func) {
       commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
     },
@@ -159,6 +168,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getSoundControl: state => state.soundControl,
     getAuth: state => state.auth,
     getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,
     getCompilerControl: state => state.compilerControl,
