@@ -364,6 +364,12 @@ export default {
     }
   }
 
+  .confirm-delete {
+    position: relative;
+    top: 0.5rem;
+    background: transparent!important;
+  }
+
   .function-drop-drop-zone {
     margin: 0;
   }
