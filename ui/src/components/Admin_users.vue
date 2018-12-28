@@ -2,9 +2,11 @@
   <div>
     <h3 class="text-left my-3">Summary</h3>
 
-    <div class="row mb-3 d-flex justify-content-between align-items-center">
+    <div class="row mb-3">
 
-      <div class="card col-xs-6 col-lg-4">
+      <div class="col-xs-4">
+        <div class="card">
+
         <div class="card-body">
 
           <h5 class="card-title text-monospace font-weight-bold">
@@ -13,9 +15,12 @@
           <p class="card-text">New accounts last 30 days</p>
 
         </div>
+        </div>
       </div>
 
-      <div class="card col-xs-6 col-lg-4">
+      <div class="col-xs-4">
+        <div class="card">
+
         <div class="card-body"
              v-b-popover.hover=""
              title="user growth compared from 0 - 30 and 30 - 60 days ago">
@@ -23,11 +28,14 @@
           <h5 :class="0 < userGrowth ? 'text-success' : 'text-danger'" class="text-monospace font-weight-bold">
             {{userGrowth | percentage}}
           </h5>
+        </div>
           <p>User Growth</p>
 
         </div>
       </div>
-      <div class="card col-xs-6 col-lg-4">
+      <div class="col-xs-4">
+        <div class="card">
+
         <div class="card-body">
           <h5 class="card-title text-monospace font-weight-bold" id="userCount">{{ userCount | local }}</h5>
           <p class="card-text">
@@ -35,8 +43,11 @@
           </p>
         </div>
       </div>
+        </div>
 
-      <div class="card col-xs-6 col-lg-4">
+      <div class="col-xs-4">
+        <div class="card">
+
         <div class="card-body">
           <h5 class="card-title text-monospace font-weight-bold" id="lastXDaysLoginCount">
             {{lastXDaysLoginCount | local}}
@@ -45,8 +56,11 @@
             Logins Last 7 days
           </p>
         </div>
+        </div>
       </div>
-      <div class="card col-xs-6 col-lg-4">
+      <div class="col-xs-4">
+        <div class="card">
+
         <div class="card-body">
           <h5 class="card-title text-monospace font-weight-bold" id="activeUserCount">
             {{activeUserCount | local}}
@@ -56,6 +70,7 @@
             fixme: admin users included in count
           </small>
           </p>
+        </div>
         </div>
 
       </div>
@@ -233,5 +248,6 @@ export default {
   .card {
     width: 15rem;
     height: 10rem;
+    margin: 1rem .5rem;
   }
 </style>

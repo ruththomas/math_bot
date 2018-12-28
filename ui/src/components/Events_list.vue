@@ -1,15 +1,12 @@
 <template>
   <div class="events-list container-fluid">
     <confirm-delete-event></confirm-delete-event>
-    <h3 class="page-title mb-3">
+    <h3 class="page-title m-3">
 
-      <span @click="toggleView" :class="listVisible ? 'active' : null">
+      <span @click="toggleView" class="mx-2" :class="listVisible ? 'active' : null">
         List
       </span>
-
-      |
-
-      <span @click="toggleView" :class="!listVisible ? 'active' : null">
+      <span @click="toggleView" class="mx-2" :class="!listVisible ? 'active' : null">
         Add
       </span>
 
@@ -41,7 +38,7 @@
       </div>
       <div v-else>
         <div v-if="listVisible">
-          <div class="alert alert-info" v-if="!eventsList.length">
+          <div class="alert alert-light" v-if="!eventsList.length">
             No events found
           </div>
           <div v-else>
@@ -176,18 +173,19 @@ export default {
   span {
 
     cursor: pointer;
-    transition: border-bottom-color .3s ease, border-bottom-width .3s linear;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom-color .3s ease;
   }
 
   span.active {
 
     color: var(--success);
-    border-bottom: 2px solid var(--success);
+    border-bottom-color: var(--success)
   }
 
   span:hover {
 
-    border-bottom: 2px solid var(--info);
+    border-bottom-color: var(--info);
   }
 
   th {

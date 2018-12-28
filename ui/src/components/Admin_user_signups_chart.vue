@@ -86,7 +86,7 @@ export default {
           }
         },
         columns: [
-          ['signups'].concat(...this.y)
+          ['Created'].concat(...this.y)
         ]
       }
       this.chart.load(options)
@@ -102,7 +102,7 @@ export default {
   mounted () {
     const xCol = ['date'].concat(...this.x)
 
-    const yCol = ['signups'].concat(...this.y)
+    const yCol = ['Created'].concat(...this.y)
 
     this.chart = c3.generate({
       bindto: `#chart_signups`,

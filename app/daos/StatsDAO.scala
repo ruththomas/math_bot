@@ -183,16 +183,16 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     val _func = func.getOrElse("00000")
 
     val _levelStats =
-      f"""
+      s"""
          |{
          |    $$group: {
-         |      _id: '$$list.${_func}.name' ,
-         |      timesPlayed: { $$sum: '$$list.${_func}.timesPlayed' },
-         |      timesPlayedAvg: { $$avg: '$$list.${_func}.timesPlayed' },
-         |      timesPlayedMax: { $$max: '$$list.${_func}.timesPlayed' },
-         |      wins: { $$sum: '$$list.${_func}.wins' },
-         |      winsAvg: { $$avg: '$$list.${_func}.wins' },
-         |      winsMax: { $$max: '$$list.${_func}.wins' },
+         |      _id: '$$$listLabel.${_func}.$nameLabel' ,
+         |      timesPlayed: { $$sum: '$$$listLabel.${_func}.$timesPlayedLabel' },
+         |      timesPlayedAvg: { $$avg: '$$$listLabel.${_func}.$timesPlayedLabel' },
+         |      timesPlayedMax: { $$max: '$$$listLabel.${_func}.$timesPlayedLabel' },
+         |      wins: { $$sum: '$$$listLabel.${_func}.$winsLabel' },
+         |      winsAvg: { $$avg: '$$$listLabel.${_func}.$winsLabel' },
+         |      winsMax: { $$max: '$$$listLabel.${_func}.$winsLabel' },
          |    }
          |  }
        """.stripMargin
@@ -200,12 +200,12 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     levelStatsCollection
       .aggregate(
         Seq(
-          BsonDocument("""{ $match: { isSandbox: false } }"""),
-          BsonDocument("""
-                         |   { $lookup: {
+          BsonDocument(s"""{ $$match: { $isSandboxLabel: false } }"""),
+          BsonDocument(s"""
+                         |   { $$lookup: {
                          |        from: "playeraccount",
-                         |        localField: "tokenId",
-                         |        foreignField: "tokenId",
+                         |        localField: "$tokenIdLabel",
+                         |        foreignField: "$tokenIdLabel",
                          |        as: "user",
                          |      },
                          |    }

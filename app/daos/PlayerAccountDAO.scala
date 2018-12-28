@@ -29,6 +29,7 @@ class PlayerAccountDAO @Inject()(
   private val collectionLabel = 'playeraccount
   private val tokenIdLabel = 'tokenId
   private val emailLabel = 'email
+  private val subLabel = 'sub
   private val isAdminLabel = 'isAdmin
   private val lastAccess = 'lastAccess
   private val timesAccessed = 'timesAccessed
@@ -122,9 +123,9 @@ class PlayerAccountDAO @Inject()(
           BsonDocument(f"""
                           |{$$group: {
                           |      _id: {
-                          |         month: {$$month: "$$created"},
-                          |         day: {$$dayOfMonth: "$$created"},
-                          |         year: {$$year: "$$created"}
+                          |         month: {$$month: "$$${createdLabel.name}"},
+                          |         day: {$$dayOfMonth: "$$${createdLabel.name}"},
+                          |         year: {$$year: "$$${createdLabel.name}"}
                           |      },
                           |      signups: {$$sum: 1},
                           |    }
@@ -154,7 +155,7 @@ class PlayerAccountDAO @Inject()(
       .aggregate(
         Seq(
           this.nonAdminAccountStatement,
-          BsonDocument(s"""{ $$sortByCount: "$$maxLevel" }""")
+          BsonDocument(s"""{ $$sortByCount: '$$${maxLevel.name}' }""")
         )
       )
       .toFuture
@@ -174,8 +175,8 @@ class PlayerAccountDAO @Inject()(
           BsonDocument(f"""
                          |   { $$lookup: {
                          |        from: "session",
-                         |        localField: "sub",
-                         |        foreignField: "token.sub",
+                         |        localField: "${subLabel.name}",
+                         |        foreignField: "token.${subLabel.name}",
                          |        as: "foundToken",
                          |      }
                          |    }
