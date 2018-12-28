@@ -6,7 +6,6 @@
       :color="gridRobotColor"
       :door-handle-color="'#B8E986'"
     ></mascot>
-    <div class="plugin"></div>
     <b-popover
       v-if="levelControl.functions.main.func.length"
       target="main-delete-function"
@@ -86,7 +85,7 @@ $danger-color: #F25C5C;
 $dialog-button-size: 3.5vmin;
 .bar {
   position: absolute;
-  left: $mascot-size;
+  left: 0;
   right: 0;
   top: calc(50%);
   height: $bar-height;
@@ -98,21 +97,12 @@ $dialog-button-size: 3.5vmin;
 
   .mascot {
     position: absolute;
-    right: calc(100% + calc(#{$mascot-size} / 2));
+    left: calc(-#{$mascot-size} / 1.6);
     transform: translateY(calc(-15% - #{$bar-height}));
     width: $mascot-size;
     height: auto;
     z-index: 100;
     cursor: pointer;
-  }
-
-  .plugin {
-    background-color: $bar-color;
-    position: absolute;
-    height: $bar-height;
-    right: 100%;
-    width: calc(#{$mascot-size} / 1.1);
-    z-index: 101;
   }
 
   .end-cap {
