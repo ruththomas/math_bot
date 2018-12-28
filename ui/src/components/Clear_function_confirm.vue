@@ -33,8 +33,12 @@ export default {
 
 <style scoped lang="scss">
 $danger-color: #F25C5C;
+$mascot-size: 9vmin;
+$bar-height: 1px;
 .confirm-delete {
   display: flex;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
 
   .trash-btn {
     margin: 0.5rem;

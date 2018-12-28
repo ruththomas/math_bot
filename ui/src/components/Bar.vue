@@ -2,7 +2,6 @@
   <div class="control-bar bar noDrag" v-if="Object.keys(levelControl.robot).length">
     <clear-function-confirm
       v-if="confirmDeleteOpen"
-      :animation-elements="animationElements()"
       :close-method="closeConfirmDelete"
       :trash-method="wipeFunction"
       :animation-method="startAnimation"
@@ -127,8 +126,6 @@ $dialog-button-size: 3.5vmin;
     padding: 0.5rem;
     transform: translateY(calc(-5% - #{$bar-height}));
     left: calc(-#{$mascot-size});
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 3px;
     z-index: 101;
   }
 
