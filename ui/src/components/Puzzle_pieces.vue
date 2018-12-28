@@ -9,6 +9,7 @@
       func.color === 'empty' ? 'piece-drop-shadow' : '',
       'func-category-' + func.category
     ]"
+    :key="func.category + '/puzzle-piece/' + func.created_id"
     @click="method ? method($event, func, ind) : ''"
     @mousedown="runCompiled.resetIfFailure"
     data-toggle="tooltip" :title="func.name"

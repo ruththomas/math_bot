@@ -161,14 +161,15 @@ export default {
   .commands {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    height: 100%;
     .functions {
       width: min-content;
       min-width: 100%;
       width: -moz-min-content;
-      height: 100%;
       margin: 0 auto;
       overflow: auto;
       display: flex;
+      padding: $pointer-size 0;
 
       .func-category-command::after {
         content: "";
