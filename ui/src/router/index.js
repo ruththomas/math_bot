@@ -8,6 +8,7 @@ import Marketing from '@/components/marketing/Marketing'
 import Callback from '@/components/Callback'
 import Auth from '@/components/Auth'
 import Admin from '@/components/Admin'
+import AdminRequest from '@/components/AdminRequest'
 import BootstrapVue from 'bootstrap-vue'
 import VueYouTubeEmbed from 'vue-youtube-embed'
 import VueForm from 'vue-form'
@@ -90,7 +91,14 @@ const router = new Router({
     {
       path: '/admin',
       name: 'Admin',
-      component: Admin
+      component: Admin,
+      secure: true
+    },
+    {
+      path: '/adminRequest',
+      name: 'AdminRequest',
+      component: AdminRequest,
+      secure: true
     },
     {
       path: '*',

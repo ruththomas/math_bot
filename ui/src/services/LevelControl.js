@@ -38,6 +38,7 @@ class LevelControl extends Ws {
   functions = null
   gridMap = null
   runCompiled = null
+  unlockedAllLevels = false
 
   // temporary until solved server side
   storeMbl () {
@@ -249,6 +250,10 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'reset-continent', path: this.path}))
   }
 
+  getUnlock () {
+    this._send(JSON.stringify({action: 'unlock'}))
+  }
+
   deleteMain () {
     this.functions.main.func = []
     this.updateFunction(this.functions.main)
@@ -303,6 +308,12 @@ class LevelControl extends Ws {
     return this.galaxy.starSystems[this.path[2]].planets[this.path[3]].stats
   }
 
+  _handleUnlockAllLevels (res) {
+    this.unlockedAllLevels = true
+
+    console.log('unlock', res)
+  }
+
   _init () {
     this._wsOnMessage((res) => {
       switch (Object.keys(res).filter((key) => key !== 'status')[0]) {
@@ -314,6 +325,10 @@ class LevelControl extends Ws {
           break
         case 'pathAndContinent':
           this._setContinent(res, true)
+          break
+
+        case 'stats':
+          this._handleUnlockAllLevels(res)
           break
         default:
           console.error(res.status, res.message)

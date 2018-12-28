@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueDefaultValue from 'vue-default-value/dist/vue-default-value'
 import permanentImages from '../assets/assets'
+
+// todo use message
 import Message from '../services/Message'
 import { AuthService } from '../services/AuthService'
 import VideoTimer from '../services/VideoTimer'
@@ -9,6 +11,8 @@ import RunCompiled from '../services/RunCompiled'
 import CompilerControl from '../services/CompilerControl'
 import VideoControl from '../services/VideoControl'
 import LevelControl from '../services/LevelControl'
+import AdminControl from '../services/AdminControl'
+import {EventsControl} from '../services/EventsControl'
 
 Vue.use(Vuex)
 Vue.use(VueDefaultValue)
@@ -20,6 +24,7 @@ function addMessage (state, messageBuilder) {
 
 export default new Vuex.Store({
   state: {
+    eventsControl: new EventsControl(),
     permanentImages: permanentImages,
     showCongrats: false,
     tryAgainShowing: false,
@@ -42,14 +47,17 @@ export default new Vuex.Store({
     compilerControl: {},
     videoTimers: {},
     videoHintControl: {},
-    levelControl: {}
+    levelControl: {},
+    adminControl: {}
   },
   mutations: {
     UPDATE_CONTROLS (state) {
       state.compilerControl = new CompilerControl()
       state.videoHintControl = new VideoControl(state)
       state.levelControl = new LevelControl()
+      state.adminControl = new AdminControl()
     },
+
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
     },
@@ -100,9 +108,13 @@ export default new Vuex.Store({
     },
     CONFIRM_DEACTIVATE_FUNCTION (state, _func) {
       state.confirmDeactiveFunction = _func
+    },
+    REQUEST_ADMIN (state, result) {
+      state.requestAdmin = result
     }
   },
   actions: {
+
     confirmDeactivateFunction ({commit}, _func) {
       commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
     },
@@ -159,8 +171,10 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getEventsControl: state => state.eventsControl,
     getAuth: state => state.auth,
     getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,
+    getAdminControl: state => state.adminControl,
     getCompilerControl: state => state.compilerControl,
     getVideoHintControl: state => state.videoHintControl,
     getVideoTimers: state => state.videoTimers,

@@ -1,34 +1,34 @@
-GET         /                                                                     controllers.SpaController.index
+GET         /                                 controllers.SpaController.index
 # Levels
-GET         /ws/levels                                                            controllers.LevelController.levelSocket
+GET         /ws/levels                        controllers.LevelController.levelSocket
 
 # Compiler
 # POST        /api/compile/:tokenId                                                  controllers.MathBotCompiler.compile(tokenId)
-GET         /ws/compilews                                                          controllers.MathBotCompiler.compileWs
-GET         /api/wsPath/:connection                                                controllers.MathBotCompiler.wsPath(connection)
+GET         /ws/compilews                     controllers.MathBotCompiler.compileWs
+GET         /api/wsPath/:connection           controllers.MathBotCompiler.wsPath(connection)
 
 # Video hints
-GET         /ws/videohint                                                          controllers.VideoHintController.videoSocket
+GET         /ws/videohint                     controllers.VideoHintController.videoSocket
 
 # Admin
-GET         /ws/admin                                                              controllers.AdminController.adminSocket
-POST        /api/admin/requestAdmin                                                controllers.AdminController.requestAdmin
-GET         /api/admin/approved                                                    controllers.AdminController.acceptOrDeny(isAccepted: Boolean = true)
-GET         /api/admin/rejected                                                    controllers.AdminController.acceptOrDeny(isAccepted: Boolean = false)
-GET         /api/admin/revoke                                                      controllers.AdminController.revokeAdmin
+GET         /ws/admin                         controllers.AdminController.adminSocket
+POST        /api/admin/requestAdmin           controllers.AdminController.requestAdmin
+GET         /api/admin/approved               controllers.AdminController.acceptOrDeny(isAccepted: Boolean = true)
+GET         /api/admin/rejected               controllers.AdminController.acceptOrDeny(isAccepted: Boolean = false)
+GET         /api/admin/revoke                 controllers.AdminController.revokeAdmin
 
 # Auth
-GET         /api/auth/requestSession                                               controllers.AuthController.requestSession
-POST        /api/auth/resumeSession                                                controllers.AuthController.resumeSession
-GET         /api/auth/authorizeGoogle                                              controllers.AuthController.authorizeGoogle
-GET         /api/auth/authorizeGithub                                              controllers.AuthController.authorizeGithub
-POST        /api/auth/signup                                                       controllers.AuthController.signupMathbot
-POST        /api/auth/authorizeMathbot                                             controllers.AuthController.authMathbot
-POST        /api/auth/existsCheck                                                  controllers.AuthController.usernameExists
-POST        /api/auth/recoverPassword                                              controllers.AuthController.passwordRecovery
-POST        /api/auth/updatePassword                                               controllers.AuthController.updatePassword
-GET         /api/auth/logout                                                       controllers.AuthController.logout
+GET         /api/auth/requestSession          controllers.AuthController.requestSession
+POST        /api/auth/resumeSession           controllers.AuthController.resumeSession
+GET         /api/auth/authorizeGoogle         controllers.AuthController.authorizeGoogle
+GET         /api/auth/authorizeGithub         controllers.AuthController.authorizeGithub
+POST        /api/auth/signup                  controllers.AuthController.signupMathbot
+POST        /api/auth/authorizeMathbot        controllers.AuthController.authMathbot
+POST        /api/auth/existsCheck             controllers.AuthController.usernameExists
+POST        /api/auth/recoverPassword         controllers.AuthController.passwordRecovery
+POST        /api/auth/updatePassword          controllers.AuthController.updatePassword
+GET         /api/auth/logout                  controllers.AuthController.logout
 
 # !! This must be last - and may show an error until prod build !!
 # Map static resources from the /public folder to the file resource path
-GET         /*file                                                                 controllers.SpaController.assetOrDefault(file)
+GET         /*file                            controllers.SpaController.assetOrDefault(file)
