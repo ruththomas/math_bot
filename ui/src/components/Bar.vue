@@ -1,21 +1,18 @@
 <template>
   <div class="control-bar bar noDrag" v-if="Object.keys(levelControl.robot).length">
-    <div
+    <clear-function-confirm
       v-if="confirmDeleteOpen"
-      class="bar-controller confirm-delete"
-    >
-      <div class="button-effect trash-main trash-reject"  @click="[updateCloseDelete(false), animateVulnerable('removeClass')]">
-        <img class="dialog-button" :src="permanentImages.buttons.xButton" />
-      </div>
-      <div class="button-effect trash-main trash-confirm"  @click="[updateCloseDelete(false), animateVulnerable('removeClass'), wipeFunction()]">
-        <img class="dialog-button" :src="permanentImages.openTrashCan" />
-      </div>
-    </div>
+      :animation-elements="animationElements()"
+      :close-method="closeConfirmDelete"
+      :trash-method="wipeFunction"
+      :animation-method="startAnimation"
+      :de-animation-method="stopAnimation"
+    ></clear-function-confirm>
     <mascot
       v-else
       :id="'main-delete-function'"
       class="bar-controller"
-      @click.native="levelControl.functions.main.func.length ? [updateCloseDelete(true), animateVulnerable('addClass')] : []"
+      @click.native="levelControl.functions.main.func.length ? [openConfirmDelete()] : []"
       :color="gridRobotColor"
       :door-handle-color="'#B8E986'"
     ></mascot>
@@ -26,6 +23,7 @@
 <script>
 import utils from '../services/utils'
 import Mascot from './Mascot'
+import ClearFunctionConfirm from './Clear_function_confirm'
 export default {
   name: 'Bar',
   computed: {
@@ -58,6 +56,7 @@ export default {
     closePopover: utils.closePopover,
     wipeFunction () {
       this.levelControl.deleteMain()
+      this.closeConfirmDelete()
       this.setPut(true)
     },
     animationElements () {
@@ -77,12 +76,22 @@ export default {
         $ele[animationMethod](elements.animationClass)
       })
     },
-    updateCloseDelete (bool) {
-      this.confirmDeleteOpen = bool
+    startAnimation () {
+      this.animateVulnerable('addClass')
+    },
+    stopAnimation () {
+      this.animateVulnerable('removeClass')
+    },
+    closeConfirmDelete () {
+      this.confirmDeleteOpen = false
+    },
+    openConfirmDelete () {
+      this.confirmDeleteOpen = true
     }
   },
   components: {
-    Mascot
+    Mascot,
+    ClearFunctionConfirm
   },
   props: ['setPut']
 }
@@ -114,6 +123,7 @@ $dialog-button-size: 3.5vmin;
   }
 
   .confirm-delete {
+    position: absolute;
     padding: 0.5rem;
     transform: translateY(calc(-5% - #{$bar-height}));
     left: calc(-#{$mascot-size});
@@ -150,13 +160,6 @@ $dialog-button-size: 3.5vmin;
 
 .trash-main {
   margin: 0.5vmin;
-}
-
-.trash-confirm {
-  background-color: $danger-color;
-  box-shadow: 0 2px 10px 0 $danger-color;
-  animation: shake 0.8s;
-  animation-iteration-count: infinite
 }
 
 .close-popover {
