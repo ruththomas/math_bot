@@ -9,7 +9,6 @@ import play.api.Environment
 import play.api.libs.ws.WSClient
 
 abstract class EventResult {
-
   def result: String
 }
 
@@ -114,7 +113,6 @@ class AdminActor @Inject()(out: ActorRef,
 
     case PutEvent(event) =>
       event match {
-
         case Some(adminEvent) =>
           eventsDAO.replace(adminEvent).map { event_ =>
             out ! PutEventResult("successfully replaced event: " + event_.id)
@@ -125,18 +123,15 @@ class AdminActor @Inject()(out: ActorRef,
 
     case DeleteEvent(event) =>
       event match {
-
         case Some(adminEvent) =>
           eventsDAO.remove(adminEvent.id)
 
           out ! DeleteEventResult("successfully removed event: " + adminEvent.id)
-
         case _ => out ! ActorFailed("Invalid Request")
       }
 
     case PostEvent(event) =>
       event match {
-
         case Some(adminEvent) =>
           val newEvent = AdminEvent(adminEvent.date, adminEvent.title, adminEvent.description, adminEvent.links)
           eventsDAO.insert(newEvent).map { evt =>

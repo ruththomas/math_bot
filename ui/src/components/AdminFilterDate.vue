@@ -164,7 +164,7 @@ export default {
   methods: {
 
     handleSetDate ({date}) {
-      console.log('handle set', date)
+      // console.log('handle set', date)
       if (this.activeAction === 'before') {
         this.userInput.maxDate = date
       } else if (this.activeAction === 'after') {
