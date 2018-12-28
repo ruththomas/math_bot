@@ -1,25 +1,24 @@
 <template>
   <div class="control-bar bar noDrag" v-if="Object.keys(levelControl.robot).length">
+    <div
+      v-if="confirmDeleteOpen"
+      class="bar-controller confirm-delete"
+    >
+      <div class="button-effect trash-main trash-reject"  @click="[updateCloseDelete(false), animateVulnerable('removeClass')]">
+        <img class="dialog-button" :src="permanentImages.buttons.xButton" />
+      </div>
+      <div class="button-effect trash-main trash-confirm"  @click="[updateCloseDelete(false), animateVulnerable('removeClass'), wipeFunction()]">
+        <img class="dialog-button" :src="permanentImages.openTrashCan" />
+      </div>
+    </div>
     <mascot
+      v-else
       :id="'main-delete-function'"
-      @click.native="animateVulnerable"
+      class="bar-controller"
+      @click.native="levelControl.functions.main.func.length ? [updateCloseDelete(true), animateVulnerable('addClass')] : []"
       :color="gridRobotColor"
       :door-handle-color="'#B8E986'"
     ></mascot>
-    <b-popover
-      v-if="levelControl.functions.main.func.length"
-      target="main-delete-function"
-      placement="top"
-      triggers="click"
-    >
-      <img class="dialog-button close-popover"
-           :src="permanentImages.buttons.xButton"
-           @click="[animateVulnerable(), closePopover('main-delete-function')]"
-      />
-      <div class="button-effect trash-confirm"  @click="[animateVulnerable(), wipeFunction(), closePopover('main-delete-function')]">
-        <img class="dialog-button" :src="permanentImages.openTrashCan" />
-      </div>
-    </b-popover>
     <div class="end-cap"></div>
   </div>
 </template>
@@ -50,23 +49,36 @@ export default {
       }
     }
   },
+  data () {
+    return {
+      confirmDeleteOpen: false
+    }
+  },
   methods: {
     closePopover: utils.closePopover,
     wipeFunction () {
       this.levelControl.deleteMain()
       this.setPut(true)
     },
-    animateVulnerable () {
-      const $functions = $('.editMain-drop-zone > .piece:not(.placeholder-piece)')
-      const animationClass = 'piece-shake'
-      $functions.each(function () {
+    animationElements () {
+      return {
+        $functions: $('.editMain-drop-zone > .piece:not(.placeholder-piece)'),
+        $bar: $('.bar'),
+        $endCap: $('.end-cap'),
+        animationClass: 'piece-shake'
+      }
+    },
+    animateVulnerable (animationMethod) {
+      const elements = this.animationElements()
+      elements.$bar[animationMethod]('red-bar')
+      elements.$endCap[animationMethod]('red-bar')
+      elements.$functions.each(function () {
         const $ele = $(this)
-        if ($ele.hasClass(animationClass)) {
-          $ele.removeClass(animationClass)
-        } else {
-          $ele.addClass(animationClass)
-        }
+        $ele[animationMethod](elements.animationClass)
       })
+    },
+    updateCloseDelete (bool) {
+      this.confirmDeleteOpen = bool
     }
   },
   components: {
@@ -95,11 +107,25 @@ $dialog-button-size: 3.5vmin;
   justify-content: center;
   z-index: -1;
 
-  .mascot {
+  .bar-controller {
     position: absolute;
+    cursor: pointer;
+    display: flex;
+  }
+
+  .confirm-delete {
+    padding: 0.5rem;
+    transform: translateY(calc(-5% - #{$bar-height}));
+    left: calc(-#{$mascot-size});
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    z-index: 101;
+  }
+
+  .mascot {
+    width: $mascot-size;
     left: calc(-#{$mascot-size} / 1.6);
     transform: translateY(calc(-15% - #{$bar-height}));
-    width: $mascot-size;
     height: auto;
     z-index: 100;
     cursor: pointer;
@@ -114,12 +140,23 @@ $dialog-button-size: 3.5vmin;
   }
 }
 
+.hidden-bar {
+  background-color: transparent;
+}
+
+.red-bar {
+  background-color: #FF0000!important;
+}
+
+.trash-main {
+  margin: 0.5vmin;
+}
+
 .trash-confirm {
   background-color: $danger-color;
   box-shadow: 0 2px 10px 0 $danger-color;
   animation: shake 0.8s;
-  animation-iteration-count: infinite;
-  margin: 1vmin;
+  animation-iteration-count: infinite
 }
 
 .close-popover {

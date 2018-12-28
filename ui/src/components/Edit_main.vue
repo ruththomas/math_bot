@@ -136,14 +136,6 @@ export default {
     padding: 0 $padding-left 0 $padding-left;
     z-index: 1000;
 
-    .hidden-bar {
-      background-color: transparent;
-    }
-
-    .red-bar {
-      background-color: #FF0000;
-    }
-
     .dialog-button {
       z-index: 2010;
       display: flex;
