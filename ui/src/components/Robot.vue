@@ -67,9 +67,15 @@ import BackgroundSound from '../services/BackgroundSound'
 export default {
   mounted () {
     this.handleFreeHint()
-    this.$store.dispatch('makeSound', {name: 'robotBackground', sound: new BackgroundSound()})
+    this.soundControl.addSound({name: 'robotBackground', sound: new BackgroundSound()})
+  },
+  beforeDestroy () {
+    this.soundControl.removeSounds(['robotBackground'])
   },
   computed: {
+    soundControl () {
+      return this.$store.getters.getSoundControl
+    },
     videoControl () {
       return this.$store.getters.getVideoHintControl
     },

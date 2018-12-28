@@ -47,9 +47,6 @@ export default new Vuex.Store({
     soundControl: {}
   },
   mutations: {
-    MAKE_SOUND (state, {name, sound}) {
-      state.soundControl.sounds[name] = sound
-    },
     UPDATE_CONTROLS (state) {
       state.compilerControl = new CompilerControl()
       state.videoHintControl = new VideoControl(state)
@@ -109,9 +106,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    makeSound ({commit}, {name, sound}) {
-      commit('MAKE_SOUND', {name, sound})
-    },
     confirmDeactivateFunction ({commit}, _func) {
       commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
     },

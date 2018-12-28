@@ -1,12 +1,8 @@
 import {Howl} from 'howler'
 
 class Sound {
-  constructor (file) {
-    this.sound = new Howl({
-      src: [file],
-      loop: true,
-      volume: 0.1
-    })
+  constructor (file, configs = {}) {
+    this.sound = new Howl(Object.assign({src: [file], volume: 0.1}, configs))
 
     this.play = this.play.bind(this)
     this.pause = this.pause.bind(this)
@@ -18,6 +14,10 @@ class Sound {
 
   pause () {
     this.sound.pause()
+  }
+
+  stop () {
+    this.sound.stop()
   }
 }
 
