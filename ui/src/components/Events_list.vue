@@ -3,9 +3,11 @@
     <h3 class="page-title m-3">
 
       <span @click="toggleView" class="mx-2" :class="listVisible ? 'active' : null">
+        <i class="fa fa-list"></i>
         List
       </span>
       <span @click="toggleView" class="mx-2" :class="!listVisible ? 'active' : null">
+        <i class="fa fa-plus-circle"></i>
         Add
       </span>
 

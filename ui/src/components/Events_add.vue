@@ -5,7 +5,11 @@
     <vue-form @submit.prevent="onSubmit" :state="formstate" class="mb-3">
 
       <div class="form-group">
-        <label for="title">Title</label>
+        <label for="title">
+
+          <i class="fa fa-hashtag"></i>
+          Title
+        </label>
         <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.title)">
           <input
             id="title"
@@ -26,13 +30,19 @@
 
       <div class="form-group">
 
-        <label>Date</label>
+        <label>
+          <i class="fa fa-calendar-o"></i>
+          Date
+        </label>
 
         <vue-ctk-date-time-picker v-model="userInput.date"></vue-ctk-date-time-picker>
       </div>
 
       <div class="form-group">
-        <label>Description</label>
+        <label>
+          <i class="fa fa-comment-o"></i>
+          Description
+        </label>
         <textarea
           name="description"
           rows="5"
@@ -44,7 +54,10 @@
       </div>
 
       <div class="form-group">
-        <label>Links</label>
+        <label>
+          <i class="fa fa-link"></i>
+          Links
+        </label>
         <input
           type="text"
           :state="true"
@@ -189,7 +202,8 @@ export default {
     color: $success-color;
   }
 
-  button {
+  button, label {
     text-transform: capitalize;
   }
+
 </style>
