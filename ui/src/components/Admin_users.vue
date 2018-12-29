@@ -79,7 +79,7 @@
     <h3 class="text-left my-3">Signups over time</h3>
 
     <div class="row mb-3">
-      <total-user-signups-chart v-if="userAccountSignups"></total-user-signups-chart>
+      <user-signups-per-month-chart v-if="userAccountSignups"></user-signups-per-month-chart>
     </div>
 
     <div class="row d-flex justify-content-center align-items-space-between my-1 font-weight-bold">
@@ -111,7 +111,7 @@
     </div>
 
     <div class="row mb-3">
-      <user-signups-chart></user-signups-chart>
+     <user-signups-per-day-chart></user-signups-per-day-chart>
     </div>
 
     <div class="row m-3">
@@ -126,15 +126,15 @@
 
 <script>
 import AdminMaxLevel from './Admin_max_level'
-import UserSignupsChart from './Admin_user_signups_chart'
+import UserSignupsPerDayChart from './UserSignupsPerDayChart'
 import AdminUserSignupCalendar from './Admin_user_signup_calandar'
 import AdminFilterDate from './AdminFilterDate'
-import TotalUserSignupsChart from './Admin_total_signups_chart'
+import UserSignupsPerMonthChart from './UserSignupsPerMonthChart'
 import moment from 'moment'
 
 export default {
   name: 'AdminUsers',
-  components: { TotalUserSignupsChart, AdminFilterDate, UserSignupsChart, AdminMaxLevel, AdminUserSignupCalendar },
+  components: { UserSignupsPerMonthChart, AdminFilterDate, UserSignupsPerDayChart, AdminMaxLevel, AdminUserSignupCalendar },
   computed: {
 
     _usersCreatedTitle () {
