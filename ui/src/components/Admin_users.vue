@@ -23,7 +23,7 @@
 
         <div class="card-body"
              v-b-popover.hover=""
-             title="user growth compared from 0 - 30 and 30 - 60 days ago">
+             :title="_usersCreatedTitle">
 
           <h5 :class="0 < userGrowth ? 'text-success' : 'text-danger'" class="text-monospace font-weight-bold">
             {{userGrowth | percentage}}
@@ -136,6 +136,10 @@ export default {
   name: 'AdminUsers',
   components: { TotalUserSignupsChart, AdminFilterDate, UserSignupsChart, AdminMaxLevel, AdminUserSignupCalendar },
   computed: {
+
+    _usersCreatedTitle () {
+      return `users created compared from 0 - 30 and 30 - 60 days ago`
+    },
 
     userGrowth () {
       const lastMonth = this.adminControl.userAccountSignups
