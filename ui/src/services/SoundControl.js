@@ -1,6 +1,17 @@
 import _ from 'underscore'
+import BumpSound from './sounds/BumpSound'
+import WalkSound from './sounds/WalkSound'
+import TurnSound from './sounds/TurnSound'
 
 class SoundControl {
+  constructor () {
+    this.addSounds([
+      {name: 'bumped', sound: new BumpSound()},
+      {name: 'walk', sound: new WalkSound()},
+      {name: 'turn', sound: new TurnSound()}
+    ])
+  }
+
   sounds = {}
 
   getSound (name) {
@@ -13,6 +24,12 @@ class SoundControl {
 
   playSound (name) {
     this.sounds[name].play()
+  }
+
+  addSounds (soundList) {
+    _.each(soundList, (sound) => {
+      this.sounds[sound.name] = sound.sound
+    })
   }
 
   removeSounds (names) {

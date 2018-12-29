@@ -5,7 +5,7 @@ class GridAnimator {
     this._updateGrid = this._updateGrid.bind(this)
   }
 
-  $store = null
+  sounds = null
   robot = null
   grid = null
   robotState = null
@@ -15,6 +15,13 @@ class GridAnimator {
     bumped: 'robot-shake'
   }
   $robot = null
+
+  _makeSound () {
+    if (!this.isLastOrFirst && this.$robot !== null) {
+      const sound = this.sounds[this.robotState.animation] || this.sounds.walk
+      sound.play()
+    }
+  }
 
   _animate () {
     if (this.$robot !== null) {
@@ -55,6 +62,7 @@ class GridAnimator {
   _moveRobot () {
     if (this.$robot !== null) {
       return new Promise(resolve => {
+        this._makeSound()
         this._animate()
         this.robot.updateRobot(this.robotState)
         this._updateGrid()
@@ -66,10 +74,12 @@ class GridAnimator {
     }
   }
 
-  async initializeAnimation (frame, done) {
+  async initializeAnimation (frame, isLastOrFirstFrame, done) {
     this.frame = frame
+    this.isLastOrFirst = isLastOrFirstFrame
     this.robotState = frame.robotState
     this.robot = $store.state.levelControl.robot
+    this.sounds = $store.state.soundControl.sounds
     this.grid = $store.state.levelControl.gridMap
     this.toolList = $store.state.levelControl.continent.toolList
     this.robotSpeed = this.robot.robotSpeed

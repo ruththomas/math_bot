@@ -35,12 +35,20 @@ import SocialSharing from './Social_sharing'
 import LevelCongrats from './Planet_congrats'
 import StarSystemCongrats from './Star_system_congrats'
 import StarSystem from './Star_system'
+import BackgroundSound from '../services/sounds/BackgroundSound'
 
 export default {
   mounted () {
     this.handleCongrats()
+    this.soundControl.addSound({name: 'robotBackground', sound: new BackgroundSound()})
+  },
+  beforeDestroy () {
+    this.soundControl.removeSounds(['robotBackground'])
   },
   computed: {
+    soundControl () {
+      return this.$store.getters.getSoundControl
+    },
     starSystemShowing () {
       return this.levelControl.path[2]
     },
