@@ -1,15 +1,28 @@
 <template>
-  <div class="col-8 space">
+  <div
+    class="space"
+    :class="[
+      isButton ? 'btn btn-dark space-btn' : '',
+      isButton && !starSystem.stats.active ? 'space-btn-disabled' : '',
+      isButton && selectedStarSystem === starSystem.id.substr(-1) ? 'space-btn-selected' : ''
+    ]"
+    :style="specifiedStyle"
+    @click="isButton && starSystem.stats.active ? levelControl.updateStarSystem(starSystem.id.substr(-1)) : ''"
+  >
     <img
-      v-for="(planet, ind) in planets" :key="'planet/' + planet.id"
+      v-for="(planet, ind) in starSystem.planets" :key="'planet/' + planet.id"
       class="planet"
       :class="[
         planet.stats.name,
         planet.stats.active ? 'active' : 'inactive',
-        planet.stats.active && Number(selectedPlanet) === ind ? 'selected' : ''
+        planet.stats.active && selectedStarSystem === starSystem.id.substr(-1) && Number(selectedPlanet) === ind ? 'selected' : ''
       ]"
       :src="permanentImages.planets[planet.stats.name]"
-      @click="planet.stats.active ? updateSelectedPlanet(ind) : ''" />
+      @click="!isButton && planet.stats.active ? updateSelectedPlanet(ind) : ''" />
+    <div v-if="isButton" class="space-text-zone">
+      <span v-if="starSystem.stats.active" class="space-btn-name">{{starSystem.stats.name}}</span>
+      <img v-else class="space-btn-image" :src="permanentImages.lock" />
+    </div>
   </div>
 </template>
 
@@ -17,6 +30,9 @@
 export default {
   name: 'planets',
   computed: {
+    levelControl () {
+      return this.$store.getters.getLevelControl
+    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     }
@@ -26,7 +42,7 @@ export default {
       selectedLevel: ''
     }
   },
-  props: ['planets', 'selectedPlanet', 'updateSelectedPlanet']
+  props: ['isButton', 'selectedPlanet', 'selectedStarSystem', 'updateSelectedPlanet', 'specifiedStyle', 'starSystem']
 }
 </script>
 
@@ -34,7 +50,7 @@ export default {
   $gradient-size: 50%;
   $outer-shadow-blur: 100px;
   $outer-shadow-size: 5px;
-  $BasicProgramming-color: rgba(202, 122, 255, 1);
+  $Coding-color: rgba(202, 122, 255, 1);
   $Counting-color: rgba(242, 92, 92, 1);
   $Numbers-color: rgba(74, 144, 226, 1);
   $Recursion-color: rgba(255, 152, 177, 1);
@@ -50,26 +66,61 @@ export default {
   $PracticeArithmetic-color: rgba(185, 62, 167, 1);
   $Refactor-color: transparent;
   $inactive-color: rgba(104, 104, 104, 1);
-  $BasicProgramming-size: 23vmin;
-  $Coordinates-size: 13vmin;
-  $Counting-size: 16vmin;
-  $Numbers-size: 20vmin;
-  $Recursion-size: 14vmin;
-  $Conditionals-size: 12vmin;
-  $Addition-size: 11vmin;
-  $Subtraction-size: 10vmin;
-  $Multiplication-size: 13vmin;
-  $Division-size: 12vmin;
-  $Exponents-size: 15vmin;
-  $Roots-size: 9vmin;
-  $Refactor-size: 5vmin;
-  $BlankSlate-size: 10vmin;
-  $PracticeArithmetic-size: 20vmin;
+  $Coding-size: 25% /*23vim*/;
+  $Coordinates-size: 14% /*13vmin*/;
+  $Counting-size: 18%/*16vmin*/;
+  $Numbers-size: 20%/*20vmin*/;
+  $Recursion-size: 16%/*14vmin*/;
+  $Conditionals-size: 12%/*12vmin*/;
+  $Addition-size: 11%/*11vmin*/;
+  $Subtraction-size: 10%/*10vmin*/;
+  $Multiplication-size: 14% /*13vmin*/;
+  $Division-size: 12% /*12vmin*/;
+  $Exponents-size: 15% /*15vmin*/;
+  $Roots-size: 10% /*9vmin*/;
+  $Refactor-size: 6% /*5vmin*/;
   $planet-gradient: rgba(0, 0, 0, 1);
+  $space-btn-size: 10vmin;
 
   .space {
-    height: 90%;
+    height: 100%;
+    width: 100%;
     position: relative;
+  }
+
+  .space-btn {
+    width: $space-btn-size;
+    height: $space-btn-size;
+    margin: 0.3em 0 0.3em 0;
+    border-radius: 0.25rem!important;
+    background-color: transparent;
+    font-size: 1.1em;
+    padding: 8% 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: transparent;
+  }
+
+  .space-btn-selected {
+    border-color: #343a40;
+  }
+
+  .space-btn:first-child {
+    margin-top: 1.5em;
+  }
+
+  .space-text-zone {
+    z-index: 101;
+    .space-btn-name {
+      font-size: 1.5em;
+      margin: 0;
+      color: #ffffff;
+    }
+    .space-btn-image {
+      height: 2em;
+      width: auto;
+    }
   }
 
   .planet {
@@ -79,128 +130,117 @@ export default {
     border-radius: 50%;
   }
 
-  .BasicProgramming {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $BasicProgramming-color, $planet-gradient);
-    height: $BasicProgramming-size;
-    width: $BasicProgramming-size;
+  .space-btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed!important;
+  }
+
+  .Coding {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Coding-color, $planet-gradient);
+    width: $Coding-size;
+    height: auto;
     top: 12%;
     left: 7%;
   }
 
   .Counting {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Counting-color, $planet-gradient);
-    height: $Counting-size;
     width: $Counting-size;
+    height: auto;
     top: 2%;
     left: 50%;
   }
 
   .Numbers {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Numbers-color, $planet-gradient);
-    height: $Numbers-size;
     width: $Numbers-size;
+    height: auto;
     top: 33%;
     left: 60%;
   }
 
   .Recursion {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Recursion-color, $planet-gradient);
-    height: $Recursion-size;
     width: $Recursion-size;
+    height: auto;
     top: 65%;
     left: 50%;
   }
 
   .Conditionals {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Conditionals-color, $planet-gradient);
-    height: $Conditionals-size;
     width: $Conditionals-size;
+    height: auto;
     top: 80%;
     left: 25%;
   }
 
   .Coordinates {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Coordinates-color, $planet-gradient);
-    height: $Coordinates-size;
     width: $Coordinates-size;
+    height: auto;
     top: 80%;
     left: 10%;
   }
 
   .Addition {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Addition-color, $planet-gradient);
-    height: $Addition-size;
     width: $Addition-size;
+    height: auto;
     top: 70%;
     left: 65%;
   }
 
   .Subtraction {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Subtraction-color, $planet-gradient);
-    height: $Subtraction-size;
     width: $Subtraction-size;
+    height: auto;
     top: 55%;
     left: 35%;
   }
 
   .Multiplication {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Multiplication-color, $planet-gradient);
-    height: $Multiplication-size;
     width: $Multiplication-size;
+    height: auto;
     top: 40%;
     left: 70%;
   }
 
   .Division {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Division-color, $planet-gradient);
-    height: $Division-size;
     width: $Division-size;
+    height: auto;
     top: 30%;
     left: 15%;
   }
 
   .Exponents {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Exponents-color, $planet-gradient);
-    height: $Exponents-size;
     width: $Exponents-size;
+    height: auto;
     top: 13%;
     left: 60%;
   }
 
   .Roots {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Roots-color, $planet-gradient);
-    height: $Roots-size;
     width: $Roots-size;
+    height: auto;
     top: 8%;
     left: 10%;
   }
 
   .Refactor {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Refactor-color, $planet-gradient);
-    height: $Division-size;
     width: $Division-size;
+    height: auto;
     top: 70%;
     left: 0;
   }
 
-  .BlankSlate {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $BlankSlate-color, $planet-gradient);
-    height: $BlankSlate-size;
-    width: $BlankSlate-size;
-    top: 10%;
-    left: 10%;
-  }
-
-  .PracticeArithmetic {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $PracticeArithmetic-color, $planet-gradient);
-    height: $PracticeArithmetic-size;
-    width: $PracticeArithmetic-size;
-    top: 50%;
-    left: 50%;
-  }
-
-  .BasicProgramming.selected {
-    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $BasicProgramming-color;
+  .Coding.selected {
+    box-shadow: 0 0 $outer-shadow-blur $outer-shadow-size $Coding-color;
   }
 
   .Counting.selected {
@@ -257,6 +297,7 @@ export default {
 
   .planet.inactive {
     opacity: 0.8;
+    cursor: not-allowed;
     background: radial-gradient(circle at $gradient-size $gradient-size, $inactive-color, $planet-gradient);
   }
 </style>
