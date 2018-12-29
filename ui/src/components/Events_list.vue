@@ -1,6 +1,5 @@
 <template>
   <div class="events-list container-fluid">
-    <confirm-delete-event></confirm-delete-event>
     <h3 class="page-title m-3">
 
       <span @click="toggleView" class="mx-2" :class="listVisible ? 'active' : null">
@@ -77,7 +76,8 @@
         </div>
 
         <events-add v-else
-                    :handle-submit="postEvent"></events-add>
+                    :handle-submit="postEvent"
+        ></events-add>
       </div>
     </div>
 
