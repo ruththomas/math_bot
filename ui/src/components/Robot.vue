@@ -66,8 +66,8 @@ import BackgroundSound from '../services/BackgroundSound'
 
 export default {
   mounted () {
-    this.handleFreeHint()
     this.soundControl.addSound({name: 'robotBackground', sound: new BackgroundSound()})
+    this.handleFreeHint()
   },
   beforeDestroy () {
     this.soundControl.removeSounds(['robotBackground'])
@@ -102,7 +102,10 @@ export default {
   },
   methods: {
     handleFreeHint () {
-      if (this.levelControl.continent !== null) return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
+      if (this.levelControl.continent !== null) {
+        this.soundControl.startSounds(['robotBackground'])
+        return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
+      }
       setTimeout(this.handleFreeHint, 10)
     },
     goToProfile () {

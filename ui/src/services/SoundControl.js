@@ -11,6 +11,10 @@ class SoundControl {
     this.sounds[name] = sound
   }
 
+  playSound (name) {
+    this.sounds[name].play()
+  }
+
   removeSounds (names) {
     _.each(this.sounds, (sound, name) => {
       if (names.includes(name)) sound.stop()
