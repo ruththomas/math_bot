@@ -39,29 +39,21 @@ class EventsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContex
       .toFuture()
       .map(_ => event)
   def remove(id: String): Future[Boolean] = {
-
     for {
-
       res <- collection.deleteOne(equal(idLabel, id)).toFuture
-
     } yield {
       0 < res.getDeletedCount
     }
   }
 
   def remove(event: AdminEvent): Future[Boolean] = {
-
     for {
-
       res <- collection.deleteOne(equal(idLabel, event.id)).toFuture
-
     } yield {
       0 < res.getDeletedCount
     }
-
   }
   def getEvents: Future[Seq[AdminEvent]] = {
-
     collection.find().toFuture
   }
 }
