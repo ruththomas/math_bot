@@ -14,9 +14,9 @@ libraryDependencies ++= Seq(
   "net.codingwell" %% "scala-guice" % "4.1.0",
   "org.reactivemongo" %% "play2-reactivemongo" % "0.12.5-play25",
   "com.github.pdorobisz" %% "math-expression-evaluator" % "1.0.0",
-  
+
   "me.prassee" %% "exp4s" % "0.0.4",
-  
+
   "io.john-ky" %% "hashids-scala" % "1.1.2-2974446",
   filters,
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0",

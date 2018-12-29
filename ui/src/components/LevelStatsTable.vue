@@ -27,11 +27,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr  v-for="continent in sortByLevel()"
+    <tr  v-for="continent in sortedLevels"
          :key="continent.id"
          v-show="continentIds.includes(continent.id)"
     >
-      <td class="text-monospace text-left">{{continent.id.slice(3)}}</td>
+      <td class="text-monospace text-left">{{levelDisplay(continent.id)}}</td>
       <td class="text-monospace text-right">{{continent.timesPlayed  | local}}</td>
       <td class="text-monospace text-right">{{continent.wins | local}}</td>
       <td class="text-monospace text-right">{{continent.wins /  continent.timesPlayed | percentage}}</td>
@@ -45,19 +45,30 @@
 </template>
 
 <script>
-import utils from '../services/utils'
 export default {
   name: 'LevelStatsTable',
   props: ['levelStats', 'continentIds'],
+  computed: {
+    sortedLevels () {
+      return Object.values(this.levelStats)
+        .filter(level => level.id.length > 4)
+        .sort((a, b) => {
+          return a.id.slice(4) - b.id.slice(4)
+        })
+    }
+  },
   methods: {
-    parseCamelCase: utils.parseCamelCase,
 
-    sortByLevel () {
-      return Object.values(this.levelStats).sort((a, b) => {
-        return a.id.slice(4) - b.id.slice(4)
-      })
+    levelDisplay (id) {
+      const level = id.slice(4)
+      if (level.startsWith('0') && level !== '0') {
+        return level.slice(1)
+      }
+
+      return level
     }
   }
+
 }
 </script>
 
