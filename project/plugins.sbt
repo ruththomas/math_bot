@@ -12,8 +12,6 @@ addSbtPlugin("io.gatling" % "gatling-sbt" % "2.2.1")
 // https://olafurpg.github.io/scalafmt
 addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "0.3.1")
 
-// addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.5.1")
-
 // sbteclipse
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.1.0")
 
