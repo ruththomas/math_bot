@@ -83,10 +83,22 @@ export default class AdminControl extends Ws {
           this._ws.onerror = (err) => {
             console.error(`${this.connection.toUpperCase()} WS FAILED`, err)
 
+            const messageBuilder = {
+              type: 'warn',
+              msg: 'Websocket error'
+            }
+            $store.dispatch('addMessage', messageBuilder)
+
             reject(err)
           }
           this._ws.onclose = () => {
             console.log(`${this.connection.toUpperCase()} WS CLOSED`)
+
+            const messageBuilder = {
+              type: 'warn',
+              msg: 'Websocket closed'
+            }
+            $store.dispatch('addMessage', messageBuilder)
           }
         })
       } catch (e) {
@@ -154,7 +166,6 @@ export default class AdminControl extends Ws {
         type: 'info',
         msg: message
       }
-      $store.dispatch('addMessage', messageBuilder)
 
       const regex = new RegExp('success|remove', 'gi')
 
@@ -162,6 +173,7 @@ export default class AdminControl extends Ws {
       if (message.match(regex)) {
         this.getEvents()
       }
+      $store.dispatch('addMessage', messageBuilder)
     }
 
     if (userCount != null) {

@@ -1,8 +1,9 @@
 <template>
 
       <tr
-        @mouseleave="toolsVisible = false"
+        @mouseleave="_handleLeave"
         @mouseenter="toolsVisible = true"
+        @click="_handleRowClick"
         style="height: 4rem;">
         <td>
           {{event.title}}
@@ -13,15 +14,32 @@
           <div class="d-flex justify-content-center align-items-center">
             <confirm-delete-event
               :event="event"
-            ></confirm-delete-event>
-            <event-detail-popover
-
               :class="toolsVisible ? 'show' : 'hidden'"
-              :id="'popover/' + event.id"
-              :event="event"
-              :title="event.title"
-              :date="event.date"
-            ></event-detail-popover>
+            ></confirm-delete-event>
+
+            <b-btn :id="popoverId"
+                   @click="_handleClick"
+                   class="btn-sm"
+                   :class="toolsVisible ? 'show' : 'hidden'"
+            >
+              Details
+            </b-btn>
+
+            <b-popover
+
+              :show.sync="show" :target="popoverId" :title="_title">
+
+              <div
+                @click="_handleRowClick(); toolsVisible = true;"
+                v-for="(value, key) in event" :key="'event_detail/' + key" class="container text-white">
+                <div class="row font-weight-bold">
+                  {{key}}
+                </div>
+                <div class="row" style="min-width: 55rem;">
+                  {{value}}
+                </div>
+              </div>
+            </b-popover>
             <span style="min-width: 80px;">
 
              <b-btn
@@ -41,20 +59,28 @@
 
 <script>
 import EventsAdd from './Events_add'
-import EventDetailPopover from './Event_detail_popover'
 import ConfirmDeleteEvent from './ConfirmDeleteEvent'
 
 export default {
   name: 'Events_detail',
-  components: { ConfirmDeleteEvent, EventDetailPopover, EventsAdd },
+  components: { ConfirmDeleteEvent, EventsAdd },
   props: ['event', 'editEvent', 'handleSubmit', 'toggleEditMode', 'confirmDelete'],
   data () {
     return {
       editMode: false,
-      toolsVisible: false
+      toolsVisible: false,
+      show: false
     }
   },
   computed: {
+
+    _title () {
+      return `${this.event.title}, ${this.event.date.toLocaleDateString()}`
+    },
+
+    popoverId () {
+      return 'popover/' + this.event.id
+    },
     permanentImages () {
       return this.$store.getters.getPermanentImages
     },
@@ -64,6 +90,26 @@ export default {
   },
   methods: {
 
+    _handleClick () {
+      this._toggleShow()
+
+      if (this.show) {
+        this.toolsVisible = true
+      }
+    },
+
+    _toggleShow () {
+      this.show = !this.show
+    },
+    _handleRowClick () {
+      if (this.show) {
+        this.show = false
+      }
+    },
+
+    _handleLeave () {
+      this.toolsVisible = this.show
+    }
   }
 }
 </script>

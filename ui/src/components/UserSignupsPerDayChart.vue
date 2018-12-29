@@ -23,7 +23,7 @@ import c3 from 'c3'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
-  name: 'UserSignupsChart',
+  name: 'UserSignupsPerDayChart',
   data () {
     return {
       chart: null
