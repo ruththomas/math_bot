@@ -5,7 +5,7 @@
       <unlock-all-levels></unlock-all-levels>
     </div>
 
-    <div class="row mb-3">
+    <div class="row mb-3" style="min-height: 10rem;">
       <admin-max-level v-if="someMaxLevel()"></admin-max-level>
       <div v-else>
         <h6>Loading...</h6>

@@ -211,14 +211,8 @@ export default {
     border:1px solid #d7dbde;
     border-image-source:initial;
     border-image-slice:initial;
-    border-image-width:initial;
-    border-image-outset:initial;
     border-image-repeat:initial;
     border-radius:4px;
-    border-top-left-radius:4px;
-    border-top-right-radius:4px;
-    border-bottom-right-radius:4px;
-    border-bottom-left-radius:4px;
     transition:border .3s linear;
     transition-property:border;
     transition-duration:.3s;
@@ -226,9 +220,6 @@ export default {
     transition-delay:0;
     width:65px;
     font-weight:700;
-    border-color:#d7dbde;
-    border-style:solid;
-    border-width:1px
   }
 
   select
@@ -238,20 +229,11 @@ export default {
     border:1px solid #d7dbde;
     border-image-source:initial;
     border-image-slice:initial;
-    border-image-width:initial;
-    border-image-outset:initial;
     border-image-repeat:initial;
     border-radius:4px;
-    border-top-left-radius:4px;
-    border-top-right-radius:4px;
-    border-bottom-right-radius:4px;
-    border-bottom-left-radius:4px;
     font-size:14px;
     font-weight:700;
     min-width:90px;
-    border-color:#d7dbde;
-    border-style:solid;
-    border-width:1px
   }
 
 </style>

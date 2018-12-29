@@ -3,13 +3,18 @@
 
     <ul class="list-group">
       <li class="list-group-item" @click="updateActive('users')"
-          :class="activeDisplay === 'users' ? 'active' : null">Users
+          :class="activeDisplay === 'users' ? 'active' : null">
+        <i class="fa fa-user-o" aria-hidden="true"></i>
+        Users
       </li>
       <li class="list-group-item" @click="updateActive('levels')"
-          :class="activeDisplay === 'levels' ? 'active' : null">Levels
+          :class="activeDisplay === 'levels' ? 'active' : null">
+        <i class="fa fa-star-o" aria-hidden="true"></i>
+        Levels
       </li>
       <li class="list-group-item" @click="updateActive('events')"
           :class="activeDisplay === 'events' ? 'active' : null">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
         Events
       </li>
     </ul>
@@ -25,4 +30,13 @@ export default {
 
 <style scoped>
 
+  li {
+
+    cursor: pointer
+  }
+
+  li:not(.active):hover {
+
+    background: var(--light);
+  }
 </style>

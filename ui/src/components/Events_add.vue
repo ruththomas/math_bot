@@ -5,64 +5,69 @@
     <vue-form @submit.prevent="onSubmit" :state="formstate" class="mb-3">
 
       <div class="form-group">
-        <label for="title">Title</label>
-        <input
-          :readonly="Boolean(readOnly)"
-          id="title"
-          type="text"
-          placeholder="enter a title"
-          name="title"
-          v-model="userInput.title"
-          required
-          class="form-control"
-        />
+        <label for="title">
+
+          <i class="fa fa-hashtag"></i>
+          Title
+        </label>
+        <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.title)">
+          <input
+            id="title"
+            type="text"
+            placeholder="enter a title"
+            name="title"
+            v-model="userInput.title"
+            required
+            :class="_klass"
+            class="form-control"
+          />
+
+          <field-messages name="title" show="$touched || $submitted" class="form-control-feedback">
+            <div slot="required">Required field</div>
+          </field-messages>
+        </validate>
       </div>
 
-       <div class="form-group">
+      <div class="form-group">
 
-         <label>Date</label>
+        <label>
+          <i class="fa fa-calendar-o"></i>
+          Date
+        </label>
 
-         <vue-ctk-date-time-picker
-           v-if="readOnly"
-           v-model="userInput.date"
-           :disable-dates="true"
-           :disable-time="true"
-
-         ></vue-ctk-date-time-picker>
-          <vue-ctk-date-time-picker
-            v-model="userInput.date"
-            v-else
-            :disable-dates="readOnly"
-            :disable-time="readOnly"
-
-          ></vue-ctk-date-time-picker>
-       </div>
+        <vue-ctk-date-time-picker v-model="userInput.date"></vue-ctk-date-time-picker>
+      </div>
 
       <div class="form-group">
-        <label>Description</label>
+        <label>
+          <i class="fa fa-comment-o"></i>
+          Description
+        </label>
         <textarea
           name="description"
-          :readonly="Boolean(readOnly)"
-          rows="5" class="form-control"
-          v-model="userInput.description"
-          required
+          rows="5"
+          class="form-control"
+          v-model.lazy="userInput.description"
           placeholder="describe the event..."
         >
       </textarea>
       </div>
 
       <div class="form-group">
-        <label>Links</label>
+        <label>
+          <i class="fa fa-link"></i>
+          Links
+        </label>
         <input
-          :readonly="Boolean(readOnly)"
           type="text"
+          :state="true"
           class="form-control"
-          v-model="userInput.links"
+          v-model.lazy="userInput.links"
           placeholder="link1,link2"
         />
       </div>
 
-      <div class="row my-3 d-flex justify-content-end" v-if="!Boolean(readOnly)">
+      <div class="row my-3 d-flex justify-content-end">
         <b-btn type="reset" class="mx-2">
           clear
         </b-btn>
@@ -79,6 +84,14 @@ import Datepicker from 'vuejs-datepicker'
 
 export default {
   name: 'Events_add',
+  computed: {
+
+    _klass () {
+      if (!(this.formstate.title && this.formstate.title.$dirty)) return null
+
+      return this.formstate.title && this.formstate.title.$dirty && this.formstate.title.$invalid ? 'is-invalid' : 'is-valid'
+    }
+  },
   data () {
     const _now = new Date()
     return {
@@ -87,7 +100,7 @@ export default {
         date: _now.toISOString(),
         title: '',
         description: '',
-        links: []
+        links: ''
       }
     }
   },
@@ -105,21 +118,92 @@ export default {
   },
   methods: {
 
+    fieldClassName (field) {
+      // for bootstrap classes
+      if (!field) {
+        return ''
+      }
+      if ((field.$touched || field.$submitted) && field.$valid) {
+        return 'has-success'
+      }
+
+      if ((field.$touched || field.$submitted) && field.$invalid) {
+        return 'has-danger'
+      }
+    },
+
     onSubmit (e) {
       e.preventDefault()
       if (!this.formstate.$valid) {
-        // todo: handle
-        console.error('invalid form', this.formstate)
-      } else {
-        this.handleSubmit(this.userInput)
+        const messageBuilder = {
+          type: 'warn',
+          msg: 'Invalid form'
+        }
+        return this.$store.dispatch('addMessage', messageBuilder)
       }
+      this.handleSubmit(this.userInput)
     }
   },
-  props: ['handleSubmit', 'init', 'event', 'readOnly']
+  props: ['handleSubmit', 'init', 'event']
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
   @import '~vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
+
+  $btn-height: 3rem;
+  $danger-color: #F25C5C;
+  $success-color: #50E3C2;
+  $danger-background: rgba(242, 92, 92, 0.2);
+  $success-background: rgba(80, 227, 194, 0.2);
+
+  .form-control-feedback {
+    position: absolute;
+    font-size: 0.75em;
+    top: 100%;
+  }
+
+  .input-success, .input-failure {
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+  }
+
+  .required-field {
+    border-radius: 0.25rem;
+  }
+
+  .required-field.has-danger {
+    border: 1px solid $danger-color;
+
+    input {
+      background-color: $danger-background;
+    }
+  }
+
+  .required-field.has-success {
+    border: 1px solid $success-color;
+
+    input {
+      color: black;
+      font-weight: bold;
+      font-size: 0.9em;
+      background-color: $success-background;
+    }
+  }
+
+  .has-danger .form-control-feedback {
+    color: $danger-color;
+  }
+
+  .has-success .form-control-feedback {
+    color: $success-color;
+  }
+
+  button, label {
+    text-transform: capitalize;
+  }
+
 </style>
