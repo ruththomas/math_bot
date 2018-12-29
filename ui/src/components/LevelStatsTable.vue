@@ -60,12 +60,13 @@ export default {
   methods: {
 
     levelDisplay (id) {
-      const level = id.slice(4)
+      let level = id.slice(4)
+
       if (level.startsWith('0') && level !== '0') {
-        return level.slice(1)
+        level = level.slice(1)
       }
 
-      return level
+      return Number(level) + 1
     }
   }
 

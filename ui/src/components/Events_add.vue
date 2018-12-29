@@ -144,32 +144,18 @@ export default {
   $success-color: #50E3C2;
   $danger-background: rgba(242, 92, 92, 0.2);
   $success-background: rgba(80, 227, 194, 0.2);
-  .form-group {
-    display: flex;
-    justify-content: center;
-    width: 90%;
-    height: $btn-height;
-    margin: 1em auto;
-    position: relative;
 
-    .form-control {
-      font-size: 0.75rem;
-      height: 100%;
-      border-radius: 0 0.25rem 0.25rem 0;
-    }
+  .form-control-feedback {
+    position: absolute;
+    font-size: 0.75em;
+    top: 100%;
+  }
 
-    .form-control-feedback {
-      position: absolute;
-      font-size: 0.75em;
-      top: 100%;
-    }
-
-    .input-success, .input-failure {
-      top: -1px;
-      right: -1px;
-      bottom: -1px;
-      left: -1px;
-    }
+  .input-success, .input-failure {
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
   }
 
   .required-field {

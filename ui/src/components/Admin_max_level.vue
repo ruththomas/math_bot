@@ -58,7 +58,7 @@ export default {
 
       let [superCluster, galaxy, starSystem, planet, ..._continent] = _id
 
-      let level = _continent.join('')
+      let level = Number(_continent.join('')) + 1
 
       return Object.assign({}, continent, {superCluster, galaxy, starSystem, planet, level})
     },
