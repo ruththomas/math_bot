@@ -4,7 +4,7 @@ import level_gen.models.CelestialSystem
 trait Planets extends Continents with LevelGenTags {
   val programmingChildren = List(
     CelestialSystem(
-      name = "BasicProgramming",
+      name = "Coding",
       kind = planet,
       children = basicProgrammingChildren
     ),

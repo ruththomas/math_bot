@@ -72,13 +72,11 @@ export default {
   name: 'LevelStats',
 
   methods: {
-
     someMaxLevel () {
       return Object.values(this.adminControl.maxLevel).some(level => {
         return level.count > 0
       })
     },
-
     async changeActivePlanet (e) {
       this.activePlanet = e.target.value
       this.getLevelStats()
