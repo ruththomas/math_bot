@@ -14,6 +14,7 @@ object Stats {
 
   final val tokenIdLabel: String = "tokenId"
   final val currentPathLabel: String = "currentPath"
+  final val maxContinentLabel: String = "maxContinent"
   final val listLabel: String = "list"
   final val isSandboxLabel: String = "isSandbox"
 
@@ -155,6 +156,7 @@ case class Stats(
     tokenId: String,
     currentPath: String,
     isSandbox: Option[Boolean] = None,
+    maxContinent: Option[String] = None,
     list: Map[String, LayerStatistic]
 ) {
   def superClusterPath: String = this.currentPath.take(1)

@@ -14,6 +14,7 @@ import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.UpdateResult
 import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase}
+import utils.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -67,8 +68,14 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     collection.replaceOne(equal(tokenIdLabel, stats.tokenId), stats).toFutureOption().map(_ => stats)
 
   def findStats(tokenId: String): Future[Option[Stats]] = {
-    val p = collection.find(equal(tokenIdLabel, tokenId))
-    p.first().toFutureOption()
+    collection
+      .find(equal(tokenIdLabel, tokenId))
+      .first()
+      .toFutureOption()
+      .map(_.map {
+        case s if s.maxContinent.nonEmpty => s
+        case s => s.copy(maxContinent = Some(updateMaxContinent(s)))
+      })
   }
 
   def updateCurrentLevel(tokenId: String, path: String): Future[Option[UpdateResult]] = {
@@ -80,6 +87,24 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
         )
       )
       .toFutureOption()
+  }
+
+  private def updateMaxContinent(stats: Stats, newPath: String = "00000"): String = {
+    // this code is confusing because it was not implemented in the first place
+    // todo - find a better way
+    val sortedStarSystems = stats.list.filter(_._1.length == 3).toList.sortBy(_._1.toInt)
+    val furthestStarSystem = sortedStarSystems.filter(_._2.active).last
+    val sortedPlanets =
+      stats.list.filter(_._1.length == 4).filter(_._1.take(3) == furthestStarSystem._1).toList.sortBy(_._1.last.toInt)
+    val furthestPlanet = sortedPlanets.filter(_._2.active).last
+    val sortedContinents =
+      stats.list.filter(_._1.length > 4).filter(_._1.take(4) == furthestPlanet._1).toList.sortBy(_._1.drop(4).toInt)
+    val furthestContinent = sortedContinents.filter(_._2.active).last
+    if (newPath.take(3) > furthestStarSystem._1 && newPath.take(4) > furthestPlanet._1 && newPath.drop(4) > furthestContinent._1) {
+      newPath
+    } else {
+      furthestContinent._1
+    }
   }
 
   private def incContinent(path: String): String = path.init + (path.last.asDigit + 1).toString
@@ -117,6 +142,7 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       _ <- collection.updateOne(
         equal(tokenIdLabel, tokenId),
         combine(
+          set(maxContinentLabel, updateMaxContinent(stats, nextPath)),
           set(currentPathLabel, if (incrementWins) nextPath else currentPath),
           inc(s"$listLabel.$currentPath.$timesPlayedLabel", 1),
           inc(s"$listLabel.$currentPath.$winsLabel", if (incrementWins) 1 else 0),
