@@ -14,6 +14,7 @@
       @click.native="levelControl.functions.main.func.length ? [openConfirmDelete()] : []"
       :color="gridRobotColor"
       :door-handle-color="'#B8E986'"
+      :eye-color="'#4A90E2'"
     ></mascot>
     <div class="end-cap"></div>
   </div>
