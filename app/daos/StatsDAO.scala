@@ -255,7 +255,6 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   }
 
   def maxLevelStats: Future[Seq[MaxLevel]] = {
-
     maxLevelCollection
       .aggregate(
         Seq(
