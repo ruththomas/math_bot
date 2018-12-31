@@ -1,12 +1,6 @@
 <template>
   <div class="container-fluid robot" data-aos="fade-in">
-    <div
-      @click="goToProfile()"
-      class="return-to-profile"
-      data-toggle="tooltip" title="Return to profile"
-    >
-      <img :src="handlePicture(userProfile.picture)" />
-    </div>
+   <user-gravatar></user-gravatar>
     <step-congrats v-if="levelControl.continent !== null" key="step-congrats"></step-congrats>
     <splash-screen v-if="levelControl.continent === null"></splash-screen>
     <div v-else class="container">
@@ -60,6 +54,7 @@ import StepCongrats from './Continent_congrats'
 import LevelCongrats from './Planet_congrats'
 import AdvancedMode from './Advanced_mode'
 import ConfirmDeactivateFunc from './Confirm_deactivate_func'
+import UserGravatar from './UserGravatar'
 import ActiveDrop from './Activate_drop'
 import StagedFunctions from './Staged_functions'
 
@@ -118,6 +113,7 @@ export default {
   },
   components: {
     ConfirmDeactivateFunc,
+    UserGravatar,
     Grid,
     Commands,
     Trash,

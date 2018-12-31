@@ -10,14 +10,15 @@ import org.mongodb.scala.MongoDatabase
 import org.mongodb.scala.bson.codecs.Macros
 import utils.SecureIdentifier
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class SessionDAO @Inject()(
     override val db: MongoDatabase,
-    aLogger : SemanticLog,
+    aLogger: SemanticLog,
     aCodecs: Seq[Codec[_]] = Seq.empty[Codec[_]],
     aProviders: Seq[CodecProvider]
-)(override implicit val ec : ExecutionContext) extends Storage[SecureIdentifier, JwtToken](
+)(override implicit val ec: ExecutionContext)
+    extends Storage[SecureIdentifier, JwtToken](
       'session,
       'sessionId,
       valueField = 'token,
@@ -27,5 +28,7 @@ class SessionDAO @Inject()(
       aCodecs
     ) {
 
-  override protected val logger : SemanticLog = aLogger.withClass[SessionDAO]()
+  override protected val logger: SemanticLog = aLogger.withClass[SessionDAO]()
+
+  def count: Future[Long] = collection.count().toFuture
 }

@@ -14,6 +14,7 @@ object Stats {
 
   final val tokenIdLabel: String = "tokenId"
   final val currentPathLabel: String = "currentPath"
+  final val maxContinentLabel: String = "maxContinent"
   final val listLabel: String = "list"
   final val isSandboxLabel: String = "isSandbox"
 
@@ -155,6 +156,7 @@ case class Stats(
     tokenId: String,
     currentPath: String,
     isSandbox: Option[Boolean] = None,
+    maxContinent: Option[String] = None,
     list: Map[String, LayerStatistic]
 ) {
   def superClusterPath: String = this.currentPath.take(1)
@@ -162,4 +164,13 @@ case class Stats(
   def starSystemPath: String = this.currentPath.take(3)
   def planetPath: String = this.currentPath.take(4)
   def continentPath: String = this.currentPath
+
+  def starSystemsInOrder: List[StarSystemData] =
+    this.list.keys.toList.filter(_.length == 3).map(StarSystemData(this, _)).sortBy(_.id.toInt)
+
+  def planetsInOrder: List[PlanetData] =
+    starSystemsInOrder.flatMap(_.planets).flatten
+
+  def continentsInOrder: List[ContinentData] =
+    planetsInOrder.flatMap(_.continents)
 }
