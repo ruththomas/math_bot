@@ -79,7 +79,6 @@ class AdminActor @Inject()(out: ActorRef,
       statsDAO.maxLevelStats.map { maxLevels =>
         out ! UserMaxLevel(maxLevels)
       }
-
     case GetLoginsLastXDays(days) =>
       playerAccountDAO.lastXDaysLoginCount(days).map { logins =>
         out ! LastXDaysLogins(logins)
@@ -89,12 +88,10 @@ class AdminActor @Inject()(out: ActorRef,
         .map { signups =>
           out ! SignupsPerDay(signups)
         }
-
     case GetActiveUserCount() =>
       sessionDAO.count.map { count =>
         out ! ActiveUserCount(count)
       }
-
     case GetLevelStats(level) =>
       statsDAO.levelStats(level).map { levelStats =>
         out ! LevelStatsResult(levelStats)
@@ -103,14 +100,11 @@ class AdminActor @Inject()(out: ActorRef,
       for {
         unMigratedUserCount <- auth0LegacyDao.countUnmigrated
         userCount <- playerAccountDAO.userCount
-
       } yield out ! UserCount(userCount + unMigratedUserCount)
-
     case GetEvents() =>
       eventsDAO.getEvents.map { events =>
         out ! Events(events)
       }
-
     case PutEvent(event) =>
       event match {
         case Some(adminEvent) =>
@@ -120,7 +114,6 @@ class AdminActor @Inject()(out: ActorRef,
         case _ => out ! ActorFailed("Invalid request")
 
       }
-
     case DeleteEvent(event) =>
       event match {
         case Some(adminEvent) =>
@@ -129,7 +122,6 @@ class AdminActor @Inject()(out: ActorRef,
           out ! DeleteEventResult("successfully removed event: " + adminEvent.id)
         case _ => out ! ActorFailed("Invalid Request")
       }
-
     case PostEvent(event) =>
       event match {
         case Some(adminEvent) =>
