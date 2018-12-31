@@ -214,7 +214,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _success (frame) {
-    return this.initializeAnimation(frame, async () => {
+    return this.initializeAnimation(frame, true, async () => {
       this.lastFrame = frame
       this.robot.setState('success')
       const isLastPlanet = $store.state.levelControl.isLastPlanet()
@@ -233,7 +233,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _failure (frame) {
-    return this.initializeAnimation(frame, async () => {
+    return this.initializeAnimation(frame, true, async () => {
       this.lastFrame = frame
       this.failure = true
       this.robot.setState('paused')
@@ -252,7 +252,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _running (frame) {
-    return this.initializeAnimation(frame, () => {
+    return this.initializeAnimation(frame, this.currentFrame <= 0, () => {
       if (this.robot.state === 'running') {
         if (this.robotFrames.length) {
           this._processFrames()

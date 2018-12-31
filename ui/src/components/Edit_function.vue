@@ -41,25 +41,21 @@
           <input v-default-value="editingFunction.name" autofocus type="text" maxlength="20" placeholder="Name your function here" v-model="editingFunction.name" @change="updateName()" />
         </div>
 
+        <clear-function-confirm
+          v-if="confirmDeleteOpen"
+          :close-method="closeConfirmDelete"
+          :trash-method="wipeFunction"
+          :animation-method="startAnimation"
+          :de-animation-method="stopAnimation"
+        ></clear-function-confirm>
+
         <img
-          v-if="editingFunction.func.length"
+          v-else-if="editingFunction.func.length"
           id="delete-function"
           class='function-control trash'
           :src="permanentImages.trashCan"
-          @click="animateVulnerable"
+          @click="openConfirmDelete"
         />
-
-        <b-popover
-          v-if="editingFunction.func.length"
-          target="delete-function"
-          placement="top"
-          triggers="click"
-        >
-          <img class="dialog-button close-popover" :src="permanentImages.buttons.xButton" @click="[closePopover('delete-function'), animateVulnerable()]" />
-          <div class="button-effect trash-confirm" variant="danger"  @click="deleteFuncContents">
-            <img class="dialog-button" :src="permanentImages.openTrashCan" />
-          </div>
-        </b-popover>
       </div>
 
       <img class="dialog-button close-edit-function" @click="closeEditFunction" :src="permanentImages.buttons.xButton" data-toggle="tooltip" title="Close">
@@ -100,6 +96,7 @@ import utils from '../services/utils'
 import PuzzlePieces from './Puzzle_pieces'
 import Tool from './Tool'
 import ScrollOptions from '../services/ScrollOptions'
+import ClearFunctionConfirm from './Clear_function_confirm'
 
 export default {
   mounted () {
@@ -162,7 +159,8 @@ export default {
           pull: true,
           put: true
         }
-      })
+      }),
+      confirmDeleteOpen: false
     }
   },
   methods: {
@@ -177,22 +175,36 @@ export default {
       func.displayName = !func.displayName
       this.levelControl.updateFunctionProperties(func)
     },
-    deleteFuncContents () {
+    wipeFunction () {
       this.closePopover('delete-function')
       this.levelControl.deleteFunction(this.editingFunction)
       this.setPut(true)
+      this.closeConfirmDelete()
     },
-    animateVulnerable () {
-      const $functions = $('.editFunction-drop-zone > .piece:not(.placeholder-piece)')
-      const animationClass = 'piece-shake'
-      $functions.each(function () {
+    animationElements () {
+      return {
+        $functions: $('.editFunction-drop-zone > .piece:not(.placeholder-piece)'),
+        animationClass: 'piece-shake'
+      }
+    },
+    animateVulnerable (animationMethod) {
+      const elements = this.animationElements()
+      elements.$functions.each(function () {
         const $ele = $(this)
-        if ($ele.hasClass(animationClass)) {
-          $ele.removeClass(animationClass)
-        } else {
-          $ele.addClass(animationClass)
-        }
+        $ele[animationMethod](elements.animationClass)
       })
+    },
+    startAnimation () {
+      this.animateVulnerable('addClass')
+    },
+    stopAnimation () {
+      this.animateVulnerable('removeClass')
+    },
+    closeConfirmDelete () {
+      this.confirmDeleteOpen = false
+    },
+    openConfirmDelete () {
+      this.confirmDeleteOpen = true
     },
     fullMessage () {
       const messageBuilder = {
@@ -235,7 +247,8 @@ export default {
     FunctionBox,
     FunctionDrop,
     PuzzlePieces,
-    Tool
+    Tool,
+    ClearFunctionConfirm
   }
 }
 </script>
@@ -351,12 +364,10 @@ export default {
     }
   }
 
-  .trash-confirm {
-    background-color: $danger-color;
-    box-shadow: 0 2px 10px 0 $danger-color;
-    animation: shake 0.8s;
-    animation-iteration-count: infinite;
-    margin: 3vmin;
+  .confirm-delete {
+    position: relative;
+    top: 0.5rem;
+    background: transparent!important;
   }
 
   .function-drop-drop-zone {

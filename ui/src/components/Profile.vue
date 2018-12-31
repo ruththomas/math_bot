@@ -3,18 +3,6 @@
     <div v-if="levelControl.galaxy !== null" class="star-system-nav">
       <level-congrats key="level-congrats"></level-congrats>
       <star-system-congrats key="star-system-congrats"></star-system-congrats>
-      <b-button
-        v-for="(starSystem, ind) in levelControl.galaxy.starSystems"
-        :key="'star-system/' + ind"
-        @click="levelControl.updateStarSystem(ind)"
-        class="btn-dark"
-        :class="Number(starSystemShowing) === ind ? 'selected' : ''"
-        :disabled="!starSystem.stats.active"
-      >
-        {{starSystem.stats.name}}
-        <i v-if="!starSystem.stats.active" class="fa fa-lock"></i>
-      </b-button>
-      <b-button class="btn-dark" @click="levelControl.getSandbox">Sandbox</b-button>
     </div>
     <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
       <div class="star-systems">
@@ -35,12 +23,20 @@ import SocialSharing from './Social_sharing'
 import LevelCongrats from './Planet_congrats'
 import StarSystemCongrats from './Star_system_congrats'
 import StarSystem from './Star_system'
+import BackgroundSound from '../services/sounds/BackgroundSound'
 
 export default {
   mounted () {
     this.handleCongrats()
+    this.soundControl.addSound({name: 'robotBackground', sound: new BackgroundSound()})
+  },
+  beforeDestroy () {
+    this.soundControl.removeSounds(['robotBackground'])
   },
   computed: {
+    soundControl () {
+      return this.$store.getters.getSoundControl
+    },
     starSystemShowing () {
       return this.levelControl.path[2]
     },

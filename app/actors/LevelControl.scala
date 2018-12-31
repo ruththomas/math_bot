@@ -50,6 +50,7 @@ class LevelControl @Inject()(
 
   /*
    * Assembles star system data back into its nested data structure
+   * (joe) TODO USE
    * */
   def getStarSystemData(tokenId: String, path: Option[String]): Future[StarSystemData] = {
     for {
@@ -158,6 +159,7 @@ class LevelControl @Inject()(
       .children(path(2))
   }
 
+  // (joe) todo use
   def getPlanetData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
     superCluster
@@ -166,6 +168,7 @@ class LevelControl @Inject()(
       .children(path(3))
   }
 
+  // (joe) todo use
   def getContinentData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
     superCluster
@@ -176,7 +179,7 @@ class LevelControl @Inject()(
   }
 
   /*
-   * Gets list of
+   * Gets list of video ids for specified path
    * */
   def getVideoIds(path: String): List[String] = {
     getContinentData(path).continentStruct.map(_.videoHints).getOrElse(List.empty[String])

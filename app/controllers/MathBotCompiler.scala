@@ -37,6 +37,7 @@ class MathBotCompiler @Inject()()(implicit system: ActorSystem,
 
   def wsPath(connection: String): Action[AnyContent] = Action { implicit request =>
     val url = connection match {
+      case p if p == "admin" => routes.AdminController.adminSocket().webSocketURL()
       case p if p == "compiler" => routes.MathBotCompiler.compileWs().webSocketURL()
       case p if p == "videohint" => routes.VideoHintController.videoSocket().webSocketURL()
       case p if p == "level" => routes.LevelController.levelSocket().webSocketURL()

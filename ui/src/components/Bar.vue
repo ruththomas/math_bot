@@ -1,26 +1,21 @@
 <template>
   <div class="control-bar bar noDrag" v-if="Object.keys(levelControl.robot).length">
+    <clear-function-confirm
+      v-if="confirmDeleteOpen"
+      :close-method="closeConfirmDelete"
+      :trash-method="wipeFunction"
+      :animation-method="startAnimation"
+      :de-animation-method="stopAnimation"
+    ></clear-function-confirm>
     <mascot
+      v-else
       :id="'main-delete-function'"
-      @click.native="animateVulnerable"
+      class="bar-controller"
+      @click.native="levelControl.functions.main.func.length ? [openConfirmDelete()] : []"
       :color="gridRobotColor"
       :door-handle-color="'#B8E986'"
+      :eye-color="'#4A90E2'"
     ></mascot>
-    <div class="plugin"></div>
-    <b-popover
-      v-if="levelControl.functions.main.func.length"
-      target="main-delete-function"
-      placement="top"
-      triggers="click"
-    >
-      <img class="dialog-button close-popover"
-           :src="permanentImages.buttons.xButton"
-           @click="[animateVulnerable(), closePopover('main-delete-function')]"
-      />
-      <div class="button-effect trash-confirm"  @click="[animateVulnerable(), wipeFunction(), closePopover('main-delete-function')]">
-        <img class="dialog-button" :src="permanentImages.openTrashCan" />
-      </div>
-    </b-popover>
     <div class="end-cap"></div>
   </div>
 </template>
@@ -28,6 +23,7 @@
 <script>
 import utils from '../services/utils'
 import Mascot from './Mascot'
+import ClearFunctionConfirm from './Clear_function_confirm'
 export default {
   name: 'Bar',
   computed: {
@@ -51,27 +47,51 @@ export default {
       }
     }
   },
+  data () {
+    return {
+      confirmDeleteOpen: false
+    }
+  },
   methods: {
     closePopover: utils.closePopover,
     wipeFunction () {
       this.levelControl.deleteMain()
+      this.closeConfirmDelete()
       this.setPut(true)
     },
-    animateVulnerable () {
-      const $functions = $('.editMain-drop-zone > .piece:not(.placeholder-piece)')
-      const animationClass = 'piece-shake'
-      $functions.each(function () {
+    animationElements () {
+      return {
+        $functions: $('.editMain-drop-zone > .piece:not(.placeholder-piece)'),
+        $bar: $('.bar'),
+        $endCap: $('.end-cap'),
+        animationClass: 'piece-shake'
+      }
+    },
+    animateVulnerable (animationMethod) {
+      const elements = this.animationElements()
+      elements.$bar[animationMethod]('red-bar')
+      elements.$endCap[animationMethod]('red-bar')
+      elements.$functions.each(function () {
         const $ele = $(this)
-        if ($ele.hasClass(animationClass)) {
-          $ele.removeClass(animationClass)
-        } else {
-          $ele.addClass(animationClass)
-        }
+        $ele[animationMethod](elements.animationClass)
       })
+    },
+    startAnimation () {
+      this.animateVulnerable('addClass')
+    },
+    stopAnimation () {
+      this.animateVulnerable('removeClass')
+    },
+    closeConfirmDelete () {
+      this.confirmDeleteOpen = false
+    },
+    openConfirmDelete () {
+      this.confirmDeleteOpen = true
     }
   },
   components: {
-    Mascot
+    Mascot,
+    ClearFunctionConfirm
   },
   props: ['setPut']
 }
@@ -86,7 +106,7 @@ $danger-color: #F25C5C;
 $dialog-button-size: 3.5vmin;
 .bar {
   position: absolute;
-  left: $mascot-size;
+  left: 0;
   right: 0;
   top: calc(50%);
   height: $bar-height;
@@ -96,23 +116,27 @@ $dialog-button-size: 3.5vmin;
   justify-content: center;
   z-index: -1;
 
-  .mascot {
+  .bar-controller {
     position: absolute;
-    right: calc(100% + calc(#{$mascot-size} / 2));
-    transform: translateY(calc(-15% - #{$bar-height}));
+    cursor: pointer;
+    display: flex;
+  }
+
+  .confirm-delete {
+    position: absolute;
+    padding: 0.5rem;
+    transform: translateY(calc(-5% - #{$bar-height}));
+    left: calc(-#{$mascot-size});
+    z-index: 101;
+  }
+
+  .mascot {
     width: $mascot-size;
+    left: calc(-#{$mascot-size} / 1.6);
+    transform: translateY(calc(-15% - #{$bar-height}));
     height: auto;
     z-index: 100;
     cursor: pointer;
-  }
-
-  .plugin {
-    background-color: $bar-color;
-    position: absolute;
-    height: $bar-height;
-    right: 100%;
-    width: calc(#{$mascot-size} / 1.1);
-    z-index: 101;
   }
 
   .end-cap {
@@ -124,12 +148,16 @@ $dialog-button-size: 3.5vmin;
   }
 }
 
-.trash-confirm {
-  background-color: $danger-color;
-  box-shadow: 0 2px 10px 0 $danger-color;
-  animation: shake 0.8s;
-  animation-iteration-count: infinite;
-  margin: 1vmin;
+.hidden-bar {
+  background-color: transparent;
+}
+
+.red-bar {
+  background-color: #FF0000!important;
+}
+
+.trash-main {
+  margin: 0.5vmin;
 }
 
 .close-popover {
