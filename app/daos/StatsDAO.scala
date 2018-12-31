@@ -4,6 +4,7 @@ import java.util.Date
 
 import actors.messages.admin.{CurrentPath, LevelStats}
 import actors.messages.level.{LayerStatistic, Stats}
+import actors.messages.playeraccount.MaxLevel
 import com.google.inject.Inject
 import level_gen.models._
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
@@ -14,7 +15,6 @@ import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.UpdateResult
 import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase}
-import utils.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -56,6 +56,18 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
         fromRegistries(
           fromProviders(
             Macros.createCodecProvider[LevelStats]()
+          ),
+          DEFAULT_CODEC_REGISTRY
+        )
+      )
+
+  val maxLevelCollection: MongoCollection[MaxLevel] =
+    mathbotDb
+      .getCollection[MaxLevel](collectionLabel)
+      .withCodecRegistry(
+        fromRegistries(
+          fromProviders(
+            Macros.createCodecProvider[MaxLevel]()
           ),
           DEFAULT_CODEC_REGISTRY
         )
@@ -200,41 +212,60 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     } yield updated.copy(isSandbox = Some(bool))
   }
 
+  private final val nonSandboxStatement = BsonDocument(s"""{ $$match: { '$isSandboxLabel': false } }""")
+
+  private final val nonAdminUserStatement = BsonDocument("""{ $match: { "user.isAdmin": false } }""")
+
+  private final val lookupUserStatement = BsonDocument(s"""
+                                                           |   { $$lookup: {
+                                                           |        from: "playeraccount",
+                                                           |        localField: "$tokenIdLabel",
+                                                           |        foreignField: "$tokenIdLabel",
+                                                           |        as: "user",
+                                                           |      },
+                                                           |    }
+                       """.stripMargin)
+
   def levelStats(func: Option[String]): Future[Seq[LevelStats]] = {
 
     val _func = func.getOrElse("00000")
 
-    val _levelStats =
-      s"""
-         |{
-         |    $$group: {
-         |      _id: '$$$listLabel.${_func}.$nameLabel' ,
-         |      timesPlayed: { $$sum: '$$$listLabel.${_func}.$timesPlayedLabel' },
-         |      timesPlayedAvg: { $$avg: '$$$listLabel.${_func}.$timesPlayedLabel' },
-         |      timesPlayedMax: { $$max: '$$$listLabel.${_func}.$timesPlayedLabel' },
-         |      wins: { $$sum: '$$$listLabel.${_func}.$winsLabel' },
-         |      winsAvg: { $$avg: '$$$listLabel.${_func}.$winsLabel' },
-         |      winsMax: { $$max: '$$$listLabel.${_func}.$winsLabel' },
-         |    }
-         |  }
-       """.stripMargin
+    val levelStatsStatement = BsonDocument(s"""
+                                              |{
+                                              |    $$group: {
+                                              |      _id: '$$$listLabel.${_func}.$nameLabel' ,
+                                              |      timesPlayed: { $$sum: '$$$listLabel.${_func}.$timesPlayedLabel' },
+                                              |      timesPlayedAvg: { $$avg: '$$$listLabel.${_func}.$timesPlayedLabel' },
+                                              |      timesPlayedMax: { $$max: '$$$listLabel.${_func}.$timesPlayedLabel' },
+                                              |      wins: { $$sum: '$$$listLabel.${_func}.$winsLabel' },
+                                              |      winsAvg: { $$avg: '$$$listLabel.${_func}.$winsLabel' },
+                                              |      winsMax: { $$max: '$$$listLabel.${_func}.$winsLabel' },
+                                              |    }
+                                              |  }
+       """.stripMargin)
 
     levelStatsCollection
       .aggregate(
         Seq(
-          BsonDocument(s"""{ $$match: { $isSandboxLabel: false } }"""),
-          BsonDocument(s"""
-                         |   { $$lookup: {
-                         |        from: "playeraccount",
-                         |        localField: "$tokenIdLabel",
-                         |        foreignField: "$tokenIdLabel",
-                         |        as: "user",
-                         |      },
-                         |    }
-                       """.stripMargin),
-          BsonDocument("""{ $match: { "user.isAdmin": false } }"""),
-          BsonDocument(_levelStats),
+          this.nonSandboxStatement,
+          this.lookupUserStatement,
+          this.nonAdminUserStatement,
+          levelStatsStatement,
           BsonDocument(f"""{$$addFields: { id: '${_func}'}}""")
+        )
+      )
+      .toFuture
+  }
+
+  def maxLevelStats: Future[Seq[MaxLevel]] = {
+
+    maxLevelCollection
+      .aggregate(
+        Seq(
+          this.nonSandboxStatement,
+          this.lookupUserStatement,
+          this.nonAdminUserStatement,
+          BsonDocument(s"""{ $$sortByCount: '$$$maxContinentLabel' }""")
         )
       )
       .toFuture

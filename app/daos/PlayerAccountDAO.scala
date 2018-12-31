@@ -58,10 +58,6 @@ class PlayerAccountDAO @Inject()(
     db.getCollection[UserAccountSignups](collectionLabel.name)
       .withCodecRegistry(codecRegistry)
 
-  val maxLevelCollection: MongoCollection[MaxLevel] =
-    db.getCollection[MaxLevel](collectionLabel.name)
-      .withCodecRegistry(codecRegistry)
-
   val _collection: MongoCollection[Document] =
     db.getCollection[Document](collectionLabel.name)
       .withCodecRegistry(codecRegistry)
@@ -147,18 +143,6 @@ class PlayerAccountDAO @Inject()(
     collection
       .count(combine(gte(lastAccess.name, date), equal(isAdminLabel.name, false)))
       .toFuture()
-  }
-
-  def maxLevelStats: Future[Seq[MaxLevel]] = {
-
-    maxLevelCollection
-      .aggregate(
-        Seq(
-          this.nonAdminAccountStatement,
-          BsonDocument(s"""{ $$sortByCount: '$$${maxLevel.name}' }""")
-        )
-      )
-      .toFuture
   }
 
   /*
