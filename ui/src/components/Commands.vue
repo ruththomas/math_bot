@@ -162,6 +162,7 @@ export default {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     height: 100%;
+    width: 100%;
     .functions {
       width: min-content;
       min-width: 100%;
@@ -169,16 +170,16 @@ export default {
       margin: 0 auto;
       overflow: auto;
       display: flex;
-      padding: $pointer-size 0;
+      padding: $pointer-size 0.2rem;
 
       .func-category-command::after {
         content: "";
         position: absolute;
-        top: -4px;
-        left: -4px;
-        right: -4px;
-        bottom: -4px;
-        border: 2px solid $click-color;
+        top: -0.2rem;
+        left: -0.2rem;
+        right: -0.2rem;
+        bottom: -0.2rem;
+        border: 1px solid $click-color;
         border-radius: 3px;
         background-color: rgba(0, 0, 0, 0.5);
       }
