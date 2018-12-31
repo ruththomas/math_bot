@@ -90,20 +90,16 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
   }
 
   private def updateMaxContinent(stats: Stats, newPath: String = "00000"): String = {
-    // this code is confusing because it was not implemented in the first place
-    // todo - find a better way
-    val sortedStarSystems = stats.list.filter(_._1.length == 3).toList.sortBy(_._1.toInt)
-    val furthestStarSystem = sortedStarSystems.filter(_._2.active).last
-    val sortedPlanets =
-      stats.list.filter(_._1.length == 4).filter(_._1.take(3) == furthestStarSystem._1).toList.sortBy(_._1.last.toInt)
-    val furthestPlanet = sortedPlanets.filter(_._2.active).last
-    val sortedContinents =
-      stats.list.filter(_._1.length > 4).filter(_._1.take(4) == furthestPlanet._1).toList.sortBy(_._1.drop(4).toInt)
-    val furthestContinent = sortedContinents.filter(_._2.active).last
-    if (newPath.take(3) > furthestStarSystem._1 && newPath.take(4) > furthestPlanet._1 && newPath.drop(4) > furthestContinent._1) {
-      newPath
-    } else {
-      furthestContinent._1
+    val orderedContinents = stats.continentsInOrder
+    val lastActive = orderedContinents.lastIndexWhere(_.stats.active)
+    val indexOfPath = orderedContinents.lastIndexWhere(_.id == newPath)
+
+    (lastActive, indexOfPath) match {
+      case (a, p) if a < 0 && p < 0 => "00000" // Something is wrong, set to zero
+      case (a, _) if a < 0 => "00000" // continents did not contain an active=true field
+      case (_, p) if p < 0 => orderedContinents(lastActive).id // continents did not contain newPath
+      case (a, p) if a <= p => newPath // newPath is after or is at furthest active
+      case (a, p) if a > p => orderedContinents(a).id // newPath is before lastActive
     }
   }
 
