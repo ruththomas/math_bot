@@ -212,8 +212,6 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     } yield updated.copy(isSandbox = Some(bool))
   }
 
-  private final val nonSandboxStatement = BsonDocument(s"""{ $$match: { '$isSandboxLabel': false } }""")
-
   private final val nonAdminUserStatement = BsonDocument("""{ $match: { "user.isAdmin": false } }""")
 
   private final val lookupUserStatement = BsonDocument(s"""
@@ -247,7 +245,6 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     levelStatsCollection
       .aggregate(
         Seq(
-          this.nonSandboxStatement,
           this.lookupUserStatement,
           this.nonAdminUserStatement,
           levelStatsStatement,
@@ -262,7 +259,6 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
     maxLevelCollection
       .aggregate(
         Seq(
-          this.nonSandboxStatement,
           this.lookupUserStatement,
           this.nonAdminUserStatement,
           BsonDocument(s"""{ $$sortByCount: '$$$maxContinentLabel' }""")
