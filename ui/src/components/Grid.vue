@@ -195,6 +195,8 @@ export default {
 
     .row {
       justify-content: center;
+      display: flex;
+      flex-direction: column;
     }
   }
 
