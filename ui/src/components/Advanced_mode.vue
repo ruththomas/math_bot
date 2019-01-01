@@ -51,6 +51,7 @@ $grid-background: rgba(0, 0, 0, 0.6);
   width: calc(#{$grid-space-size} * 10);
   margin: 0 auto;
   position: relative;
+  font-size: calc(5px + 1.5vmin);
 
   .bar {
     position: absolute;
