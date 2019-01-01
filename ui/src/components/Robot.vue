@@ -15,7 +15,7 @@
         enter-active-class="animated tada"
         leave-active-class="animated bounceOutRight"
       >
-        <div v-if="levelControl.mode === 'normal'" class="row container" style="flex: 1;">
+        <div v-if="levelControl.mode === 'normal'" class="row container" style="flex: 1; padding: 0;">
           <div class="row" style="padding: 1% 0; display: flex; flex: 2; position: relative; z-index: 110;">
             <popover-bucket v-if="functionAreaShowing === 'editFunction'"></popover-bucket>
             <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div v-else class="row container" style="flex: 1;">
+        <div v-else class="row container" style="flex: 1; padding: 0;">
           <advanced-mode></advanced-mode>
         </div>
       </transition>
