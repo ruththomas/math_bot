@@ -63,7 +63,7 @@ export default {
 $space-btn-size: 10vmin;
 .star-system {
   display: flex;
-  height: 85%;
+  height: 100%;
   width: 100%;
   position: relative;
   font-size: 1.5vmin;
