@@ -2,18 +2,22 @@ package daos
 
 import java.time.Instant
 
+import actors.messages.level.Stats.tokenIdLabel
 import actors.messages.level.{HintTaken, HintsTaken}
 import com.google.inject.Inject
+import loggers.SemanticLog
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.{MongoCollection, MongoDatabase, _}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
-class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
+class VideoHintDAO @Inject()(mathbotDb: MongoDatabase, aLogger: SemanticLog)(implicit ec: ExecutionContext) {
   final val collectionLabel: String = "video_hints"
 
   import HintTaken._
@@ -122,5 +126,12 @@ class VideoHintDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionCon
       )
       .toFuture()
       .map(ht => ht.list(path).copy(count = 0)) // doing this because it is returning the pre-updated hints
+  }
+
+  collection.createIndex(ascending(tokenIdLabel)).toFuture().onComplete {
+    case Success(_) =>
+      aLogger.debug(SemanticLog.tags.index(collectionLabel, tokenIdLabel, "Created index"))
+    case Failure(t) =>
+      aLogger.error(SemanticLog.tags.index(collectionLabel, tokenIdLabel, t, "Failed to create index"))
   }
 }

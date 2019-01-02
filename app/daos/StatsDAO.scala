@@ -7,25 +7,27 @@ import actors.messages.level.{LayerStatistic, Stats}
 import actors.messages.playeraccount.MaxLevel
 import com.google.inject.Inject
 import level_gen.models._
+import loggers.SemanticLog
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.UpdateResult
 import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
-class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
+class StatsDAO @Inject()(mathbotDb: MongoDatabase, aLogger: SemanticLog)(implicit ec: ExecutionContext) {
   final val collectionLabel = "user_stats"
   import LayerStatistic._
   import Stats._
 
   val codecRegistry: CodecRegistry = fromRegistries(
     fromProviders(
-      Macros.createCodecProvider[Stats](),
       Macros.createCodecProvider[Stats](),
       Macros.createCodecProvider[CelestialSystem](),
       Macros.createCodecProvider[LayerStatistic](),
@@ -266,4 +268,10 @@ class StatsDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext
       .toFuture
   }
 
+  collection.createIndex(ascending(tokenIdLabel)).toFuture().onComplete {
+    case Success(_) =>
+      aLogger.debug(SemanticLog.tags.index(collectionLabel, tokenIdLabel, "Created index"))
+    case Failure(t) =>
+      aLogger.error(SemanticLog.tags.index(collectionLabel, tokenIdLabel, t, "Failed to create index"))
+  }
 }

@@ -1,6 +1,6 @@
 package loggers
 
-import akka.http.scaladsl.model.{ StatusCode, Uri }
+import akka.http.scaladsl.model.{StatusCode, Uri}
 import javassist.runtime.Desc
 import utils.SecureIdentifier
 
@@ -46,17 +46,22 @@ object SemanticLog {
 
     def `class`[T](classTag: ClassTag[T]): (Symbol, String) = symbols.classTag -> classTag.runtimeClass.getCanonicalName
     def actorBecomes(name: String) = Seq(symbols.actorBecomes -> name)
-    def description(d: String) : (Symbol, String) = symbols.description -> d
+    def description(d: String): (Symbol, String) = symbols.description -> d
     def exception(c: Throwable, d: String) = Seq(cause(c), description(d))
-    def cause(c: Throwable) : (Symbol, String) = symbols.cause -> c.toString
+    def cause(c: Throwable): (Symbol, String) = symbols.cause -> c.toString
     def mongo(sessionId: SecureIdentifier, status: String): Seq[(Symbol, String)] =
       Seq(symbols.sessionId -> sessionId.toString, symbols.mongo -> status)
     def outboundHttp(sessionId: SecureIdentifier, uri: Uri, status: StatusCode, body: String) =
       Seq(symbols.outboundUri -> uri.toString(), symbols.httpStatus -> status.value, symbols.httpBody -> body)
     def oauth(oauthSource: String, desc: String) = Seq(symbols.oauth -> oauthSource, description(desc))
     def message(msg: Any): Seq[(Symbol, String)] = Seq(symbols.message -> msg.toString)
-    def index(col : Symbol, fld : Symbol, desc : String) = Seq(symbols.collection -> col.name, symbols.field -> fld.name) :+ description(desc)
-    def index(col : Symbol, fld : Symbol, c: Throwable, desc : String) = Seq(symbols.collection -> col.name, symbols.field -> fld.name) ++ exception(c, desc)
+    def index(col: Symbol, fld: Symbol, desc: String) =
+      Seq(symbols.collection -> col.name, symbols.field -> fld.name) :+ description(desc)
+    def index(col: Symbol, fld: Symbol, c: Throwable, desc: String) =
+      Seq(symbols.collection -> col.name, symbols.field -> fld.name) ++ exception(c, desc)
+    def index(col: String, fld: String, c: Throwable, desc: String) =
+      Seq(symbols.collection -> col, symbols.field -> fld) ++ exception(c, desc)
+    def index(col: String, fld: String, desc: String) = Seq(symbols.collection -> col, symbols.field -> fld)
   }
 
   implicit class loggerExtensions(innerLog: SemanticLog) {
