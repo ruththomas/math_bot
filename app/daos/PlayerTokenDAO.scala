@@ -1,18 +1,22 @@
 package daos
 
+import actors.messages.level.Stats.tokenIdLabel
 import com.google.inject.Inject
+import loggers.SemanticLog
 import models.StepToken
 import models.deprecatedPlayerToken.{CurrentStats, FuncToken, Lambdas, PlayerToken}
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.{CodecRegistries, CodecRegistry}
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
 import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
 import org.mongodb.scala.{Completed, _}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
-class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionContext) {
+class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase, aLogger: SemanticLog)(implicit ec: ExecutionContext) {
   final val collectionLabel = "tokens"
 
   import PlayerToken._
@@ -47,4 +51,11 @@ class PlayerTokenDAO @Inject()(mathbotDb: MongoDatabase)(implicit ec: ExecutionC
       .toFutureOption()
 
   def getTokenCount: Future[String] = collection.count().toFuture().map(_.toString)
+
+  collection.createIndex(ascending(tokenIdLabel)).toFuture().onComplete {
+    case Success(_) =>
+      aLogger.debug(SemanticLog.tags.index(collectionLabel, tokenIdLabel, "Created index"))
+    case Failure(t) =>
+      aLogger.error(SemanticLog.tags.index(collectionLabel, tokenIdLabel, t, "Failed to create index"))
+  }
 }

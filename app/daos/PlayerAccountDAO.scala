@@ -92,13 +92,6 @@ class PlayerAccountDAO @Inject()(
         .toFutureOption()
     } yield result
 
-  collection.createIndex(ascending(tokenIdLabel.name)).toFuture().onComplete {
-    case Success(_) =>
-      aLogger.debug(SemanticLog.tags.index(collectionLabel, tokenIdLabel, "Created index"))
-    case Failure(t) =>
-      aLogger.error(SemanticLog.tags.index(collectionLabel, tokenIdLabel, t, "Failed to create index"))
-  }
-
   def count: Future[Long] = collection.count().toFuture()
 
   private final val nonAdminAccountStatement: BsonDocument = BsonDocument(
@@ -182,4 +175,10 @@ class PlayerAccountDAO @Inject()(
     collection.count(equal(isAdminLabel.name, BsonBoolean(false))).toFuture()
   }
 
+  collection.createIndex(ascending(tokenIdLabel.name)).toFuture().onComplete {
+    case Success(_) =>
+      aLogger.debug(SemanticLog.tags.index(collectionLabel, tokenIdLabel, "Created index"))
+    case Failure(t) =>
+      aLogger.error(SemanticLog.tags.index(collectionLabel, tokenIdLabel, t, "Failed to create index"))
+  }
 }
