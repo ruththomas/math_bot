@@ -4,6 +4,7 @@ import RunCompiled from './RunCompiled'
 import _ from 'underscore'
 import circular from 'circular-json'
 import $router from '../router'
+import $store from '../store/store'
 
 class LevelControl extends Ws {
   constructor () {
@@ -26,6 +27,7 @@ class LevelControl extends Ws {
     this.getCurrentStarSystem = this.getCurrentStarSystem.bind(this)
     this._positionBar = this._positionBar.bind(this)
     this.getSandbox = this.getSandbox.bind(this)
+    this._handleProfileState = this._handleProfileState.bind(this)
 
     this._openSocket(this._init)
   }
@@ -310,31 +312,48 @@ class LevelControl extends Ws {
 
   _handleUnlockAllLevels (res) {
     this.unlockedAllLevels = true
-
     console.log('unlock', res)
   }
 
-  _init () {
-    this._wsOnMessage((res) => {
-      switch (Object.keys(res).filter((key) => key !== 'status')[0]) {
-        case 'path':
-          this._setPath(res)
-          break
-        case 'galaxyData':
-          this._setGalaxy(res)
-          break
-        case 'pathAndContinent':
-          this._setContinent(res, true)
-          break
+  _unload () {
+    window.onbeforeunload = () => {
+      localStorage.setItem('profile-state', JSON.stringify({path: this.path, galaxyData: this.galaxy, pathAndContinent: {path: this.path, builtContinent: this.continent}}))
+      this._send(JSON.stringify({action: 'unload'}))
+    }
+  }
 
-        case 'stats':
-          this._handleUnlockAllLevels(res)
-          break
-        default:
-          console.error(res.status, res.message)
-      }
-    })
-    this._send(JSON.stringify({action: 'init'}))
+  _handleProfileState (data) {
+    switch (Object.keys(data).filter((key) => key !== 'status')[0]) {
+      case 'path':
+        this._setPath(data)
+        break
+      case 'galaxyData':
+        this._setGalaxy(data)
+        break
+      case 'pathAndContinent':
+        this._setContinent(data, true)
+        break
+      case 'stats':
+        this._handleUnlockAllLevels(data)
+        break
+      default:
+        console.error(data.status || 'Mutated data in cache', data.message || data)
+    }
+  }
+
+  _init () {
+    const profile = $store.state.auth.userProfile
+    const cachedProfileState = localStorage.getItem('profile-state')
+    this._unload()
+    if (cachedProfileState !== null && profile.sessionId === profile.lastCacheId) {
+      // console.log('CACHE')
+      const profileState = JSON.parse(cachedProfileState)
+      _.each(profileState, (item, key) => this._handleProfileState({[key]: item}))
+    } else {
+      // console.log('SERVER')
+      this._wsOnMessage(this._handleProfileState)
+      this._send(JSON.stringify({action: 'init'}))
+    }
   }
 
   getSandbox () {

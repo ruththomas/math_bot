@@ -40,9 +40,8 @@ export class AuthService {
   }
 
   _handleAuthenticated () {
-    const tokenId = this.userProfile.sub || this.userProfile.user_id
     this.authenticated = true
-    $store.dispatch('updateControls', tokenId)
+    $store.dispatch('updateControls')
     this._storeLastRoute()
     this._handleRoute()
   }

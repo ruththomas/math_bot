@@ -57,7 +57,6 @@ export default new Vuex.Store({
       state.levelControl = new LevelControl()
       state.adminControl = new AdminControl()
     },
-
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
     },
@@ -114,11 +113,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
-
     confirmDeactivateFunction ({commit}, _func) {
       commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
     },
-    updateControls ({commit}, tokenId) {
+    updateControls ({commit}) {
       commit('UPDATE_CONTROLS')
     },
     clearAuthErrors ({commit}) {
