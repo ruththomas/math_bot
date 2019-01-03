@@ -58,6 +58,8 @@ object LevelRequestConvertFlow extends SocketRequestConvertFlow {
         GetSandbox()
       case Some(LevelRequest(action, _, pathOpt, _, _)) if action == "reset-continent" =>
         ResetContinent(pathOpt)
+      case Some(LevelRequest(action, _, _, _, _)) if action == "unload" =>
+        Unload()
       case _ => ActorFailed("Bad json input")
     }
   }

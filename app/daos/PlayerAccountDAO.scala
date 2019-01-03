@@ -15,6 +15,7 @@ import org.mongodb.scala.bson.{BsonBoolean, BsonDateTime, BsonDocument}
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Indexes._
 import org.mongodb.scala.model.Updates._
+import org.mongodb.scala.result.UpdateResult
 import org.mongodb.scala.{Completed, MongoCollection, MongoDatabase, _}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,9 +34,8 @@ class PlayerAccountDAO @Inject()(
   private val isAdminLabel = 'isAdmin
   private val lastAccess = 'lastAccess
   private val timesAccessed = 'timesAccessed
-  private val maxLevel = 'maxLevel
-  private val maxStep = 'maxStep
   private val createdLabel = 'created
+  private val lastCacheIdLabel = 'lastCacheId
 
   private val codecRegistry = fromRegistries(
     fromProviders(
@@ -85,10 +85,10 @@ class PlayerAccountDAO @Inject()(
         .toFutureOption()
     } yield result
 
-  def updateMaxLevelAndStep(tokenId: String, ml: String, ms: String): Future[Option[PlayerAccount]] =
+  def updateLastCacheId(tokenId: String, sessionId: String): Future[Option[UpdateResult]] =
     for {
       result <- collection
-        .findOneAndUpdate(equal(tokenIdLabel.name, tokenId), combine(set(maxLevel.name, ml), set(maxStep.name, ms)))
+        .updateOne(equal(tokenIdLabel.name, tokenId), set(lastCacheIdLabel.name, sessionId))
         .toFutureOption()
     } yield result
 

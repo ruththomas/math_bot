@@ -35,20 +35,23 @@ object LevelActor {
   final case class ChangeFunctionColor(function: Function)
   final case class GetSandbox()
   final case class ResetContinent(pathOpt: Option[String])
+  final case class Unload()
 
   def props(out: ActorRef,
             tokenId: String,
+            sessionId: String,
             statsDAO: StatsDAO,
             lambdasDAO: FunctionsDAO,
             playerTokenDAO: PlayerTokenDAO,
             ws: WSClient,
             environment: Environment,
             levelControl: LevelControl) =
-    Props(new LevelActor(out, tokenId, statsDAO, lambdasDAO, playerTokenDAO, ws, environment, levelControl))
+    Props(new LevelActor(out, tokenId, sessionId, statsDAO, lambdasDAO, playerTokenDAO, ws, environment, levelControl))
 }
 
 class LevelActor @Inject()(out: ActorRef,
                            tokenId: String,
+                           sessionId: String,
                            statsDAO: StatsDAO,
                            functionsDAO: FunctionsDAO,
                            playerTokenDAO: PlayerTokenDAO,
@@ -175,6 +178,8 @@ class LevelActor @Inject()(out: ActorRef,
       for {
         reset <- levelControl.resetContinent(tokenId, pathOpt)
       } yield out ! reset
+    case Unload() =>
+      levelControl.updateLastCacheId(tokenId, sessionId)
     case actorFailed: ActorFailed => out ! actorFailed
   }
 }
