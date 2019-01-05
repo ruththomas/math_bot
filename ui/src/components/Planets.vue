@@ -18,6 +18,7 @@
         planet.stats.active && selectedStarSystem === starSystem.id.substr(-1) && Number(selectedPlanet) === ind ? 'selected' : ''
       ]"
       :src="permanentImages.planets[planet.stats.name]"
+      @error="defaultImage(planet.stats.name)"
       @click="!isButton && planet.stats.active ? updateSelectedPlanet(ind) : ''" />
     <div v-if="isButton" class="space-text-zone">
       <span v-if="starSystem.stats.active" class="space-btn-name">{{starSystem.stats.name}}</span>
@@ -40,6 +41,11 @@ export default {
   data () {
     return {
       selectedLevel: ''
+    }
+  },
+  methods: {
+    defaultImage (planet) {
+      this.permanentImages.planets[planet] = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAIAAAgABJ60+RsAAAAASUVORK5CYII='
     }
   },
   props: ['isButton', 'selectedPlanet', 'selectedStarSystem', 'updateSelectedPlanet', 'specifiedStyle', 'starSystem']

@@ -252,5 +252,6 @@ module.exports = {
   gridMesh: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522345998/misc/grid-mesh_auu3wh.svg',
   lock: 'https://res.cloudinary.com/deqjemwcu/image/upload/v1522347906/misc/lock.png',
   spaceShip: 'https://res.cloudinary.com/doohickey/image/upload/v1521989176/noun_1018446_cc_zvq5px.svg',
-  gravatar: 'https://res.cloudinary.com/doohickey/image/upload/v1536423046/noun_person_924847_cccccc_wi94pe.svg'
+  gravatar: 'https://res.cloudinary.com/doohickey/image/upload/v1536423046/noun_person_924847_cccccc_wi94pe.svg',
+  dummyImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAIAAAgABJ60+RsAAAAASUVORK5CYII='
 }
