@@ -55,6 +55,7 @@ class LevelController @Inject()(
                   ActorFlow.actorRef { out =>
                     LevelActor.props(out,
                                      session.playerTokenId,
+                                     sessionId.toString,
                                      statsDAO,
                                      lambdasDAO,
                                      playerTokenDAO,

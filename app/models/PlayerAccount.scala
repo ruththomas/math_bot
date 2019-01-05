@@ -19,4 +19,5 @@ case class PlayerAccount(tokenId: String,
                          maxLevel: String,
                          maxStep: String,
                          picture: Option[String] = None,
+                         lastCacheId: Option[String] = None,
                          isAdmin: Boolean = false)

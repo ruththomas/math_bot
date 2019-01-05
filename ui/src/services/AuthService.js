@@ -22,12 +22,13 @@ export class AuthService {
   }
 
   _storeLastRoute () {
-    window.onbeforeunload = () => {
-      const route = $router.history.current.fullPath
-      if (route === '/robot' || route === '/profile') {
-        localStorage.setItem('last_location', route)
-      }
-    }
+    window.addOnBeforeUnload(
+      () => {
+        const route = $router.history.current.fullPath
+        if (route === '/robot' || route === '/profile') {
+          localStorage.setItem('last_location', route)
+        }
+      })
   }
 
   _handleRoute () {
@@ -40,9 +41,8 @@ export class AuthService {
   }
 
   _handleAuthenticated () {
-    const tokenId = this.userProfile.sub || this.userProfile.user_id
     this.authenticated = true
-    $store.dispatch('updateControls', tokenId)
+    $store.dispatch('updateControls')
     this._storeLastRoute()
     this._handleRoute()
   }
