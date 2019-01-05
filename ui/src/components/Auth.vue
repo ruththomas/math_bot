@@ -46,6 +46,9 @@ import UpdatePassword from './Update_password'
 export default {
   name: 'Auth',
   mounted () {
+    if (this.auth.authenticated) {
+      this.$router.push({path: '/profile'})
+    }
     this.auth.clearErrors()
     this.showUpdate()
   },

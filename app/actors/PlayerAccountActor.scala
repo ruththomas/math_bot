@@ -13,7 +13,8 @@ import scala.concurrent.ExecutionContext
 
 class PlayerAccountActor @Inject()(
     val playerAccount: PlayerAccountDAO
-)(implicit val ec : ExecutionContext) extends Actor {
+)(implicit val ec: ExecutionContext)
+    extends Actor {
   override def receive: Receive = {
     case CreateAccount(jwt) => {
       val now = Date.from(Instant.now())
@@ -24,17 +25,17 @@ class PlayerAccountActor @Inject()(
           playerAccount.updateAccess(pa.tokenId)
           s ! AccountCreated(pa.tokenId)
         case None =>
-          val pa = PlayerAccount(jwt.playerTokenId, jwt.iss, jwt.sub, jwt.email, jwt.name, now, now, 1, "", "", jwt.picture)
-          playerAccount.put(pa) foreach {
-            _ => s ! AccountCreated(pa.tokenId)
+          val pa =
+            PlayerAccount(jwt.playerTokenId, jwt.iss, jwt.sub, jwt.email, jwt.name, now, now, 1, "", "", jwt.picture)
+          playerAccount.put(pa) foreach { _ =>
+            s ! AccountCreated(pa.tokenId)
           }
       }
 
     }
     case UpdateAccountAccess(idToken) =>
       playerAccount.updateAccess(idToken)
-
-    case UpdateMaxLevelAndStep(idToken, maxLevel, maxStep) =>
-      playerAccount.updateMaxLevelAndStep(idToken, maxLevel, maxStep)
+    case UpdateCacheId(tokenId, sessionId) =>
+      sender() ! playerAccount.updateLastCacheId(tokenId, sessionId)
   }
 }
