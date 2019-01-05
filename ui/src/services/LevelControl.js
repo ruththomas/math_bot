@@ -28,6 +28,8 @@ class LevelControl extends Ws {
     this._positionBar = this._positionBar.bind(this)
     this.getSandbox = this.getSandbox.bind(this)
     this._handleProfileState = this._handleProfileState.bind(this)
+    this._cacheState = this._cacheState.bind(this)
+    this._unload = this._unload.bind(this)
 
     this._openSocket(this._init)
   }
@@ -334,15 +336,27 @@ class LevelControl extends Ws {
     }
   }
 
+  _cacheState () {
+    const state = {path: this.path, galaxyData: this.galaxy, pathAndContinent: {path: this.path, builtContinent: this.continent}}
+    localStorage.setItem('profile-state', JSON.stringify(state))
+  }
+
+  _unload () {
+    window.addOnBeforeUnload(() => {
+      this._cacheState()
+    })
+  }
+
   _init () {
     const profile = $store.state.auth.userProfile
     const cachedProfileState = localStorage.getItem('profile-state')
+    this._unload()
     if (cachedProfileState !== null && profile.sessionId === profile.lastCacheId) {
-      // console.log('CACHE')
+      console.log('PROFILE ~ CACHE')
       const profileState = JSON.parse(cachedProfileState)
       _.each(profileState, (item, key) => this._handleProfileState({[key]: item}))
     } else {
-      // console.log('SERVER')
+      console.log('PROFILE ~ SERVER')
       this._wsOnMessage(this._handleProfileState)
       this._send(JSON.stringify({action: 'init'}))
     }
