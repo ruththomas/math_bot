@@ -52,7 +52,7 @@ class LevelControl @Inject()(
   /*
    * Assembles galaxy data back into its nested data structure
    * */
-  def getGalaxyData(tokenId: String, path: Option[String]): Future[GalaxyData] = {
+  def getGalaxyData(tokenId: String, path: Option[String] = None): Future[GalaxyData] = {
     for {
       stats <- getStats(tokenId)
     } yield GalaxyData(stats, path.getOrElse("00000"))
@@ -405,11 +405,12 @@ class LevelControl @Inject()(
    * Used to unlock all levels
    * In the future this should be part of the admin screen
    * */
-  def unlock(tokenId: String): Future[Stats] = {
+  def unlock(tokenId: String): Future[GalaxyData] = {
     for {
       _ <- getStats(tokenId)
-      unlocked <- statsDAO.unlock(tokenId)
-    } yield unlocked
+      _ <- statsDAO.unlock(tokenId)
+      galaxyData <- getGalaxyData(tokenId)
+    } yield galaxyData
   }
 
   def getSandbox(tokenId: String): Future[PathAndContinent] = {

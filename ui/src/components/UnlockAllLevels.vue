@@ -15,7 +15,6 @@ export default {
     }
   },
   methods: {
-
     // unlock all levels for user
     unlockLevels () {
       this.levelControl.getUnlock()
