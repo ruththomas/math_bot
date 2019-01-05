@@ -22,12 +22,13 @@ export class AuthService {
   }
 
   _storeLastRoute () {
-    window.onbeforeunload = () => {
-      const route = $router.history.current.fullPath
-      if (route === '/robot' || route === '/profile') {
-        localStorage.setItem('last_location', route)
-      }
-    }
+    window.addOnBeforeUnload(
+      () => {
+        const route = $router.history.current.fullPath
+        if (route === '/robot' || route === '/profile') {
+          localStorage.setItem('last_location', route)
+        }
+      })
   }
 
   _handleRoute () {

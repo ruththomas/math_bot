@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import VueDefaultValue from 'vue-default-value/dist/vue-default-value'
 import permanentImages from '../assets/assets'
 
-// todo use message
+// (joe) todo use message
 import Message from '../services/Message'
 import { AuthService } from '../services/AuthService'
 import VideoTimer from '../services/VideoTimer'

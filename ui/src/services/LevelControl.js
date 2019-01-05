@@ -315,13 +315,6 @@ class LevelControl extends Ws {
     console.log('unlock', res)
   }
 
-  _unload () {
-    window.onbeforeunload = () => {
-      localStorage.setItem('profile-state', JSON.stringify({path: this.path, galaxyData: this.galaxy, pathAndContinent: {path: this.path, builtContinent: this.continent}}))
-      this._send(JSON.stringify({action: 'unload'}))
-    }
-  }
-
   _handleProfileState (data) {
     switch (Object.keys(data).filter((key) => key !== 'status')[0]) {
       case 'path':
@@ -344,7 +337,6 @@ class LevelControl extends Ws {
   _init () {
     const profile = $store.state.auth.userProfile
     const cachedProfileState = localStorage.getItem('profile-state')
-    this._unload()
     if (cachedProfileState !== null && profile.sessionId === profile.lastCacheId) {
       // console.log('CACHE')
       const profileState = JSON.parse(cachedProfileState)
