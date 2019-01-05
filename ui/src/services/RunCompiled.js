@@ -67,7 +67,6 @@ class RunCompiled extends GridAnimator {
 
   start (mbl) {
     const emptyFuncs = this._testForEmptyFunctions()
-
     if (emptyFuncs.length) {
       this._mainEmptyMessage(emptyFuncs)
     } else if (this.robot.state !== 'paused') {
@@ -207,7 +206,6 @@ class RunCompiled extends GridAnimator {
 
   _mainEmptyMessage (emptyFuncs) {
     const emptyCount = emptyFuncs.length
-
     const messageBuilder = {
       type: 'warn',
       msg: emptyFuncs.find(f => f.name === 'Main') ? 'Main cannot be empty' : `${emptyFuncs.length} of your functions ${emptyCount > 1 ? 'are' : 'is'} empty`,
