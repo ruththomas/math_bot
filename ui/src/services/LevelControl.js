@@ -29,7 +29,6 @@ class LevelControl extends Ws {
     this.getSandbox = this.getSandbox.bind(this)
     this._handleProfileState = this._handleProfileState.bind(this)
     this._cacheState = this._cacheState.bind(this)
-    this._unload = this._unload.bind(this)
 
     this._positionBarOnSizeChange()
     this._openSocket(this._init)
@@ -44,7 +43,6 @@ class LevelControl extends Ws {
   functions = null
   gridMap = null
   runCompiled = null
-  unlockedAllLevels = false
 
   // temporary until solved server side
   storeMbl () {
@@ -59,10 +57,12 @@ class LevelControl extends Ws {
 
   _setPath ({path}) {
     this.path = path
+    this._cacheState()
   }
 
   _setGalaxy ({galaxyData}) {
     this.galaxy = galaxyData
+    this._cacheState()
   }
 
   _setStarSystem ({starSystemData}) {
@@ -77,10 +77,12 @@ class LevelControl extends Ws {
     this.functions = this.continent.lambdas
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
+    this._cacheState()
     setTimeout(this._positionBar, 500)
   }
 
   _resetContinent ({pathAndContinent: {path, builtContinent}}) {
+    this.path = path
     this.continent = builtContinent
     this.functions = this.continent.lambdas
   }
@@ -260,6 +262,11 @@ class LevelControl extends Ws {
   }
 
   getUnlock () {
+    this._wsOnMessage((res) => {
+      this._handleProfileState(res)
+      this._cacheState()
+      $router.push({path: '/profile'})
+    })
     this._send(JSON.stringify({action: 'unlock'}))
   }
 
@@ -317,11 +324,6 @@ class LevelControl extends Ws {
     return this.galaxy.starSystems[this.path[2]].planets[this.path[3]].stats
   }
 
-  _handleUnlockAllLevels (res) {
-    this.unlockedAllLevels = true
-    console.log('unlock', res)
-  }
-
   _handleProfileState (data) {
     switch (Object.keys(data).filter((key) => key !== 'status')[0]) {
       case 'path':
@@ -333,9 +335,6 @@ class LevelControl extends Ws {
       case 'pathAndContinent':
         this._setContinent(data, true)
         break
-      case 'stats':
-        this._handleUnlockAllLevels(data)
-        break
       default:
         console.error(data.status || 'Mutated data in cache', data.message || data)
     }
@@ -346,16 +345,9 @@ class LevelControl extends Ws {
     localStorage.setItem('profile-state', JSON.stringify(state))
   }
 
-  _unload () {
-    window.addOnBeforeUnload(() => {
-      this._cacheState()
-    })
-  }
-
   _init () {
     const profile = $store.state.auth.userProfile
     const cachedProfileState = localStorage.getItem('profile-state')
-    this._unload()
     if (cachedProfileState !== null && profile.sessionId === profile.lastCacheId) {
       console.log('PROFILE ~ CACHE')
       const profileState = JSON.parse(cachedProfileState)

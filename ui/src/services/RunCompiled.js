@@ -169,7 +169,7 @@ class RunCompiled extends GridAnimator {
     this._addMessage(failedMessage1)
   }
 
-  _mainEmptyMessage () {
+  _mainEmptyMessage (emptyFuncs) {
     const messageBuilder = {
       type: 'warn',
       msg: '',
