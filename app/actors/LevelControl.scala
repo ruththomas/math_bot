@@ -2,19 +2,26 @@ package actors
 
 import actors.messages.AssignedFunction
 import actors.messages.level._
+import actors.messages.playeraccount.{UpdateAccountAccess, UpdateCacheId}
+import akka.NotUsed
+import akka.actor.ActorRef
 import akka.http.scaladsl.util.FastFuture
+import akka.stream.scaladsl.Sink
 import com.google.inject.Inject
+import com.google.inject.name.Named
 import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
 import level_gen.models.CelestialSystem
 import models.deprecatedPlayerToken.PlayerToken
 import level_gen.sandbox.Sandbox._
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class LevelControl @Inject()(
     statsDAO: StatsDAO,
     functionsDAO: FunctionsDAO,
-    playerTokenDAO: PlayerTokenDAO
+    playerTokenDAO: PlayerTokenDAO,
+    @Named(ActorTags.playerAccount) playerAccountActor: ActorRef
 )(implicit ec: ExecutionContext) {
   import compiler.ElementKinds._
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
@@ -38,6 +45,9 @@ class LevelControl @Inject()(
     })
     statsDAO.replace(updatedUserStats)
   }
+
+  def updateLastCacheId(tokenId: String, sessionId: String) =
+    playerAccountActor ! UpdateCacheId(tokenId, sessionId)
 
   /*
    * Assembles galaxy data back into its nested data structure
