@@ -35,7 +35,7 @@ object LevelActor {
   final case class ChangeFunctionColor(function: Function)
   final case class GetSandbox()
   final case class ResetContinent(pathOpt: Option[String])
-  final case class Unload()
+  final case class UpdateLastCacheId()
 
   def props(out: ActorRef,
             tokenId: String,
@@ -178,7 +178,7 @@ class LevelActor @Inject()(out: ActorRef,
       for {
         reset <- levelControl.resetContinent(tokenId, pathOpt)
       } yield out ! reset
-    case Unload() =>
+    case UpdateLastCacheId() =>
       levelControl.updateLastCacheId(tokenId, sessionId)
     case actorFailed: ActorFailed => out ! actorFailed
   }
