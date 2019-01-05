@@ -46,7 +46,7 @@ class LevelControl @Inject()(
     statsDAO.replace(updatedUserStats)
   }
 
-  def updateLastCacheId(tokenId: String, sessionId: String) =
+  def updateLastCacheId(tokenId: String, sessionId: String): Unit =
     playerAccountActor ! UpdateCacheId(tokenId, sessionId)
 
   /*
