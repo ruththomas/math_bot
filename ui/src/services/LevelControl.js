@@ -91,6 +91,7 @@ class LevelControl extends Ws {
 
   _updatePath () {
     this._wsOnMessage(() => {})
+    this._cacheState()
     this._send(JSON.stringify({action: 'update-path', path: this.path}))
   }
 
@@ -338,6 +339,7 @@ class LevelControl extends Ws {
   _cacheState () {
     const state = {path: this.path, galaxyData: this.galaxy, pathAndContinent: {path: this.path, builtContinent: this.continent}}
     localStorage.setItem('profile-state', JSON.stringify(state))
+    this._send(JSON.stringify({action: 'update-cache-id'}))
   }
 
   _init () {
