@@ -1,6 +1,7 @@
 package actors
 import actors.messages.ActorFailed
 import actors.messages.admin.{AdminEvent, LevelStats, NewEvent}
+import actors.messages.level.Stats
 import actors.messages.playeraccount.{MaxLevel, UserAccountSignups}
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
@@ -8,7 +9,8 @@ import daos._
 import play.api.Environment
 import play.api.libs.ws.WSClient
 
-abstract class EventResult {
+trait EventResult {
+
   def result: String
 }
 
@@ -16,6 +18,8 @@ object AdminActor {
   final case class GetUserCount()
   final case class GetMaxLevel()
   final case class GetEvents()
+  final case class GetStarSystemStats(starSystem: Option[String])
+  final case class GetPlanetStats(level: Option[String])
   final case class PutEvent(event: Option[AdminEvent])
   final case class PostEvent(event: Option[NewEvent])
   final case class DeleteEvent(event: Option[AdminEvent])
@@ -72,6 +76,8 @@ class AdminActor @Inject()(out: ActorRef,
   import context.dispatcher
 
   private final val className = "AdminActor"
+
+  private final val stats = Stats("")
 
   override def receive: Receive = {
 
