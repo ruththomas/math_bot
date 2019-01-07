@@ -2,12 +2,9 @@
   <div
     class="space"
     :class="[
-      isButton ? 'btn btn-dark space-btn' : '',
-      isButton && !starSystem.stats.active ? 'space-btn-disabled' : '',
-      isButton && selectedStarSystem === starSystem.id.substr(-1) ? 'space-btn-selected' : ''
+      isButton ? 'space-btn' : ''
     ]"
     :style="specifiedStyle"
-    @click="isButton && starSystem.stats.active ? levelControl.updateStarSystem(starSystem.id.substr(-1)) : ''"
   >
     <img
       v-for="(planet, ind) in starSystem.planets" :key="'planet/' + planet.id"
@@ -20,10 +17,6 @@
       :src="permanentImages.planets[planet.stats.name]"
       @error="defaultImage(planet.stats.name)"
       @click="!isButton && planet.stats.active ? updateSelectedPlanet(ind) : ''" />
-    <div v-if="isButton" class="space-text-zone">
-      <span v-if="starSystem.stats.active" class="space-btn-name">{{starSystem.stats.name}}</span>
-      <img v-else class="space-btn-image" :src="permanentImages.lock" />
-    </div>
   </div>
 </template>
 
@@ -72,19 +65,19 @@ export default {
   $PracticeArithmetic-color: rgba(185, 62, 167, 1);
   $Refactor-color: transparent;
   $inactive-color: rgba(104, 104, 104, 1);
-  $Coding-size: 25% /*23vim*/;
-  $Coordinates-size: 14% /*13vmin*/;
-  $Counting-size: 18%/*16vmin*/;
-  $Numbers-size: 20%/*20vmin*/;
-  $Recursion-size: 16%/*14vmin*/;
-  $Conditionals-size: 12%/*12vmin*/;
-  $Addition-size: 11%/*11vmin*/;
-  $Subtraction-size: 10%/*10vmin*/;
-  $Multiplication-size: 14% /*13vmin*/;
-  $Division-size: 12% /*12vmin*/;
-  $Exponents-size: 15% /*15vmin*/;
-  $Roots-size: 10% /*9vmin*/;
-  $Refactor-size: 6% /*5vmin*/;
+  $Coding-size: 35% /*23vim*/;
+  $Counting-size: 28%/*16vmin*/;
+  $Numbers-size: 25%/*20vmin*/;
+  $Recursion-size: 22%/*14vmin*/;
+  $Conditionals-size: 18%/*12vmin*/;
+  $Coordinates-size: 20% /*13vmin*/;
+  $Addition-size: 18%/*11vmin*/;
+  $Subtraction-size: 22%/*10vmin*/;
+  $Multiplication-size: 20% /*13vmin*/;
+  $Division-size: 18% /*12vmin*/;
+  $Exponents-size: 25% /*15vmin*/;
+  $Roots-size: 18% /*9vmin*/;
+  $Refactor-size: 16% /*5vmin*/;
   $planet-gradient: rgba(0, 0, 0, 1);
   $space-btn-size: 10vmin;
 
@@ -95,25 +88,8 @@ export default {
   }
 
   .space-btn {
-    width: $space-btn-size;
     height: $space-btn-size;
-    margin: 0.3em 0 0.3em 0;
-    border-radius: 0.25rem!important;
-    background-color: transparent;
-    font-size: 1.1em;
-    padding: 8% 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-color: transparent;
-  }
-
-  .space-btn-selected {
-    border-color: #343a40;
-  }
-
-  .space-btn:first-child {
-    margin-top: 1.5em;
+    width: $space-btn-size;
   }
 
   .space-text-zone {
@@ -305,5 +281,72 @@ export default {
     opacity: 0.8;
     cursor: not-allowed;
     background: radial-gradient(circle at $gradient-size $gradient-size, $inactive-color, $planet-gradient);
+  }
+
+  @media (max-width: 414px) and (orientation: portrait) {
+    .Coding {
+      width: calc(#{$Coding-size} * 1.3);
+      height: auto;
+    }
+
+    .Counting {
+      width: calc(#{$Counting-size} * 1.3);
+      height: auto;
+    }
+
+    .Numbers {
+      width: calc(#{$Numbers-size} * 1.3);
+      height: auto;
+    }
+
+    .Recursion {
+      width: calc(#{$Recursion-size} * 1.3);
+      height: auto;
+    }
+
+    .Conditionals {
+      width: calc(#{$Conditionals-size} * 1.3);
+      height: auto;
+    }
+
+    .Coordinates {
+      width: calc(#{$Coordinates-size} * 1.3);
+      height: auto;
+    }
+
+    .Addition {
+      width: calc(#{$Addition-size} * 1.3);
+      height: auto;
+    }
+
+    .Subtraction {
+      width: calc(#{$Subtraction-size} * 1.3);
+      height: auto;
+    }
+
+    .Multiplication {
+      width: calc(#{$Multiplication-size} * 1.3);
+      height: auto;
+    }
+
+    .Division {
+      width: calc(#{$Division-size} * 1.3);
+      height: auto;
+    }
+
+    .Exponents {
+      width: calc(#{$Exponents-size} * 1.3);
+      height: auto;
+    }
+
+    .Roots {
+      width: calc(#{$Roots-size} * 1.3);
+      height: auto;
+    }
+
+    .Refactor {
+      width: calc(#{$Division-size} * 1.3);
+      height: auto;
+    }
   }
 </style>
