@@ -5,24 +5,48 @@ import CodeMirror from '../../node_modules/codemirror/lib/codemirror'
   'use strict'
 
   CodeMirror.defineMode('mathbotlang', function (config) {
+    let spacebefore = false
+    let inbracket = false
+    let Highlighters = {
+      'forward': [/forward\b/, 'keyword'],
+      'right': [/right\b/, 'keyword'],
+      'putdown': [/putdown\b/, 'keyword'],
+      'pickup': [/pickup\b/, 'keyword'],
+      '=>': [/=>\B/, 'def'],
+      'sym': [/(')(\w|\d)+/, 'atom']
+    }
     return {
       token: function (stream) {
-        let match = function (array) {
-          let stringarray = array.splice(0)
-          if (stringarray.length < 1) return true
-          if (!stream.eat(stringarray[0]) || stream === undefined) return false
-          stringarray.shift()
-          return match(stringarray)
+        if (stream.start === 0) spacebefore = true
+        if (stream.eatSpace()) spacebefore = true
+        if (stream.eat('(')) {
+          spacebefore = true
+          inbracket = true
+          return
         }
-        if (match(['u', 'n', 'l', 'e', 's', 's'])) return 'atom'
-        if (match(['i', 'f'])) return 'atom'
-        if (match(['r', 'i', 'g', 'h', 't'])) return 'keyword'
-        if (match(['p', 'i', 'c', 'k', 'u', 'p'])) return 'keyword'
-        if (match(['u', 't', 'd', 'o', 'w', 'n'])) return 'keyword'
-        if (match(['f', 'o', 'r', 'w', 'a', 'r', 'd'])) return 'keyword'
-        if (match([')'])) return 'bracket'
-        if (match(['('])) return 'bracket'
-        if (match(['=', '>'])) return 'def'
+        let val
+        Object.keys(Highlighters).forEach(function (key) {
+          if (stream.eatSpace()) spacebefore = true
+          if (spacebefore) {
+            if (stream.match(Highlighters[key][0])) {
+              spacebefore = false
+              val = Highlighters[key][1]
+            }
+          }
+        })
+        if (val) return val
+        if (spacebefore) {
+          if (stream.match(/((\w|\d)+ =>)/)) {
+            stream.backUp(3)
+            let toturn = stream.current()
+            if (!inbracket) toturn = toturn.substr(1)
+            const toadd = new RegExp(toturn + '\\' + 'b')
+            Highlighters[toturn] = [toadd, 'keyword']
+            spacebefore = false
+            return 'keyword'
+          }
+        }
+        spacebefore = false
         stream.next()
       }
     }
