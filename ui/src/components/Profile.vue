@@ -1,12 +1,12 @@
 <template>
   <div class="container profile">
     <splash-screen v-if="levelControl.galaxy === null"></splash-screen>
-    <div v-else style="height: 90%">
+    <div v-else class="profile-top">
       <div v-if="levelControl.galaxy !== null" class="star-system-nav">
         <level-congrats key="level-congrats"></level-congrats>
         <star-system-congrats key="star-system-congrats"></star-system-congrats>
       </div>
-      <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
+      <div v-if="levelControl.galaxy !== null" class="row star-systems-slot">
         <div class="star-systems">
           <star-system></star-system>
         </div>
@@ -86,8 +86,16 @@ export default {
         }
       }
     }
-    .row {
+    .profile-top {
+      height: 90%;
+      .row {
+        margin: auto;
+      }
+    }
+    .star-systems-slot {
       position: relative;
+      margin: 0;
+      height: 90%;
       .star-systems {
         height: 100%;
         width: 100%;
@@ -118,5 +126,8 @@ export default {
         border: 1px solid #ffffff;
       }
     }
+  }
+
+  @media (max-width: 414px) and (orientation: portrait) {
   }
 </style>

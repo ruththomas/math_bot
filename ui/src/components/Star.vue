@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $star-size: 4vmin;
+  $star-size: 100%;
   $click-color: #B8E986;
 
   .star {
