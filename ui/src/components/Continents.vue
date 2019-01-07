@@ -15,10 +15,10 @@
           :key="'continent/' + continent.id"
           :disabled="!continent.stats.active"
         >
-          <div class="col-6">
+          <div class="step-text">
             <div class="step-info-text">Level {{ continentNumber + 1 }}</div>
           </div>
-          <div class="col-6">
+          <div class="step-stars">
             <stars v-if="continent.stats.active" :continent-id="continent.id"></stars>
             <div v-else class="stars">
               <img :src="permanentImages.lock" style="height: 1.5em;" />
@@ -26,14 +26,14 @@
           </div>
         </button>
         <button
-          v-if="nextPlanet && currentStarSystem.stats.name !== 'Sandbox' && continents[continents.length - 1].stats.wins > 0"
+          v-if="nextPlanet && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextPlanet.id + '0')">
-          <div class="col-6">
+          <div class="step-text">
             <div class="step-info-text"><div>Next planet!</div> {{parseCamelCase(nextPlanet.stats.name)}}</div>
           </div>
-          <div class="col-6">
+          <div class="step-stars">
             <img
               class="step-next-planet"
               :class="nextPlanet.stats.name"
@@ -43,7 +43,7 @@
           </div>
         </button>
         <button
-          v-else-if="nextStarSystem && nextStarSystem.stats.name !== 'Sandbox' && continents[continents.length - 1].stats.wins > 0"
+          v-else-if="nextStarSystem && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextStarSystem.planets[0].id + '0')"
@@ -57,23 +57,6 @@
               :class="nextStarSystem.planets[0].stats.name"
               :src="permanentImages.planets[nextStarSystem.planets[0].stats.name]"
               alt="Planet"
-            />
-          </div>
-        </button>
-        <button
-          v-else-if="nextStarSystem && nextStarSystem.stats.name === 'Sandbox'"
-          type="button"
-          class="btn btn-dark btn-lg btn-block"
-        >
-          <div class="col-6">
-            <div class="step-info-text"><div>You won!</div></div>
-          </div>
-          <div class="col-6">
-            <img
-              class="step-next-planet"
-              :src="permanentImages.instructionsRobot"
-              alt="Planet"
-              style="background-color: #ffffff; border-radius: 50%;"
             />
           </div>
         </button>
@@ -141,7 +124,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $steps-font-size: 2vmin;
+  $steps-font-size: 1.5em;
   $gradient-size: 100px;
   $outer-shadow-blur: 50px;
   $outer-shadow-size: 1px;
@@ -185,6 +168,10 @@ export default {
       background-color: #000000;
       font-size: 1.1em;
       padding: 8% 0;
+    }
+
+    .step-text, .step-stars {
+      width: 50%;
     }
 
     .btn-lg {
