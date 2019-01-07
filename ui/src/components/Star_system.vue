@@ -1,16 +1,30 @@
 <template>
 <div class="star-system animated fadeIn">
-  <div class="col-2" style="padding: 0; display: flex; flex-direction: column; align-items: center;">
-    <planets
+  <div class="btn-group-vertical">
+    <div
       v-for="(starSystem, ind) in starSystems"
       :key="'profile-star-system/' + ind"
-      :selected-star-system="selectedStarSystem"
-      :selected-planet="selectedPlanet"
-      :update-selected-planet="levelControl.updatePlanet"
-      :is-button="true"
-      :star-system="starSystem"
-    ></planets>
-    <div class="btn btn-dark sandbox-btn" @click="levelControl.getSandbox">Sandbox</div>
+      class="btn btn-dark star-system-btn"
+      :class="[
+        !starSystem.stats.active ? 'space-btn-disabled' : '',
+        selectedStarSystem === starSystem.id.substr(-1) ? 'space-btn-selected' : ''
+      ]"
+      @click="levelControl.updateStarSystem(ind)"
+    >
+      <div class="star-system-planets">
+        <planets
+          :selected-star-system="selectedStarSystem"
+          :selected-planet="selectedPlanet"
+          :update-selected-planet="levelControl.updatePlanet"
+          :is-button="true"
+          :star-system="starSystem"
+        ></planets>
+      </div>
+      <div class="star-system-name">
+        {{starSystem.stats.name}}
+      </div>
+    </div>
+    <div class="btn btn-dark star-system-btn" @click="levelControl.getSandbox">Sandbox</div>
   </div>
   <div class="col-6">
     <planets
@@ -60,7 +74,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$space-btn-size: 10vmin;
+$space-btn-size: 20vmin;
+$click-color: #B8E986;
 .star-system {
   display: flex;
   height: 100%;
@@ -71,18 +86,37 @@ $space-btn-size: 10vmin;
     position: absolute;
     color: white;
   }
-  .col-2 {
-    .sandbox-btn {
+  .btn-group-vertical {
+    justify-content: flex-start;
+    .star-system-btn {
+      height: min-content;
       width: $space-btn-size;
       margin: 0.3em 0 0.3em 0;
-      border-radius: 0.25rem!important;
-      background-color: transparent;
-      font-size: 1.5em;
-      padding: 8% 0;
+      background-color: #000000;
+      font-size: 1.75em;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      border: none;
+      border-radius: 3px;
+
+      .star-system-name {
+        flex: 1;
+      }
+
+      .star-system-planets {
+        flex: 2;
+        height: 100%;
+      }
+    }
+
+    .star-system-btn.space-btn-selected {
+      border-color: $click-color;
+    }
+
+    .star-system-btn.space-btn-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 }
