@@ -22,14 +22,24 @@
         <div class="card">
 
         <div class="card-body"
-             v-b-popover.hover=""
-             :title="_usersCreatedTitle">
+             >
 
           <h5 :class="0 < userGrowth ? 'text-success' : 'text-danger'" class="text-monospace font-weight-bold">
             {{userGrowth | percentage}}
+
           </h5>
         </div>
-          <p>User Growth</p>
+          <p>
+            User Growth
+
+            <i
+              v-b-popover.hover=""
+              :title="_usersCreatedTitle"
+              class="fa fa-info-circle"
+            >
+
+            </i>
+          </p>
 
         </div>
       </div>
@@ -138,7 +148,7 @@ export default {
   computed: {
 
     _usersCreatedTitle () {
-      return `users created compared from 0 - 30 and 30 - 60 days ago`
+      return `users created from 0 - 30 and 30 - 60 days ago`
     },
 
     userGrowth () {

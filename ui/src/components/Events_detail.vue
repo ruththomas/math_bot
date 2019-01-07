@@ -17,14 +17,15 @@
               :class="toolsVisible ? 'show' : 'hidden'"
             ></confirm-delete-event>
 
-            <b-btn :id="popoverId"
-                   @click="_handleClick"
-                   class="btn-sm"
-                   :class="toolsVisible ? 'show' : 'hidden'"
-            >
-              Details
-            </b-btn>
+              <i
+                :id="popoverId"
+                @click="_handleClick"
+                :class="toolsVisible ? 'show' : 'hidden'"
 
+                class="fa fa-info-circle"
+              >
+
+              </i>
             <b-popover
 
               :show.sync="show" :target="popoverId" :title="_title">
@@ -42,13 +43,12 @@
             </b-popover>
             <span style="min-width: 80px;">
 
-             <b-btn
-               class="btn-sm"
-               :class="toolsVisible ? 'show' : 'hidden'"
-               @click="toggleEditMode(event)"
-             >
-            Edit
-          </b-btn>
+            <i
+              :class="toolsVisible ? 'show' : 'hidden'"
+              @click="toggleEditMode(event)"
+              class="fa fa-pencil">
+
+            </i>
 
           </span>
           </div>
@@ -123,6 +123,11 @@ export default {
 
   .show {
     visibility: visible;
+  }
+
+  .fa {
+
+    cursor: pointer;
   }
 
 </style>
