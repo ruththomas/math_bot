@@ -351,11 +351,11 @@ class LevelControl extends Ws {
     const profile = $store.state.auth.userProfile
     const cachedProfileState = localStorage.getItem('profile-state')
     if (cachedProfileState !== null && profile.sessionId === profile.lastCacheId) {
-      console.log('PROFILE ~ CACHE')
+      // console.log('PROFILE ~ CACHE')
       const profileState = JSON.parse(cachedProfileState)
       _.each(profileState, (item, key) => this._handleProfileState({[key]: item}))
     } else {
-      console.log('PROFILE ~ SERVER')
+      // console.log('PROFILE ~ SERVER')
       this._wsOnMessage(this._handleProfileState)
       this._send(JSON.stringify({action: 'init'}))
     }
