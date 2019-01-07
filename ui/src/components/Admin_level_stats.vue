@@ -20,9 +20,35 @@
         <div class="mx-3">
 
           <div class="form-group">
-            <label for="starSystems">
+            <label for="starSystems"
+                id="starSystemHelp"
+                   @click="showStarSystemData = !showStarSystemData"
+            >
               star system
+              <i
+
+                class="fa fa-info-circle"
+              >
+
+              </i>
+
             </label>
+            <b-popover
+
+              :show.sync="showStarSystemData" target="#starSystemHelp" :title="adminControl.levelStats[starSystem.id]._id">
+
+              <div
+                @click="showStarSystemData = !showStarSystemData"
+                v-for="(value, key) in adminControl.levelStats[starSystem.id]" :key="'event_detail/' + key"
+                class="container text-white">
+                <div class="row font-weight-bold">
+                  {{key}}
+                </div>
+                <div class="row" style="min-width: 55rem;">
+                  {{value}}
+                </div>
+              </div>
+            </b-popover>
             <select @change="changeStarSystem" class="form-control-sm" id="starSystems" name="starSystems">
               <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
                 {{star.stats.name}}
@@ -33,9 +59,35 @@
 
         <div class="mx-3">
           <div class="form-group">
-            <label for="planets">
+            <label for="planets" id="showPlanetData"
+              @click="showPlanetData = !showPlanetData"
+            >
               planets
+              <i
+
+                class="fa fa-info-circle"
+              >
+
+              </i>
+
             </label>
+
+            <b-popover
+
+              :show.sync="showPlanetData" target="#showPlanetData" :title="adminControl.levelStats[planet.id]._id">
+
+              <div
+                @click="showPlanetData = !showPlanetData"
+                v-for="(value, key) in adminControl.levelStats[starSystem.id]" :key="'event_detail/' + key"
+                class="container text-white">
+                <div class="row font-weight-bold">
+                  {{key}}
+                </div>
+                <div class="row" style="min-width: 55rem;">
+                  {{value}}
+                </div>
+              </div>
+            </b-popover>
             <select
               id="planets"
               name="planets"
@@ -79,7 +131,11 @@ export default {
     },
     async changeActivePlanet (e) {
       this.activePlanet = e.target.value
-      this.getLevelStats()
+      Promise.all([
+        this.getLevelStats(),
+        this.getPlanetStats(),
+        this.getStarSystemStats()
+      ])
     },
     changeStarSystem (e) {
       const { target: { value } } = e
@@ -91,18 +147,29 @@ export default {
       const ids = this.planet.continents.map(i => i.id)
 
       Promise.all(ids.map(continentId => this.adminControl.getLevelStats(continentId)))
+    },
+    getPlanetStats () {
+      this.adminControl.getLevelStats(this.planet.id)
+    },
+
+    getStarSystemStats () {
+      this.adminControl.getLevelStats(this.starSystem.id)
     }
 
   },
   mounted () {
     Promise.all([
       this.adminControl.getMaxLevelStats(),
-      this.getLevelStats()
+      this.getLevelStats(),
+      this.getPlanetStats(),
+      this.getStarSystemStats()
     ])
   },
   data () {
     return {
       activeStarSystem: '000',
+      showPlanetData: false,
+      showStarSystemData: false,
       activePlanet: '0000'
     }
   },
@@ -153,6 +220,11 @@ export default {
       font-weight: bold;
     }
 
+  }
+
+  .fa {
+
+    cursor: pointer;
   }
 
 </style>
