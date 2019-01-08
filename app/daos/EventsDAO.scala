@@ -63,7 +63,7 @@ class EventsDAO @Inject()(mathbotDb: MongoDatabase, aLogger: SemanticLog)(implic
   // creating index on id field as not using _id womp
 
   collection
-    .createIndex(Indexes.ascending(dateLabel), IndexOptions().unique(true))
+    .createIndex(Indexes.ascending(idLabel), IndexOptions().unique(true))
     .toFuture()
     .onComplete {
       case Success(_) =>
