@@ -145,7 +145,7 @@ export default {
   computed: {
 
     _usersCreatedTitle () {
-      return `users created from 0 - 30 and 30 - 60 days ago`
+      return `new accounts compared from last 30 days and last 30 - 60 days`
     },
 
     userGrowth () {

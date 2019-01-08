@@ -12,6 +12,7 @@ export default class AdminControl extends Ws {
     signups: 'signups',
     loginsLastXDays: 'logins-last-x-days',
     levelStats: 'level-stats',
+    planetStats: 'planet-stats',
     maxLevel: 'max-level',
     getEvents: 'events-get',
     postEvents: 'events-post',
@@ -134,7 +135,12 @@ export default class AdminControl extends Ws {
     }))
   }
 
-  getLevelStats (_id) {
+  getPlanetStats (planetId) {
+    console.log('pid', planetId)
+    this._send(JSON.stringify({action: this.actions.planetStats, level: planetId}))
+  }
+
+  getContinentStats (_id) {
     this._send(JSON.stringify({ action: this.actions.levelStats, level: _id }))
   }
 
@@ -199,11 +205,8 @@ export default class AdminControl extends Ws {
     }
 
     if (maxLevel) {
-      maxLevel.forEach(level => {
-        Object.assign(this.maxLevel, {
-          [level._id]: level
-        })
-      })
+      maxLevel.forEach(level =>
+        Object.assign(this.maxLevel, { [level._id]: level }))
     }
 
     if (events) {

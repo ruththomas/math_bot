@@ -21,7 +21,7 @@
 
           <div class="form-group">
             <label for="starSystems"
-                id="starSystemHelp"
+                   id="starSystemHelp"
                    @click="showStarSystemData = !showStarSystemData"
             >
               star system
@@ -35,7 +35,8 @@
             </label>
             <b-popover
 
-              :show.sync="showStarSystemData" target="#starSystemHelp" :title="adminControl.levelStats[starSystem.id]._id">
+              :show.sync="showStarSystemData" target="#starSystemHelp"
+              :title="adminControl.levelStats[starSystem.id]._id">
 
               <div
                 @click="showStarSystemData = !showStarSystemData"
@@ -60,7 +61,7 @@
         <div class="mx-3">
           <div class="form-group">
             <label for="planets" id="showPlanetData"
-              @click="showPlanetData = !showPlanetData"
+                   @click="showPlanetData = !showPlanetData"
             >
               planets
               <i
@@ -129,13 +130,10 @@ export default {
         return level.count > 0
       })
     },
-    async changeActivePlanet (e) {
+    changeActivePlanet (e) {
       this.activePlanet = e.target.value
-      Promise.all([
-        this.getLevelStats(),
-        this.getPlanetStats(),
-        this.getStarSystemStats()
-      ])
+
+      this.adminControl.getPlanetStats(this.activePlanet)
     },
     changeStarSystem (e) {
       const { target: { value } } = e
@@ -143,26 +141,15 @@ export default {
 
       this.changeActivePlanet({ target: { value: value + '0' } })
     },
-    getLevelStats () {
-      const ids = this.planet.continents.map(i => i.id)
-
-      Promise.all(ids.map(continentId => this.adminControl.getLevelStats(continentId)))
-    },
     getPlanetStats () {
-      this.adminControl.getLevelStats(this.planet.id)
-    },
-
-    getStarSystemStats () {
-      this.adminControl.getLevelStats(this.starSystem.id)
+      this.adminControl.getPlanetStats(this.planet.id)
     }
 
   },
   mounted () {
     Promise.all([
       this.adminControl.getMaxLevelStats(),
-      this.getLevelStats(),
-      this.getPlanetStats(),
-      this.getStarSystemStats()
+      this.getPlanetStats()
     ])
   },
   data () {
@@ -203,16 +190,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .star-system {
-    display: flex;
+  .star-system-admin {
     height: 100%;
     width: 100%;
     position: relative;
-
-    .header {
-      position: absolute;
-      color: white;
-    }
 
     th, label {
 
@@ -220,11 +201,10 @@ export default {
       font-weight: bold;
     }
 
-  }
+    .fa {
 
-  .fa {
-
-    cursor: pointer;
+      cursor: pointer;
+    }
   }
 
 </style>
