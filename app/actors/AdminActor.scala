@@ -1,7 +1,7 @@
 package actors
 import actors.messages.ActorFailed
 import actors.messages.admin.{AdminEvent, LevelStats, NewEvent}
-import actors.messages.level.{PlanetData, Stats}
+import actors.messages.level.Stats
 import actors.messages.playeraccount.{MaxLevel, UserAccountSignups}
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
@@ -81,10 +81,6 @@ class AdminActor @Inject()(out: ActorRef,
 
   override def receive: Receive = {
 
-    // todo: fix level stats
-
-    // todo: use starSystem stats to reduce websocket calls
-
     case GetMaxLevel() =>
       statsDAO.maxLevelStats.map { maxLevels =>
         out ! UserMaxLevel(maxLevels)
@@ -114,29 +110,10 @@ class AdminActor @Inject()(out: ActorRef,
           levels.map(level => statsDAO.levelStats(Some(level)).map(ls => out ! LevelStatsResult(ls)))
         case _ => ActorFailed
       }
-
-    case GetStarSystemStats(starSystem) =>
-      val _starSystem = starSystem.getOrElse("000")
-      this.stats.starSystemsInOrder.find(star => star.id == _starSystem) match {
-
-        case Some(ss) =>
-          val planets: Option[List[PlanetData]] = ss.planets
-
-          planets match {
-
-            case Some(pp) =>
-              val j = pp.map(_.id)
-
-            case _ => ActorFailed
-          }
-
-        case _ => ActorFailed
+    case GetContinentStats(continent) =>
+      statsDAO.levelStats(continent).map { levelStats =>
+        out ! LevelStatsResult(levelStats)
       }
-
-//
-//      statsDAO.levelStats(level).map { levelStats =>
-//        out ! LevelStatsResult(levelStats)
-//      }
     case GetUserCount() =>
       for {
         unMigratedUserCount <- auth0LegacyDao.countUnmigrated
