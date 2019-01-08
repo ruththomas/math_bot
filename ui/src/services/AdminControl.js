@@ -135,10 +135,18 @@ export default class AdminControl extends Ws {
     }))
   }
 
+  /*
+
+    fetch planet and all it's continets stas
+   */
   getPlanetStats (planetId) {
-    console.log('pid', planetId)
     this._send(JSON.stringify({action: this.actions.planetStats, level: planetId}))
   }
+
+  /*
+
+    Not used
+   */
 
   getContinentStats (_id) {
     this._send(JSON.stringify({ action: this.actions.levelStats, level: _id }))
