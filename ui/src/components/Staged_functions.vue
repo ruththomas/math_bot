@@ -74,7 +74,7 @@ export default {
       const func = this.levelControl.functions.activeFuncs.find(f => f.created_id === createdId)
 
       // if user drags command function ignore
-      if (!func) return
+      if (!func) return this.levelControl.cleanStaged()
 
       this.$store.dispatch('confirmDeactivateFunction',
         Object.assign(func, {
