@@ -181,6 +181,10 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'activate-function', 'function': func}))
   }
 
+  cleanStaged () {
+    this.functions.stagedFunctions = this.functions.stagedFunctions.filter((f) => f.category === 'staged')
+  }
+
   deactivateFunction (func) {
     // clear function fields
     Object.assign(func, {

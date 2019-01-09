@@ -97,6 +97,10 @@ export default {
     align-items: center;
     color: #ffffff;
 
+    .stars {
+      height: 5vmin;
+    }
+
     .text-minor {
       font-size: $font-size;
       *:first-child {
