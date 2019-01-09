@@ -55,7 +55,6 @@ import LevelCongrats from './Planet_congrats'
 import AdvancedMode from './Advanced_mode'
 import ConfirmDeactivateFunc from './Confirm_deactivate_func'
 import UserGravatar from './UserGravatar'
-import ActiveDrop from './Activate_drop'
 import StagedFunctions from './Staged_functions'
 
 export default {
@@ -125,7 +124,6 @@ export default {
     StepCongrats,
     LevelCongrats,
     AdvancedMode,
-    ActiveDrop,
     StagedFunctions
   }
 }
