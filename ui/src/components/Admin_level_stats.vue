@@ -7,8 +7,8 @@
 
     <div class="row mb-3" style="min-height: 10rem;">
       <admin-max-level v-if="someMaxLevel()"></admin-max-level>
-      <div v-else>
-        <h6>Loading...</h6>
+      <div v-else class="container-fluid">
+        <donut-spinner></donut-spinner>
       </div>
     </div>
 
@@ -120,6 +120,7 @@ import Planets from './Planets'
 import AdminMaxLevel from './Admin_max_level'
 import UnlockAllLevels from './UnlockAllLevels'
 import LevelStatsTable from './LevelStatsTable'
+import DonutSpinner from './DonutSpinner'
 
 export default {
   name: 'LevelStats',
@@ -180,6 +181,7 @@ export default {
     }
   },
   components: {
+    DonutSpinner,
     LevelStatsTable,
     UnlockAllLevels,
     AdminMaxLevel,
