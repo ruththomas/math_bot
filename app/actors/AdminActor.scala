@@ -1,6 +1,7 @@
 package actors
 import actors.messages.ActorFailed
 import actors.messages.admin.{AdminEvent, LevelStats, NewEvent}
+import actors.messages.level.Stats
 import actors.messages.playeraccount.{MaxLevel, UserAccountSignups}
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
@@ -8,7 +9,8 @@ import daos._
 import play.api.Environment
 import play.api.libs.ws.WSClient
 
-abstract class EventResult {
+trait EventResult {
+
   def result: String
 }
 
@@ -16,6 +18,8 @@ object AdminActor {
   final case class GetUserCount()
   final case class GetMaxLevel()
   final case class GetEvents()
+  final case class GetStarSystemStats(starSystem: Option[String])
+  final case class GetPlanetStats(planet: Option[String])
   final case class PutEvent(event: Option[AdminEvent])
   final case class PostEvent(event: Option[NewEvent])
   final case class DeleteEvent(event: Option[AdminEvent])
@@ -26,7 +30,7 @@ object AdminActor {
   final case class GetActiveUserCount()
   final case class GetSignupsPerDay()
   final case class GetLoginsLastXDays(days: Option[Int])
-  final case class GetLevelStats(level: Option[String])
+  final case class GetContinentStats(level: Option[String])
   final case class LevelStatsResult(levelStats: Seq[LevelStats])
   final case class SignupsPerDay(result: Seq[UserAccountSignups])
   final case class LastXDaysLogins(logins: Long)
@@ -73,6 +77,8 @@ class AdminActor @Inject()(out: ActorRef,
 
   private final val className = "AdminActor"
 
+  private final val stats = Stats("")
+
   override def receive: Receive = {
 
     case GetMaxLevel() =>
@@ -95,8 +101,17 @@ class AdminActor @Inject()(out: ActorRef,
         out ! ActiveUserCount(count)
       }
 
-    case GetLevelStats(level) =>
-      statsDAO.levelStats(level).map { levelStats =>
+    case GetPlanetStats(planet) =>
+      this.stats.planetsInOrder.find(p => p.id == planet.getOrElse("0000")) match {
+
+        case Some(_planet) =>
+          val levels = _planet.id :: _planet.continents.map(_.id)
+
+          levels.map(level => statsDAO.levelStats(Some(level)).map(ls => out ! LevelStatsResult(ls)))
+        case _ => ActorFailed
+      }
+    case GetContinentStats(continent) =>
+      statsDAO.levelStats(continent).map { levelStats =>
         out ! LevelStatsResult(levelStats)
       }
     case GetUserCount() =>
@@ -124,17 +139,16 @@ class AdminActor @Inject()(out: ActorRef,
     case DeleteEvent(event) =>
       event match {
         case Some(adminEvent) =>
-          eventsDAO.remove(adminEvent.id)
-
-          out ! DeleteEventResult("successfully removed event: " + adminEvent.id)
+          eventsDAO
+            .remove(adminEvent.id)
+            .map(_ => out ! DeleteEventResult("successfully removed event: " + adminEvent.id))
         case _ => out ! ActorFailed("Invalid Request")
       }
 
     case PostEvent(event) =>
       event match {
-        case Some(adminEvent) =>
-          val newEvent = AdminEvent(adminEvent.date, adminEvent.title, adminEvent.description, adminEvent.links)
-          eventsDAO.insert(newEvent).map { evt =>
+        case Some(evt) =>
+          eventsDAO.insert(AdminEvent(evt)).map { evt =>
             out ! PostEventResult("successfully added event: " + evt.id)
           }
         case _ => out ! ActorFailed("Invalid Request")

@@ -2,10 +2,9 @@
   <div>
     <h3 class="text-left my-3">Summary</h3>
 
-    <div class="row mb-3">
+    <div class="row">
 
-      <div class="col-xs-4">
-        <div class="card">
+      <div class="card">
 
         <div class="card-body">
 
@@ -15,26 +14,32 @@
           <p class="card-text">New accounts last 30 days</p>
 
         </div>
-        </div>
       </div>
 
-      <div class="col-xs-4">
-        <div class="card">
+      <div class="card">
 
         <div class="card-body"
-             v-b-popover.hover=""
-             :title="_usersCreatedTitle">
+        >
 
-          <h5 :class="0 < userGrowth ? 'text-success' : 'text-danger'" class="text-monospace font-weight-bold">
+          <h5 :class="0 < userGrowth ? 'text-success' : 'text-danger'"
+              class="card-title text-monospace font-weight-bold">
             {{userGrowth | percentage}}
-          </h5>
-        </div>
-          <p>User Growth</p>
 
+          </h5>
+          <p class="card-text">
+            User Growth
+            <i
+              v-b-popover.hover=""
+              :title="_usersCreatedTitle"
+              class="fa fa-info-circle"
+            >
+
+            </i>
+          </p>
         </div>
+
       </div>
-      <div class="col-xs-4">
-        <div class="card">
+      <div class="card">
 
         <div class="card-body">
           <h5 class="card-title text-monospace font-weight-bold" id="userCount">{{ userCount | local }}</h5>
@@ -43,10 +48,8 @@
           </p>
         </div>
       </div>
-        </div>
 
-      <div class="col-xs-4">
-        <div class="card">
+      <div class="card">
 
         <div class="card-body">
           <h5 class="card-title text-monospace font-weight-bold" id="lastXDaysLoginCount">
@@ -56,21 +59,19 @@
             Logins Last 7 days
           </p>
         </div>
-        </div>
       </div>
-      <div class="col-xs-4">
-        <div class="card">
+      <div class="card">
 
         <div class="card-body">
           <h5 class="card-title text-monospace font-weight-bold" id="activeUserCount">
             {{activeUserCount | local}}
           </h5>
           <p class="card-text">
-            Active Users <small class="text-danger">
-            fixme: admin users included in count
-          </small>
+            Active Users
+            <small class="text-danger">
+              fixme: admin users included in count
+            </small>
           </p>
-        </div>
         </div>
 
       </div>
@@ -111,7 +112,7 @@
     </div>
 
     <div class="row mb-3">
-     <user-signups-per-day-chart></user-signups-per-day-chart>
+      <user-signups-per-day-chart></user-signups-per-day-chart>
     </div>
 
     <div class="row m-3">
@@ -134,11 +135,17 @@ import moment from 'moment'
 
 export default {
   name: 'AdminUsers',
-  components: { UserSignupsPerMonthChart, AdminFilterDate, UserSignupsPerDayChart, AdminMaxLevel, AdminUserSignupCalendar },
+  components: {
+    UserSignupsPerMonthChart,
+    AdminFilterDate,
+    UserSignupsPerDayChart,
+    AdminMaxLevel,
+    AdminUserSignupCalendar
+  },
   computed: {
 
     _usersCreatedTitle () {
-      return `users created compared from 0 - 30 and 30 - 60 days ago`
+      return `new accounts compared from last 30 days and last 30 - 60 days`
     },
 
     userGrowth () {
