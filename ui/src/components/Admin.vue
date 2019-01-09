@@ -1,8 +1,22 @@
 <template>
-  <div class="container-fluid admin">
+  <div class="container-fluid admin"
+  :class="adminTheme"
+  >
       <div class="row my-3">
         <user-gravatar></user-gravatar>
       </div>
+
+    <div class="row">
+      <toggle-button
+
+        @change="changeAdminTheme"
+        :value="adminTheme === 'dark'"
+        color="#82C7EB"
+        :sync="true"
+        :labels="{checked: 'Dark', unchecked: 'Light'}"
+
+      />
+    </div>
         <div class="row">
 
           <admin-nav
@@ -14,8 +28,8 @@
             <level-stats v-if="activeDisplay === 'levels'"></level-stats>
             <div v-if="activeDisplay === 'users'">
               <admin-users v-if="userAccountSignups.length"></admin-users>
-              <div v-else>
-                <h1>Doing Science...</h1>
+              <div v-else class="container">
+                <donut-spinner></donut-spinner>
               </div>
             </div>
             <events-list v-if="activeDisplay === 'events'"></events-list>
@@ -36,9 +50,12 @@ import LevelStats from './Admin_level_stats'
 import AdminUsers from './Admin_users'
 import EventsList from './Events_list'
 import AdminNav from './AdminNav'
+import DonutSpinner from './DonutSpinner'
 
 // refresh data every x seconds
 const fetchDataInterval = 60 // seconds
+
+const ADMIN_THEME_KEY = '@@ADMIN_THEME@@'
 
 export default {
   name: 'Admin',
@@ -51,8 +68,30 @@ export default {
   },
   mounted () {
     this.handleRoute()
+    this.loadTheme()
   },
   methods: {
+
+    changeAdminTheme ({value}) {
+      this._changeAdminTheme(value ? 'dark' : 'light')
+    },
+
+    _changeAdminTheme (theme) {
+      const validThemes = ['light', 'dark']
+
+      if (!validThemes.includes(theme)) {
+        throw new Error('invalid request')
+      }
+      return this.$store.dispatch('changeAdminTheme', theme).then(() => {
+        localStorage.setItem(ADMIN_THEME_KEY, theme)
+      })
+    },
+    loadTheme () {
+      console.log('loaded theme', localStorage.getItem(ADMIN_THEME_KEY))
+      let theme = localStorage.getItem(ADMIN_THEME_KEY) || 'light'
+
+      this._changeAdminTheme(theme)
+    },
 
     // toggle view levels & users
     updateActive (_active) {
@@ -120,9 +159,13 @@ export default {
     },
     levelControl () {
       return this.$store.getters.getLevelControl
+    },
+    adminTheme () {
+      return this.$store.getters.getAdminTheme
     }
   },
   components: {
+    DonutSpinner,
     AdminNav,
     EventsList,
     AdminUsers,
@@ -145,6 +188,37 @@ export default {
     height: 100vh;
     overflow-y: scroll;
     background: var(--light);
+  }
+
+  .admin.dark {
+
+    background-color: #222;
+    color: var(--light);
+
+    .card {
+      width: 15rem;
+      height: 10rem;
+      margin: 1rem .5rem;
+      background-color: #303030;
+      background-clip: border-box;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+
+    }
+
+    .card-header {
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 0;
+      color: inherit;
+      background-color: #444;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+  }
+
+  .card {
+
+    background: var(--dark);
+    color: white;
   }
 
   .star-system-container {

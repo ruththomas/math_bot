@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    class="admin-users"
+    :class="adminTheme">
     <h3 class="text-left my-3">Summary</h3>
 
     <div class="row">
@@ -162,6 +164,9 @@ export default {
         .filter(item => this.filterSignups(item, minDate, new Date()))
         .reduce((accum, item) => accum + item.signups, 0)
     },
+    adminTheme () {
+      return this.$store.getters.getAdminTheme
+    },
 
     adminControl () {
       return this.$store.getters.getAdminControl
@@ -200,6 +205,7 @@ export default {
 
       return minDate <= date && date <= maxDate
     }
+
   },
   watch: {
 
@@ -239,7 +245,30 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+  .card {
+    width: 15rem;
+    height: 10rem;
+    margin: 1rem .5rem;
+    background-clip: border-box;
+  }
+
+  .admin-users.dark {
+
+    .card {
+      background-color: #303030;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+
+    }
+
+    .card-header {
+      color: inherit;
+      background-color: #444;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+  }
 
   #userCount, #lastXDaysLoginCount {
 
@@ -256,9 +285,4 @@ export default {
     color: red;
   }
 
-  .card {
-    width: 15rem;
-    height: 10rem;
-    margin: 1rem .5rem;
-  }
 </style>

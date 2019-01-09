@@ -1,21 +1,25 @@
 <template>
 
-     <div class="container-fluid">
-       <div class="row">
-         <div class="card" style="width: 100%;">
-             <div class="card-header">
-               <h4 class="text-left">
-                 New player accounts per day
-               </h4>
-             </div>
-           <div class="card-body">
-             <div class="row">
-               <div id="chart_signups" class="chart"></div>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
+  <div
+
+    class="user-signups-per-day-chart container-fluid"
+    :class="adminTheme"
+  >
+    <div class="row">
+      <div class="card" style="width: 100%;">
+        <div class="card-header">
+          <h4 class="text-left">
+            New player accounts per day
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div id="chart_signups" class="chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -30,6 +34,10 @@ export default {
     }
   },
   computed: {
+
+    adminTheme () {
+      return this.$store.getters.getAdminTheme
+    },
 
     data () {
       return this.adminControl.userAccountSignups
@@ -173,6 +181,34 @@ export default {
 
     width: 100%;
     min-height: 200px;
+  }
+
+  .user-signups-per-day-chart.dark {
+
+    .card {
+      background-color: #303030;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+
+    }
+
+    .card-header {
+      background-color: #444;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+  }
+
+  .c3-axis-y text {
+    fill: red;
+    font-size:12px;
+  }
+  .c3-axis-x text {
+    font-size:12px;
+    fill:purple;
+  }
+
+  .c3-axis {
+    fill: red;
+    font-size:12px;
   }
 
   /*.c3-line-total, .c3-line-signups {*/

@@ -1,5 +1,8 @@
 <template>
- <div class="container-fluid">
+ <div
+   class="user-signups-per-month-chart container-fluid"
+   :class="adminTheme"
+ >
    <div class="row">
      <div class="card" style="width: 100%;">
        <div class="card-header">
@@ -32,6 +35,10 @@ export default {
 
     data () {
       return this.adminControl.userAccountSignups
+    },
+
+    adminTheme () {
+      return this.$store.getters.getAdminTheme
     },
 
     total_ () {
@@ -190,8 +197,19 @@ export default {
     min-height: 200px;
   }
 
-  /*.c3-line-total, .c3-line-signups {*/
-  /*stroke-width: 0;*/
-  /*}*/
+  .user-signups-per-month-chart.dark {
+
+    .card {
+      background-color: #303030;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+
+    }
+
+    .card-header {
+      color: inherit;
+      background-color: #444;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+  }
 
 </style>
