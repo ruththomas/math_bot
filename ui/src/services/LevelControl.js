@@ -85,6 +85,7 @@ class LevelControl extends Ws {
     this.path = path
     this.continent = builtContinent
     this.functions = this.continent.lambdas
+    this._cacheState()
   }
 
   _updatePath () {
