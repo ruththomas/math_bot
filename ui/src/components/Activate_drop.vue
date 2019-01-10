@@ -68,7 +68,7 @@ export default {
 $pointer-size: 2vmin;
 .active-drop {
   position: fixed;
-  /*background-color: #f0f0f0;*/
+  opacity: 0.5;
   height: 100%;
   width: 100%;
   bottom: 0;
