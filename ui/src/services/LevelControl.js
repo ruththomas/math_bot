@@ -87,6 +87,7 @@ class LevelControl extends Ws {
     this.path = path
     this.continent = builtContinent
     this.functions = this.continent.lambdas
+    this._cacheState()
   }
 
   _updatePath () {
@@ -101,6 +102,7 @@ class LevelControl extends Ws {
     //   return {name: f.name, index: f.index, createdId: f.created_id}
     // }))
     this.functions = functions
+    this._cacheState()
   }
 
   _positionBar () {
