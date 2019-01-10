@@ -1,7 +1,6 @@
 <template>
   <div class="col-8 user-profile-controls" style="display: flex;">
     <div class="profile-image">
-      <!--<img class="profile-logo" :src="permanentImages.instructionsRobot">-->
       <mascot :animate="true"></mascot>
     </div>
     <div class="profile-text">
