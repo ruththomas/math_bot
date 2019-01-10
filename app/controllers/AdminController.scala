@@ -1,7 +1,8 @@
 package controllers
 
 import actors.convert_flow.{AdminRequestConvertFlow, AdminResponseConvertFlow}
-import actors.{ActorTags, AdminActor, LevelActor}
+import actors.messages.admin.{AdminEvent, NewEvent}
+import actors.{ActorTags, AdminActor}
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.util.FastFuture
 import akka.stream.Materializer
@@ -12,7 +13,7 @@ import daos._
 import email.{AdminApprovedEmail, AdminVerificationEmail}
 import models.AdminAuth
 import play.api.Environment
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsSuccess, JsValue, Json}
 import play.api.libs.streams.ActorFlow
 import play.api.libs.ws._
 import play.api.mvc._
@@ -26,6 +27,9 @@ class AdminController @Inject()(
     val playerAccountDAO: PlayerAccountDAO,
     val adminAuthDAO: AdminAuthDAO,
     val sessionDAO: SessionDAO,
+    val statsDAO: StatsDAO,
+    val auth0LegacyDAO: Auth0LegacyDao,
+    val eventsDAO: EventsDAO,
     @Named(ActorTags.sendGrid) val sendGrid: ActorRef,
     implicit val system: ActorSystem,
     implicit val conf: play.api.Configuration,
@@ -50,7 +54,16 @@ class AdminController @Inject()(
                   AdminRequestConvertFlow()
                     .via(
                       ActorFlow.actorRef { out =>
-                        AdminActor.props(out, playerTokenDAO, ws, environment)
+                        AdminActor
+                          .props(out,
+                                 playerAccountDAO,
+                                 playerTokenDAO,
+                                 auth0LegacyDAO,
+                                 sessionDAO,
+                                 statsDAO,
+                                 eventsDAO,
+                                 ws,
+                                 environment)
                       }
                     )
                     .via(AdminResponseConvertFlow())
@@ -133,4 +146,5 @@ class AdminController @Inject()(
       case None => FastFuture.successful(BadRequest("Missing email query parameter"))
     }
   }
+
 }

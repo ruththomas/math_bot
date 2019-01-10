@@ -58,6 +58,7 @@ export default {
       position: absolute;
       right: 0;
       bottom: 0;
+      width: 12vmin;
       z-index: 111;
     }
     .mascot {

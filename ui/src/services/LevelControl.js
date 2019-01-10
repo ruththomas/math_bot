@@ -4,6 +4,7 @@ import RunCompiled from './RunCompiled'
 import _ from 'underscore'
 import circular from 'circular-json'
 import $router from '../router'
+import $store from '../store/store'
 
 class LevelControl extends Ws {
   constructor () {
@@ -26,6 +27,8 @@ class LevelControl extends Ws {
     this.getCurrentStarSystem = this.getCurrentStarSystem.bind(this)
     this._positionBar = this._positionBar.bind(this)
     this.getSandbox = this.getSandbox.bind(this)
+    this._handleProfileState = this._handleProfileState.bind(this)
+    this._cacheState = this._cacheState.bind(this)
 
     this._openSocket(this._init)
   }
@@ -52,10 +55,12 @@ class LevelControl extends Ws {
 
   _setPath ({path}) {
     this.path = path
+    this._cacheState()
   }
 
   _setGalaxy ({galaxyData}) {
     this.galaxy = galaxyData
+    this._cacheState()
   }
 
   _setStarSystem ({starSystemData}) {
@@ -74,16 +79,20 @@ class LevelControl extends Ws {
     // }))
     this.gridMap = this.continent.gridMap
     this.runCompiled = new RunCompiled()
+    this._cacheState()
     setTimeout(this._positionBar, 500)
   }
 
   _resetContinent ({pathAndContinent: {path, builtContinent}}) {
+    this.path = path
     this.continent = builtContinent
     this.functions = this.continent.lambdas
+    this._cacheState()
   }
 
   _updatePath () {
     this._wsOnMessage(() => {})
+    this._cacheState()
     this._send(JSON.stringify({action: 'update-path', path: this.path}))
   }
 
@@ -93,6 +102,7 @@ class LevelControl extends Ws {
     //   return {name: f.name, index: f.index, createdId: f.created_id}
     // }))
     this.functions = functions
+    this._cacheState()
   }
 
   _positionBar () {
@@ -173,6 +183,10 @@ class LevelControl extends Ws {
     this._send(JSON.stringify({action: 'activate-function', 'function': func}))
   }
 
+  cleanStaged () {
+    this.functions.stagedFunctions = this.functions.stagedFunctions.filter((f) => f.category === 'staged')
+  }
+
   deactivateFunction (func) {
     // clear function fields
     Object.assign(func, {
@@ -209,7 +223,10 @@ class LevelControl extends Ws {
   }
 
   updateFunction (func) {
-    this._wsOnMessage(this._positionBar) // doing nothing with response for now
+    this._wsOnMessage(() => {
+      this._cacheState()
+      this._positionBar()
+    })
     this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))
   }
 
@@ -247,6 +264,15 @@ class LevelControl extends Ws {
       this.runCompiled = new RunCompiled()
     })
     this._send(JSON.stringify({action: 'reset-continent', path: this.path}))
+  }
+
+  getUnlock () {
+    this._wsOnMessage((res) => {
+      this._handleProfileState(res)
+      this._cacheState()
+      $router.push({path: '/profile'})
+    })
+    this._send(JSON.stringify({action: 'unlock'}))
   }
 
   deleteMain () {
@@ -303,23 +329,40 @@ class LevelControl extends Ws {
     return this.galaxy.starSystems[this.path[2]].planets[this.path[3]].stats
   }
 
+  _handleProfileState (data) {
+    switch (Object.keys(data).filter((key) => key !== 'status')[0]) {
+      case 'path':
+        this._setPath(data)
+        break
+      case 'galaxyData':
+        this._setGalaxy(data)
+        break
+      case 'pathAndContinent':
+        this._setContinent(data, true)
+        break
+      default:
+        console.error(data.status || 'Mutated data in cache', data.message || data)
+    }
+  }
+
+  _cacheState () {
+    const state = {path: this.path, galaxyData: this.galaxy, pathAndContinent: {path: this.path, builtContinent: this.continent}}
+    localStorage.setItem('profile-state', JSON.stringify(state))
+    this._send(JSON.stringify({action: 'update-cache-id'}))
+  }
+
   _init () {
-    this._wsOnMessage((res) => {
-      switch (Object.keys(res).filter((key) => key !== 'status')[0]) {
-        case 'path':
-          this._setPath(res)
-          break
-        case 'galaxyData':
-          this._setGalaxy(res)
-          break
-        case 'pathAndContinent':
-          this._setContinent(res, true)
-          break
-        default:
-          console.error(res.status, res.message)
-      }
-    })
-    this._send(JSON.stringify({action: 'init'}))
+    const profile = $store.state.auth.userProfile
+    const cachedProfileState = localStorage.getItem('profile-state')
+    if (cachedProfileState !== null && profile.sessionId === profile.lastCacheId) {
+      // console.log('PROFILE ~ CACHE')
+      const profileState = JSON.parse(cachedProfileState)
+      _.each(profileState, (item, key) => this._handleProfileState({[key]: item}))
+    } else {
+      // console.log('PROFILE ~ SERVER')
+      this._wsOnMessage(this._handleProfileState)
+      this._send(JSON.stringify({action: 'init'}))
+    }
   }
 
   getSandbox () {

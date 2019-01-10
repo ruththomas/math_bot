@@ -1,5 +1,5 @@
 <template>
-  <div class="col-4 steps">
+  <div class="steps">
     <div class="row">
       <h2 class="header"><span>{{`${Number(selectedPlanet) + 1}`}}.</span> {{ parseCamelCase(planetName) }}</h2>
     </div>
@@ -15,10 +15,10 @@
           :key="'continent/' + continent.id"
           :disabled="!continent.stats.active"
         >
-          <div class="col-6">
+          <div class="step-text">
             <div class="step-info-text">Level {{ continentNumber + 1 }}</div>
           </div>
-          <div class="col-6">
+          <div class="step-stars">
             <stars v-if="continent.stats.active" :continent-id="continent.id"></stars>
             <div v-else class="stars">
               <img :src="permanentImages.lock" style="height: 1.5em;" />
@@ -26,14 +26,14 @@
           </div>
         </button>
         <button
-          v-if="nextPlanet && currentStarSystem.stats.name !== 'Sandbox' && continents[continents.length - 1].stats.wins > 0"
+          v-if="nextPlanet && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextPlanet.id + '0')">
-          <div class="col-6">
+          <div class="step-text">
             <div class="step-info-text"><div>Next planet!</div> {{parseCamelCase(nextPlanet.stats.name)}}</div>
           </div>
-          <div class="col-6">
+          <div class="step-stars">
             <img
               class="step-next-planet"
               :class="nextPlanet.stats.name"
@@ -43,7 +43,7 @@
           </div>
         </button>
         <button
-          v-else-if="nextStarSystem && nextStarSystem.stats.name !== 'Sandbox' && continents[continents.length - 1].stats.wins > 0"
+          v-else-if="nextStarSystem && continents[continents.length - 1].stats.wins > 0"
           type="button"
           class="btn btn-dark btn-lg btn-block"
           @click="goToRobot(nextStarSystem.planets[0].id + '0')"
@@ -57,23 +57,6 @@
               :class="nextStarSystem.planets[0].stats.name"
               :src="permanentImages.planets[nextStarSystem.planets[0].stats.name]"
               alt="Planet"
-            />
-          </div>
-        </button>
-        <button
-          v-else-if="nextStarSystem && nextStarSystem.stats.name === 'Sandbox'"
-          type="button"
-          class="btn btn-dark btn-lg btn-block"
-        >
-          <div class="col-6">
-            <div class="step-info-text"><div>You won!</div></div>
-          </div>
-          <div class="col-6">
-            <img
-              class="step-next-planet"
-              :src="permanentImages.instructionsRobot"
-              alt="Planet"
-              style="background-color: #ffffff; border-radius: 50%;"
             />
           </div>
         </button>
@@ -141,11 +124,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $steps-font-size: 2vmin;
+  $steps-font-size: 1.5em;
   $gradient-size: 100px;
   $outer-shadow-blur: 50px;
   $outer-shadow-size: 1px;
-  $BasicProgramming-color: rgba(202, 122, 255, 1);
+  $Coding-color: rgba(202, 122, 255, 1);
   $Counting-color: rgba(242, 92, 92, 1);
   $Numbers-color: rgba(74, 144, 226, 1);
   $Recursion-color: rgba(255, 152, 177, 1);
@@ -166,14 +149,12 @@ export default {
     font-size: 0.8em;
   }
   .steps {
-    position: absolute;
-    top: 8%;
-    right: 0;
-    bottom: 0;
     color: $font-color;
     font-size: $steps-font-size;
-
+    height: 100%;
+    padding-top: 1em;
     .header {
+      height: 10%;
       font-size: 1.5em;
       padding: 2% 0;
       text-align: left;
@@ -189,12 +170,20 @@ export default {
       padding: 8% 0;
     }
 
+    .step-text, .step-stars {
+      width: 50%;
+    }
+
+    .btn-lg {
+      width: 100%;
+    }
+
     .steps-container {
-      overflow-y: auto;
+      overflow: auto;
       -webkit-overflow-scrolling: touch;
       height: 90%;
       .btn-group-vertical {
-        min-height: min-content;
+        height: min-content;
         width: 100%;
         justify-content: flex-start;
 
@@ -215,8 +204,8 @@ export default {
     }
   }
 
-  .step-next-planet.BasicProgramming {
-    background: radial-gradient(circle at $gradient-size $gradient-size, $BasicProgramming-color, $planet-gradient);
+  .step-next-planet.Coding {
+    background: radial-gradient(circle at $gradient-size $gradient-size, $Coding-color, $planet-gradient);
   }
 
   .step-next-planet.Counting {
@@ -263,8 +252,8 @@ export default {
     background: radial-gradient(circle at $gradient-size $gradient-size, $Roots-color, $planet-gradient);
   }
 
-  .BasicProgramming.selected {
-    border: 2px solid $BasicProgramming-color;
+  .Coding.selected {
+    border: 2px solid $Coding-color;
   }
 
   .Counting.selected {

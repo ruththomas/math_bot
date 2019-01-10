@@ -112,6 +112,28 @@
   AOS.init({
     duration: 1200,
   });
+  (function (win) {
+    const funcArr = [],
+      isFunction = function (value) { return (value && (value).constructor === Function); },
+      isString = function (value) {return (value && (value).constructor === String); };
+    win.onbeforeunload = function () {
+      let func, result
+      while (func = funcArr.shift()) {
+        if (func && isFunction(func)) {
+          result = func()
+          if (result !== undefined && isString(result)) {
+            break
+          }
+        }
+      }
+      return result
+    };
+    win.addOnBeforeUnload = function (func) {
+      if (func && isFunction(func)) {
+        funcArr.push(func)
+      }
+    }
+  }(window))
 </script>
 <!-- built files will be auto injected -->
 </body>

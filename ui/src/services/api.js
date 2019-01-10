@@ -65,5 +65,11 @@ export default {
       .then(res => res.body)
       .then(successCb)
       .catch(errCb)
+  },
+
+  requestAdmin () {
+    return Vue.http.post('/api/admin/requestAdmin', {})
+      .then(res => res.body)
+      .catch(err => err)
   }
 }

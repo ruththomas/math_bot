@@ -1,24 +1,15 @@
 <template>
   <div class="container profile">
-    <div v-if="levelControl.galaxy !== null" class="star-system-nav">
-      <level-congrats key="level-congrats"></level-congrats>
-      <star-system-congrats key="star-system-congrats"></star-system-congrats>
-      <b-button
-        v-for="(starSystem, ind) in levelControl.galaxy.starSystems"
-        :key="'star-system/' + ind"
-        @click="levelControl.updateStarSystem(ind)"
-        class="btn-dark"
-        :class="Number(starSystemShowing) === ind ? 'selected' : ''"
-        :disabled="!starSystem.stats.active"
-      >
-        {{starSystem.stats.name}}
-        <i v-if="!starSystem.stats.active" class="fa fa-lock"></i>
-      </b-button>
-      <b-button class="btn-dark" @click="levelControl.getSandbox">Sandbox</b-button>
-    </div>
-    <div v-if="levelControl.galaxy !== null" class="row" style="height: 90%;">
-      <div class="star-systems">
-        <star-system></star-system>
+    <splash-screen v-if="levelControl.galaxy === null"></splash-screen>
+    <div v-else class="profile-top">
+      <div v-if="levelControl.galaxy !== null" class="star-system-nav">
+        <level-congrats key="level-congrats"></level-congrats>
+        <star-system-congrats key="star-system-congrats"></star-system-congrats>
+      </div>
+      <div v-if="levelControl.galaxy !== null" class="row star-systems-slot">
+        <div class="star-systems">
+          <star-system></star-system>
+        </div>
       </div>
     </div>
     <div class="col-8 controls" style="height: 20%;">
@@ -95,8 +86,16 @@ export default {
         }
       }
     }
-    .row {
+    .profile-top {
+      height: 90%;
+      .row {
+        margin: auto;
+      }
+    }
+    .star-systems-slot {
       position: relative;
+      margin: 0;
+      height: 90%;
       .star-systems {
         height: 100%;
         width: 100%;
@@ -127,5 +126,8 @@ export default {
         border: 1px solid #ffffff;
       }
     }
+  }
+
+  @media (max-width: 414px) and (orientation: portrait) {
   }
 </style>

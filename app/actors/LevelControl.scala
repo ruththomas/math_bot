@@ -2,19 +2,26 @@ package actors
 
 import actors.messages.AssignedFunction
 import actors.messages.level._
+import actors.messages.playeraccount.{UpdateAccountAccess, UpdateCacheId}
+import akka.NotUsed
+import akka.actor.ActorRef
 import akka.http.scaladsl.util.FastFuture
+import akka.stream.scaladsl.Sink
 import com.google.inject.Inject
+import com.google.inject.name.Named
 import daos.{FunctionsDAO, PlayerTokenDAO, StatsDAO}
 import level_gen.SuperClusters
 import level_gen.models.CelestialSystem
 import models.deprecatedPlayerToken.PlayerToken
 import level_gen.sandbox.Sandbox._
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class LevelControl @Inject()(
     statsDAO: StatsDAO,
     functionsDAO: FunctionsDAO,
-    playerTokenDAO: PlayerTokenDAO
+    playerTokenDAO: PlayerTokenDAO,
+    @Named(ActorTags.playerAccount) playerAccountActor: ActorRef
 )(implicit ec: ExecutionContext) {
   import compiler.ElementKinds._
   final val superCluster: CelestialSystem = SuperClusters.getCluster("SuperCluster1")
@@ -39,10 +46,13 @@ class LevelControl @Inject()(
     statsDAO.replace(updatedUserStats)
   }
 
+  def updateLastCacheId(tokenId: String, sessionId: String) =
+    playerAccountActor ! UpdateCacheId(tokenId, sessionId)
+
   /*
    * Assembles galaxy data back into its nested data structure
    * */
-  def getGalaxyData(tokenId: String, path: Option[String]): Future[GalaxyData] = {
+  def getGalaxyData(tokenId: String, path: Option[String] = None): Future[GalaxyData] = {
     for {
       stats <- getStats(tokenId)
     } yield GalaxyData(stats, path.getOrElse("00000"))
@@ -50,6 +60,7 @@ class LevelControl @Inject()(
 
   /*
    * Assembles star system data back into its nested data structure
+   * (joe) TODO USE
    * */
   def getStarSystemData(tokenId: String, path: Option[String]): Future[StarSystemData] = {
     for {
@@ -158,6 +169,7 @@ class LevelControl @Inject()(
       .children(path(2))
   }
 
+  // (joe) todo use
   def getPlanetData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
     superCluster
@@ -166,6 +178,7 @@ class LevelControl @Inject()(
       .children(path(3))
   }
 
+  // (joe) todo use
   def getContinentData(p: String): CelestialSystem = {
     val path = Stats.makePath(p)
     superCluster
@@ -176,7 +189,7 @@ class LevelControl @Inject()(
   }
 
   /*
-   * Gets list of
+   * Gets list of video ids for specified path
    * */
   def getVideoIds(path: String): List[String] = {
     getContinentData(path).continentStruct.map(_.videoHints).getOrElse(List.empty[String])
@@ -392,11 +405,12 @@ class LevelControl @Inject()(
    * Used to unlock all levels
    * In the future this should be part of the admin screen
    * */
-  def unlock(tokenId: String): Future[Stats] = {
+  def unlock(tokenId: String): Future[GalaxyData] = {
     for {
       _ <- getStats(tokenId)
-      unlocked <- statsDAO.unlock(tokenId)
-    } yield unlocked
+      _ <- statsDAO.unlock(tokenId)
+      galaxyData <- getGalaxyData(tokenId)
+    } yield galaxyData
   }
 
   def getSandbox(tokenId: String): Future[PathAndContinent] = {

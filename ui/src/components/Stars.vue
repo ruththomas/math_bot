@@ -73,7 +73,8 @@ export default {
     justify-content: center;
     border-radius: 5px;
     cursor: pointer;
-    width: min-content;
+    width: 100%;
+    height: 3vmin;
     margin: 0 auto;
     .progress {
       position: absolute;
@@ -92,7 +93,10 @@ export default {
   }
   .star-spread {
     display: flex;
+    justify-content: center;
     z-index: 101;
+    height: 100%;
+    width: 100%;
     .star-one, .star-two, .star-three {
       align-self: center;
     }

@@ -30,6 +30,7 @@
     </b-modal>
     <video-hint></video-hint>
     <messages></messages>
+    <konami-code></konami-code>
     <router-view></router-view>
   </div>
 </template>
@@ -37,6 +38,7 @@
 <script>
 import Messages from './components/Messages'
 import MBHeader from './components/Mathbot_header'
+import KonamiCode from './components/KonamiCode'
 import VideoHint from './components/Video_hint'
 export default {
   name: 'app',
@@ -54,6 +56,7 @@ export default {
   components: {
     Messages,
     MBHeader,
+    KonamiCode,
     VideoHint
   }
 }
