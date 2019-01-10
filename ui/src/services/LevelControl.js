@@ -221,7 +221,10 @@ class LevelControl extends Ws {
   }
 
   updateFunction (func) {
-    this._wsOnMessage(this._positionBar) // doing nothing with response for now
+    this._wsOnMessage(() => {
+      this._cacheState()
+      this._positionBar()
+    })
     this._send(JSON.stringify({action: 'update-function', 'function': this._prepFunc(func)}))
   }
 
