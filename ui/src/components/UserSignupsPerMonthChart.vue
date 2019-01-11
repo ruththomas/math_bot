@@ -189,8 +189,6 @@ export default {
 
 <style scoped lang="scss">
 
-  @import '~c3/c3.min.css';
-
   .chart {
 
     width: 100%;
@@ -210,6 +208,7 @@ export default {
       background-color: #444;
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
+
   }
 
 </style>

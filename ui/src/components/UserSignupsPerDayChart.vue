@@ -175,8 +175,6 @@ export default {
 
 <style scoped lang="scss">
 
-  @import '~c3/c3.min.css';
-
   .chart {
 
     width: 100%;
@@ -195,24 +193,7 @@ export default {
       background-color: #444;
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
-  }
 
-  .c3-axis-y text {
-    fill: red;
-    font-size:12px;
   }
-  .c3-axis-x text {
-    font-size:12px;
-    fill:purple;
-  }
-
-  .c3-axis {
-    fill: red;
-    font-size:12px;
-  }
-
-  /*.c3-line-total, .c3-line-signups {*/
-  /*stroke-width: 0;*/
-  /*}*/
 
 </style>

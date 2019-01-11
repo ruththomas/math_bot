@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid admin"
-  :class="adminTheme"
+       :class="adminTheme"
   >
-      <div class="row my-3">
-        <user-gravatar></user-gravatar>
-      </div>
+    <div class="row my-3">
+      <user-gravatar></user-gravatar>
+    </div>
 
     <div class="row">
       <toggle-button
@@ -17,25 +17,25 @@
 
       />
     </div>
-        <div class="row">
+    <div class="row">
 
-          <admin-nav
-            :update-active="updateActive"
-            :active-display="activeDisplay"
-          ></admin-nav>
-          <div class="col-sm-9">
+      <admin-nav
+        :update-active="updateActive"
+        :active-display="activeDisplay"
+      ></admin-nav>
+      <div class="col-sm-9">
 
-            <level-stats v-if="activeDisplay === 'levels'"></level-stats>
-            <div v-if="activeDisplay === 'users'">
-              <admin-users v-if="userAccountSignups.length"></admin-users>
-              <div v-else class="container">
-                <donut-spinner></donut-spinner>
-              </div>
-            </div>
-            <events-list v-if="activeDisplay === 'events'"></events-list>
+        <level-stats v-if="activeDisplay === 'levels'"></level-stats>
+        <div v-if="activeDisplay === 'users'">
+          <admin-users v-if="userAccountSignups.length"></admin-users>
+          <div v-else class="container">
+            <donut-spinner></donut-spinner>
           </div>
         </div>
+        <events-list v-if="activeDisplay === 'events'"></events-list>
       </div>
+    </div>
+  </div>
 
 </template>
 
@@ -57,6 +57,8 @@ const fetchDataInterval = 60 // seconds
 
 const ADMIN_THEME_KEY = '@@ADMIN_THEME@@'
 
+// http://themes.djavaui.com/blankon-fullpack-admin-theme/production/admin/html/chart-c3js.html
+
 export default {
   name: 'Admin',
 
@@ -72,7 +74,7 @@ export default {
   },
   methods: {
 
-    changeAdminTheme ({value}) {
+    changeAdminTheme ({ value }) {
       this._changeAdminTheme(value ? 'dark' : 'light')
     },
 
@@ -87,7 +89,6 @@ export default {
       })
     },
     loadTheme () {
-      console.log('loaded theme', localStorage.getItem(ADMIN_THEME_KEY))
       let theme = localStorage.getItem(ADMIN_THEME_KEY) || 'light'
 
       this._changeAdminTheme(theme)
@@ -181,7 +182,9 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+
+  @import '~c3/c3.min.css';
 
   .admin {
 
@@ -190,15 +193,28 @@ export default {
     background: var(--light);
   }
 
+  .c3-tooltip {
+    color: black;
+  }
+
   .admin.dark {
 
     background-color: #222;
     color: var(--light);
 
+    .table thead th {
+
+      border-bottom: 2px solid #444;
+
+    }
+
+    .table td {
+
+      border-top: 1px solid #444;
+
+    }
+
     .card {
-      width: 15rem;
-      height: 10rem;
-      margin: 1rem .5rem;
       background-color: #303030;
       background-clip: border-box;
       border: 1px solid rgba(0, 0, 0, 0.125);
@@ -213,12 +229,13 @@ export default {
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
 
-  }
+    .c3 text {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      fill: var(--light);
+    }
 
-  .card {
-
-    background: var(--dark);
-    color: white;
   }
 
   .star-system-container {
