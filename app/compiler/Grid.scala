@@ -1,6 +1,6 @@
 package compiler
 
-import compiler.processor.RobotLocation
+import compiler.processor.{ ElementChange, GridCellChange, RobotLocation }
 import play.api.libs.json.{ Json, OFormat }
 
 object CellType extends Enumeration {
@@ -29,7 +29,7 @@ case class Grid(
     grid: Map[(Int, Int), Cell] = Map.empty[(Int, Int), Cell],
     gridDimensions: Rectangle = Rectangle(Point(0, 0), Point(4, 9))
 ) {
-  def currentCell() = getCell(robotLocation)
+  def currentCell() : Cell = getCell(robotLocation)
 
   def getCell(location: Point): Cell = grid.getOrElse(location.asTuple, Cell(CellType.EmptySpace, List.empty[Element]))
 
@@ -75,8 +75,9 @@ case class Grid(
     (updateCurrentCell(updatedCell), CellChange(robotLocation, updatedCell))
   }
 
-  def pickupItem(): (Grid, Option[CellChange], Option[Element]) = {
-    val existingElementsAtRobotLocation = Cell.pickupItem(grid.get(robotLocation.asTuple))
+  /*@deprecated("This method will be removed after scrub-through work is completed, use pickupItem instead", "Issue #438")*/
+  def pickupItemOld(): (Grid, Option[CellChange], Option[Element]) = {
+    val existingElementsAtRobotLocation = Cell.pickupItemOld(grid.get(robotLocation.asTuple))
 
     existingElementsAtRobotLocation match {
       case Some((cell, Some(element))) =>
@@ -84,6 +85,15 @@ case class Grid(
       case Some((cell, None)) => (updateCurrentCell(cell), Some(CellChange(robotLocation, None)), None)
       case None => (this, None, None)
     }
+  }
+
+  def pickupItem() : (Grid, Option[GridCellChange], Option[Element]) = {
+    val (updatedCell, elementChange, elementPicked) = Cell.pickupItem(grid.get(robotLocation.asTuple))
+    (
+      updateCurrentCell(updatedCell),
+      elementChange.map(e =>GridCellChange(robotLocation, ElementChange(pop = Some(e)))),
+      elementPicked
+    )
   }
 
   def applyChangeCell(cellChange: CellChange): Grid = {

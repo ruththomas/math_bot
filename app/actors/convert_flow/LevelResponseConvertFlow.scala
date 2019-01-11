@@ -26,7 +26,7 @@ object LevelResponseConvertFlow extends SocketResponseConvertFlow {
   final val success = "success"
   final val failed = "failed"
 
-  override def responseToJson(msg: Any): JsValue = {
+  private def responseToJson(msg: Any): JsValue = {
     Json.toJson[LevelResponse](msg match {
       case celestialSystem: CelestialSystem => LevelResponse(success, celestialSystem = Some(celestialSystem))
       case stats: Stats => LevelResponse(success, stats = Some(stats))
