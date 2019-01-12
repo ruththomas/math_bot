@@ -17,7 +17,7 @@
       <!--:eye-color="'#4A90E2'"-->
     <!--&gt;</mascot>-->
     <!--<div class="end-cap"></div>-->
-    <svg class="bar-graphic" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="100%" width="100%" viewBox="0 0 997.51 47.22">
+    <svg class="bar-graphic" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="100%" width="100%" viewBox="0 0 997.51 50">
       <title>bar</title>
       <path class="cls-1" d="M0,172.44" transform="translate(-0.99 -2.39)"/>
       <path class="cls-2" d="M95,26c316.82,0,604.62.08,903,0" transform="translate(-0.99 -2.39)"/>
@@ -115,7 +115,7 @@ $dialog-button-size: 3.5vmin;
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(50%);
+  top: 35%;
   /*
   height: $bar-height;
   background-color: $bar-color;
@@ -128,8 +128,6 @@ $dialog-button-size: 3.5vmin;
     fill:#afe88d;
   }
   .cls-2 {
-    width:100px;
-    height:100px;
     fill:none;stroke:#afe88d;
   }
   .bar-graphic {

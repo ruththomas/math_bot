@@ -100,7 +100,8 @@ class LevelControl extends Ws {
     const $mainDropZone = $('.edit-main > .function-drop > .function-drop-drop-zone')
     if ($mainDropZone.length) {
       const $bar = $('.bar')
-      const mainDropZoneHalf = $mainDropZone.height() / 2
+      console.log($mainDropZone.height(), ($mainDropZone.height() / 2) - (46.51 / 2))
+      const mainDropZoneHalf = ($mainDropZone.height() / 2) - (46.51 / 2)
       const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
       const barOffsetTop = $bar.offset().top
       const barPosTop = $bar.position().top
