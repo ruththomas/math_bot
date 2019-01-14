@@ -113,17 +113,19 @@ $danger-color: #F25C5C;
 $dialog-button-size: 3.5vmin;
 .bar {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 35%;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
   /*
   height: $bar-height;
   background-color: $bar-color;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: -1;
+
   */
+  z-index: -1;
   .cls-1 {
     fill:#afe88d;
   }
