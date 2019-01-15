@@ -132,9 +132,6 @@ class AuthController @Inject()(
   private def generateSessionAuthorized(sessionId: SecureIdentifier, idToken: JwtToken): Future[SessionAuthorized] = {
     for {
       lastCacheIdOpt <- playerAccountDAO.find(idToken.playerTokenId).map(_.flatMap(_.lastCacheId))
-      _ <- if (!lastCacheIdOpt.contains(sessionId.toString))
-        playerAccountDAO.updateLastCacheId(idToken.playerTokenId, sessionId.toString)
-      else FastFuture.successful(None)
     } yield {
       SessionAuthorized(sessionId,
                         lastCacheIdOpt,

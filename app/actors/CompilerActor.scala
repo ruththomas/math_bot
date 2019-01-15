@@ -1,20 +1,20 @@
 package actors
 
-import _root_.models.compiler.{ClientFrame, ClientRobotState, ClientTrace}
+import _root_.models.compiler.{ ClientFrame, ClientFrameLegacy, ClientRobotState, ClientTrace }
 import actors.messages._
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{ Actor, ActorRef, Props }
 import akka.http.scaladsl.util.FastFuture
 import akka.util.Timeout
 import compiler.operations.Final
 import compiler.processor.Frame
-import compiler.{Compiler, FrameController, GridAndProgram, Point}
+import compiler.{ Compiler, FrameController, GridAndProgram, Point }
 import configuration.CompilerConfiguration
 import javax.inject.Inject
 import loggers.MathBotLogger
 import models.GridMap
 
 import scala.concurrent.duration._
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.{ ExecutionContextExecutor, Future }
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
     logger: MathBotLogger,
@@ -29,7 +29,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
 
   private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
 
-  private def createFrames(leadingFrames: Seq[Frame]): Future[Seq[ClientFrame]] = {
+  private def createFrames(leadingFrames: Seq[Frame]): Future[Seq[ClientFrameLegacy]] = {
 
     val minimized = leadingFrames.map(_.withMinimalGrid)
 
@@ -40,17 +40,29 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           pathAndContinent <- levelControl.advanceStats(tokenId, f.success)
         } yield {
           if (f.success) {
-            minimized.init.map(ClientFrame(_)) :+ ClientFrame.success(f, pathAndContinent)
+            minimized.init.map(ClientFrameLegacy(_)) :+ ClientFrameLegacy.success(f, pathAndContinent)
           } else {
-            minimized.init.map(ClientFrame(_)) :+ ClientFrame.failure(f, pathAndContinent)
+            minimized.init.map(ClientFrameLegacy(_)) :+ ClientFrameLegacy.failure(f, pathAndContinent)
           }
         }
 
       case _ =>
-        FastFuture.successful[Seq[ClientFrame]](minimized.map(ClientFrame(_)))
-
+        FastFuture.successful[Seq[ClientFrameLegacy]](minimized.map(ClientFrameLegacy(_)))
     }
+  }
 
+  private def addPathAndContinent(frames : Seq[ClientFrame]) : Future[Seq[ClientFrame]] = {
+    frames.last.programState match {
+      case "running" =>
+        FastFuture.successful(frames)
+      case s =>
+        for {
+          // Update stats, and get the updated stats and the next continent
+          pathAndContinent <- levelControl.advanceStats(tokenId, s == "success")
+        } yield {
+            frames.init :+ frames.last.copy(pathAndContinent = Some(pathAndContinent))
+        }
+    }
   }
 
   private def createLastFromFromNothing() = {
@@ -61,7 +73,8 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                   "failure",
                   Some(pathAndContinent),
                   Seq.empty[ClientTrace],
-                  Some(0))
+                  0,
+        None)
     }
   }
 
@@ -77,11 +90,78 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
   }
    */
 
-  private def sendFrames(programState: ProgramState, clientFrames: Seq[ClientFrame]): Unit = {
-    out ! CompilerOutput(clientFrames)
-  }
+  override def receive: Receive = createCompile() orElse createProcessor()
 
-  override def receive: Receive = createCompile()
+  private def createProcessor(): Receive = {
+    case ProcessorCreate(selector, problem) =>
+      logger.LogInfo(className, "Creating new processor.")
+
+      for {
+        continent <- levelControl.compilerBuiltContinent(tokenId)
+      } yield {
+        val main = continent.lambdas.main
+        val funcs = continent.lambdas.functions
+        val commands = continent.lambdas.cmds
+        val grid = GridMap( // todo - refactor to use continent directly
+          gMap = continent.gridMap,
+          robotOrientation = continent.initialRobotState.orientation,
+          success = continent.stepControl.success,
+          problem = problem,
+          evalEachFrame = continent.evalEachFrame,
+          description = continent.description,
+          toolList = continent.toolList
+        )
+        for {
+          program <- Compiler.compile(main, funcs, commands, grid, problem)
+        } yield {
+          context.become(
+            processorContinue(
+              ProgramState(frameController = FrameController(program,
+                f => continent.stepControl.success(f, problem),
+                continent.evalEachFrame,
+                config),
+                grid = grid,
+                program = program)
+            )
+          )
+          self ! ProcessorContinue(selector)
+        }
+      }
+    case ProcessorCreateMbl(selector, problem, mbl) =>
+      logger.LogInfo(className, "Creating new compiler.")
+
+      for {
+        continent <- levelControl.compilerBuiltContinent(tokenId)
+      } yield {
+        val grid = GridMap( // todo - refactor to use continent directly
+          gMap = continent.gridMap,
+          robotOrientation = continent.initialRobotState.orientation,
+          success = continent.stepControl.success,
+          problem = problem,
+          evalEachFrame = continent.evalEachFrame,
+          description = continent.description,
+          toolList = continent.toolList
+        )
+
+        Compiler.compileMbl(mbl, grid, problem) match {
+
+          case Left(program) =>
+            context.become(
+              processorContinue(
+                ProgramState(frameController = FrameController(program,
+                  f => continent.stepControl.success(f, problem),
+                  continent.evalEachFrame,
+                  config),
+                  grid = grid,
+                  program = program)
+              )
+            )
+            self ! ProcessorContinue(selector)
+          case Right(error) =>
+            out ! ActorFailed(error)
+        }
+      }
+  }
 
   def createCompile(): Receive = {
     case CompilerExecute(steps, problem) =>
@@ -177,15 +257,40 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                      s"Stepping compiler for $steps steps with actor ${context.self.path.toSerializationFormat}")
 
       for {
-        cf <- createFrames(state.frameController.request(index, steps, 1))
+        cf <- createFrames(state.frameController.requestFrames(index, steps, 1))
       } yield {
-        sendFrames(state, cf)
+        out ! CompilerOutputLegacy(cf)
       }
       context.become(compileContinue(index + steps, state))
 
     case _: CompilerHalt =>
       logger.LogInfo(className, "Compiler halted")
-      context.become(createCompile())
+      context.become(createCompile() orElse createProcessor())
+      out ! CompilerHalted()
+
+    case Right(invalidJson: ActorFailed) =>
+      logger.LogFailure(className, invalidJson.msg)
+      self ! invalidJson.msg
+
+    case _ => out ! ActorFailed("Unknown command submitted to compiler")
+  }
+
+  private def processorContinue(state: ProgramState): Receive = {
+
+    case ProcessorContinue(selector) =>
+      logger.LogInfo(className,
+        s"Creating ${selector.count} frames starting at ${selector.index} with a direction/skip of ${selector.direction} with actor ${context.self.path.toSerializationFormat}")
+
+      for {
+        cf <- addPathAndContinent(state.frameController.request(selector.index, selector.count, selector.direction))
+      } yield {
+        out ! CompilerOutput(cf)
+      }
+      context.become(processorContinue(state))
+
+    case _: CompilerHalt =>
+      logger.LogInfo(className, "Compiler halted")
+      context.become(createCompile() orElse createProcessor())
       out ! CompilerHalted()
 
     case Right(invalidJson: ActorFailed) =>

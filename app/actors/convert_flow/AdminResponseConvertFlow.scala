@@ -29,7 +29,7 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
   final val success = "success"
   final val failed = "failed"
 
-  override def responseToJson(msg: Any): JsValue = {
+  private def responseToJson(msg: Any): JsValue = {
     Json.toJson[AdminResponse](msg match {
       case LastXDaysLogins(logins) => AdminResponse(success, None, None, None, Some(logins))
       case ActiveUserCount(count) => AdminResponse(success, None, None, None, None, Some(count))
