@@ -1,20 +1,20 @@
 package actors
 
-import _root_.models.compiler.{ ClientFrame, ClientFrameLegacy, ClientRobotState, ClientTrace }
+import _root_.models.compiler.{ClientFrame, ClientFrameLegacy, ClientRobotState, ClientTrace}
 import actors.messages._
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{Actor, ActorRef, Props}
 import akka.http.scaladsl.util.FastFuture
 import akka.util.Timeout
 import compiler.operations.Final
 import compiler.processor.Frame
-import compiler.{ Compiler, FrameController, GridAndProgram, Point }
+import compiler.{Compiler, FrameController, GridAndProgram, Point}
 import configuration.CompilerConfiguration
 import javax.inject.Inject
 import loggers.MathBotLogger
 import models.GridMap
 
 import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContextExecutor, Future }
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
     logger: MathBotLogger,
@@ -25,7 +25,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
 
   implicit val timeout: Timeout = 5000.minutes
 
-  private case class ProgramState(frameController: FrameController, grid: GridMap, program: GridAndProgram)
+  private case class ProgramState(frameController: FrameController,
+                                  grid: GridMap,
+                                  program: GridAndProgram,
+                                  prevFrame: Int)
 
   private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
 
@@ -51,7 +54,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
     }
   }
 
-  private def addPathAndContinent(frames : Seq[ClientFrame]) : Future[Seq[ClientFrame]] = {
+  private def addPathAndContinent(frames: Seq[ClientFrame]): Future[Seq[ClientFrame]] = {
     frames.last.programState match {
       case "running" =>
         FastFuture.successful(frames)
@@ -60,7 +63,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           // Update stats, and get the updated stats and the next continent
           pathAndContinent <- levelControl.advanceStats(tokenId, s == "success")
         } yield {
-            frames.init :+ frames.last.copy(pathAndContinent = Some(pathAndContinent))
+          frames.init :+ frames.last.copy(pathAndContinent = Some(pathAndContinent))
         }
     }
   }
@@ -74,7 +77,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                   Some(pathAndContinent),
                   Seq.empty[ClientTrace],
                   0,
-        None)
+                  None)
     }
   }
 
@@ -116,12 +119,15 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
         } yield {
           context.become(
             processorContinue(
-              ProgramState(frameController = FrameController(program,
-                f => continent.stepControl.success(f, problem),
-                continent.evalEachFrame,
-                config),
+              ProgramState(
+                frameController = FrameController(program,
+                                                  f => continent.stepControl.success(f, problem),
+                                                  continent.evalEachFrame,
+                                                  config),
                 grid = grid,
-                program = program)
+                program = program,
+                prevFrame = 0
+              )
             )
           )
           self ! ProcessorContinue(selector)
@@ -148,12 +154,15 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           case Left(program) =>
             context.become(
               processorContinue(
-                ProgramState(frameController = FrameController(program,
-                  f => continent.stepControl.success(f, problem),
-                  continent.evalEachFrame,
-                  config),
+                ProgramState(
+                  frameController = FrameController(program,
+                                                    f => continent.stepControl.success(f, problem),
+                                                    continent.evalEachFrame,
+                                                    config),
                   grid = grid,
-                  program = program)
+                  program = program,
+                  prevFrame = 0
+                )
               )
             )
             self ! ProcessorContinue(selector)
@@ -191,12 +200,15 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
           context.become(
             compileContinue(
               0,
-              ProgramState(frameController = FrameController(program,
-                                                             f => continent.stepControl.success(f, problem),
-                                                             continent.evalEachFrame,
-                                                             config),
-                           grid = grid,
-                           program = program)
+              ProgramState(
+                frameController = FrameController(program,
+                                                  f => continent.stepControl.success(f, problem),
+                                                  continent.evalEachFrame,
+                                                  config),
+                grid = grid,
+                program = program,
+                prevFrame = 0
+              )
             )
           )
           self ! CompilerContinue(steps)
@@ -224,12 +236,15 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
             context.become(
               compileContinue(
                 0,
-                ProgramState(frameController = FrameController(program,
-                                                               f => continent.stepControl.success(f, problem),
-                                                               continent.evalEachFrame,
-                                                               config),
-                             grid = grid,
-                             program = program)
+                ProgramState(
+                  frameController = FrameController(program,
+                                                    f => continent.stepControl.success(f, problem),
+                                                    continent.evalEachFrame,
+                                                    config),
+                  grid = grid,
+                  program = program,
+                  prevFrame = 0
+                )
               )
             )
             self ! CompilerContinue(steps)
@@ -257,11 +272,11 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                      s"Stepping compiler for $steps steps with actor ${context.self.path.toSerializationFormat}")
 
       for {
-        cf <- createFrames(state.frameController.requestFrames(index, steps, 1))
+        cf <- createFrames(state.frameController.requestFrames(index, steps, 1, state.prevFrame))
       } yield {
         out ! CompilerOutputLegacy(cf)
       }
-      context.become(compileContinue(index + steps, state))
+      context.become(compileContinue(index + steps, state.copy(prevFrame = index + steps - 1)))
 
     case _: CompilerHalt =>
       logger.LogInfo(className, "Compiler halted")
@@ -278,15 +293,17 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
   private def processorContinue(state: ProgramState): Receive = {
 
     case ProcessorContinue(selector) =>
-      logger.LogInfo(className,
-        s"Creating ${selector.count} frames starting at ${selector.index} with a direction/skip of ${selector.direction} with actor ${context.self.path.toSerializationFormat}")
+      logger.LogInfo(
+        className,
+        s"Creating ${selector.count} frames starting at ${selector.index} with a direction/skip of ${selector.direction} with actor ${context.self.path.toSerializationFormat}"
+      )
 
       for {
-        cf <- addPathAndContinent(state.frameController.request(selector.index, selector.count, selector.direction))
+        cf <- addPathAndContinent(state.frameController.request(selector.index, selector.count, selector.direction, state.prevFrame))
       } yield {
         out ! CompilerOutput(cf)
+        context.become(processorContinue(state.copy(prevFrame = cf.last.index)))
       }
-      context.become(processorContinue(state))
 
     case _: CompilerHalt =>
       logger.LogInfo(className, "Compiler halted")
