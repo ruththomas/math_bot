@@ -16,7 +16,13 @@
       :door-handle-color="'#B8E986'"
       :eye-color="'#4A90E2'"
     ></mascot>
-    <div class="end-cap"></div>
+    <svg class="bar-graphic" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="100%" width="100%" viewBox="0 0 997.51 50">
+      <title>bar</title>
+      <path class="cls-1" d="M0,172.44" transform="translate(-0.99 -2.39)"/>
+      <path class="cls-2" d="M95,26c316.82,0,604.62.08,903,0" transform="translate(-0.99 -2.39)"/>
+      <line class="cls-2" x1="997.01" y1="47.22" x2="997.01"/>
+      <path class="cls-2" d="M1.07,26c1.47-.25,3.93.41,6.59,1.32,7.22,2.47,7.93,10.57,11.86,11,5.9.61,9.31-17.13,15.37-17.13,7.07,0,9.88,24.11,16.25,24.15,7.24,0,10.07-31.14,19.32-31.62C81,12.9,83,26,95,26" transform="translate(-0.99 -2.39)"/>
+    </svg>
   </div>
 </template>
 
@@ -63,7 +69,6 @@ export default {
       return {
         $functions: $('.editMain-drop-zone > .piece:not(.placeholder-piece)'),
         $bar: $('.bar'),
-        $endCap: $('.end-cap'),
         animationClass: 'piece-shake'
       }
     },
@@ -106,16 +111,28 @@ $danger-color: #F25C5C;
 $dialog-button-size: 3.5vmin;
 .bar {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(50%);
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  /*
   height: $bar-height;
   background-color: $bar-color;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: -1;
 
+  */
+  z-index: -1;
+  .cls-1 {
+    fill:#afe88d;
+  }
+  .cls-2 {
+    fill:none;stroke:#afe88d;
+  }
+  .bar-graphic {
+    width:100%;
+  }
   .bar-controller {
     position: absolute;
     cursor: pointer;
@@ -137,14 +154,6 @@ $dialog-button-size: 3.5vmin;
     height: auto;
     z-index: 100;
     cursor: pointer;
-  }
-
-  .end-cap {
-    position: absolute;
-    height: 3vmin;
-    width: 1px;
-    left: 100%;
-    background-color: $bar-color;
   }
 }
 
