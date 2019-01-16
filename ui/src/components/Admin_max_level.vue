@@ -136,7 +136,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  @import '~c3/c3.min.css';
 
   #current_path_chart {
 
