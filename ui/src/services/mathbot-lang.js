@@ -13,7 +13,8 @@ import CodeMirror from '../../node_modules/codemirror/lib/codemirror'
       'putdown': [/putdown\b/, 'keyword'],
       'pickup': [/pickup\b/, 'keyword'],
       '=>': [/=>\B/, 'def'],
-      'sym': [/(')(\w|\d)+/, 'atom']
+      'sym': [/(')(\w|\d)+/, 'atom'],
+      ')': [/\)/, 'bracket']
     }
     return {
       token: function (stream) {
@@ -22,28 +23,32 @@ import CodeMirror from '../../node_modules/codemirror/lib/codemirror'
         if (stream.eat('(')) {
           spacebefore = true
           inbracket = true
-          return
+          return "bracket"
         }
         let val
+        let foundone = false
         Object.keys(Highlighters).forEach(function (key) {
-          if (stream.eatSpace()) spacebefore = true
-          if (spacebefore) {
-            if (stream.match(Highlighters[key][0])) {
-              spacebefore = false
-              val = Highlighters[key][1]
+          if (!foundone) {
+            if (stream.eatSpace()) spacebefore = true
+            if (spacebefore) {
+              if (stream.match(Highlighters[key][0])) {
+                spacebefore = false
+                foundone = true
+                val = Highlighters[key][1]
+              }
             }
           }
         })
         if (val) return val
         if (spacebefore) {
-          if (stream.match(/((\w|\d)+ =>)/)) {
+          if (stream.match(/((\w|\d|-|_)+ =>)/)) {
             stream.backUp(3)
             let toturn = stream.current()
             if (!inbracket) toturn = toturn.substr(1)
             const toadd = new RegExp(toturn + '\\' + 'b')
-            Highlighters[toturn] = [toadd, 'keyword']
+            Highlighters[toturn] = [toadd, 'builtin']
             spacebefore = false
-            return 'keyword'
+            return 'builtin'
           }
         }
         spacebefore = false
