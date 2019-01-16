@@ -103,14 +103,19 @@ class LevelControl extends Ws {
   }
 
   _positionBar () {
-    const $mainDropZone = $('.edit-main > .function-drop > .function-drop-drop-zone')
-    if ($mainDropZone.length) {
-      const $bar = $('.bar')
-      const mainDropZoneHalf = $mainDropZone.height() / 2
-      const mainDropOffsetTop = $mainDropZone.offset().top + mainDropZoneHalf
-      const barOffsetTop = $bar.offset().top
-      const barPosTop = $bar.position().top
-      $bar.animate({top: (barPosTop + (mainDropOffsetTop - barOffsetTop) - 2) + 'px'}, 100)
+    const $bar = $('.bar')
+    const $mascot = $('.mascot')
+    const $mainDropZone = $('.edit-main > .function-drop')
+    const mainDropZoneHalf = $mainDropZone.height() / 2
+
+    if (document.getElementById('overflowing').scrollWidth > document.getElementById('overflowing').clientWidth) {
+      $bar[0].style.bottom = '2vmin'
+      $mascot.css('top', (mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 'px').css('top', '-=1vmin')
+    } else {
+      $bar[0].style.bottom = ''
+      if ($mainDropZone.length) {
+        $mascot.animate({top: (mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 'px'}, 100)
+      }
     }
   }
 

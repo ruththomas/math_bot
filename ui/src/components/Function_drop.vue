@@ -1,5 +1,5 @@
 <template>
-  <div class="function-drop">
+  <div class="function-drop" id="overflowing">
     <draggable
       class="function-drop-drop-zone"
       :class="[showMesh ? 'mesh-background' : '', origin + '-drop-zone']"
@@ -131,8 +131,8 @@ export default {
           $ele.find('.piece').removeClass('dropped-indicator')
         })
 
-        $dropped.addClass('dropped-indicator')
-        $dropped.find('.piece').addClass('dropped-indicator')
+        // $dropped.addClass('dropped-indicator')
+        // $dropped.find('.piece').addClass('dropped-indicator')
 
         if ((childrenWidthSum * 2) > dropWidth) {
           $dropZone.animate({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`}, 200)
