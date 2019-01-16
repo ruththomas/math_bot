@@ -28,7 +28,7 @@
     >
       <span :style="{color: levelControl.getColorHex('1')}">{{func.color[0]}}</span><span :style="{color: levelControl.getColorHex('100')}">{{func.color[1]}}</span><span :style="{color: levelControl.getColorHex('10000')}">{{func.color[2]}}</span>
     </div>
-    <svg v-if="pieceToShow === 'closed'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+    <svg v-if="pieceToShow === 'closed'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" :class="!showName ? 'no-name' : ''" >
       <linearGradient id="rainbow-border" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="20%" stop-color="#4A90E2" />
         <stop offset="40%" stop-color="#CA7AFF" />
@@ -119,7 +119,7 @@
     <div
       v-if="pieceToShow === 'closed' && showName  "
       class="piece-name"
-      :class="func.color"
+      :class="[func.color]"
       :style="{'background-color': levelControl.getColorHex(func.color)}"
     >
       <span :style="{opacity: func.name === '' ? 0 : 1}">
@@ -206,6 +206,10 @@ export default {
   $pink: #FF98B1;
   $red: #F25C5C;
   $pointer-size: 2vmin;
+
+  .no-name {
+    vertical-align: unset;
+  }
 
   .piece {
     position: relative;

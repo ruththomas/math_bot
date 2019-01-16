@@ -1,22 +1,21 @@
 <template>
   <div class="control-bar bar noDrag" v-if="Object.keys(levelControl.robot).length">
-    <!--<clear-function-confirm-->
-      <!--v-if="confirmDeleteOpen"-->
-      <!--:close-method="closeConfirmDelete"-->
-      <!--:trash-method="wipeFunction"-->
-      <!--:animation-method="startAnimation"-->
-      <!--:de-animation-method="stopAnimation"-->
-    <!--&gt;</clear-function-confirm>-->
-    <!--<mascot-->
-      <!--v-else-->
-      <!--:id="'main-delete-function'"-->
-      <!--class="bar-controller"-->
-      <!--@click.native="levelControl.functions.main.func.length ? [openConfirmDelete()] : []"-->
-      <!--:color="gridRobotColor"-->
-      <!--:door-handle-color="'#B8E986'"-->
-      <!--:eye-color="'#4A90E2'"-->
-    <!--&gt;</mascot>-->
-    <!--<div class="end-cap"></div>-->
+    <clear-function-confirm
+      v-if="confirmDeleteOpen"
+      :close-method="closeConfirmDelete"
+      :trash-method="wipeFunction"
+      :animation-method="startAnimation"
+      :de-animation-method="stopAnimation"
+    ></clear-function-confirm>
+    <mascot
+      v-else
+      :id="'main-delete-function'"
+      class="bar-controller"
+      @click.native="levelControl.functions.main.func.length ? [openConfirmDelete()] : []"
+      :color="gridRobotColor"
+      :door-handle-color="'#B8E986'"
+      :eye-color="'#4A90E2'"
+    ></mascot>
     <svg class="bar-graphic" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="100%" width="100%" viewBox="0 0 997.51 50">
       <title>bar</title>
       <path class="cls-1" d="M0,172.44" transform="translate(-0.99 -2.39)"/>
@@ -70,7 +69,6 @@ export default {
       return {
         $functions: $('.editMain-drop-zone > .piece:not(.placeholder-piece)'),
         $bar: $('.bar'),
-        $endCap: $('.end-cap'),
         animationClass: 'piece-shake'
       }
     },
@@ -156,14 +154,6 @@ $dialog-button-size: 3.5vmin;
     height: auto;
     z-index: 100;
     cursor: pointer;
-  }
-
-  .end-cap {
-    position: absolute;
-    height: 3vmin;
-    width: 1px;
-    left: 100%;
-    background-color: $bar-color;
   }
 }
 
