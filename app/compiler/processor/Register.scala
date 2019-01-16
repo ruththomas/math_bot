@@ -1,9 +1,9 @@
 package compiler.processor
 
-import compiler.{Cell, CellType, Element}
+import compiler.{ Cell, CellType, Element }
 
 object AnimationType extends Enumeration {
-  val Bumped = Value("bumped")
+  val Bumped : AnimationType.Value = Value("bumped")
 }
 
 case class Register(holdingCell: Cell = Cell(cellType = CellType.RobotHolding),
@@ -15,7 +15,14 @@ case class Register(holdingCell: Cell = Cell(cellType = CellType.RobotHolding),
     case _ => None
   }
 
-  def push(newElement: Option[Element]): Register =
+  def popDelta(): Option[(Register, ElementChange, Element)] = holdingCell.pop() match {
+    case (Some(newCell), Some(topElement)) =>
+      Some((this.copy(holdingCell = newCell), ElementChange(pop = Some(topElement)), topElement))
+    case _ => None
+  }
+
+
+  def push(newElement : Option[Element]): Register =
     newElement match {
       case Some(element) => this.copy(holdingCell = this.holdingCell.push(element))
       case _ =>  this // No change

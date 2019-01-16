@@ -1,8 +1,9 @@
 package models.compiler
 
 import actors.messages.level.PathAndContinent
-import compiler.processor.Frame
-import play.api.libs.json.{Json, OWrites}
+import compiler.Element
+import compiler.processor._
+import play.api.libs.json._
 
 /*
  * Conveys the result of a mathbot processor execution to the web client.
@@ -12,30 +13,23 @@ case class ClientFrame(robotState: ClientRobotState,
                        programState: String,
                        pathAndContinent: Option[PathAndContinent],
                        trace: Seq[ClientTrace],
-                       index: Option[Int]) {
+                       index: Int,
+                       change : Option[FrameChange]) {
   def isSuccess: Boolean = programState == "success"
   def isFailure: Boolean = programState == "failure"
 }
 
 object ClientFrame {
 
+  // The "change" implicits are temporary for debugging. Eventually the frame change field will be removed.
+  implicit val element: OWrites[Element] = new OWrites[Element] {
+    override def writes(o : Element) : JsObject = JsObject(Seq("name" -> JsString(o.color.toString).asInstanceOf[JsValue], "original" -> JsBoolean(o.original).asInstanceOf[JsValue]))
+}
+  implicit val robotLocationChange: OWrites[RobotLocationChange] = Json.writes[RobotLocationChange]
+  implicit val robotOrientationChange: OWrites[RobotOrientationChange] = Json.writes[RobotOrientationChange]
+  implicit val elementChange: OWrites[ElementChange] = Json.writes[ElementChange]
+  implicit val gridCellChange: OWrites[GridCellChange] = Json.writes[GridCellChange]
+  implicit val frameChangeWrite : OWrites[FrameChange] = Json.writes[FrameChange]
+
   implicit val clientFrameWrites: OWrites[ClientFrame] = Json.writes[ClientFrame]
-
-  def apply(frame: Frame, pathAndContinent: Option[PathAndContinent] = None): ClientFrame =
-    ClientFrame(frame, "running", pathAndContinent)
-
-  // stepData is the step data to render at this point
-  def success(frame: Frame, pathAndContinent: PathAndContinent): ClientFrame =
-    ClientFrame(frame, "success", Some(pathAndContinent))
-
-  // stepData is the step data to render at this point
-  def failure(frame: Frame, pathAndContinent: PathAndContinent): ClientFrame =
-    ClientFrame(frame, "failure", Some(pathAndContinent))
-
-  def apply(frame: Frame, programState: String, pathAndContinent: Option[PathAndContinent]): ClientFrame =
-    ClientFrame(ClientRobotState(frame),
-                programState,
-                pathAndContinent,
-                Seq(ClientTrace(frame.traceTag)),
-                index = frame.index)
 }
