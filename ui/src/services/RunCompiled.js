@@ -274,7 +274,7 @@ class RunCompiled extends GridAnimator {
 
   async _processFrames (_) {
     // console.log('frames ~ ', this.robotFrames.slice())
-    const current = this.robotFrames[this._nextCurrent()]
+    const current = this.robotFrames.shift()
     this._controlAsk()
     const run = await this[`_${current.programState}`](current)
     run(current)
@@ -285,7 +285,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _controlAsk () {
-    if (this._lastFrame().programState === 'running' && this.robotFrames.length - this.currentFrame < 50) {
+    if (this._lastFrame().programState === 'running' && this.robotFrames.length < 3) {
       this._askCompiler()
     }
   }
@@ -305,21 +305,29 @@ class RunCompiled extends GridAnimator {
     this._addMessage(messageBuilder)
   }
 
+  _generateFrames () {
+    return {
+      index: (this.robotFrames[0] || {index: 0}).index,
+      count: 10,
+      direction: 1
+    }
+  }
+
   _askCompiler (mbl, create, startRunning) {
     this.compilerControl._wsOnMessage((compiled) => {
       if (compiled.hasOwnProperty('error')) {
         this._mblError(compiled.error)
         this.robot.setState('failure')
       } else {
-        this.robotFrames = this.robotFrames.concat(compiled.frames)
+        this.robotFrames = compiled.frames
         if (startRunning) startRunning()
       }
     })
+
     this.compilerControl.send({
       problem: this.levelControl.continent.problem.encryptedProblem,
-      halt: false,
-      mbl: mbl,
-      create: create
+      create: !!startRunning,
+      frames: this._generateFrames()
     })
   }
 }
