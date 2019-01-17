@@ -10,7 +10,6 @@ import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.{CodecProvider, CodecRegistries}
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, Macros}
-import org.mongodb.scala.bson.collection.mutable.Document
 import org.mongodb.scala.bson.{BsonBoolean, BsonDateTime, BsonDocument}
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Indexes._
@@ -56,10 +55,6 @@ class PlayerAccountDAO @Inject()(
 
   val userAccountSignupCollection: MongoCollection[UserAccountSignups] =
     db.getCollection[UserAccountSignups](collectionLabel.name)
-      .withCodecRegistry(codecRegistry)
-
-  val _collection: MongoCollection[Document] =
-    db.getCollection[Document](collectionLabel.name)
       .withCodecRegistry(codecRegistry)
 
   def put(pa: PlayerAccount): Future[Completed] = collection.insertOne(pa).toFuture()
@@ -136,33 +131,6 @@ class PlayerAccountDAO @Inject()(
     collection
       .count(combine(gte(lastAccess.name, date), equal(isAdminLabel.name, false)))
       .toFuture()
-  }
-
-  /*
-
-  fixme: query is expensive cannot use in prod
-   */
-
-  def activeUserCount: Future[Int] = {
-
-    collection
-      .aggregate(
-        Seq(
-          this.nonAdminAccountStatement,
-          BsonDocument(f"""
-                         |   { $$lookup: {
-                         |        from: "session",
-                         |        localField: "${subLabel.name}",
-                         |        foreignField: "token.${subLabel.name}",
-                         |        as: "foundToken",
-                         |      }
-                         |    }
-                       """.stripMargin)
-        )
-      )
-      .toFuture()
-      .map(_.length)
-
   }
 
   /*

@@ -27,7 +27,6 @@ object AdminActor {
   final case class PostEventResult(result: String) extends EventResult
   final case class PutEventResult(result: String) extends EventResult
   final case class UserMaxLevel(maxLevel: Seq[MaxLevel])
-  final case class GetActiveUserCount()
   final case class GetSignupsPerDay()
   final case class GetLoginsLastXDays(days: Option[Int])
   final case class GetContinentStats(level: Option[String])
@@ -35,7 +34,6 @@ object AdminActor {
   final case class SignupsPerDay(result: Seq[UserAccountSignups])
   final case class LastXDaysLogins(logins: Long)
   final case class UserCount(count: Long)
-  final case class ActiveUserCount(count: Long)
   final case class Events(events: Seq[AdminEvent])
   final case class Event(event: AdminEvent)
 
@@ -95,11 +93,6 @@ class AdminActor @Inject()(out: ActorRef,
         .map { signups =>
           out ! SignupsPerDay(signups)
         }
-
-    case GetActiveUserCount() =>
-      sessionDAO.count.map { count =>
-        out ! ActiveUserCount(count)
-      }
 
     case GetPlanetStats(planet) =>
       this.stats.planetsInOrder.find(p => p.id == planet.getOrElse("0000")) match {
