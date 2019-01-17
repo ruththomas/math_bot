@@ -2,11 +2,12 @@ import GridAnimator from './GridAnimator'
 import $store from '../store/store'
 import $router from '../router'
 import { $root } from '../main'
+import _ from 'underscore'
 
 class RunCompiled extends GridAnimator {
   constructor () {
     super()
-    this.currentFrame = -1
+    this.currentFrame = {index: -1}
     this.forward = true
     this.robotFrames = []
     this.levelControl = $store.state.levelControl
@@ -252,7 +253,7 @@ class RunCompiled extends GridAnimator {
   }
 
   _running (frame) {
-    return this.initializeAnimation(frame, this.currentFrame <= 0, () => {
+    return this.initializeAnimation(frame, this.currentFrame.index === 0, () => {
       if (this.robot.state === 'running') {
         if (this.robotFrames.length) {
           this._processFrames()
@@ -267,25 +268,22 @@ class RunCompiled extends GridAnimator {
     this.forward = forward
   }
 
-  _nextCurrent () {
-    this.currentFrame = Math.min(this.robotFrames.length - 1, this.forward ? this.currentFrame + 1 : Math.max(this.currentFrame - 1, 0))
-    return this.currentFrame
-  }
-
   async _processFrames (_) {
     // console.log('frames ~ ', this.robotFrames.slice())
-    const current = this.robotFrames.shift()
+    this.currentFrame = this.robotFrames.length > 1 ? this.robotFrames.shift() : this.robotFrames[0]
     this._controlAsk()
-    const run = await this[`_${current.programState}`](current)
-    run(current)
+    const run = await this[`_${this.currentFrame.programState}`](this.currentFrame)
+    run(this.currentFrame)
   }
 
   _lastFrame () {
-    return this.robotFrames[this.robotFrames.length - 1]
+    return this.robotFrames[this.robotFrames.length - 1] || {index: 0}
   }
 
+  _askBuffer = 5
+
   _controlAsk () {
-    if (this._lastFrame().programState === 'running' && this.robotFrames.length < 3) {
+    if (this._lastFrame().programState === 'running' && this.robotFrames.length < this._askBuffer) {
       this._askCompiler()
     }
   }
@@ -307,9 +305,9 @@ class RunCompiled extends GridAnimator {
 
   _generateFrames () {
     return {
-      index: (this.robotFrames[0] || {index: 0}).index,
+      index: this.currentFrame.index + 1,
       count: 10,
-      direction: 1
+      direction: this.forward ? 1 : -1
     }
   }
 
@@ -319,7 +317,8 @@ class RunCompiled extends GridAnimator {
         this._mblError(compiled.error)
         this.robot.setState('failure')
       } else {
-        this.robotFrames = compiled.frames
+        this.robotFrames = _.uniq(this.robotFrames.concat(compiled.frames), (frame) => frame.index)
+        console.log(this.robotFrames)
         if (startRunning) startRunning()
       }
     })
