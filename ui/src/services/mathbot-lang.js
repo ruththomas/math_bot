@@ -23,7 +23,7 @@ import CodeMirror from '../../node_modules/codemirror/lib/codemirror'
         if (stream.eat('(')) {
           spacebefore = true
           inbracket = true
-          return "bracket"
+          return 'bracket'
         }
         let val
         let foundone = false

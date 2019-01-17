@@ -107,17 +107,6 @@ export default class AdminControl extends Ws {
     })
   }
 
-  /*
-
-    fetch user count from socket request
-    @param cb function
-    @returns callback w/ {status: string = success, userCount: string = 1}
-   */
-
-  getActiveUserCount () {
-    this._send(JSON.stringify({ action: this.actions.activeUserCount })) // { status: 'success',userCount: "1"}
-  }
-
   getUserCount () {
     this._send(JSON.stringify({ action: this.actions.userCount })) // { status: 'success',userCount: "1"}
   }

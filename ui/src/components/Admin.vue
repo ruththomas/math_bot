@@ -103,7 +103,6 @@ export default {
       return Promise.all([
         this.adminControl.getDailySignups(),
         this.adminControl.getUserCount(),
-        this.adminControl.getActiveUserCount(),
         this.adminControl.getLoginsLastXDays(7),
         this.adminControl.getEvents()
       ])
