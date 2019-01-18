@@ -27,7 +27,7 @@
         v-for="(btn, ind) in playButtonsNumber"
         :key="'play-button/' + ind"
         class="actual-play play dialog-button"
-        :class="[isLastFrame ? 'disabled' : '', !!levelControl.runCompiled.direction ? '' : 'play-reverse']"
+        :class="[isLastFrame ? 'disabled' : '', levelControl.runCompiled.direction < 0 ? 'play-reverse' : '']"
         :src="permanentImages.buttons.playButton"
         @click="!isLastFrame ? levelControl.runCompiled.start() : ''"
       />

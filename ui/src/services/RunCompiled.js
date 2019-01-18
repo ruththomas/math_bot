@@ -53,7 +53,7 @@ class RunCompiled extends GridAnimator {
         this.robotFrames = []
         this._deleteAllMessages()
         this.robot.setState('running')
-        this._askCompiler(!normalMode ? $store.state.levelControl.mbl : false, true, this._processFrames)
+        this._askCompiler(Object.assign({create: true, startRunning: this._processFrames}, !normalMode ? {mbl: $store.state.levelControl.mbl} : {}))
       } else {
         this.robot.setState('running')
         this._processFrames()
@@ -264,7 +264,12 @@ class RunCompiled extends GridAnimator {
   }
 
   setDirection (sliderValue, speed) {
-    this.direction = sliderValue > 50 ? 1 : -1
+    const newDirection = sliderValue > 50 ? 1 : -1
+    if (this.direction !== newDirection) {
+      console.log('DIRECTION CHANGE')
+      this.robotFrames = this.robotFrames.slice(0, 1)
+    }
+    this.direction = newDirection
     if (this.levelControl.robot.state === 'home' || this.levelControl.robot.state === 'paused') {
       this.start()
     } else {
@@ -275,9 +280,9 @@ class RunCompiled extends GridAnimator {
 
   async _processFrames (_) {
     // console.log('frames ~ ', this.robotFrames.slice())
-    this.currentFrame = this.robotFrames.length < 2 ? this.robotFrames[0] : this.robotFrames.shift()
-    console.log(this.currentFrame.index)
+    this.currentFrame = this.robotFrames.length === 1 ? this.robotFrames[0] : this.robotFrames.shift()
     this._controlAsk()
+    console.log(this.currentFrame.index)
     const run = await this[`_${this.currentFrame.programState}`](this.currentFrame)
     run(this.currentFrame)
   }
@@ -290,7 +295,7 @@ class RunCompiled extends GridAnimator {
 
   _controlAsk () {
     if (this._lastFrame().programState === 'running' && this.robotFrames.length < this._askBuffer) {
-      this._askCompiler()
+      this._askCompiler({})
     }
   }
 
@@ -317,22 +322,23 @@ class RunCompiled extends GridAnimator {
     }
   }
 
-  _askCompiler (mbl, create, startRunning) {
+  _askCompiler ({create = false, startRunning = undefined, mbl = undefined}) {
     this.compilerControl._wsOnMessage((compiled) => {
       if (compiled.hasOwnProperty('error')) {
         this._mblError(compiled.error)
         this.robot.setState('failure')
       } else {
+        console.log(compiled.frames)
         this.robotFrames = compiled.frames
         if (startRunning) startRunning()
       }
     })
 
-    this.compilerControl.send({
+    this.compilerControl.send(Object.assign({
       problem: this.levelControl.continent.problem.encryptedProblem,
-      create: !!startRunning,
+      create: create,
       frames: this._generateFrames()
-    })
+    }, mbl ? {mbl} : {}))
   }
 }
 
