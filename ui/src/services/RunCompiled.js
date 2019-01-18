@@ -2,13 +2,12 @@ import GridAnimator from './GridAnimator'
 import $store from '../store/store'
 import $router from '../router'
 import { $root } from '../main'
-import _ from 'underscore'
 
 class RunCompiled extends GridAnimator {
   constructor () {
     super()
     this.currentFrame = {index: -1}
-    this.forward = true
+    this.direction = 1
     this.robotFrames = []
     this.levelControl = $store.state.levelControl
     this.compilerControl = $store.state.compilerControl
@@ -63,7 +62,7 @@ class RunCompiled extends GridAnimator {
   }
 
   pause () {
-    this.forward = true
+    this.direction = 1
     this.robot.setSpeed(400)
     this.robot.setState(this.robot.state === 'running' ? 'paused' : 'home')
   }
@@ -264,13 +263,20 @@ class RunCompiled extends GridAnimator {
     })
   }
 
-  setDirection (forward = !this.forward) {
-    this.forward = forward
+  setDirection (sliderValue, speed) {
+    this.direction = sliderValue > 50 ? 1 : -1
+    if (this.levelControl.robot.state === 'home' || this.levelControl.robot.state === 'paused') {
+      this.start()
+    } else {
+      this.levelControl.robot.setState('running')
+    }
+    this.levelControl.robot.setSpeed(speed)
   }
 
   async _processFrames (_) {
     // console.log('frames ~ ', this.robotFrames.slice())
-    this.currentFrame = this.robotFrames.length > 1 ? this.robotFrames.shift() : this.robotFrames[0]
+    this.currentFrame = this.robotFrames.length < 2 ? this.robotFrames[0] : this.robotFrames.shift()
+    console.log(this.currentFrame.index)
     this._controlAsk()
     const run = await this[`_${this.currentFrame.programState}`](this.currentFrame)
     run(this.currentFrame)
@@ -305,9 +311,9 @@ class RunCompiled extends GridAnimator {
 
   _generateFrames () {
     return {
-      index: this.currentFrame.index + 1,
+      index: this.currentFrame.index + this.direction,
       count: 10,
-      direction: this.forward ? 1 : -1
+      direction: this.direction
     }
   }
 
@@ -317,8 +323,7 @@ class RunCompiled extends GridAnimator {
         this._mblError(compiled.error)
         this.robot.setState('failure')
       } else {
-        this.robotFrames = _.uniq(this.robotFrames.concat(compiled.frames), (frame) => frame.index)
-        console.log(this.robotFrames)
+        this.robotFrames = compiled.frames
         if (startRunning) startRunning()
       }
     })
