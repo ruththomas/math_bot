@@ -107,16 +107,25 @@ class LevelControl extends Ws {
     if (functionAreaShowing === 'editMain' && $router.currentRoute.path === '/robot') {
       const $bar = $('.bar')
       const $mascot = $('.mascot')
+      const $clearFunctionConfirm = $('.confirm-delete')
       const $mainDropZone = $('.edit-main > .function-drop')
       const mainDropZoneHalf = $mainDropZone.height() / 2
       const $overflowing = document.getElementById('overflowing')
       if ($overflowing.scrollWidth > $overflowing.clientWidth) {
         $bar[0].style.bottom = '2vmin'
-        $mascot.css('top', (mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 'px').css('top', '-=1vmin')
+        if ($clearFunctionConfirm.children()[0]) {
+          $clearFunctionConfirm.css('top', (mainDropZoneHalf - $clearFunctionConfirm[0].offsetHeight / 2) + 'px').css('top', '-=1vmin')
+        } else {
+          $mascot.css('top', (mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 'px').css('top', '-=1vmin')
+        }
       } else {
         $bar[0].style.bottom = ''
         if ($mainDropZone.length) {
-          $mascot.animate({top: (mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 'px'}, 100)
+          if ($clearFunctionConfirm.children()[0]) {
+            $clearFunctionConfirm.css('top', (mainDropZoneHalf - $clearFunctionConfirm[0].offsetHeight / 2) + 'px')
+          } else {
+            $mascot.css('top', (mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 'px')
+          }
         }
       }
     }
