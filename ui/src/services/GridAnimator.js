@@ -39,7 +39,7 @@ class GridAnimator {
   }
 
   _updateGrid () {
-    if (this.$robot !== null) {
+    if (this.$robot !== null && this.robotState.grid) {
       // console.log('[cells]', JSON.parse(JSON.stringify(this.robotState.grid.cells)))
       this.robotState.grid.cells.forEach(cell => {
         if (cell.location.x === 2) {
@@ -74,10 +74,32 @@ class GridAnimator {
     }
   }
 
+  /**
+   * @important THIS CANT BE PUSHED TO PRODUCTION!!!
+   * @description This function is temporary because the compiler is replacing holding with the animation
+   * this function breaks robot holding if the robot is holding something.
+   * @param robotState
+   * @private
+   * todo -> remove this function after issue is addressed in compiler
+   */
+  _fixAnimation (robotState) {
+    if (robotState.holding && typeof robotState.holding === 'string') {
+      robotState.animation = robotState.holding
+      robotState.holding = []
+    }
+
+    if (!Array.isArray(robotState.holding)) {
+      robotState.grid = robotState.holding
+      robotState.holding = []
+    }
+
+    return robotState
+  }
+
   async initializeAnimation (frame, isLastOrFirstFrame, done) {
     this.frame = frame
     this.isLastOrFirst = isLastOrFirstFrame
-    this.robotState = frame.robotState
+    this.robotState = this._fixAnimation(frame.robotState)
     this.robot = $store.state.levelControl.robot
     this.sounds = $store.state.soundControl.sounds
     this.grid = $store.state.levelControl.gridMap
