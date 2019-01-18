@@ -8,7 +8,6 @@ import $store from '../store/store'
 export default class AdminControl extends Ws {
   actions = {
     userCount: 'user-count',
-    activeUserCount: 'active-user-count',
     signups: 'signups',
     loginsLastXDays: 'logins-last-x-days',
     levelStats: 'level-stats',
@@ -21,7 +20,6 @@ export default class AdminControl extends Ws {
   }
 
   userCount = 0
-  activeUserCount = 0
   lastXDaysLoginCount = 0
   userAccountSignups = []
 
@@ -109,17 +107,6 @@ export default class AdminControl extends Ws {
     })
   }
 
-  /*
-
-    fetch user count from socket request
-    @param cb function
-    @returns callback w/ {status: string = success, userCount: string = 1}
-   */
-
-  getActiveUserCount () {
-    this._send(JSON.stringify({ action: this.actions.activeUserCount })) // { status: 'success',userCount: "1"}
-  }
-
   getUserCount () {
     this._send(JSON.stringify({ action: this.actions.userCount })) // { status: 'success',userCount: "1"}
   }
@@ -159,7 +146,6 @@ export default class AdminControl extends Ws {
   handleSocketResponse (result) {
     const {
       status = 'failure',
-      activeUserCount = null,
       lastXDaysLoginCount = null,
       events = null,
       message = null,
@@ -193,11 +179,6 @@ export default class AdminControl extends Ws {
     if (userCount != null) {
       this.userCount = parseInt(userCount)
     }
-
-    if (activeUserCount != null) {
-      this.activeUserCount = parseInt(activeUserCount)
-    }
-
     if (lastXDaysLoginCount != null) {
       this.lastXDaysLoginCount = parseInt(lastXDaysLoginCount)
     }

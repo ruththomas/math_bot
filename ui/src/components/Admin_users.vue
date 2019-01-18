@@ -62,21 +62,6 @@
           </p>
         </div>
       </div>
-      <div class="card">
-
-        <div class="card-body">
-          <h5 class="card-title text-monospace font-weight-bold" id="activeUserCount">
-            {{activeUserCount | local}}
-          </h5>
-          <p class="card-text">
-            Active Users
-            <small class="text-danger">
-              fixme: admin users included in count
-            </small>
-          </p>
-        </div>
-
-      </div>
     </div>
 
     <h3 class="text-left my-3">Signups over time</h3>
@@ -173,10 +158,6 @@ export default {
     },
     userCount () {
       return this.adminControl.userCount
-    },
-
-    activeUserCount () {
-      return this.adminControl.activeUserCount
     },
 
     lastXDaysLoginCount () {
