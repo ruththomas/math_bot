@@ -269,12 +269,16 @@ class RunCompiled extends GridAnimator {
       this.robotFrames = this.robotFrames.slice(0, 1)
     }
     this.direction = newDirection
+    this.levelControl.robot.setSpeed(speed)
     if (this.levelControl.robot.state === 'paused' || this.levelControl.robot.state === 'home') {
-      this.start()
+      if (this.levelControl.robot.state === 'home' && this.direction < 0) {
+        this.direction = 1
+      } else {
+        this.start()
+      }
     } else {
       this.levelControl.robot.setState('running')
     }
-    this.levelControl.robot.setSpeed(speed)
   }
 
   async _processFrames (_) {
