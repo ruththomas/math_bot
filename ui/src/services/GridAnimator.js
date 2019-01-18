@@ -74,10 +74,24 @@ class GridAnimator {
     }
   }
 
+  /**
+   * @description This function is temporary because the compiler is replacing holding with the animation
+   * @param robotState
+   * @private
+   * todo -> remove this function after issue is addressed in compiler
+   */
+  _fixAnimation (robotState) {
+    if (robotState.holding && typeof robotState.holding === 'string') {
+      robotState.animation = robotState.holding
+      robotState.holding = []
+    }
+    return robotState
+  }
+
   async initializeAnimation (frame, isLastOrFirstFrame, done) {
     this.frame = frame
     this.isLastOrFirst = isLastOrFirstFrame
-    this.robotState = frame.robotState
+    this.robotState = this._fixAnimation(frame.robotState)
     this.robot = $store.state.levelControl.robot
     this.sounds = $store.state.soundControl.sounds
     this.grid = $store.state.levelControl.gridMap

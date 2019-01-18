@@ -108,6 +108,13 @@ export default {
       background-color: transparent;
       .modal-body {
         background-color: $background-color;
+        .stars {
+          height: min-content;
+        }
+        .stars .star-spread {
+          display: flex;
+          justify-content: center;
+        }
         .stars .star-spread .star {
           height: $star-size;
           width: $star-size;
