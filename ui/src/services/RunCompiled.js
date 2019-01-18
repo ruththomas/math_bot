@@ -280,8 +280,8 @@ class RunCompiled extends GridAnimator {
 
   async _processFrames (_) {
     // console.log('frames ~ ', this.robotFrames.slice())
+    await this._controlAsk()
     this.currentFrame = this.robotFrames.length === 1 ? this.robotFrames[0] : this.robotFrames.shift()
-    this._controlAsk()
     console.log(this.currentFrame.index)
     const run = await this[`_${this.currentFrame.programState}`](this.currentFrame)
     run(this.currentFrame)
@@ -294,9 +294,13 @@ class RunCompiled extends GridAnimator {
   _askBuffer = 5
 
   _controlAsk () {
-    if (this._lastFrame().programState === 'running' && this.robotFrames.length < this._askBuffer) {
-      this._askCompiler({})
-    }
+    return new Promise(resolve => {
+      if (this._lastFrame().programState === 'running' && this.robotFrames.length < this._askBuffer) {
+        this._askCompiler({startRunning: resolve})
+      } else {
+        resolve()
+      }
+    })
   }
 
   _mblError (error) {
