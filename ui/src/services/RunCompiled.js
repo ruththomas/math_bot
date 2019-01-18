@@ -266,11 +266,10 @@ class RunCompiled extends GridAnimator {
   setDirection (sliderValue, speed) {
     const newDirection = sliderValue > 50 ? 1 : -1
     if (this.direction !== newDirection) {
-      console.log('DIRECTION CHANGE')
       this.robotFrames = this.robotFrames.slice(0, 1)
     }
     this.direction = newDirection
-    if (this.levelControl.robot.state === 'home' || this.levelControl.robot.state === 'paused') {
+    if (this.levelControl.robot.state === 'paused' || this.levelControl.robot.state === 'home') {
       this.start()
     } else {
       this.levelControl.robot.setState('running')
@@ -282,7 +281,6 @@ class RunCompiled extends GridAnimator {
     // console.log('frames ~ ', this.robotFrames.slice())
     await this._controlAsk()
     this.currentFrame = this.robotFrames.length === 1 ? this.robotFrames[0] : this.robotFrames.shift()
-    console.log(this.currentFrame.index)
     const run = await this[`_${this.currentFrame.programState}`](this.currentFrame)
     run(this.currentFrame)
   }
@@ -332,7 +330,6 @@ class RunCompiled extends GridAnimator {
         this._mblError(compiled.error)
         this.robot.setState('failure')
       } else {
-        console.log(compiled.frames)
         this.robotFrames = compiled.frames
         if (startRunning) startRunning()
       }
