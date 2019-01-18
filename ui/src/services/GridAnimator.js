@@ -75,7 +75,9 @@ class GridAnimator {
   }
 
   /**
+   * @important THIS CANT BE PUSHED TO PRODUCTION!!!
    * @description This function is temporary because the compiler is replacing holding with the animation
+   * this function breaks robot holding if the robot is holding something.
    * @param robotState
    * @private
    * todo -> remove this function after issue is addressed in compiler
@@ -85,6 +87,12 @@ class GridAnimator {
       robotState.animation = robotState.holding
       robotState.holding = []
     }
+
+    if (!Array.isArray(robotState.holding)) {
+      robotState.grid = robotState.holding
+      robotState.holding = []
+    }
+
     return robotState
   }
 

@@ -63,7 +63,7 @@ class RunCompiled extends GridAnimator {
 
   pause () {
     this.robot.setSpeed(400)
-    this.robot.setState(this.robot.state === 'running' ? 'paused' : 'home')
+    this.robot.setState('paused')
   }
 
   stop () {
