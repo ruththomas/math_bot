@@ -18,10 +18,10 @@
     ></mascot>
     <svg class="bar-graphic" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="100%" width="100%" viewBox="0 0 997.51 50">
       <title>bar</title>
-      <path class="cls-1" d="M0,172.44" transform="translate(-0.99 -2.39)"/>
-      <path class="cls-2" d="M95,26c316.82,0,604.62.08,903,0" transform="translate(-0.99 -2.39)"/>
-      <line class="cls-2" x1="997.01" y1="47.22" x2="997.01"/>
-      <path class="cls-2" d="M1.07,26c1.47-.25,3.93.41,6.59,1.32,7.22,2.47,7.93,10.57,11.86,11,5.9.61,9.31-17.13,15.37-17.13,7.07,0,9.88,24.11,16.25,24.15,7.24,0,10.07-31.14,19.32-31.62C81,12.9,83,26,95,26" transform="translate(-0.99 -2.39)"/>
+      <path :fill="!confirmDeleteOpen ? '#B8E986' : '#F25C5C'" d="M0,172.44" transform="translate(-0.99 -2.39)"/>
+      <path :stroke="!confirmDeleteOpen ? '#B8E986' : '#F25C5C'" fill="none" d="M95,26c316.82,0,604.62.08,903,0" transform="translate(-0.99 -2.39)"/>
+      <line :stroke="!confirmDeleteOpen ? '#B8E986' : '#F25C5C'" fill="none" x1="997.01" y1="47.22" x2="997.01"/>
+      <path :stroke="!confirmDeleteOpen ? '#B8E986' : '#F25C5C'" fill="none" d="M1.07,26c1.47-.25,3.93.41,6.59,1.32,7.22,2.47,7.93,10.57,11.86,11,5.9.61,9.31-17.13,15.37-17.13,7.07,0,9.88,24.11,16.25,24.15,7.24,0,10.07-31.14,19.32-31.62C81,12.9,83,26,95,26" transform="translate(-0.99 -2.39)"/>
     </svg>
   </div>
 </template>
@@ -74,8 +74,8 @@ export default {
     },
     animateVulnerable (animationMethod) {
       const elements = this.animationElements()
-      elements.$bar[animationMethod]('red-bar')
-      elements.$endCap[animationMethod]('red-bar')
+      // elements.$bar[animationMethod]('red-bar')
+      // elements.$endCap[animationMethod]('red-bar')
       elements.$functions.each(function () {
         const $ele = $(this)
         $ele[animationMethod](elements.animationClass)
@@ -89,8 +89,10 @@ export default {
     },
     closeConfirmDelete () {
       this.confirmDeleteOpen = false
+      setTimeout(this.levelControl._positionBar, 10)
     },
     openConfirmDelete () {
+      setTimeout(this.levelControl._positionBar, 10)
       this.confirmDeleteOpen = true
     }
   },
@@ -125,10 +127,11 @@ $dialog-button-size: 3.5vmin;
   */
   z-index: -1;
   .cls-1 {
-    fill:#afe88d;
+    fill:$bar-color;
   }
   .cls-2 {
-    fill:none;stroke:#afe88d;
+    fill:none;
+    stroke:$bar-color;
   }
   .bar-graphic {
     width:100%;
