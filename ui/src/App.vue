@@ -44,6 +44,26 @@ export default {
   name: 'app',
   mounted () {
     window.scrollTo(0, 1)
+    if (process.env.NODE_ENV === 'development') {
+      const devMessages = [
+        'sounds are suppressed during development',
+        'free hints are suppressed during development'
+      ]
+      const devMsgSeenLabel = 'dev_msg_seen'
+      const seen = localStorage.getItem(devMsgSeenLabel)
+
+      if (seen === null) {
+        const confirmed = confirm(
+          'Important message for developers: \n\n' +
+          devMessages.join('\n\n') + '\n\n' +
+          'After confirming you will not see this message again unless you clear local storage.'
+        )
+        if (confirmed) {
+          localStorage.setItem(devMsgSeenLabel, confirmed)
+        }
+      }
+      devMessages.forEach((m) => console.log('!!' + m.toUpperCase() + '!!'))
+    }
   },
   computed: {
     auth () {
