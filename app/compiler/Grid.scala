@@ -1,6 +1,6 @@
 package compiler
 
-import compiler.processor.{ ElementChange, GridCellChange, RobotLocation }
+import compiler.processor.{ ElementChange, GridCellChange }
 import play.api.libs.json.{ Json, OFormat }
 
 object CellType extends Enumeration {
@@ -32,8 +32,6 @@ case class Grid(
   def currentCell() : Cell = getCell(robotLocation)
 
   def getCell(location: Point): Cell = grid.getOrElse(location.asTuple, Cell(CellType.EmptySpace, List.empty[Element]))
-
-  def getRobotLocation: RobotLocation = RobotLocation(robotLocation.x, robotLocation.y, robotOrientation)
 
   def moveRobotForwardOneSpot(): Option[Grid] = {
     val newLocation = robotOrientation match {

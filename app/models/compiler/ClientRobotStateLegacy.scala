@@ -1,14 +1,14 @@
 package models.compiler
 
 import compiler.Point
-import compiler.processor.{ AnimationType, Frame }
-import play.api.libs.json.{ JsPath, Writes }
+import compiler.processor.{AnimationType, Frame}
+import play.api.libs.json.{JsPath, Writes}
 
 case class ClientRobotStateLegacy(location: Point,
-                            orientation: String,
-                            holding: List[String],
-                            animation: Option[AnimationType.Value],
-                            grid: Option[ClientGrid])
+                                  orientation: String,
+                                  holding: List[String],
+                                  animation: Option[AnimationType.Value],
+                                  grid: Option[ClientGrid])
 
 object ClientRobotStateLegacy {
 
@@ -16,18 +16,18 @@ object ClientRobotStateLegacy {
 
   implicit val robotStateWrite: Writes[ClientRobotStateLegacy] = (
     (JsPath \ "location").write[Point] and
-      (JsPath \ "orientation").write[String] and
-      (JsPath \ "holding").write[List[String]] and
-      (JsPath \ "animation").write[Option[AnimationType.Value]] and
-      (JsPath \ "grid").write[Option[ClientGrid]]
-    )(unlift(ClientRobotStateLegacy.unapply))
+    (JsPath \ "orientation").write[String] and
+    (JsPath \ "holding").write[List[String]] and
+    (JsPath \ "animation").write[Option[AnimationType.Value]] and
+    (JsPath \ "grid").write[Option[ClientGrid]]
+  )(unlift(ClientRobotStateLegacy.unapply))
 
   def apply(frame: Frame): ClientRobotStateLegacy = new ClientRobotStateLegacy(
-    location = frame.robotLocation.map(l => Point(l.x, l.y)).getOrElse(Point(0, 0)),
-    orientation = frame.robotLocation.map(l => l.orientation).getOrElse("0"),
+    location = frame.board.robotLocation,
+    orientation = frame.board.robotOrientation,
+    holding = frame.register.holdingCell.contents.map(v => v.image),
     animation = frame.register.animation,
-    grid = Some(ClientGrid(frame.board)),
-    holding = frame.register.holdingCell.contents.map(v => v.image)
+    grid = Some(ClientGrid(frame.board))
   )
 
   def apply(location: Point, orientation: String, holding: List[String]): ClientRobotStateLegacy =
