@@ -49,12 +49,12 @@ class RunCompiled extends GridAnimator {
   start () {
     if (this.levelControl.functions.main.func.length) {
       const normalMode = $store.state.levelControl.mode === 'normal'
-      if (this.robot.state !== 'paused') {
+      if (this.robot.state === 'home') {
         this.robotFrames = []
         this._deleteAllMessages()
         this.robot.setState('running')
         this._askCompiler(Object.assign({create: true, startRunning: this._processFrames}, !normalMode ? {mbl: $store.state.levelControl.mbl} : {}))
-      } else {
+      } else if (this.robot.state === 'paused') {
         this.robot.setState('running')
         this._processFrames()
       }
@@ -263,21 +263,25 @@ class RunCompiled extends GridAnimator {
   }
 
   setDirection (sliderValue, speed) {
+    // todo -> after testing in prod run this through a function to skip frames, if needed.
     const newDirection = sliderValue > 50 ? 1 : -1
+
+    // If direction changes reduce robotFrames to a single frame so _controlAsk is forced
+    // to ask for more frames immediately
     if (this.direction !== newDirection) {
       this.robotFrames = this.robotFrames.slice(0, 1)
     }
+
+    // Change direction of robot
     this.direction = newDirection
+    // Set robot speed. Speed is calculated in Grid_controls.vue based on slider value
     this.levelControl.robot.setSpeed(speed)
-    if (this.levelControl.robot.state === 'paused' || this.levelControl.robot.state === 'home') {
-      if (this.levelControl.robot.state === 'home' && this.direction < 0) {
-        this.direction = 1
-      } else {
-        this.start()
-      }
-    } else {
-      this.levelControl.robot.setState('running')
-    }
+
+    // Ensure robot direction is forward if robot is home
+    if (this.robot.state === 'home') this.direction = 1
+
+    // Start robot
+    this.start()
   }
 
   async _processFrames (_) {
