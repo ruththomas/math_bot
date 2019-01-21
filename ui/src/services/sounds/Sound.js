@@ -8,8 +8,10 @@ class Sound {
     this.pause = this.pause.bind(this)
   }
 
-  play () {
-    this.sound.play()
+  play (sprite) {
+    if (process.env.NODE_ENV === 'production') {
+      this.sound.play(sprite)
+    }
   }
 
   pause () {

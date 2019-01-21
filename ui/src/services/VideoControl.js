@@ -41,10 +41,12 @@ class VideoControl extends Ws {
   }
 
   showFreeHint (url) {
-    if (url) {
-      this.freeHintsShown.push(url)
-      this.setCurrentVideo(url)
-      this.showVideo()
+    if (process.env.NODE_ENV === 'production') {
+      if (url) {
+        this.freeHintsShown.push(url)
+        this.setCurrentVideo(url)
+        this.showVideo()
+      }
     }
   }
 
