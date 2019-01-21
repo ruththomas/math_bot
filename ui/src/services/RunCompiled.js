@@ -343,7 +343,7 @@ class RunCompiled extends GridAnimator {
    */
   _controlAsk () {
     return new Promise(resolve => {
-      if (this._lastFrame().programState === 'running' && this.robotFrames.length < this._askBuffer) {
+      if ((this._lastFrame().programState === 'running' || this._lastFrame().programState === 'failure') && this.robotFrames.length < this._askBuffer) {
         this._askCompiler({startRunning: resolve})
       } else {
         resolve()
