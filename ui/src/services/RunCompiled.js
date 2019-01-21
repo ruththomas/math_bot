@@ -306,6 +306,9 @@ class RunCompiled extends GridAnimator {
     // Ensure robot direction is forward if robot is home
     if (this.robot.state === 'home') this.direction = 1
 
+    // If robot is at the end and direction is not positive return
+    if (this.currentFrame.programState === 'failure' && this.direction > 0) return
+
     // Start robot
     this.start()
   }
@@ -343,7 +346,7 @@ class RunCompiled extends GridAnimator {
    */
   _controlAsk () {
     return new Promise(resolve => {
-      if (this._lastFrame().programState === 'running' && this.robotFrames.length < this._askBuffer) {
+      if ((this._lastFrame().programState === 'running' || this.failure) && this.robotFrames.length < this._askBuffer) {
         this._askCompiler({startRunning: resolve})
       } else {
         resolve()
