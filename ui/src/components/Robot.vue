@@ -91,8 +91,7 @@ export default {
   },
   methods: {
     handleFreeHint () {
-      if (process.env.NODE_ENV === 'production' && this.levelControl.continent !== null) {
-        this.soundControl.startSounds(['robotBackground'])
+      if (this.levelControl.continent !== null) {
         return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
       }
       setTimeout(this.handleFreeHint, 10)

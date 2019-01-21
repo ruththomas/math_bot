@@ -10,7 +10,9 @@ class Ws {
     this._getWsPath(this.connection, path => {
       this._ws = new WebSocket(path)
       this._ws.onopen = () => {
-        console.log(`${this.connection.toUpperCase()} WS OPEN`)
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`${this.connection.toUpperCase()} WS OPEN`)
+        }
         if (cb) cb()
       }
       this._ws.onerror = (err) => {
