@@ -307,7 +307,9 @@ class RunCompiled extends GridAnimator {
     if (this.robot.state === 'home') this.direction = 1
 
     // Start robot
-    this.start()
+    if ((this.failure && this.direction < 1) || !this.failure) {
+      this.start()
+    }
   }
 
   /**
@@ -343,7 +345,7 @@ class RunCompiled extends GridAnimator {
    */
   _controlAsk () {
     return new Promise(resolve => {
-      if ((this._lastFrame().programState === 'running' || this._lastFrame().programState === 'failure') && this.robotFrames.length < this._askBuffer) {
+      if ((this._lastFrame().programState === 'running' || this.failure) && this.robotFrames.length < this._askBuffer) {
         this._askCompiler({startRunning: resolve})
       } else {
         resolve()
