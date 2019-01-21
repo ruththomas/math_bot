@@ -8,22 +8,45 @@ import CodeMirror from '../../node_modules/codemirror/lib/codemirror'
     let spacebefore = false
     let inbracket = false
     let Highlighters = {
-      'forward': [/forward\b/, 'keyword'],
-      'right': [/right\b/, 'keyword'],
-      'putdown': [/putdown\b/, 'keyword'],
-      'pickup': [/pickup\b/, 'keyword'],
-      '=>': [/=>\B/, 'def'],
+      'forward': [/(forward)(?=( |$))/, 'keyword'],
+      'right': [/(right)(?=( |$))/, 'keyword'],
+      'putdown': [/(putdown)(?=( |$))/, 'keyword'],
+      'pickup': [/(pickup)(?=( |$))/, 'keyword'],
+      '=>': [/(=>)(?=( |$))/, 'def'],
       'sym': [/(')(\w|\d)+/, 'atom'],
       ')': [/\)/, 'bracket']
     }
     return {
       token: function (stream) {
+        if (stream.lineOracle.line === 0 && stream.start === 0) {
+          Highlighters = {
+            'forward': [/(forward)(?=( |$|\)))/, 'keyword'],
+            'right': [/(right)(?=( |$|\)))/, 'keyword'],
+            'putdown': [/(putdown)(?=( |$|\)))/, 'keyword'],
+            'pickup': [/(pickup)(?=( |$|\)))/, 'keyword'],
+            '=>': [/(=>)(?=( |$))/, 'def'],
+            'sym': [/(')(\w|\d)+/, 'atom'],
+            ')': [/\)/, 'bracket']
+          }
+        }
         if (stream.start === 0) spacebefore = true
         if (stream.eatSpace()) spacebefore = true
         if (stream.eat('(')) {
           spacebefore = true
           inbracket = true
           return 'bracket'
+        }
+        if (spacebefore) {
+          if (stream.match(/((\w|\d|-|_)+ =>)/)) {
+            stream.backUp(3)
+            let toturn = stream.current()
+            if (!inbracket) toturn = toturn.substr(1)
+            toturn = toturn.replace(/\s/g, '')
+            const toadd = new RegExp('(' + toturn + ')(?=( |$)|\\))')
+            Highlighters[toturn] = [toadd, 'builtin']
+            spacebefore = false
+            return 'builtin'
+          }
         }
         let val
         let foundone = false
@@ -40,17 +63,6 @@ import CodeMirror from '../../node_modules/codemirror/lib/codemirror'
           }
         })
         if (val) return val
-        if (spacebefore) {
-          if (stream.match(/((\w|\d|-|_)+ =>)/)) {
-            stream.backUp(3)
-            let toturn = stream.current()
-            if (!inbracket) toturn = toturn.substr(1)
-            const toadd = new RegExp(toturn + '\\' + 'b')
-            Highlighters[toturn] = [toadd, 'builtin']
-            spacebefore = false
-            return 'builtin'
-          }
-        }
         spacebefore = false
         stream.next()
       }
