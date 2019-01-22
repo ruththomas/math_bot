@@ -27,8 +27,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
 
   private case class ProgramState(frameController: FrameController,
                                   grid: GridMap,
-                                  program: GridAndProgram,
-                                  prevFrame: Int)
+                                  program: GridAndProgram)
 
   private val className = s"CompilerActor(${context.self.path.toSerializationFormat})"
 
@@ -125,8 +124,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                                                   continent.evalEachFrame,
                                                   config),
                 grid = grid,
-                program = program,
-                prevFrame = 0
+                program = program
               )
             )
           )
@@ -160,8 +158,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                                                     continent.evalEachFrame,
                                                     config),
                   grid = grid,
-                  program = program,
-                  prevFrame = 0
+                  program = program
                 )
               )
             )
@@ -206,8 +203,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                                                   continent.evalEachFrame,
                                                   config),
                 grid = grid,
-                program = program,
-                prevFrame = 0
+                program = program
               )
             )
           )
@@ -242,8 +238,7 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                                                     continent.evalEachFrame,
                                                     config),
                   grid = grid,
-                  program = program,
-                  prevFrame = 0
+                  program = program
                 )
               )
             )
@@ -272,11 +267,11 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
                      s"Stepping compiler for $steps steps with actor ${context.self.path.toSerializationFormat}")
 
       for {
-        cf <- createFrames(state.frameController.requestFrames(index, steps, 1, state.prevFrame))
+        cf <- createFrames(state.frameController.requestFrames(index, steps, 1))
       } yield {
         out ! CompilerOutputLegacy(cf)
       }
-      context.become(compileContinue(index + steps, state.copy(prevFrame = index + steps - 1)))
+      context.become(compileContinue(index + steps, state))
 
     case _: CompilerHalt =>
       logger.LogInfo(className, "Compiler halted")
@@ -299,10 +294,10 @@ class CompilerActor @Inject()(out: ActorRef, tokenId: String)(
       )
 
       for {
-        cf <- addPathAndContinent(state.frameController.request(selector.index, selector.count, selector.direction, state.prevFrame))
+        cf <- addPathAndContinent(state.frameController.request(selector.index, selector.count, selector.direction, selector.previous))
       } yield {
         out ! CompilerOutput(cf)
-        context.become(processorContinue(state.copy(prevFrame = cf.last.index)))
+        context.become(processorContinue(state))
       }
 
     case _: CompilerHalt =>

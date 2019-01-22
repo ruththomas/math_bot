@@ -27,16 +27,16 @@ object CompilerRequestConvertFlow extends SocketRequestConvertFlow {
             CompilerContinue(steps)
           case JsSuccess(CompilerRequest(None, Some(problem), _, Some(true), None, Some(frameRequest)), _) if frameRequest.direction != 0 && frameRequest.count > 0 =>
             ProcessorCreate(
-              ProcessorFrameSelector(frameRequest.index, frameRequest.count, frameRequest.direction),
+              ProcessorFrameSelector(frameRequest.previous, frameRequest.index, frameRequest.count, frameRequest.direction),
               Problem(encryptedProblem = problem)
             )
           case JsSuccess(CompilerRequest(None, Some(problem), _, Some(true), Some(mbl), Some(frameRequest)), _) if frameRequest.direction != 0 && frameRequest.count > 0 =>
             ProcessorCreateMbl(
-              ProcessorFrameSelector(frameRequest.index, frameRequest.count, frameRequest.direction),
+              ProcessorFrameSelector(frameRequest.index, frameRequest.count, frameRequest.direction, frameRequest.previous),
               Problem(encryptedProblem = problem), mbl)
           case JsSuccess(CompilerRequest(None, _, _, createOpt, _, Some(frameRequest)), _) if frameRequest.direction != 0 && frameRequest.count > 0 && !createOpt.getOrElse(false) =>
             ProcessorContinue(
-              ProcessorFrameSelector(frameRequest.index, frameRequest.count, frameRequest.direction)
+              ProcessorFrameSelector(frameRequest.previous, frameRequest.index, frameRequest.count, frameRequest.direction)
             )
           case _ =>
             ActorFailed("Invalid socket request json.")

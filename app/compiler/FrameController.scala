@@ -116,11 +116,11 @@ class FrameController(program: GridAndProgram,
    * @return The sequence of frames requested.
    */
   def request(index: Int, count: Int, direction: Int, prevFrame: Int): Stream[ClientFrame] = {
-    applyChangeToHead(requestFrames(index, count, direction, prevFrame), previousChange(prevFrame, index))
+    applyChangeToHead(requestFrames(index, count, direction), previousChange(prevFrame, index))
       .map(toClientFrame)
   }
 
-  def requestFrames(index: Int, count: Int, direction: Int, prevFrame: Int): Stream[Frame] = {
+  def requestFrames(index: Int, count: Int, direction: Int): Stream[Frame] = {
 
     direction match {
       case 0 => // Zero defaults to all frames but this is usually prevented by the request pipeline
