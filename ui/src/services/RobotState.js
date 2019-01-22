@@ -43,6 +43,7 @@ class Robot {
     this.robotLocation = robotState.location || this.robotLocation
     this.robotCarrying = robotState.holding || this.robotCarrying
     this.robotFacing = robotState.orientation || this.robotFacing
+    // console.log(this.robotFacing)
   }
 }
 
