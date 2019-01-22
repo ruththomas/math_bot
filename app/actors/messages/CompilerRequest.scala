@@ -3,6 +3,7 @@ package actors.messages
 import play.api.libs.json.{JsValue, Json, Reads}
 
 case class FrameRequest(
+                       previous : Int, // The frame index of the last frame.  If it there was no last frame, just set to the same as index.
                        index : Int, // The frame index to start the frame sequence with
                        count: Int, // The number of frames to request
                        direction: Int // Direction and skip relative to the index. A positive or negative non-zero number.  Values less than -1 or larger than 1 will skip frames

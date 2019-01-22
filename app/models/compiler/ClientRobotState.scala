@@ -19,15 +19,15 @@ object ClientRobotState {
           o.location.map("location" -> Json.toJsObject(_)),
           o.orientation.map("orientation" -> JsString(_)),
           o.holding.map("holding" -> Json.toJson(_)),
-          o.animation.map("holding" -> Json.toJson(_)),
-          o.grid.map("holding" -> Json.toJson(_))
+          o.animation.map("animation" -> Json.toJson(_)),
+          o.grid.map("grid" -> Json.toJson(_))
         ).flatten
       )
   }
 
   def apply(frame: Frame): ClientRobotState = new ClientRobotState(
-    location = Some(frame.robotLocation.map(l => Point(l.x, l.y)).getOrElse(Point(0, 0))),
-    orientation = Some(frame.robotLocation.map(l => l.orientation).getOrElse("0")),
+    location = Some(frame.board.robotLocation),
+    orientation = Some(frame.board.robotOrientation),
     animation = frame.register.animation,
     grid = Some(ClientGrid(frame.board)),
     holding = Some(frame.register.holdingCell.contents.map(v => v.image))

@@ -1,7 +1,7 @@
 package compiler
 
 import actors.messages.level.PathAndContinent
-import compiler.operations.{ Final, Initial }
+import compiler.operations.{Final, Initial}
 import compiler.processor._
 import configuration.CompilerConfiguration
 import models.compiler._
@@ -23,80 +23,108 @@ class FrameController(program: GridAndProgram,
 
   private val frames: Stream[Frame] = processor.execute(successCheck, executeEachFrame)
 
-  private def toClientFrame(frame : Frame) : ClientFrame = {
-    val location = frame.change.location.map(c => c.to)
-    val orientation = frame.change.orientation.map(c => c.to)
-    val holding = frame.change.holding match {
-      case Nil =>
-        None
+  private def toClientFrame(frame: Frame): ClientFrame = {
+    frame.operation match {
+      case Initial =>
+        val location = Some(frame.board.robotLocation)
+        val orientation = Some(frame.board.robotOrientation)
+        val holding = frame.register.holdingCell.contents match {
+          case Nil =>
+            None
+          case _ =>
+            Some(frame.register.holdingCell.contents.map(_.name))
+        }
+        val animation = frame.register.animation
+        val grid = Some(ClientGrid(frame.board))
+        val robotState = ClientRobotState(
+          location,
+          orientation,
+          holding,
+          animation,
+          grid
+        )
+        val programState = (frame.operation, frame.success) match {
+          case (Final, true) => "success"
+          case (Final, false) => "failure"
+          case _ => "running"
+        }
+        val pathAndContinent = Option.empty[PathAndContinent]
+        val trace = Seq(ClientTrace(frame.traceTag))
+        val index = frame.index
+
+        ClientFrame(
+          robotState,
+          programState,
+          pathAndContinent,
+          trace,
+          index,
+          change = Some(frame.change)
+        )
       case _ =>
-        Some(frame.register.holdingCell.contents.map(_.name))
+        val location = frame.change.location.map(c => c.to)
+        val orientation = frame.change.orientation.map(c => c.to)
+        val holding = frame.change.holding match {
+          case Nil =>
+            None
+          case _ =>
+            Some(frame.register.holdingCell.contents.map(_.name))
+        }
+        val animation = frame.change.location match {
+          case Some(RobotLocationChange(_, _, true)) => Some(AnimationType.Bumped)
+          case _ => None
+        }
+        val grid = if (frame.change.grid.nonEmpty) {
+          Some(ClientGrid(frame.change.grid.map(c => ClientCell(c.location, frame.board.getCell(c.location))).toSet))
+        } else {
+          Option.empty[ClientGrid]
+        }
+        val robotState =
+          ClientRobotState(
+            location,
+            orientation,
+            holding,
+            animation,
+            grid
+          )
+        val programState = (frame.operation, frame.success) match {
+          case (Final, true) => "success"
+          case (Final, false) => "failure"
+          case _ => "running"
+        }
+        val pathAndContinent = Option.empty[PathAndContinent]
+        val trace = Seq(ClientTrace(frame.traceTag))
+        val index = frame.index
+        ClientFrame(
+          robotState,
+          programState,
+          pathAndContinent,
+          trace,
+          index,
+          change = Some(frame.change)
+        )
     }
-    val animation = frame.change.location match {
-      case Some(RobotLocationChange(_, _, true)) => Some(AnimationType.Bumped)
-      case _ => None
-    }
-    val grid = if (frame.change.grid.nonEmpty) {
-      Some(ClientGrid(frame.change.grid.map(c => ClientCell(c.location, frame.board.getCell(c.location))).toSet))
-    } else {
-      Option.empty[ClientGrid]
-    }
-    val robotState =
-      ClientRobotState(
-        location,
-        orientation,
-        holding,
-        animation,
-        grid
-      )
-    val programState = (frame.operation, frame.success) match {
-      case (Final, true) => "success"
-      case (Final, false) => "failure"
-      case _ => "running"
-    }
-    val pathAndContinent = Option.empty[PathAndContinent]
-    val trace = Seq(ClientTrace(frame.traceTag))
-    val index = frame.index
-    ClientFrame(
-      robotState,
-      programState,
-      pathAndContinent,
-      trace,
-      index,
-      change = Some(frame.change)
-    )
   }
 
-  private def toClientFrameWithDefaults(frame: Frame) : ClientFrame = {
-    val cf = toClientFrame(frame)
-    cf.copy(
-      robotState = ClientRobotState(
-        cf.robotState.location.orElse(Some(frame.board.robotLocation)),
-        cf.robotState.orientation.orElse(Some(frame.board.robotOrientation)),
-        cf.robotState.holding.orElse(Some(frame.register.holdingCell.contents.map(_.name))),
-        cf.robotState.animation,
-        cf.robotState.grid
-      )
-    )
+  /**
+   * Generates processor frames from any starting index, direction, and skip increment.
+   *
+   * @param index The starting frame of the requested sequence
+   * @param count The number of frames in the request.
+   * @param direction The direction and skip interval of the request. >1 or <-1 will skip frames.
+   * @param prevFrame The frame to use as the previous frame when computing the change for the first
+   *                    frame in the sequence. If its the same, no change is computed for the first frame.
+   * @return The sequence of frames requested.
+   */
+  def request(index: Int, count: Int, direction: Int, prevFrame: Int): Stream[ClientFrame] = {
+    applyChangeToHead(requestFrames(index, count, direction), previousChange(prevFrame, index))
+      .map(toClientFrame)
   }
 
-  def request(index: Int, count: Int, direction: Int): Seq[ClientFrame] = {
-    requestFrames(index, count, direction) match {
-      case frame :: Nil =>
-        Seq(toClientFrameWithDefaults(frame))
-      case head +: tail =>
-        toClientFrameWithDefaults(head) +: tail.map(toClientFrame)
-      case _ =>
-        Seq.empty[ClientFrame]
-    }
-
-  }
-
-  def requestFrames(index: Int, count: Int, direction: Int): Seq[Frame] = {
+  def requestFrames(index: Int, count: Int, direction: Int): Stream[Frame] = {
 
     direction match {
-      case 0 =>
-        forwardSlice(frames, index, count) // Zero defaults to all frames but this is usually prevented by the request pipeline
+      case 0 => // Zero defaults to all frames but this is usually prevented by the request pipeline
+        forwardSlice(frames, index, count)
       case 1 =>
         forwardSlice(frames, index, count)
       case -1 =>
@@ -113,10 +141,30 @@ class FrameController(program: GridAndProgram,
     }
   }
 
-  private def forwardSlice(frames: Stream[Frame], index: Int, count: Int) =
+  private def previousChange(prevFrame: Int, index: Int): Option[Frame] = {
+    prevFrame.compare(index) match {
+      case c if c == 0 => // No Delta
+        None
+      case c if c > 0 => // Backwards
+        Some(merge(frames.slice(index, prevFrame + 1), invert = true))
+      case c if c < 0 => // Forward
+        Some(merge(frames.slice(prevFrame, index + 1)))
+    }
+  }
+
+  private def applyChangeToHead(frames: Stream[Frame], change: Option[Frame]): Stream[Frame] = {
+    (change, frames.headOption) match {
+      case (Some(c), Some(h)) =>
+        h.copy(change = c.change) +: frames.tail
+      case _ =>
+        frames
+    }
+  }
+
+  private def forwardSlice(frames: Stream[Frame], index: Int, count: Int): Stream[Frame] =
     frames.slice(index, index + count)
 
-  private def reverseSlice(frames: Stream[Frame], index: Int, count: Int) =
+  private def reverseSlice(frames: Stream[Frame], index: Int, count: Int): Stream[Frame] =
     // A reversed frame is constructed by taking the change of the frame that follows it, and then inverting it.
     // e.g. The reverse of frame 1 is built by taking the change on frame 2 and then reversing the order of the change.
     frames
@@ -127,18 +175,18 @@ class FrameController(program: GridAndProgram,
       .take(count)
       .toStream // Because there an extra frame on the end, we just take the first frames after materializing the stream
 
-  private def preserveGrouping(frames: Stream[Frame], size: Int) = {
+  private def preserveGrouping(frames: Stream[Frame], size: Int): Stream[Frame] = {
     // When merging frames, we have to keep the initial and final frames out of the merge
     frames match {
       case head +: middle :+ tail
           if (head.operation == Initial && tail.operation == Final) || (head.operation == Final && tail.operation == Initial) =>
-        head +: middle.grouped(size).map(f => merge(f)).toSeq :+ tail
+        head +: middle.grouped(size).map(f => merge(f)).toStream :+ tail
       case head +: rest if head.operation == Initial || head.operation == Final =>
-        head +: rest.grouped(size).map(f => merge(f)).toSeq
+        head +: rest.grouped(size).map(f => merge(f)).toStream
       case init :+ tail if tail.operation == Final || tail.operation == Final =>
-        init.grouped(size).map(f => merge(f)).toSeq :+ tail
+        init.grouped(size).map(f => merge(f)).toStream :+ tail
       case all =>
-        all.grouped(size).map(f => merge(f)).toSeq
+        all.grouped(size).map(f => merge(f)).toStream
     }
   }
 
@@ -155,12 +203,14 @@ class FrameController(program: GridAndProgram,
     val holdingChanges = changes.flatMap(_.holding)
     val gridChanges = changes.flatMap(_.grid)
 
-    frames.last.copy(change = FrameChange(
+    frames.last.copy(
+      change = FrameChange(
         location = locationChanges,
         orientation = orientationChanges,
         holding = holdingChanges,
         grid = gridChanges
-      ))
+      )
+    )
   }
 
 }
