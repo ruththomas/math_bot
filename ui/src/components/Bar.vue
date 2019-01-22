@@ -134,7 +134,10 @@ $dialog-button-size: 3.5vmin;
     stroke:$bar-color;
   }
   .bar-graphic {
+    left:0px;
+    position: absolute;
     width:100%;
+    height:auto;
   }
   .bar-controller {
     position: absolute;
