@@ -103,7 +103,8 @@ class LevelControl extends Ws {
   }
 
   _positionBar () {
-    if ($router.currentRoute.path === '/robot') {
+    const functionAreaShowing = $store.getters.getFunctionAreaShowing
+    if (this.mode === 'normal' && functionAreaShowing === 'editMain' && $router.currentRoute.path === '/robot') {
       const $bar = $('.bar-graphic')
       const $mascot = $('.mascot')
       const $clearFunctionConfirm = $('.confirm-delete')

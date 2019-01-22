@@ -40,9 +40,10 @@ class Robot {
   * 'initialRobotState' and 'robotState' can be de-structured into this app
   * */
   updateRobot (robotState) {
-    this.robotLocation = robotState.location
-    this.robotCarrying = robotState.holding
-    this.robotFacing = robotState.orientation
+    this.robotLocation = robotState.location || this.robotLocation
+    this.robotCarrying = robotState.holding || this.robotCarrying
+    this.robotFacing = robotState.orientation || this.robotFacing
+    // console.log(this.robotFacing)
   }
 }
 

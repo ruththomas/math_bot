@@ -62,7 +62,7 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
   }
 
   private def generateFinalFrame(state : ProcessorState, frameIndex: Int, isSuccess : Boolean) : Frame =
-    Frame(Final, state.currentRegister, state.currentGrid, FrameChange(), TraceTag(UserFunction(), -1), index = frameIndex, Some(state.currentGrid.getRobotLocation), None, isSuccess)
+    Frame(Final, state.currentRegister, state.currentGrid, FrameChange(), TraceTag(UserFunction(), -1), index = frameIndex, None, isSuccess)
 
   private def executeHelp(state : ProcessorState, executed : Frame, stepCount : Int, maybeOperation : Option[(Operation, TraceTag)], post : Seq[(Operation, TraceTag)], successCheck : Grid => Boolean, checkEveryFrame : Boolean) = {
     if (executed.success)
@@ -84,7 +84,7 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
           grid = gchange.toSeq,
           holding = item.map(e => ElementChange(push = Some(e))).toSeq
         )
-        Frame(operation._1, state.currentRegister, grid, frameChange, operation._2, index = frameIndex, Some(state.currentGrid.getRobotLocation), change, successCheck(state.currentGrid))
+        Frame(operation._1, state.currentRegister, grid, frameChange, operation._2, index = frameIndex, change, successCheck(state.currentGrid))
 
       case SetItemDown =>
         state.currentRegister.popDelta() match {
@@ -92,17 +92,17 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
             val (grid, change) = state.currentGrid.setItemDown(element)
             state.currentRegister = register.clearAnimation()
             state.currentGrid = grid
-            Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(state.currentGrid.robotLocation, rchange.inverse, rchange), operation._2, index = frameIndex, Some(state.currentGrid.getRobotLocation), Some(change), successCheck(state.currentGrid))
+            Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(state.currentGrid.robotLocation, rchange.inverse, rchange), operation._2, index = frameIndex, Some(change), successCheck(state.currentGrid))
           case None =>
             state.currentRegister = state.currentRegister.clearAnimation()
-            Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(), operation._2, index = frameIndex, Some(state.currentGrid.getRobotLocation), None, successCheck(state.currentGrid))
+            Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(), operation._2, index = frameIndex, None, successCheck(state.currentGrid))
         }
 
       case ChangeRobotDirection =>
         val priorOrientation = state.currentGrid.robotOrientation
         state.currentGrid = state.currentGrid.changeDirection()
         state.currentRegister = state.currentRegister.clearAnimation()
-        Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(priorOrientation, state.currentGrid.robotOrientation), operation._2, index = frameIndex, Some(state.currentGrid.getRobotLocation), None, successCheck(state.currentGrid))
+        Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(priorOrientation, state.currentGrid.robotOrientation), operation._2, index = frameIndex, None, successCheck(state.currentGrid))
 
       case MoveRobotForwardOneSpot =>
         val priorLocation = state.currentGrid.robotLocation
@@ -110,16 +110,16 @@ class Processor(val initialGridAndProgram: GridAndProgram, config: CompilerConfi
           case Some(grid) =>
             state.currentGrid = grid
             state.currentRegister = state.currentRegister.clearAnimation()
-            Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(priorLocation, state.currentGrid.robotLocation), operation._2, index = frameIndex, Some(state.currentGrid.getRobotLocation), None, successCheck(state.currentGrid))
+            Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(priorLocation, state.currentGrid.robotLocation), operation._2, index = frameIndex, None, successCheck(state.currentGrid))
           case None =>
             state.currentRegister = state.currentRegister.copy(animation = Some(AnimationType.Bumped))
-            Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(priorLocation, priorLocation, bump = true), operation._2, index = frameIndex, Some(state.currentGrid.getRobotLocation), None, successCheck(state.currentGrid))
+            Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(priorLocation, priorLocation, bump = true), operation._2, index = frameIndex, None, successCheck(state.currentGrid))
         }
 
       case Initial =>
-        Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(), operation._2, index = frameIndex, Some(state.currentGrid.getRobotLocation))
+        Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(), operation._2, index = frameIndex)
 
-      case _ => Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(), operation._2, index = frameIndex, None, None, successCheck(state.currentGrid))
+      case _ => Frame(operation._1, state.currentRegister, state.currentGrid, FrameChange(), operation._2, index = frameIndex, None, successCheck(state.currentGrid))
     }
 }
 

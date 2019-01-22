@@ -3,7 +3,7 @@ package compiler.processor
 import compiler.operations.Operation
 import compiler.{ Cell, CellChange, Grid }
 
-case class Frame(operation: Operation, register: Register, board: Grid, change: FrameChange, traceTag: TraceTag, index: Int, robotLocation: Option[RobotLocation] = None, cellChange: Option[CellChange] = None, success: Boolean = false) {
+case class Frame(operation: Operation, register: Register, board: Grid, change: FrameChange, traceTag: TraceTag, index: Int, cellChange: Option[CellChange] = None, success: Boolean = false) {
   def withMinimalGrid : Frame =
     cellChange match {
       case Some(cell) =>

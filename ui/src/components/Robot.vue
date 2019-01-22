@@ -92,7 +92,6 @@ export default {
   methods: {
     handleFreeHint () {
       if (this.levelControl.continent !== null) {
-        this.soundControl.startSounds(['robotBackground'])
         return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
       }
       setTimeout(this.handleFreeHint, 10)
