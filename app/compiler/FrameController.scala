@@ -171,7 +171,15 @@ class FrameController(program: GridAndProgram,
       .slice(index + 1 - count, index + 2) // Because slice gets a frame "up to" the requested, we add one frame, the second value is the one needed for its "change" field
       .reverse
       .sliding(2) // Groups the frames into pairs
-      .map(pair => pair.last.copy(change = pair.head.change.inverse)) // copy the change from the head frame into the last. This is the opposite of the explanation above because the frames are reversed
+      .map { pair =>
+        val c = FrameChange(
+          location = pair.head.change.location.map(_.inverse),
+          orientation = pair.last.change.orientation.map(_.inverse),
+          grid = pair.head.change.grid.map(_.inverse),
+          holding = pair.head.change.holding.map(_.inverse)
+        )
+        pair.last.copy(change = c)
+      }
       .take(count)
       .toStream // Because there an extra frame on the end, we just take the first frames after materializing the stream
 
