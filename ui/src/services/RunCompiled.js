@@ -324,6 +324,7 @@ class RunCompiled extends GridAnimator {
     await this._controlAsk()
     // After frames are updated set current frame. Current frame cannot be empty
     this.currentFrame = this.robotFrames.length === 1 ? this.robotFrames[0] : this.robotFrames.shift()
+    // console.log(this.currentFrame.index)
     // Run appropriately named function based on programState from compiler
     // this._running
     // this._success
@@ -371,6 +372,7 @@ class RunCompiled extends GridAnimator {
 
   _generateFrames () {
     return {
+      previous: this.currentFrame.index,
       index: this.currentFrame.index + this.direction,
       count: 10,
       direction: this.direction
