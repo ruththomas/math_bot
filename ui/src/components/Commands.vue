@@ -30,7 +30,7 @@ import FunctionBox from './Function_box'
 import PopoverBucket from './Popover_bucket'
 import uId from 'uid'
 import PuzzlePieces from './Puzzle_pieces'
-import ScrollOptions from '../services/ScrollOptions'
+import DraggableOptionGenerator from '../services/DraggableOptionGenerator'
 
 export default {
   name: 'Commands',
@@ -74,7 +74,7 @@ export default {
   data () {
     return {
       commandEvt: null,
-      functionOptions: ScrollOptions({
+      functionOptions: DraggableOptionGenerator({
         group: {
           name: 'commands-drag',
           pull: 'clone',

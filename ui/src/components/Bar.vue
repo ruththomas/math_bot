@@ -63,7 +63,6 @@ export default {
     wipeFunction () {
       this.levelControl.deleteMain()
       this.closeConfirmDelete()
-      this.setPut(true)
     },
     animationElements () {
       return {
@@ -99,8 +98,7 @@ export default {
   components: {
     Mascot,
     ClearFunctionConfirm
-  },
-  props: ['setPut']
+  }
 }
 </script>
 

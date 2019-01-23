@@ -1,4 +1,4 @@
-function ScrollOptions (addons) {
+function DraggableOptionGenerator (addons) {
   const defaults = {
     animation: 100,
     ghostClass: 'ghost',
@@ -10,4 +10,4 @@ function ScrollOptions (addons) {
   return Object.assign(defaults, addons)
 }
 
-export default ScrollOptions
+export default DraggableOptionGenerator
