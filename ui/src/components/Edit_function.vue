@@ -95,7 +95,7 @@ import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
 import PuzzlePieces from './Puzzle_pieces'
 import Tool from './Tool'
-import ScrollOptions from '../services/ScrollOptions'
+import DraggableOptionGenerator from '../services/DraggableOptionGenerator'
 import ClearFunctionConfirm from './Clear_function_confirm'
 
 export default {
@@ -153,11 +153,14 @@ export default {
   },
   data () {
     return {
-      functionDraggableOptions: ScrollOptions({
+      functionDraggableOptions: DraggableOptionGenerator({
         group: {
-          name: 'commands-slide',
-          pull: true,
-          put: true
+          name: 'edit-function-drag',
+          put: (to, from) => {
+            const fromGroup = from.options.group.name
+            const $childs = $(to.el).children(':not(.piece-placeholder)')
+            return fromGroup === 'commands-drag' && $childs.length < this.editingFunction.sizeLimit
+          }
         }
       }),
       confirmDeleteOpen: false
@@ -213,17 +216,10 @@ export default {
       }
       this.$store.dispatch('addMessage', messageBuilder)
     },
-    setPut (bool = this.functions.length < this.editingFunction.sizeLimit) {
-      this.functionDraggableOptions.group.put = bool
-      // if (!bool) {
-      //   this.fullMessage()
-      // }
-    },
     editFunction () {
       if (this.functions.length <= this.editingFunction.sizeLimit) {
         this.levelControl.updateFunction(this.editingFunction)
       }
-      this.setPut()
     },
     closeEditFunction () {
       this.$store.dispatch('updateFunctionAreaShowing', 'editMain')

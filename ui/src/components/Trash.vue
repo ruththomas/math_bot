@@ -19,8 +19,8 @@ export default {
       trash: [],
       trashDraggableData: {
         group: {
-          name: 'commands-slide',
-          put: true,
+          name: 'trash-drag',
+          put: ['edit-main-drag', 'edit-function-drag'],
           pull: false
         },
         scroll: false

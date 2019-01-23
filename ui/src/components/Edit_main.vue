@@ -12,7 +12,7 @@
       :origin="'editMain'"
       :size-limit="levelControl.continent.mainMax"
     ></function-drop>
-    <bar :set-put="setPut"></bar>
+    <bar></bar>
 </div>
 </template>
 
@@ -23,11 +23,10 @@ import FunctionDrop from './Function_drop'
 import utils from '../services/utils'
 import Mascot from './Mascot'
 import Bar from './Bar'
-import ScrollOptions from '../services/ScrollOptions'
+import DraggableOptionGenerator from '../services/DraggableOptionGenerator'
 
 export default {
   mounted () {
-    this.setPut()
     setTimeout(this.levelControl._positionBar, 500)
   },
   computed: {
@@ -55,18 +54,17 @@ export default {
   },
   data () {
     return {
-      mainDraggableOptions: ScrollOptions({
+      mainDraggableOptions: DraggableOptionGenerator({
         group: {
-          name: 'commands-slide',
-          pull: true,
-          put: true
+          name: 'edit-main-drag',
+          put: (to, from) => {
+            const fromGroup = from.options.group.name
+            const $childs = $(to.el).children(':not(.piece-placeholder)')
+            return fromGroup === 'commands-drag' && $childs.length < this.levelControl.continent.mainMax
+          },
+          revertClone: true
         }
       })
-    }
-  },
-  watch: {
-    path () {
-      this.setPut()
     }
   },
   methods: {
@@ -77,17 +75,10 @@ export default {
       }
       this.$store.dispatch('addMessage', messageBuilder)
     },
-    setPut (bool = this.mainFunction.func.length < this.levelControl.continent.mainMax) {
-      this.mainDraggableOptions.group.put = bool
-      if (!bool) {
-        this.fullMessage()
-      }
-    },
     editFunction () {
       if (this.mainFunction.func.length <= this.levelControl.continent.mainMax) {
         this.levelControl.updateFunction(this.mainFunction)
       }
-      this.setPut()
     },
     add () {
     },
