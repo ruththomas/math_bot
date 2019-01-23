@@ -116,7 +116,7 @@ export default {
   $dialog-button-size: 3.5vmin;
   $danger-color: #F25C5C;
   $mascot-size: 12vmin;
-  $padding-left: 10%;
+  $padding-left: 14%;
   $bar-color: #B8E986;
 
   .edit-main {

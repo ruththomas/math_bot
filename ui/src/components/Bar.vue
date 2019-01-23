@@ -132,7 +132,10 @@ $dialog-button-size: 3.5vmin;
     stroke:$bar-color;
   }
   .bar-graphic {
-    width:100%;
+    right:0px;
+    position: absolute;
+    width:95.2%;
+    height:auto;
   }
   .bar-controller {
     position: absolute;
@@ -150,7 +153,7 @@ $dialog-button-size: 3.5vmin;
 
   .mascot {
     width: $mascot-size;
-    left: calc(-#{$mascot-size} / 1.6);
+    left: 0px;
     transform: translateY(calc(-15% - #{$bar-height}));
     height: auto;
     z-index: 100;
