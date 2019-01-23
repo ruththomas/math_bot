@@ -127,10 +127,12 @@ export default {
   $mascot-size: 12vmin;
   $padding-left: 14%;
   $bar-color: #B8E986;
+  $grid-space-size: 9vmin;
 
   .edit-main {
     position: relative;
-    width: 100%;
+    width: calc(#{$grid-space-size} * 10);
+    max-width: 100%;
     margin: 0 auto;
     height: 100%;
     padding: 0 $padding-left 0 $padding-left;
