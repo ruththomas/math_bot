@@ -47,9 +47,9 @@ export default {
     return {
       draggableOptions: ScrollOptions({
         group: {
-          name: 'commands-staged',
+          name: 'staged-functions-drag',
           pull: 'clone',
-          put: ['commands-slide'],
+          put: ['commands-drag'],
           revertClone: true
         },
         sort: false

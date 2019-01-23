@@ -155,9 +155,8 @@ export default {
     return {
       functionDraggableOptions: ScrollOptions({
         group: {
-          name: 'commands-slide',
-          pull: true,
-          put: true
+          name: 'edit-function-drag',
+          put: ['commands-drag']
         }
       }),
       confirmDeleteOpen: false
@@ -214,7 +213,7 @@ export default {
       this.$store.dispatch('addMessage', messageBuilder)
     },
     setPut (bool = this.functions.length < this.editingFunction.sizeLimit) {
-      this.functionDraggableOptions.group.put = bool
+      // this.functionDraggableOptions.group.put = bool
       // if (!bool) {
       //   this.fullMessage()
       // }

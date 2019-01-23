@@ -76,9 +76,10 @@ export default {
       commandEvt: null,
       functionOptions: ScrollOptions({
         group: {
-          name: 'commands-slide',
+          name: 'commands-drag',
           pull: 'clone',
-          put: ['commands-staged']
+          put: ['staged-functions-drag'],
+          revertClone: true
         }
       }),
       currentColor: this.colorSelected,

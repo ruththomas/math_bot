@@ -57,9 +57,9 @@ export default {
     return {
       mainDraggableOptions: ScrollOptions({
         group: {
-          name: 'commands-slide',
-          pull: true,
-          put: true
+          name: 'edit-main-drag',
+          put: ['commands-drag'],
+          revertClone: true
         }
       })
     }
@@ -78,10 +78,10 @@ export default {
       this.$store.dispatch('addMessage', messageBuilder)
     },
     setPut (bool = this.mainFunction.func.length < this.levelControl.continent.mainMax) {
-      this.mainDraggableOptions.group.put = bool
-      if (!bool) {
-        this.fullMessage()
-      }
+      // this.mainDraggableOptions.group.put = bool
+      // if (!bool) {
+      //   this.fullMessage()
+      // }
     },
     editFunction () {
       if (this.mainFunction.func.length <= this.levelControl.continent.mainMax) {
