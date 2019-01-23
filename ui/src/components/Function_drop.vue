@@ -161,12 +161,13 @@ export default {
 
   .function-drop {
     overflow: auto;
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: auto;
     height: 100%;
     width: 100%;
     z-index: 999;
     margin: 0;
     .function-drop-drop-zone {
+      -webkit-transform: translate3d(0,0,0);
       position: relative;
       width: min-content;
       width: -moz-min-content;
