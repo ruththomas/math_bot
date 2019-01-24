@@ -46,7 +46,7 @@ $btn-size: 3.3vmin;
   .social-links {
     .share-button {
       display: inline-flex;
-      justify-content: space-evenly;
+      justify-content: space-around;
       align-items: center;
       border-radius: 50%;
       cursor: pointer;
