@@ -99,9 +99,6 @@ import DraggableOptionGenerator from '../services/DraggableOptionGenerator'
 import ClearFunctionConfirm from './Clear_function_confirm'
 
 export default {
-  mounted () {
-    this.setPut()
-  },
   computed: {
     levelControl () {
       return this.$store.getters.getLevelControl
@@ -146,11 +143,6 @@ export default {
       return this.permanentImages.cmdImages
     }
   },
-  watch: {
-    editingFunction () {
-      this.setPut()
-    }
-  },
   data () {
     return {
       functionDraggableOptions: DraggableOptionGenerator({
@@ -181,7 +173,6 @@ export default {
     wipeFunction () {
       this.closePopover('delete-function')
       this.levelControl.deleteFunction(this.editingFunction)
-      this.setPut(true)
       this.closeConfirmDelete()
     },
     animationElements () {
