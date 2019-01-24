@@ -26,6 +26,7 @@ function addMessage (state, messageBuilder) {
 export default new Vuex.Store({
   state: {
     eventsControl: new EventsControl(),
+    adminTheme: null,
     permanentImages: permanentImages,
     showCongrats: false,
     tryAgainShowing: false,
@@ -59,6 +60,9 @@ export default new Vuex.Store({
       state.levelControl = new LevelControl()
       state.soundControl = new SoundControl()
       state.adminControl = new AdminControl()
+    },
+    CHANGE_ADMIN_THEME (state, theme) {
+      state.adminTheme = theme
     },
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
@@ -169,10 +173,14 @@ export default new Vuex.Store({
     },
     deleteMessages ({commit}) {
       commit('DELETE_MESSAGES')
+    },
+    changeAdminTheme ({commit}, theme) {
+      commit('CHANGE_ADMIN_THEME', theme)
     }
   },
   getters: {
     getSoundControl: state => state.soundControl,
+    getAdminTheme: state => state.adminTheme,
     getEventsControl: state => state.eventsControl,
     getAuth: state => state.auth,
     getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,

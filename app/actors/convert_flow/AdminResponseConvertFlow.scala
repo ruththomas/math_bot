@@ -16,7 +16,6 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
       message: Option[String] = None,
       userAccountSignups: Option[Seq[UserAccountSignups]] = None,
       lastXDaysLoginCount: Option[Long] = None,
-      activeUserCount: Option[Long] = None,
       currentPath: Option[Seq[CurrentPath]] = None,
       levelStats: Option[Seq[LevelStats]] = None,
       maxLevel: Option[Seq[MaxLevel]] = None,
@@ -31,18 +30,28 @@ object AdminResponseConvertFlow extends SocketResponseConvertFlow {
 
   private def responseToJson(msg: Any): JsValue = {
     Json.toJson[AdminResponse](msg match {
-      case LastXDaysLogins(logins) => AdminResponse(success, None, None, None, Some(logins))
-      case ActiveUserCount(count) => AdminResponse(success, None, None, None, None, Some(count))
-      case UserCount(count) => AdminResponse(success, userCount = Some(count))
-      case SignupsPerDay(signups) => AdminResponse(success, None, None, Some(signups))
-      case UserMaxLevel(maxLevel) => AdminResponse(success, None, None, None, None, None, None, None, Some(maxLevel))
-      case LevelStatsResult(levelStats) => AdminResponse(success, None, None, None, None, None, None, Some(levelStats))
-      case Events(events) => AdminResponse(success, None, None, None, None, None, None, None, None, Some(events))
-      case Event(event) => AdminResponse(success, None, None, None, None, None, None, None, None, None, Some(event))
-      case DeleteEventResult(message) => AdminResponse(success, None, Some(message))
-      case PutEventResult(message) => AdminResponse(success, None, Some(message))
-      case PostEventResult(message) => AdminResponse(success, None, Some(message))
-      case ActorFailed(message) => AdminResponse(failed, message = Some(message))
+      case LastXDaysLogins(logins) =>
+        AdminResponse(success, None, None, None, Some(logins))
+      case UserCount(count) =>
+        AdminResponse(success, userCount = Some(count))
+      case SignupsPerDay(signups) =>
+        AdminResponse(success, None, None, Some(signups))
+      case UserMaxLevel(maxLevel) =>
+        AdminResponse(success, None, None, None, None, None, None, Some(maxLevel))
+      case LevelStatsResult(levelStats) =>
+        AdminResponse(success, None, None, None, None, None, Some(levelStats))
+      case Events(events) =>
+        AdminResponse(success, None, None, None, None, None, None, None, Some(events))
+      case Event(event) =>
+        AdminResponse(success, None, None, None, None, None, None, None, None, Some(event))
+      case DeleteEventResult(message) =>
+        AdminResponse(success, None, Some(message))
+      case PutEventResult(message) =>
+        AdminResponse(success, None, Some(message))
+      case PostEventResult(message) =>
+        AdminResponse(success, None, Some(message))
+      case ActorFailed(message) =>
+        AdminResponse(failed, message = Some(message))
       case _ => AdminResponse(failed)
     })
   }

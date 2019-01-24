@@ -93,6 +93,7 @@ export default {
   }
   .star-spread {
     display: flex;
+    justify-content: center;
     z-index: 101;
     height: 100%;
     width: 100%;

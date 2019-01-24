@@ -20,10 +20,10 @@ object AdminRequestConvertFlow extends SocketRequestConvertFlow {
   def jsonToCommand(msg: JsValue): Any = {
     Json.fromJson[AdminRequest](msg).asOpt match {
       case Some(AdminRequest(action, _, _, _, _)) if action == "user-count" => GetUserCount()
-      case Some(AdminRequest(action, _, _, _, _)) if action == "active-user-count" => GetActiveUserCount()
       case Some(AdminRequest(action, _, _, _, _)) if action == "signups" => GetSignupsPerDay()
       case Some(AdminRequest(action, _, _, _, days)) if action == "logins-last-x-days" => GetLoginsLastXDays(days)
-      case Some(AdminRequest(action, id, _, _, _)) if action == "level-stats" => GetLevelStats(id)
+      case Some(AdminRequest(action, id, _, _, _)) if action == "level-stats" => GetContinentStats(id)
+      case Some(AdminRequest(action, id, _, _, _)) if action == "planet-stats" => GetPlanetStats(id)
       case Some(AdminRequest(action, _, _, _, _)) if action == "max-level" => GetMaxLevel()
       case Some(AdminRequest(action, _, _, _, _)) if action == "events-get" => GetEvents()
       case Some(AdminRequest(action, _, event, _, _)) if action == "events-put" => PutEvent(event)

@@ -1,12 +1,21 @@
 <template>
 
-  <div class="card" style="width: 100%; min-width: 30rem;">
-    <div class="card-header">
-      <h3>How Max Levels Are Distributed</h3>
+  <div class="admin-max-level container-fluid"
+       :class="adminTheme"
+
+  >
+    <div class="row">
+      <div
+        class="card" style="width: 100%; min-width: 30rem;">
+        <div class="card-header">
+          <h3>How Max Levels Are Distributed</h3>
+        </div>
+        <div class="card-body">
+          <div id="current_path_chart"></div>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <div id="current_path_chart"></div>
-    </div>
+
   </div>
 
 </template>
@@ -42,6 +51,10 @@ export default {
       return this.$store.getters.getAdminControl
     },
 
+    adminTheme () {
+      return this.$store.getters.getAdminTheme
+    },
+
     data () {
       return Object.values(this.adminControl.maxLevel)
         .filter(level => level._id.length >= 5)
@@ -54,26 +67,30 @@ export default {
   methods: {
 
     getInfo (continent) {
-      const {_id} = continent
+      const { _id } = continent
 
       let [superCluster, galaxy, starSystem, planet, ..._continent] = _id
 
       let level = Number(_continent.join('')) + 1
 
-      return Object.assign({}, continent, {superCluster, galaxy, starSystem, planet, level})
+      return Object.assign({}, continent, { superCluster, galaxy, starSystem, planet, level })
     },
 
     generateChart () {
       const mapToGraph = (item) => {
         const starSystem = this.levelControl.galaxy.starSystems[item.starSystem]
 
-        const {planets, stats: {name: starSystemName}} = starSystem
+        const { planets, stats: { name: starSystemName } } = starSystem
 
         const planet = planets[item.planet]
 
-        const {stats: {name: planetName}} = planet
+        const { stats: { name: planetName } } = planet
 
-        return Object.assign({}, item, {starSystemName, planetName, title: `${starSystemName} ${planetName} ${item.level}`})
+        return Object.assign({}, item, {
+          starSystemName,
+          planetName,
+          title: `${starSystemName} ${planetName} ${item.level}`
+        })
       }
 
       const d = this.data.map(mapToGraph)
@@ -118,13 +135,27 @@ export default {
 }
 </script>
 
-<style scoped>
-  @import '~c3/c3.min.css';
+<style scoped lang="scss">
 
   #current_path_chart {
 
     width: 100%;
     min-height: 200px;
+  }
+
+  .admin-max-level.dark {
+
+    .card {
+      background-color: #303030;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+
+    }
+
+    .card-header {
+      background-color: #444;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
   }
 
 </style>

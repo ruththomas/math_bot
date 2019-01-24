@@ -1,21 +1,25 @@
 <template>
 
-     <div class="container-fluid">
-       <div class="row">
-         <div class="card" style="width: 100%;">
-             <div class="card-header">
-               <h4 class="text-left">
-                 New player accounts per day
-               </h4>
-             </div>
-           <div class="card-body">
-             <div class="row">
-               <div id="chart_signups" class="chart"></div>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
+  <div
+
+    class="user-signups-per-day-chart container-fluid"
+    :class="adminTheme"
+  >
+    <div class="row">
+      <div class="card" style="width: 100%;">
+        <div class="card-header">
+          <h4 class="text-left">
+            New player accounts per day
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div id="chart_signups" class="chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -30,6 +34,10 @@ export default {
     }
   },
   computed: {
+
+    adminTheme () {
+      return this.$store.getters.getAdminTheme
+    },
 
     data () {
       return this.adminControl.userAccountSignups
@@ -167,16 +175,25 @@ export default {
 
 <style scoped lang="scss">
 
-  @import '~c3/c3.min.css';
-
   .chart {
 
     width: 100%;
     min-height: 200px;
   }
 
-  /*.c3-line-total, .c3-line-signups {*/
-  /*stroke-width: 0;*/
-  /*}*/
+  .user-signups-per-day-chart.dark {
+
+    .card {
+      background-color: #303030;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+
+    }
+
+    .card-header {
+      background-color: #444;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+  }
 
 </style>

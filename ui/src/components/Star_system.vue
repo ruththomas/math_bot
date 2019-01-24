@@ -4,27 +4,33 @@
     <div
       v-for="(starSystem, ind) in starSystems"
       :key="'profile-star-system/' + ind"
-      class="btn btn-dark star-system-btn"
-      :class="[
-        !starSystem.stats.active ? 'space-btn-disabled' : '',
-        selectedStarSystem === starSystem.id.substr(-1) ? 'space-btn-selected' : ''
-      ]"
-      @click="levelControl.updateStarSystem(ind)"
+      class="ms-star-sys-btn"
     >
-      <div class="star-system-planets">
-        <planets
-          :selected-star-system="selectedStarSystem"
-          :selected-planet="selectedPlanet"
-          :update-selected-planet="levelControl.updatePlanet"
-          :is-button="true"
-          :star-system="starSystem"
-        ></planets>
-      </div>
-      <div class="star-system-name">
-        {{starSystem.stats.name}}
-      </div>
+        <div
+          class="btn btn-dark star-system-btn"
+          :class="[
+            !starSystem.stats.active ? 'space-btn-disabled' : '',
+            selectedStarSystem === starSystem.id.substr(-1) ? 'space-btn-selected' : ''
+          ]"
+          @click="levelControl.updateStarSystem(ind)"
+        >
+          <div class="star-system-planets">
+            <planets
+              :selected-star-system="selectedStarSystem"
+              :selected-planet="selectedPlanet"
+              :update-selected-planet="levelControl.updatePlanet"
+              :is-button="true"
+              :star-system="starSystem"
+            ></planets>
+          </div>
+          <div class="star-system-name">
+            {{starSystem.stats.name}}
+          </div>
+        </div>
     </div>
-    <div class="btn btn-dark star-system-btn" @click="levelControl.getSandbox">Sandbox</div>
+    <div class="ms-star-sys-btn">
+        <div class="btn btn-dark star-system-btn" @click="levelControl.getSandbox">Sandbox</div>
+    </div>
   </div>
   <div class="col-6">
     <planets
@@ -119,5 +125,9 @@ $click-color: #B8E986;
       cursor: not-allowed;
     }
   }
+}
+.ms-star-sys-btn {
+  display: -ms-grid;
+  -ms-grid-columns: min-content;
 }
 </style>

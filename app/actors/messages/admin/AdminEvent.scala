@@ -23,6 +23,12 @@ object AdminEvent {
 
   }
 
+  def apply(evt: NewEvent): AdminEvent = {
+
+    AdminEvent(new Date(evt.date), evt.title, evt.description, evt.links, UUID.randomUUID().toString)
+
+  }
+
 }
 
 case class AdminEvent(date: Date, title: String, description: String, links: String, id: String)

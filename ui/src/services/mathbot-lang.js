@@ -8,44 +8,61 @@ import CodeMirror from '../../node_modules/codemirror/lib/codemirror'
     let spacebefore = false
     let inbracket = false
     let Highlighters = {
-      'forward': [/forward\b/, 'keyword'],
-      'right': [/right\b/, 'keyword'],
-      'putdown': [/putdown\b/, 'keyword'],
-      'pickup': [/pickup\b/, 'keyword'],
-      '=>': [/=>\B/, 'def'],
-      'sym': [/(')(\w|\d)+/, 'atom']
+      'forward': [/(forward)(?=( |$))/, 'keyword'],
+      'right': [/(right)(?=( |$))/, 'keyword'],
+      'putdown': [/(putdown)(?=( |$))/, 'keyword'],
+      'pickup': [/(pickup)(?=( |$))/, 'keyword'],
+      '=>': [/(=>)(?=( |$))/, 'def'],
+      'sym': [/(')(\w|\d)+/, 'atom'],
+      ')': [/\)/, 'bracket']
     }
     return {
       token: function (stream) {
+        if (stream.lineOracle.line === 0 && stream.start === 0) {
+          Highlighters = {
+            'forward': [/(forward)(?=( |$|\)))/, 'keyword'],
+            'right': [/(right)(?=( |$|\)))/, 'keyword'],
+            'putdown': [/(putdown)(?=( |$|\)))/, 'keyword'],
+            'pickup': [/(pickup)(?=( |$|\)))/, 'keyword'],
+            '=>': [/(=>)(?=( |$))/, 'def'],
+            'sym': [/(')(\w|\d)+/, 'atom'],
+            ')': [/\)/, 'bracket']
+          }
+        }
         if (stream.start === 0) spacebefore = true
         if (stream.eatSpace()) spacebefore = true
         if (stream.eat('(')) {
           spacebefore = true
           inbracket = true
-          return
+          return 'bracket'
+        }
+        if (spacebefore) {
+          if (stream.match(/((\w|\d|-|_)+ =>)/)) {
+            stream.backUp(3)
+            let toturn = stream.current()
+            if (!inbracket) toturn = toturn.substr(1)
+            toturn = toturn.replace(/\s/g, '')
+            const toadd = new RegExp('(' + toturn + ')(?=( |$)|\\))')
+            Highlighters[toturn] = [toadd, 'builtin']
+            spacebefore = false
+            return 'builtin'
+          }
         }
         let val
+        let foundone = false
         Object.keys(Highlighters).forEach(function (key) {
-          if (stream.eatSpace()) spacebefore = true
-          if (spacebefore) {
-            if (stream.match(Highlighters[key][0])) {
-              spacebefore = false
-              val = Highlighters[key][1]
+          if (!foundone) {
+            if (stream.eatSpace()) spacebefore = true
+            if (spacebefore) {
+              if (stream.match(Highlighters[key][0])) {
+                spacebefore = false
+                foundone = true
+                val = Highlighters[key][1]
+              }
             }
           }
         })
         if (val) return val
-        if (spacebefore) {
-          if (stream.match(/((\w|\d)+ =>)/)) {
-            stream.backUp(3)
-            let toturn = stream.current()
-            if (!inbracket) toturn = toturn.substr(1)
-            const toadd = new RegExp(toturn + '\\' + 'b')
-            Highlighters[toturn] = [toadd, 'keyword']
-            spacebefore = false
-            return 'keyword'
-          }
-        }
         spacebefore = false
         stream.next()
       }
