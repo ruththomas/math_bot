@@ -80,7 +80,7 @@ export default {
       .social-sharing {
         .social-links {
           display: flex;
-          justify-content: space-evenly;
+          justify-content: space-around;
           flex-direction: column;
           height: 100%;
         }
