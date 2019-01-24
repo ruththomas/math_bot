@@ -204,6 +204,17 @@ export default {
   }
 
   .full-indicator {
-    box-shadow: 0.5vmin 0 0 0 $danger-color;
+    &::after {
+      content: "";
+      background-color: $danger-color;
+      position: absolute;
+      height: 75%;
+      width: 3px;
+      margin: auto;
+      top: 0;
+      left: 102%;
+      bottom: 0;
+      right: 0;
+    }
   }
 </style>
