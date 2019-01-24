@@ -147,13 +147,13 @@ $dialog-button-size: 3.5vmin;
     position: absolute;
     padding: 0.5rem;
     transform: translateY(calc(-5% - #{$bar-height}));
-    left: calc(-#{$mascot-size});
+    left: -1vmin;
     z-index: 101;
   }
 
   .mascot {
     width: $mascot-size;
-    left: 0px;
+    left: -2vmin;
     transform: translateY(calc(-15% - #{$bar-height}));
     height: auto;
     z-index: 100;

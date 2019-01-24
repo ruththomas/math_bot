@@ -3,9 +3,9 @@
    <user-gravatar></user-gravatar>
     <step-congrats v-if="levelControl.continent !== null" key="step-congrats"></step-congrats>
     <splash-screen v-if="levelControl.continent === null"></splash-screen>
-    <div v-else class="container">
+    <div v-else class="robot-container">
 
-      <div class="row" style="position: relative;">
+      <div class="row" style="flex: 0.6;">
         <trash></trash>
         <grid></grid>
         <active-drop v-if="functionAreaShowing === 'addFunction'"></active-drop>
@@ -15,18 +15,18 @@
         enter-active-class="animated tada"
         leave-active-class="animated bounceOutRight"
       >
-        <div v-if="levelControl.mode === 'normal'" class="row container" style="flex: 1; padding: 0;">
-          <div class="row" style="padding: 1% 0; display: flex; flex: 2; position: relative; z-index: 110;">
+        <div v-if="levelControl.mode === 'normal'" class="row container" style="flex: 0.5;">
+          <div class="row">
             <popover-bucket v-if="functionAreaShowing === 'editFunction'"></popover-bucket>
             <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
           </div>
 
-          <div class="row" style="padding: 0; display: flex; flex: 2; position: relative;">
+          <div class="row">
             <trash></trash>
             <commands></commands>
           </div>
 
-          <div class="row" style="display: flex; flex: 1; position: relative;">
+          <div class="row">
             <trash></trash>
             <staged-functions></staged-functions>
           </div>
@@ -138,13 +138,13 @@ export default {
     background-size: cover;
     height: 100%;
     padding: 2vmin 0;
-    .container {
+    .robot-container {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       height: 100%;
       .row {
-        margin: 0;
+        margin: 0 auto;
         width: 100%;
         z-index: 111;
       }
@@ -153,24 +153,6 @@ export default {
         position: relative;
         height: $box-height;
         z-index: 100;
-      }
-    }
-    .return-to-profile {
-      position: fixed;
-      right: 0;
-      top: 0;
-      cursor: pointer;
-      height: 9vmin;
-      width: 9vmin;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      z-index: 112;
-      img {
-        border-radius: 50%;
-        height: 80%;
-        width: 80%;
       }
     }
   }

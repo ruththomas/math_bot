@@ -88,6 +88,7 @@ export default {
   $piece-height: 7.5vmin;
   $dialog-button-size: 3.5vmin;
   $piece-height: 7.5vmin;
+  $grid-space-size: 9vmin;
 
   .staged-functions-container {
     overflow: auto;

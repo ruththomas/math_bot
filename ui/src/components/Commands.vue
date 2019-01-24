@@ -154,6 +154,7 @@ export default {
   $commands-margin-top: 2vmin;
   $piece-height: 7.5vmin;
   $pointer-size: 2vmin;
+  $grid-space-size: 9vmin;
 
   .invisible {
     visibility: hidden;
@@ -163,7 +164,8 @@ export default {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     height: 100%;
-    width: 100%;
+    width: calc(#{$grid-space-size} * 10);
+    max-width: 100%;
     .functions {
       width: min-content;
       min-width: 100%;
