@@ -112,19 +112,19 @@ class LevelControl extends Ws {
       const mainDropZoneHalf = $mainDropZone.height() / 2
       const $overflowing = document.getElementById('overflowing')
       if ($overflowing.scrollWidth > $overflowing.clientWidth) {
-        $bar.css('top', (mainDropZoneHalf - $bar[0].height.baseVal.value / 2) + 'px').css('top', '-=1vmin')
+        $bar.css('top', ((mainDropZoneHalf - $bar[0].height.baseVal.value / 2) + 30)  + 'px').css('top', '-=1vmin')
         if ($clearFunctionConfirm.children()[0]) {
-          $clearFunctionConfirm.css('top', (mainDropZoneHalf - $clearFunctionConfirm[0].offsetHeight / 2) + 'px').css('top', '-=1vmin')
+          $clearFunctionConfirm.css('top', ((mainDropZoneHalf - $clearFunctionConfirm[0].offsetHeight / 2) + 30)  + 'px').css('top', '-=1vmin')
         } else {
-          $mascot.css('top', (mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 'px').css('top', '-=1vmin')
+          $mascot.css('top', ((mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 30)  + 'px').css('top', '-=1vmin')
         }
       } else {
         if ($mainDropZone.length) {
-          $bar.css('top', (mainDropZoneHalf - $bar[0].height.baseVal.value / 2) + 'px')
+          $bar.css('top',((mainDropZoneHalf - $bar[0].height.baseVal.value / 2) + 30) + 'px')
           if ($clearFunctionConfirm.children()[0]) {
-            $clearFunctionConfirm.css('top', (mainDropZoneHalf - $clearFunctionConfirm[0].offsetHeight / 2) + 'px')
+            $clearFunctionConfirm.css('top', ((mainDropZoneHalf - $clearFunctionConfirm[0].offsetHeight / 2) + 30)  + 'px')
           } else {
-            $mascot.css('top', (mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 'px')
+            $mascot.css('top', ((mainDropZoneHalf - $mascot.children()[0].height.baseVal.value / 2) + 30)  + 'px')
           }
         }
       }

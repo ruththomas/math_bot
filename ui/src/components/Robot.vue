@@ -5,7 +5,7 @@
     <splash-screen v-if="levelControl.continent === null"></splash-screen>
     <div v-else class="robot-container">
 
-      <div class="row" style="flex: 1.45;">
+      <div class="row" style="flex: 0.6;">
         <trash></trash>
         <grid></grid>
         <active-drop v-if="functionAreaShowing === 'addFunction'"></active-drop>
@@ -15,7 +15,7 @@
         enter-active-class="animated tada"
         leave-active-class="animated bounceOutRight"
       >
-        <div v-if="levelControl.mode === 'normal'" class="row container" style="flex: 1;">
+        <div v-if="levelControl.mode === 'normal'" class="row container" style="flex: 0.5;">
           <div class="row">
             <popover-bucket v-if="functionAreaShowing === 'editFunction'"></popover-bucket>
             <edit-main v-if="functionAreaShowing === 'editMain'"></edit-main>
@@ -153,24 +153,6 @@ export default {
         position: relative;
         height: $box-height;
         z-index: 100;
-      }
-    }
-    .return-to-profile {
-      position: fixed;
-      right: 0;
-      top: 0;
-      cursor: pointer;
-      height: 9vmin;
-      width: 9vmin;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      z-index: 112;
-      img {
-        border-radius: 50%;
-        height: 80%;
-        width: 80%;
       }
     }
   }

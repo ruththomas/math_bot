@@ -51,8 +51,8 @@ export default {
     right: 0;
     top: 0;
     cursor: pointer;
-    height: 9vmin;
-    width: 9vmin;
+    height: 8vmin;
+    width: 8vmin;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -135,7 +135,7 @@ export default {
     max-width: 100%;
     margin: 0 auto;
     height: 100%;
-    padding: 0 $padding-left 0 $padding-left;
+    padding: 30px $padding-left 0 $padding-left;
     z-index: 1000;
 
     .dialog-button {

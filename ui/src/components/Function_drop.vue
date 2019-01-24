@@ -158,12 +158,14 @@ export default {
   $click-color: #B8E986;
   $danger-color: #F25C5C;
   $piece-height: 7.5vmin;
+  $grid-space-size: 9vmin;
 
   .function-drop {
     overflow: auto;
     -webkit-overflow-scrolling: auto;
     height: 100%;
-    width: 100%;
+    width: calc(#{$grid-space-size} * 10);
+    max-width: 100%;
     z-index: 999;
     margin: 0;
     .function-drop-drop-zone {
