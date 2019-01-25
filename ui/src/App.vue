@@ -56,13 +56,17 @@ export default {
         const confirmed = confirm(
           'Important message for developers: \n\n' +
           devMessages.join('\n\n') + '\n\n' +
-          'After confirming you will not see this message again unless you clear local storage.'
+          'After confirming you will not see this message again unless you clear local storage. \n' +
+          'If you need these to be on remove \'dev_msg_seen\' from local storage, then hit cancel on this message.'
         )
         if (confirmed) {
-          localStorage.setItem(devMsgSeenLabel, confirmed)
+          this.$store.dispatch('setDevSuppress')
+          devMessages.forEach((m) => console.log('!!' + m.toUpperCase() + '!!'))
         }
+      } else {
+        this.$store.dispatch('setDevSuppress')
+        devMessages.forEach((m) => console.log('!!' + m.toUpperCase() + '!!'))
       }
-      devMessages.forEach((m) => console.log('!!' + m.toUpperCase() + '!!'))
     }
   },
   computed: {

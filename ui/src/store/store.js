@@ -51,9 +51,13 @@ export default new Vuex.Store({
     videoHintControl: {},
     levelControl: {},
     soundControl: {},
-    adminControl: {}
+    adminControl: {},
+    devSuppress: false
   },
   mutations: {
+    SET_DEV_SUPPRESS (state) {
+      state.devSuppress = true
+    },
     UPDATE_CONTROLS (state) {
       state.compilerControl = new CompilerControl()
       state.videoHintControl = new VideoControl(state)
@@ -120,6 +124,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setDevSuppress ({commit}) {
+      commit('SET_DEV_SUPPRESS')
+    },
     confirmDeactivateFunction ({commit}, _func) {
       commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
     },
@@ -179,6 +186,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getDevSuppress: state => state.devSuppress,
     getSoundControl: state => state.soundControl,
     getAdminTheme: state => state.adminTheme,
     getEventsControl: state => state.eventsControl,

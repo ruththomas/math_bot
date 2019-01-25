@@ -32,6 +32,7 @@ export default {
   mounted () {
     this.handleCongrats()
     this.soundControl.addSound({name: 'robotBackground', sound: new BackgroundSound()})
+    this.soundControl.playSound('robotBackground')
   },
   beforeDestroy () {
     this.soundControl.removeSounds(['robotBackground'])

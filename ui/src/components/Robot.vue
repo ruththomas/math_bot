@@ -91,7 +91,7 @@ export default {
   },
   methods: {
     handleFreeHint () {
-      if (this.levelControl.continent !== null) {
+      if (!this.$store.getters.getDevSuppress && this.levelControl.continent !== null) {
         return this.videoControl.showFreeHint(this.levelControl.continent.freeHint)
       }
       setTimeout(this.handleFreeHint, 10)
