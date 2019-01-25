@@ -32,6 +32,7 @@ export default {
   mounted () {
     this.handleCongrats()
     this.soundControl.addSound({name: 'robotBackground', sound: new BackgroundSound()})
+    this.soundControl.playSound('robotBackground')
   },
   beforeDestroy () {
     this.soundControl.removeSounds(['robotBackground'])
@@ -88,7 +89,7 @@ export default {
       .social-sharing {
         .social-links {
           display: flex;
-          justify-content: space-evenly;
+          justify-content: space-around;
           flex-direction: column;
           height: 100%;
         }

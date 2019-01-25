@@ -7,8 +7,8 @@
 
     <div class="row mb-3" style="min-height: 10rem;">
       <admin-max-level v-if="someMaxLevel()"></admin-max-level>
-      <div v-else>
-        <h6>Loading...</h6>
+      <div v-else class="container-fluid">
+        <donut-spinner></donut-spinner>
       </div>
     </div>
 
@@ -20,9 +20,36 @@
         <div class="mx-3">
 
           <div class="form-group">
-            <label for="starSystems">
+            <label for="starSystems"
+                   id="starSystemHelp"
+                   @click="showStarSystemData = !showStarSystemData"
+            >
               star system
+              <i
+
+                class="fa fa-info-circle"
+              >
+
+              </i>
+
             </label>
+            <b-popover
+
+              :show.sync="showStarSystemData" target="#starSystemHelp"
+              :title="adminControl.levelStats[starSystem.id]._id">
+
+              <div
+                @click="showStarSystemData = !showStarSystemData"
+                v-for="(value, key) in adminControl.levelStats[starSystem.id]" :key="'event_detail/' + key"
+                class="container text-white">
+                <div class="row font-weight-bold">
+                  {{key}}
+                </div>
+                <div class="row" style="min-width: 55rem;">
+                  {{value}}
+                </div>
+              </div>
+            </b-popover>
             <select @change="changeStarSystem" class="form-control-sm" id="starSystems" name="starSystems">
               <option v-for="star in levelControl.galaxy.starSystems" :key="star.id" :value="star.id">
                 {{star.stats.name}}
@@ -33,9 +60,35 @@
 
         <div class="mx-3">
           <div class="form-group">
-            <label for="planets">
+            <label for="planets" id="showPlanetData"
+                   @click="showPlanetData = !showPlanetData"
+            >
               planets
+              <i
+
+                class="fa fa-info-circle"
+              >
+
+              </i>
+
             </label>
+
+            <b-popover
+
+              :show.sync="showPlanetData" target="#showPlanetData" :title="adminControl.levelStats[planet.id]._id">
+
+              <div
+                @click="showPlanetData = !showPlanetData"
+                v-for="(value, key) in adminControl.levelStats[starSystem.id]" :key="'event_detail/' + key"
+                class="container text-white">
+                <div class="row font-weight-bold">
+                  {{key}}
+                </div>
+                <div class="row" style="min-width: 55rem;">
+                  {{value}}
+                </div>
+              </div>
+            </b-popover>
             <select
               id="planets"
               name="planets"
@@ -67,6 +120,7 @@ import Planets from './Planets'
 import AdminMaxLevel from './Admin_max_level'
 import UnlockAllLevels from './UnlockAllLevels'
 import LevelStatsTable from './LevelStatsTable'
+import DonutSpinner from './DonutSpinner'
 
 export default {
   name: 'LevelStats',
@@ -77,9 +131,10 @@ export default {
         return level.count > 0
       })
     },
-    async changeActivePlanet (e) {
+    changeActivePlanet (e) {
       this.activePlanet = e.target.value
-      this.getLevelStats()
+
+      this.adminControl.getPlanetStats(this.activePlanet)
     },
     changeStarSystem (e) {
       const { target: { value } } = e
@@ -87,22 +142,22 @@ export default {
 
       this.changeActivePlanet({ target: { value: value + '0' } })
     },
-    getLevelStats () {
-      const ids = this.planet.continents.map(i => i.id)
-
-      Promise.all(ids.map(continentId => this.adminControl.getLevelStats(continentId)))
+    getPlanetStats () {
+      this.adminControl.getPlanetStats(this.planet.id)
     }
 
   },
   mounted () {
     Promise.all([
       this.adminControl.getMaxLevelStats(),
-      this.getLevelStats()
+      this.getPlanetStats()
     ])
   },
   data () {
     return {
       activeStarSystem: '000',
+      showPlanetData: false,
+      showStarSystemData: false,
       activePlanet: '0000'
     }
   },
@@ -126,6 +181,7 @@ export default {
     }
   },
   components: {
+    DonutSpinner,
     LevelStatsTable,
     UnlockAllLevels,
     AdminMaxLevel,
@@ -136,16 +192,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .star-system {
-    display: flex;
+  .star-system-admin {
     height: 100%;
     width: 100%;
     position: relative;
-
-    .header {
-      position: absolute;
-      color: white;
-    }
 
     th, label {
 
@@ -153,6 +203,10 @@ export default {
       font-weight: bold;
     }
 
+    .fa {
+
+      cursor: pointer;
+    }
   }
 
 </style>

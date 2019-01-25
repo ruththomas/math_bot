@@ -26,6 +26,7 @@ function addMessage (state, messageBuilder) {
 export default new Vuex.Store({
   state: {
     eventsControl: new EventsControl(),
+    adminTheme: null,
     permanentImages: permanentImages,
     showCongrats: false,
     tryAgainShowing: false,
@@ -50,15 +51,22 @@ export default new Vuex.Store({
     videoHintControl: {},
     levelControl: {},
     soundControl: {},
-    adminControl: {}
+    adminControl: {},
+    devSuppress: false
   },
   mutations: {
+    SET_DEV_SUPPRESS (state) {
+      state.devSuppress = true
+    },
     UPDATE_CONTROLS (state) {
       state.compilerControl = new CompilerControl()
       state.videoHintControl = new VideoControl(state)
       state.levelControl = new LevelControl()
       state.soundControl = new SoundControl()
       state.adminControl = new AdminControl()
+    },
+    CHANGE_ADMIN_THEME (state, theme) {
+      state.adminTheme = theme
     },
     CLEAR_AUTH_ERRORS (state) {
       state.authErrors = []
@@ -116,6 +124,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setDevSuppress ({commit}) {
+      commit('SET_DEV_SUPPRESS')
+    },
     confirmDeactivateFunction ({commit}, _func) {
       commit('CONFIRM_DEACTIVATE_FUNCTION', _func)
     },
@@ -169,10 +180,15 @@ export default new Vuex.Store({
     },
     deleteMessages ({commit}) {
       commit('DELETE_MESSAGES')
+    },
+    changeAdminTheme ({commit}, theme) {
+      commit('CHANGE_ADMIN_THEME', theme)
     }
   },
   getters: {
+    getDevSuppress: state => state.devSuppress,
     getSoundControl: state => state.soundControl,
+    getAdminTheme: state => state.adminTheme,
     getEventsControl: state => state.eventsControl,
     getAuth: state => state.auth,
     getConfirmDeactiveFunction: state => state.confirmDeactiveFunction,

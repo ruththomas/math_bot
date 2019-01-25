@@ -2,6 +2,7 @@ import _ from 'underscore'
 import BumpSound from './sounds/BumpSound'
 import WalkSound from './sounds/WalkSound'
 import TurnSound from './sounds/TurnSound'
+import $store from '../store/store'
 
 class SoundControl {
   constructor () {
@@ -23,7 +24,9 @@ class SoundControl {
   }
 
   playSound (name) {
-    this.sounds[name].play()
+    if (!$store.state.devSuppress) {
+      this.sounds[name].play()
+    }
   }
 
   addSounds (soundList) {
@@ -48,11 +51,13 @@ class SoundControl {
   }
 
   startSounds (filter) {
-    _.each(this.sounds, (sound, name) => {
-      if (filter.includes(name)) {
-        sound.play()
-      }
-    })
+    if (!$store.state.devSuppress) {
+      _.each(this.sounds, (sound, name) => {
+        if (filter.includes(name)) {
+          sound.play()
+        }
+      })
+    }
   }
 }
 

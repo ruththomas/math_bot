@@ -105,14 +105,14 @@ class RunCompiled extends GridAnimator {
   _hideLevelCongrats = () => $root.$emit('bv::hide::modal', 'level-congrats-modal')
 
   _showFreeHint (url) {
-    $store.state.videoHintControl.showFreeHint(url)
+    if (!$store.state.devSuppress && url) {
+      $store.state.videoHintControl.showFreeHint(url)
+    }
   }
 
   _initializeStep () {
     const freeHint = this.lastFrame.pathAndContinent.builtContinent.freeHint
-    if (this.lastFrame === null) {
-      this._showFreeHint(freeHint)
-    }
+    this._showFreeHint(freeHint)
     this.levelControl._setContinent(this.lastFrame)
     this._hideCongrats()
     this.constructor(this.context)

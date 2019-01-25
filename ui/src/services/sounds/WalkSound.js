@@ -6,9 +6,7 @@ class WalkSound extends Sound {
   }
 
   play () {
-    if (process.env.NODE_ENV === 'production') {
-      this.sound.play('oneStep')
-    }
+    this.sound.play('oneStep')
   }
 }
 

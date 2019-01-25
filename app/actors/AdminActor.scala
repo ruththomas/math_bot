@@ -1,6 +1,7 @@
 package actors
 import actors.messages.ActorFailed
 import actors.messages.admin.{AdminEvent, LevelStats, NewEvent}
+import actors.messages.level.Stats
 import actors.messages.playeraccount.{MaxLevel, UserAccountSignups}
 import akka.actor.{Actor, ActorRef, Props}
 import com.google.inject.Inject
@@ -8,7 +9,8 @@ import daos._
 import play.api.Environment
 import play.api.libs.ws.WSClient
 
-abstract class EventResult {
+trait EventResult {
+
   def result: String
 }
 
@@ -73,6 +75,8 @@ class AdminActor @Inject()(out: ActorRef,
 
   private final val className = "AdminActor"
 
+  private final val stats = Stats("")
+
   override def receive: Receive = {
 
     case GetMaxLevel() =>
@@ -117,16 +121,15 @@ class AdminActor @Inject()(out: ActorRef,
     case DeleteEvent(event) =>
       event match {
         case Some(adminEvent) =>
-          eventsDAO.remove(adminEvent.id)
-
-          out ! DeleteEventResult("successfully removed event: " + adminEvent.id)
+          eventsDAO
+            .remove(adminEvent.id)
+            .map(_ => out ! DeleteEventResult("successfully removed event: " + adminEvent.id))
         case _ => out ! ActorFailed("Invalid Request")
       }
     case PostEvent(event) =>
       event match {
-        case Some(adminEvent) =>
-          val newEvent = AdminEvent(adminEvent.date, adminEvent.title, adminEvent.description, adminEvent.links)
-          eventsDAO.insert(newEvent).map { evt =>
+        case Some(evt) =>
+          eventsDAO.insert(AdminEvent(evt)).map { evt =>
             out ! PostEventResult("successfully added event: " + evt.id)
           }
         case _ => out ! ActorFailed("Invalid Request")

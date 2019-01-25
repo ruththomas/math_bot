@@ -18,8 +18,7 @@ class GridAnimator {
 
   _makeSound () {
     if (!this.isLastOrFirst && this.$robot !== null) {
-      const sound = this.sounds[this.robotState.animation] || this.sounds.walk
-      sound.play()
+      this.soundControl.playSound(this.robotState.animation || 'walk')
     }
   }
 
@@ -79,7 +78,7 @@ class GridAnimator {
     this.isLastOrFirst = isLastOrFirstFrame
     this.robotState = frame.robotState
     this.robot = $store.state.levelControl.robot
-    this.sounds = $store.state.soundControl.sounds
+    this.soundControl = $store.state.soundControl
     this.grid = $store.state.levelControl.gridMap
     this.toolList = $store.state.levelControl.continent.toolList
     this.robotSpeed = this.robot.robotSpeed

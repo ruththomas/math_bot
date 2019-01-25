@@ -127,12 +127,7 @@ export default {
         dropZoneChildren.each(function () {
           const $ele = $(this)
           childrenWidthSum += $ele.outerWidth()
-          $ele.removeClass('dropped-indicator')
-          $ele.find('.piece').removeClass('dropped-indicator')
         })
-
-        // $dropped.addClass('dropped-indicator')
-        // $dropped.find('.piece').addClass('dropped-indicator')
 
         if ((childrenWidthSum * 2) > dropWidth) {
           $dropZone.animate({'padding-right': `${(dropWidth / 2) - (droppedWidth / 2)}px`}, 200)
@@ -204,21 +199,18 @@ export default {
     animation-iteration-count: infinite;
   }
 
-  .dropped-indicator {
-    position: relative;
-
-    &::before {
-      content: url("../assets/next-arrow.svg");
-      height: 2vmin;
-      width: 2vmin;
-      position: absolute;
-      transform: rotate(90deg);
-      top: -2vmin;
-      left: 50%;
-    }
-  }
-
   .full-indicator {
-    box-shadow: 0.5vmin 0 0 0 $danger-color;
+    &::after {
+      content: "";
+      background-color: $danger-color;
+      position: absolute;
+      height: 75%;
+      width: 3px;
+      margin: auto;
+      top: 0;
+      left: 102%;
+      bottom: 0;
+      right: 0;
+    }
   }
 </style>

@@ -96,6 +96,7 @@ export class AuthService {
     api.logout(() => {
       this.clearErrors()
       this.authenticated = false
+      localStorage.clear()
       $router.push({path: '/about'})
     })
   }

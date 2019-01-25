@@ -1,5 +1,6 @@
 <template>
-  <div class="events-list container-fluid">
+  <div class="events-list container-fluid"
+  >
     <h3 class="page-title m-3">
 
       <span @click="toggleView" class="mx-2" :class="listVisible ? 'active' : null">
@@ -167,7 +168,6 @@ export default {
 
   .events-list {
 
-    background: var(--light);
     overflow-y: scroll;
     height: 100vh;
   }

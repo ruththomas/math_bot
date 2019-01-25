@@ -6,9 +6,12 @@ import router from './router'
 import store from './store/store'
 import utils from './services/utils'
 
+import ToggleButton from 'vue-js-toggle-button'
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker'
 
 Vue.component('vue-ctk-date-time-picker', VueCtkDateTimePicker)
+
+Vue.use(ToggleButton)
 
 Vue.filter('percentage', val => {
   if (val == null) return ''
