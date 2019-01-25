@@ -230,6 +230,15 @@ class LevelControl extends Ws {
     }, 0)
   }
 
+  /**
+   * @description resets main func to [] when navigating there from /profile or when coming from prev level
+   */
+  makeMainFuncEmpty () {
+    if (this.continent.mainMax < 10000) {
+      this.updateFunction(this._prepFunc(Object.assign(this.functions.main, {func: []})))
+    }
+  }
+
   updateFunction (func) {
     this._wsOnMessage((res) => {
       this._positionBar()
@@ -261,6 +270,7 @@ class LevelControl extends Ws {
   getContinent (path, cb) {
     this._wsOnMessage(({pathAndContinent}) => {
       this._setContinent({pathAndContinent})
+      this.makeMainFuncEmpty()
       if (cb) cb(pathAndContinent)
     })
     this._send(JSON.stringify({action: 'get-continent', path: path || undefined}))

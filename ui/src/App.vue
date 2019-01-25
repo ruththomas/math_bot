@@ -61,6 +61,7 @@ export default {
         )
         if (confirmed) {
           this.$store.dispatch('setDevSuppress')
+          localStorage.setItem('dev_msg_seen', true)
           devMessages.forEach((m) => console.log('!!' + m.toUpperCase() + '!!'))
         }
       } else {

@@ -234,14 +234,16 @@ object PreparedFunctions {
     val staged = indexEm(convertColors(addMoreStaged(functions.actives, assignedStaged ::: functions.staged)))
 
     val filteredFunctions = FilteredFunctions(main, actives, staged, continentStruct)
+    // sets mains func to empty if main has a max size
+    val adjustedMain = filteredFunctions.main
 
     functionsDAO.replaceAll(
       functions.tokenId,
-      Functions(functions.tokenId, List(filteredFunctions.main) ::: actives ::: staged)
+      Functions(functions.tokenId, List(adjustedMain) ::: actives ::: staged)
     )
 
     new PreparedFunctions(
-      main = filteredFunctions.main,
+      main = adjustedMain,
       activeFunctions = filteredFunctions.actives,
       stagedFunctions = filteredFunctions.staged
     )
